@@ -1,2 +1,6 @@
-export {sayHello, sayGoodbye} from './hello-world'
-
+export * from "./masa";
+import {
+  addresses,
+  loadIdentityContracts,
+  IIdentityContracts,
+} from "./contracts";

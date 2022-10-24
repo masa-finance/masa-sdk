@@ -1,3 +1,5 @@
-.idea
-node_modules
-/dist
+.idea/
+node_modules/
+dist/
+
+yarn-error.log
