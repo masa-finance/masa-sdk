@@ -1,4 +1,4 @@
-import Masa from "../masa"
+import Masa from "../masa";
 
 export const patchMetadataUrl = (masa: Masa, tokeUri: string) => {
   const apiUrl: string = masa.config.apiUrl;

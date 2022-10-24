@@ -1,6 +1,6 @@
 import { getLoginTemplate } from "./get-logintemplate";
 import Masa from "../masa";
-import { unpackSessionId } from "../helpers/unpack-session-id"
+import { unpackSessionId } from "../helpers/unpack-session-id";
 
 export const login = async (masa: Masa) => {
   console.log("Logging in");

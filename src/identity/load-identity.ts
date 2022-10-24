@@ -1,5 +1,5 @@
 import { loadIdentityContracts } from "../contracts";
-import Masa from "../masa"
+import Masa from "../masa";
 
 export const loadIdentity = async (masa: Masa, address: string) => {
   const identityContracts = await loadIdentityContracts({
