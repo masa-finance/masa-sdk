@@ -1,0 +1,72 @@
+Arguments: 
+  /Users/matiasmartinez/.nvm/versions/node/v16.18.0/bin/node /Users/matiasmartinez/.nvm/versions/node/v16.18.0/bin/yarn add Conf
+
+PATH: 
+  /Users/matiasmartinez/Downloads/google-cloud-sdk/bin:/Users/matiasmartinez/.nvm/versions/node/v16.18.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/opt/X11/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.18.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/Conf: Not found
+      at Request.params.callback [as _callback] (/Users/matiasmartinez/.nvm/versions/node/v16.18.0/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at Request.self.callback (/Users/matiasmartinez/.nvm/versions/node/v16.18.0/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:513:28)
+      at Request.<anonymous> (/Users/matiasmartinez/.nvm/versions/node/v16.18.0/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:513:28)
+      at IncomingMessage.<anonymous> (/Users/matiasmartinez/.nvm/versions/node/v16.18.0/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:627:28)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1358:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "hwrld",
+    "version": "2.1.1",
+    "description": "Can log \"hello world\" and \"goodbye world\" to the console!",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+      "/dist"
+    ],
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "tsc",
+      "publish-lib": "npm run build && npm publish",
+      "publish-beta": "npm run build && npm publish --tag beta",
+      "publish-dryrun": "npm run build && npm publish --dry-run"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/bersling/typescript-library-starter.git"
+    },
+    "keywords": [
+      "demo",
+      "typescript",
+      "library",
+      "hello world"
+    ],
+    "author": "Daniel Niederberger <bersling@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/bersling/typescript-library-starter/issues"
+    },
+    "homepage": "https://github.com/bersling/typescript-library-starter#readme",
+    "devDependencies": {},
+    "dependencies": {
+      "typescript": "^4.2.3"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
