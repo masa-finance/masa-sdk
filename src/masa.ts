@@ -34,8 +34,17 @@ export default class Masa {
       logging: boolean;
     };
   }) {
-    this.client = new MasaClient({ apiUrl, cookie });
-    this.arweaveClient = arweave(host, port, protocol, logging);
+    this.client = new MasaClient({
+      apiUrl,
+      cookie,
+    });
+
+    this.arweaveClient = arweave({
+      host,
+      port,
+      protocol,
+      logging,
+    });
 
     this.config.wallet = wallet;
     this.config.apiUrl = apiUrl;
