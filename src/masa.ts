@@ -1,27 +1,30 @@
 import { BigNumber, ethers } from "ethers";
 import { logout } from "./session/logout";
 import { checkLogin } from "./session/check-login";
-import { loadIdentity } from "./identity/load-identity";
 import { version } from "./helpers/version";
 import { login } from "./session/login";
 import { addresses, loadIdentityContracts } from "./contracts";
 import MasaClient from "./utils/clients/middleware";
 import { arweave } from "./utils/clients/arweave";
 import { loadSoulNamesFromIdentity } from "./soul-name/loadSoulNamesFromIdentity";
-import { patchMetadataUrl } from "./helpers/patch-metadata-url";
 import { getBalances } from "./account/getBalances";
+import { createRandomWallet } from "./account/createRandomWallet";
+import { loadIdentity } from "./identity/loadIdentity";
+import { patchMetadataUrl } from "./helpers/patchMetadataUrl";
 
 export default class Masa {
   public readonly client: MasaClient;
   public readonly arweaveClient;
 
   constructor({
-    provider,
+    cookie,
+    wallet,
     apiUrl,
     environment,
     arweave: { host, port, protocol, logging },
   }: {
-    provider: ethers.providers.JsonRpcProvider;
+    cookie?: string;
+    wallet: ethers.Signer;
     apiUrl: string;
     environment: string;
     arweave: {
@@ -31,32 +34,29 @@ export default class Masa {
       logging: boolean;
     };
   }) {
-    this.client = new MasaClient({ apiUrl });
+    this.client = new MasaClient({ apiUrl, cookie });
     this.arweaveClient = arweave(host, port, protocol, logging);
 
+    this.config.wallet = wallet;
     this.config.apiUrl = apiUrl;
-    this.config.provider = provider;
     this.config.environment = environment;
   }
 
   public config: {
-    cookie?: string;
     apiUrl: string;
     environment: string;
     network: string;
-    provider: ethers.providers.JsonRpcProvider;
+    wallet: ethers.Signer;
   } = {
     apiUrl: "https://dev.middleware.masa.finance",
     environment: "dev",
     network: "goerli",
-    provider: new ethers.providers.JsonRpcProvider(
-      "https://rpc.ankr.com/eth_goerli"
-    ),
+    wallet: createRandomWallet(),
   };
 
   session = {
     checkLogin: () => checkLogin(this),
-    sessionLogout: (cookie?: string) => this.client.sessionLogout(cookie),
+    sessionLogout: () => this.client.sessionLogout(),
     login: () => login(this),
     logout: () => logout(this),
   };
@@ -75,16 +75,14 @@ export default class Masa {
   };
 
   metadata = {
-    metadataStore: (soulName: string) =>
-      this.client.metadataStore(soulName, this.config.cookie),
-    getMetadata: (url: string) =>
-      this.client.getMetadata(url, this.config.cookie),
+    metadataStore: (soulName: string) => this.client.metadataStore(soulName),
+    getMetadata: (url: string) => this.client.getMetadata(url),
     patchMetadataUrl: (tokenUri: string) => patchMetadataUrl(this, tokenUri),
   };
 
   creditScore = {
     creditScoreMint: (address: string, signature: string) =>
-      this.client.creditScoreMint(address, signature, this.config.cookie),
+      this.client.creditScoreMint(address, signature),
   };
 
   utils = {
@@ -94,7 +92,7 @@ export default class Masa {
   contracts = {
     loadIdentityContracts: () =>
       loadIdentityContracts({
-        provider: this.config.provider,
+        provider: this.config.wallet.provider,
         network: this.config.network,
       }),
     addresses,

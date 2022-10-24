@@ -1,6 +1,6 @@
-import { getLoginTemplate } from "./get-logintemplate";
 import Masa from "../masa";
-import { unpackSessionId } from "../helpers/unpack-session-id";
+import { getLoginTemplate } from "./get-logintemplate";
+import { unpackSessionId } from "../helpers/unpackSessionId"
 
 export const login = async (masa: Masa) => {
   console.log("Logging in");
@@ -18,29 +18,31 @@ export const login = async (masa: Masa) => {
         challengeData.expires
       );
 
-      const address = (await masa.config.provider.listAccounts())[0];
+      const address = await masa.config.wallet.getAddress();
 
       console.log(`Signer Address: '${address}'`);
       console.log(`Signing: \n'${msg}'\n`);
 
-      const signer = await masa.config.provider.getSigner();
-      const signature = await signer.signMessage(msg);
+      const signature = await masa.config.wallet.signMessage(msg);
       console.log(`Signature: '${signature}'`);
 
       const checkSignatureData = await masa.client.checkSignature(
         address,
         signature,
-        masa.config.cookie
+        challengeData.cookie
       );
 
       if (checkSignatureData) {
         console.log("\nLogged in as:");
         console.log(`Address: '${address}'`);
         console.log(`User ID: '${checkSignatureData.id}'`);
+        console.log(`Session ID: '${unpackSessionId(challengeData.cookie)}'`);
 
-        if (challengeData.cookie) {
-          console.log(`Session ID: '${unpackSessionId(challengeData.cookie)}'`);
-        }
+        return {
+          address,
+          userId: checkSignatureData.id,
+          cookie: challengeData.cookie,
+        };
       }
     }
   }

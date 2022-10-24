@@ -1,11 +1,7 @@
-import { loadIdentityContracts } from "../contracts";
 import Masa from "../masa";
 
 export const loadIdentity = async (masa: Masa, address: string) => {
-  const identityContracts = await loadIdentityContracts({
-    provider: masa.config.provider,
-    network: masa.config.network,
-  });
+  const identityContracts = await masa.contracts.loadIdentityContracts();
 
   let identityId;
 

@@ -6,8 +6,11 @@ const headers = {
 
 export default class MasaClient {
   private middlewareClient;
+  public cookie?: string;
 
-  constructor({ apiUrl }: { apiUrl: string }) {
+  constructor({ apiUrl, cookie }: { apiUrl: string; cookie?: string }) {
+    this.cookie = cookie;
+
     this.middlewareClient = axios.create({
       baseURL: apiUrl,
       withCredentials: true,
@@ -15,11 +18,11 @@ export default class MasaClient {
     });
   }
 
-  sessionCheck = async (cookie?: string): Promise<any | undefined> => {
+  sessionCheck = async (): Promise<any | undefined> => {
     const checkResponse = await this.middlewareClient
       .get(`/session/check`, {
         headers: {
-          cookie: cookie ? [cookie] : undefined,
+          cookie: this.cookie ? [this.cookie] : undefined,
         },
       })
       .catch(() => {
@@ -33,10 +36,10 @@ export default class MasaClient {
     }
   };
 
-  getMetadata = async (uri: string, cookie?: string) => {
+  getMetadata = async (uri: string) => {
     const metadataResponse = await this.middlewareClient.get(uri, {
       headers: {
-        cookie: cookie ? [cookie] : undefined,
+        cookie: this.cookie ? [this.cookie] : undefined,
       },
     });
 
@@ -46,10 +49,7 @@ export default class MasaClient {
     }
   };
 
-  metadataStore = async (
-    soulName: string,
-    cookie?: string
-  ): Promise<any | undefined> => {
+  metadataStore = async (soulName: string): Promise<any | undefined> => {
     const storeMetadataResponse = await this.middlewareClient
       .post(
         `/storage/store`,
@@ -58,12 +58,12 @@ export default class MasaClient {
         },
         {
           headers: {
-            cookie: cookie ? [cookie] : undefined,
+            cookie: this.cookie ? [this.cookie] : undefined,
           },
         }
       )
       .catch((err: any) => {
-        console.error(err.message);
+        console.error("Storing metadata failed!", err.message);
       });
 
     if (storeMetadataResponse) {
@@ -76,7 +76,7 @@ export default class MasaClient {
     const getChallengeResponse = await this.middlewareClient
       .get(`/session/get-challenge`)
       .catch((err: any) => {
-        console.error(err.message);
+        console.error("Get Challenge failed!", err.message);
       });
 
     if (getChallengeResponse) {
@@ -99,6 +99,8 @@ export default class MasaClient {
     signature: string,
     cookie?: string
   ): Promise<any | undefined> => {
+    const cookieToUse = cookie || this.cookie;
+
     const checkSignatureResponse = await this.middlewareClient
       .post(
         `/session/check-signature`,
@@ -108,12 +110,12 @@ export default class MasaClient {
         },
         {
           headers: {
-            cookie: cookie ? [cookie] : undefined,
+            cookie: cookieToUse ? [cookieToUse] : undefined,
           },
         }
       )
       .catch((err: any) => {
-        console.error(err.message);
+        console.error("Check signature failed!", err.message);
       });
 
     if (checkSignatureResponse) {
@@ -123,11 +125,7 @@ export default class MasaClient {
     }
   };
 
-  creditScoreMint = async (
-    address: string,
-    signature: string,
-    cookie?: string
-  ) => {
+  creditScoreMint = async (address: string, signature: string) => {
     const storeMetadataResponse = await this.middlewareClient
       .post(
         `/contracts/credit-score/mint`,
@@ -137,7 +135,7 @@ export default class MasaClient {
         },
         {
           headers: {
-            cookie: cookie ? [cookie] : undefined,
+            cookie: this.cookie ? [this.cookie] : undefined,
           },
         }
       )
@@ -157,11 +155,11 @@ export default class MasaClient {
     }
   };
 
-  sessionLogout = async (cookie?: string) => {
+  sessionLogout = async () => {
     const logoutResponse = await this.middlewareClient
       .post(`/session/logout`, undefined, {
         headers: {
-          cookie: cookie ? [cookie] : undefined,
+          cookie: this.cookie ? [this.cookie] : undefined,
         },
       })
       .catch((err: any) => {
