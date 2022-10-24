@@ -9,9 +9,6 @@ export const loadSoulNamesFromIdentity = async (
 
   const identityContracts = await masa.contracts.loadIdentityContracts();
 
-  const address = await identityContracts.SoulboundIdentityContract[
-    "ownerOf(uint256)"
-  ](identityId);
   const soulNames = await identityContracts.SoulNameContract[
     "getSoulNames(uint256)"
   ](identityId);
@@ -22,16 +19,9 @@ export const loadSoulNamesFromIdentity = async (
       soulNames[nameIndex]
     );
 
-    const tokenId =
-      // todo this is bad style, we need to get the tokenId from the soul name somehow on getTokenData
-      await identityContracts.SoulNameContract.tokenOfOwnerByIndex(
-        address,
-        nameIndex
-      );
-
     const tokenUri = await identityContracts.SoulNameContract[
       "tokenURI(uint256)"
-    ](tokenId);
+    ](tokenDetails.tokenId);
 
     let metadata;
     try {
@@ -51,7 +41,6 @@ export const loadSoulNamesFromIdentity = async (
 
     soulNameDetails.push({
       index: nameIndex,
-      tokenId,
       tokenUri,
       tokenDetails,
       metadata,
