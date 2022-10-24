@@ -18,14 +18,12 @@ export const login = async (masa: Masa) => {
         challengeData.expires
       );
 
-      const signer = await masa.config.provider?.getSigner();
-      if (!signer) return;
-
-      const address = await signer.getAddress();
+      const address = (await masa.config.provider.listAccounts())[0];
 
       console.log(`Signer Address: '${address}'`);
       console.log(`Signing: \n'${msg}'\n`);
 
+      const signer = await masa.config.provider.getSigner();
       const signature = await signer.signMessage(msg);
       console.log(`Signature: '${signature}'`);
 
