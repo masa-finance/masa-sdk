@@ -4,12 +4,12 @@ export const arweave = ({
   host,
   port,
   protocol,
-  logging,
+  logging = false,
 }: {
   host: string;
   port: number;
   protocol: string;
-  logging: boolean;
+  logging?: boolean;
 }) => {
   return Arweave.init({
     host,

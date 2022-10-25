@@ -5,7 +5,7 @@ import { version } from "./helpers/version";
 import { login } from "./session/login";
 import { addresses, loadIdentityContracts } from "./contracts";
 import MasaClient from "./utils/clients/middleware";
-import { arweave } from "./utils/clients/arweave";
+import { arweave as arweaveInit } from "./utils/clients/arweave";
 import { getBalances } from "./account/getBalances";
 import { createRandomWallet } from "./account/createRandomWallet";
 import { patchMetadataUrl } from "./helpers/patchMetadataUrl";
@@ -26,14 +26,15 @@ import { listSoulnames, loadSoulNamesByIdentityId } from "./soul-name/list";
 
 export interface MasaArgs {
   cookie?: string;
-  wallet: ethers.Signer;
-  apiUrl: string;
-  environment: string;
-  arweave: {
+  wallet: ethers.Signer | ethers.Wallet;
+  apiUrl?: string;
+  environment?: string;
+  network?: string;
+  arweave?: {
     host: string;
     port: number;
     protocol: string;
-    logging: boolean;
+    logging?: boolean;
   };
 }
 
@@ -41,7 +42,7 @@ export interface MasaConfig {
   apiUrl: string;
   environment: string;
   network: string;
-  wallet: ethers.Signer;
+  wallet: ethers.Signer | ethers.Wallet;
 }
 
 export default class Masa {
@@ -50,34 +51,33 @@ export default class Masa {
 
   constructor({
     cookie,
-    wallet,
-    apiUrl,
-    environment,
-    arweave: { host, port, protocol, logging },
+    wallet = createRandomWallet(),
+    apiUrl = "https://dev.middleware.masa.finance",
+    environment = "dev",
+    network = "goerli",
+    arweave = {
+      host: "arweave.net",
+      port: 443,
+      protocol: "https",
+      logging: false,
+    },
   }: MasaArgs) {
     this.client = new MasaClient({
       apiUrl,
       cookie,
     });
 
-    this.arweaveClient = arweave({
-      host,
-      port,
-      protocol,
-      logging,
-    });
+    this.arweaveClient = arweaveInit(arweave);
 
-    this.config.wallet = wallet;
-    this.config.apiUrl = apiUrl;
-    this.config.environment = environment;
+    this.config = {
+      apiUrl,
+      environment,
+      network,
+      wallet,
+    };
   }
 
-  public config: MasaConfig = {
-    apiUrl: "https://dev.middleware.masa.finance",
-    environment: "dev",
-    network: "goerli",
-    wallet: createRandomWallet(),
-  };
+  public config: MasaConfig;
 
   session = {
     checkLogin: () => checkLogin(this),

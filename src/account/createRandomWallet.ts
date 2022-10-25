@@ -1,6 +1,6 @@
-import { ethers } from "ethers";
+import { ethers, Wallet } from "ethers";
 
-export const createRandomWallet = () => {
+export const createRandomWallet = (): Wallet => {
   const wallet = ethers.Wallet.createRandom();
 
   wallet.connect(
