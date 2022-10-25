@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/interface/soulName.ts:12](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/interface/soulName.ts#L12)
+[src/interface/soulName.ts:12](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/interface/soulName.ts#L12)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[src/interface/soulName.ts:8](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/interface/soulName.ts#L8)
+[src/interface/soulName.ts:8](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/interface/soulName.ts#L8)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[src/interface/soulName.ts:9](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/interface/soulName.ts#L9)
+[src/interface/soulName.ts:9](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/interface/soulName.ts#L9)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/interface/soulName.ts:10](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/interface/soulName.ts#L10)
+[src/interface/soulName.ts:10](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/interface/soulName.ts#L10)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[src/interface/soulName.ts:11](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/interface/soulName.ts#L11)
+[src/interface/soulName.ts:11](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/interface/soulName.ts#L11)

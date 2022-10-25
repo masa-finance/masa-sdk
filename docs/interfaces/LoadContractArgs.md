@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[src/contracts/index.ts:31](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/contracts/index.ts#L31)
+[src/contracts/index.ts:31](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/contracts/index.ts#L31)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[src/contracts/index.ts:30](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/contracts/index.ts#L30)
+[src/contracts/index.ts:30](https://github.com/masa-finance/masa-sdk/blob/72beff4/src/contracts/index.ts#L30)
