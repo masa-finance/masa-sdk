@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[src/contracts/contract-service.ts:8](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/contracts/contract-service.ts#L8)
+[src/contracts/contract-service.ts:8](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/contracts/contract-service.ts#L8)
 
 ## Variables
 
@@ -48,7 +48,7 @@
 
 #### Defined in
 
-[src/contracts/index.ts:25](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/contracts/index.ts#L25)
+[src/contracts/index.ts:25](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/contracts/index.ts#L25)
 
 ## Functions
 
@@ -68,4 +68,4 @@
 
 #### Defined in
 
-[src/contracts/index.ts:34](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/contracts/index.ts#L34)
+[src/contracts/index.ts:34](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/contracts/index.ts#L34)

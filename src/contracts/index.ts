@@ -7,7 +7,7 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { ethers } from "ethers";
 import * as goerli from "./goerli";
-import { IIdentityContracts } from "../interface/contracts";
+import { IIdentityContracts } from "../interface";
 
 export interface Addresses {
   [index: string]: {
@@ -27,7 +27,7 @@ export const addresses: Addresses = {
 };
 
 export interface LoadContractArgs {
-  provider?: any;
+  provider?: ethers.providers.Provider;
   network?: string;
 }
 

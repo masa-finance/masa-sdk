@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[src/masa.ts:51](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L51)
+[src/masa.ts:51](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L51)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/masa.ts:100](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L100)
+[src/masa.ts:100](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L100)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:49](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L49)
+[src/masa.ts:49](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L49)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:48](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L48)
+[src/masa.ts:48](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L48)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:75](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L75)
+[src/masa.ts:75](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L75)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:136](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L136)
+[src/masa.ts:136](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L136)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:122](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L122)
+[src/masa.ts:122](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L122)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:89](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L89)
+[src/masa.ts:89](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L89)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:116](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L116)
+[src/masa.ts:116](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L116)
 
 ___
 
@@ -176,7 +176,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:82](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L82)
+[src/masa.ts:82](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L82)
 
 ___
 
@@ -195,7 +195,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:104](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L104)
+[src/masa.ts:104](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L104)
 
 ___
 
@@ -211,4 +211,4 @@ ___
 
 #### Defined in
 
-[src/masa.ts:132](https://github.com/masa-finance/masa-sdk/blob/d4e7116/src/masa.ts#L132)
+[src/masa.ts:132](https://github.com/masa-finance/masa-sdk/blob/adcda96/src/masa.ts#L132)
