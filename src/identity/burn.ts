@@ -1,0 +1,31 @@
+import { BigNumber } from "ethers";
+import Masa from "../masa";
+
+export const burnIdentityById = async (masa: Masa, identityId: BigNumber) => {
+  const identityContracts = await masa.contracts.loadIdentityContracts();
+
+  console.log("Burning Identity");
+  try {
+    const tx = await identityContracts.SoulboundIdentityContract.connect(
+      masa.config.wallet
+    ).burn(identityId);
+
+    console.log("Waiting for the burn tx to finalize");
+    await tx.wait();
+
+    console.log(`Identity with id ${identityId} burned!`);
+  } catch (err: any) {
+    console.error(`Burning of Identity Failed! ${err.message}`);
+  }
+};
+
+export const burnIdentity = async (masa: Masa) => {
+  if (await masa.session.checkLogin()) {
+    const identityId = await masa.identity.load();
+    if (!identityId) return;
+
+    await burnIdentityById(masa, identityId);
+  } else {
+    console.log("Not logged in please login first");
+  }
+};

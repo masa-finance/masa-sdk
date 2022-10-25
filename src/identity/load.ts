@@ -1,7 +1,8 @@
 import Masa from "../masa";
 
-export const loadIdentity = async (masa: Masa, address: string) => {
+export const loadIdentity = async (masa: Masa, address?: string) => {
   const identityContracts = await masa.contracts.loadIdentityContracts();
+  address = address || (await masa.config.wallet.getAddress());
 
   let identityId;
 

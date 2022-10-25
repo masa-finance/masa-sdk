@@ -6,11 +6,43 @@ import { login } from "./session/login";
 import { addresses, loadIdentityContracts } from "./contracts";
 import MasaClient from "./utils/clients/middleware";
 import { arweave } from "./utils/clients/arweave";
-import { loadSoulNamesFromIdentity } from "./soul-name/loadSoulNamesFromIdentity";
 import { getBalances } from "./account/getBalances";
 import { createRandomWallet } from "./account/createRandomWallet";
-import { loadIdentity } from "./identity/loadIdentity";
 import { patchMetadataUrl } from "./helpers/patchMetadataUrl";
+import { burnCreditScore } from "./credit-report/burn";
+import {
+  listCreditReports,
+  loadCreditScoresByIdentityId,
+} from "./credit-report/list";
+import { burnIdentity } from "./identity/burn";
+import { loadIdentity } from "./identity/load";
+import { ContractService, PaymentMethod } from "./contracts/contract-service";
+import { createCreditScore } from "./credit-report/create";
+import { createSoulName } from "./soul-name/create";
+import { createIdentity } from "./identity/create";
+import { showIdentity } from "./identity/show";
+import { burnSoulName } from "./soul-name/burn";
+import { listSoulnames, loadSoulNamesByIdentityId } from "./soul-name/list";
+
+export interface MasaArgs {
+  cookie?: string;
+  wallet: ethers.Signer;
+  apiUrl: string;
+  environment: string;
+  arweave: {
+    host: string;
+    port: number;
+    protocol: string;
+    logging: boolean;
+  };
+}
+
+export interface MasaConfig {
+  apiUrl: string;
+  environment: string;
+  network: string;
+  wallet: ethers.Signer;
+}
 
 export default class Masa {
   public readonly client: MasaClient;
@@ -22,18 +54,7 @@ export default class Masa {
     apiUrl,
     environment,
     arweave: { host, port, protocol, logging },
-  }: {
-    cookie?: string;
-    wallet: ethers.Signer;
-    apiUrl: string;
-    environment: string;
-    arweave: {
-      host: string;
-      port: number;
-      protocol: string;
-      logging: boolean;
-    };
-  }) {
+  }: MasaArgs) {
     this.client = new MasaClient({
       apiUrl,
       cookie,
@@ -51,12 +72,7 @@ export default class Masa {
     this.config.environment = environment;
   }
 
-  public config: {
-    apiUrl: string;
-    environment: string;
-    network: string;
-    wallet: ethers.Signer;
-  } = {
+  public config: MasaConfig = {
     apiUrl: "https://dev.middleware.masa.finance",
     environment: "dev",
     network: "goerli",
@@ -71,7 +87,14 @@ export default class Masa {
   };
 
   identity = {
-    loadIdentity: (address: string) => loadIdentity(this, address),
+    create: (
+      soulName: string,
+      duration: number,
+      paymentMethod: PaymentMethod
+    ) => createIdentity(this, soulName, duration, paymentMethod),
+    load: (address?: string) => loadIdentity(this, address),
+    burn: () => burnIdentity(this),
+    show: (address?: string) => showIdentity(this, address),
   };
 
   account = {
@@ -79,8 +102,15 @@ export default class Masa {
   };
 
   soulNames = {
-    loadSoulNamesFromIdentity: (identityId: BigNumber) =>
-      loadSoulNamesFromIdentity(this, identityId),
+    list: (address?: string) => listSoulnames(this, address),
+    loadSoulNamesByIdentityId: (identityId: BigNumber) =>
+      loadSoulNamesByIdentityId(this, identityId),
+    create: (
+      soulName: string,
+      duration: number,
+      paymentMethod: PaymentMethod
+    ) => createSoulName(this, soulName, duration, paymentMethod),
+    burn: (soulName: string) => burnSoulName(this, soulName),
   };
 
   metadata = {
@@ -90,8 +120,13 @@ export default class Masa {
   };
 
   creditScore = {
-    creditScoreMint: (address: string, signature: string) =>
+    mint: (address: string, signature: string) =>
       this.client.creditScoreMint(address, signature),
+    create: () => createCreditScore(this),
+    burn: (creditReportId: number) => burnCreditScore(this, creditReportId),
+    list: (address?: string) => listCreditReports(this, address),
+    load: (identityId: BigNumber) =>
+      loadCreditScoresByIdentityId(this, identityId),
   };
 
   utils = {
@@ -99,6 +134,7 @@ export default class Masa {
   };
 
   contracts = {
+    service: new ContractService(this),
     loadIdentityContracts: () =>
       loadIdentityContracts({
         provider: this.config.wallet.provider,

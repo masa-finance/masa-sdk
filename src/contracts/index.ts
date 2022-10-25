@@ -1,17 +1,13 @@
 import {
-  SoulboundIdentity,
   SoulboundIdentity__factory,
-  SoulboundCreditReport,
   SoulboundCreditReport__factory,
-  SoulName,
   SoulName__factory,
-  SoulLinker,
   SoulLinker__factory,
-  SoulStore,
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { ethers } from "ethers";
 import * as goerli from "./goerli";
+import { IIdentityContracts } from "../interface/contracts";
 
 export interface Addresses {
   [index: string]: {
@@ -29,14 +25,6 @@ export interface Addresses {
 export const addresses: Addresses = {
   goerli,
 };
-
-export interface IIdentityContracts {
-  SoulboundIdentityContract: SoulboundIdentity;
-  SoulboundCreditReportContract: SoulboundCreditReport;
-  SoulNameContract: SoulName;
-  SoulLinkerContract: SoulLinker;
-  SoulStoreContract: SoulStore;
-}
 
 export interface LoadContractArgs {
   provider?: any;
