@@ -4,7 +4,7 @@ export interface Attribute {
   value: number | string;
 }
 
-export interface IISoulName {
+export interface ISoulName {
   description: "This is a soul name!";
   external_url: "https://beta.claimyoursoul.masa.finance";
   image: string;
