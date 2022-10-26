@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/interface/creditReport.ts:3](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/creditReport.ts#L3)
+[src/interface/creditReport.ts:3](https://github.com/masa-finance/masa-sdk/blob/1a83a00/src/interface/creditReport.ts#L3)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[src/interface/creditReport.ts:4](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/creditReport.ts#L4)
+[src/interface/creditReport.ts:4](https://github.com/masa-finance/masa-sdk/blob/1a83a00/src/interface/creditReport.ts#L4)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/interface/creditReport.ts:2](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/creditReport.ts#L2)
+[src/interface/creditReport.ts:2](https://github.com/masa-finance/masa-sdk/blob/1a83a00/src/interface/creditReport.ts#L2)
 
 ___
 
@@ -61,4 +61,4 @@ ___
 
 #### Defined in
 
-[src/interface/creditReport.ts:5](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/creditReport.ts#L5)
+[src/interface/creditReport.ts:5](https://github.com/masa-finance/masa-sdk/blob/1a83a00/src/interface/creditReport.ts#L5)

@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[src/contracts/loadIdentityContracts.ts:14](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/contracts/loadIdentityContracts.ts#L14)
+[src/contracts/loadIdentityContracts.ts:14](https://github.com/masa-finance/masa-sdk/blob/1a83a00/src/contracts/loadIdentityContracts.ts#L14)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[src/contracts/loadIdentityContracts.ts:13](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/contracts/loadIdentityContracts.ts#L13)
+[src/contracts/loadIdentityContracts.ts:13](https://github.com/masa-finance/masa-sdk/blob/1a83a00/src/contracts/loadIdentityContracts.ts#L13)
