@@ -45,19 +45,15 @@ export default class Masa {
 
   session = session(this);
   identity = identity(this);
-  account = account(this);
   soulNames = soulNames(this);
-
+  creditScore = creditScore(this);
+  account = account(this);
+  contracts = contracts(this);
   metadata = {
     store: (soulName: string) => this.client.storeMetadata(soulName),
     retrieve: (url: string) => this.client.getMetadata(url),
   };
-
-  creditScore = creditScore(this);
-
   utils = {
     version,
   };
-
-  contracts = contracts(this);
 }

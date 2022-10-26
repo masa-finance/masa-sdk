@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ICreditReport, IIdentity } from "../../interface";
 import { BigNumber } from "ethers";
+import Transaction from "arweave/node/lib/transaction";
 
 const headers = {
   "Content-Type": "application/json",
@@ -53,7 +54,27 @@ export class MasaClient {
     }
   };
 
-  storeMetadata = async (soulName: string): Promise<any | undefined> => {
+  storeMetadata = async (
+    soulName: string
+  ): Promise<
+    | {
+        // image info
+        imageTransaction: Transaction;
+        imageResponse: {
+          status: number;
+          statusText: string;
+          data: any;
+        };
+        // metadata info
+        metadataTransaction: Transaction;
+        metadataResponse: {
+          status: number;
+          statusText: string;
+          data: any;
+        };
+      }
+    | undefined
+  > => {
     const storeMetadataResponse = await this.middlewareClient
       .post(
         `/storage/store`,
