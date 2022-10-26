@@ -16,41 +16,26 @@ export const loadCreditScoresByIdentityId = async (
   const creditReports = [];
   const identityContracts = await masa.contracts.loadIdentityContracts();
 
-  const address = await identityContracts.SoulboundIdentityContract[
-    "ownerOf(uint256)"
-  ](identityId);
+  const creditReportIds: BigNumber[] =
+    await identityContracts.SoulLinkerContract["getSBTLinks(uint256,address)"](
+      identityId,
+      identityContracts.SoulboundCreditReportContract.address
+    );
 
-  // todo find a better way to get the owner of a credit report then by address (identity id)
-  const creditReportBalance =
-    await identityContracts.SoulboundCreditReportContract.balanceOf(address);
+  for (const tokenId of creditReportIds) {
+    const tokenUri = patchMetadataUrl(
+      masa,
+      await identityContracts.SoulboundCreditReportContract.tokenURI(tokenId)
+    );
 
-  if (creditReportBalance.toNumber() > 0) {
-    for (
-      let creditReportIndex = 0;
-      creditReportBalance < creditReportBalance;
-      creditReportIndex++
-    ) {
-      const tokenId =
-        await identityContracts.SoulboundCreditReportContract.tokenOfOwnerByIndex(
-          address,
-          creditReportIndex
-        );
+    console.log(`Metadata Url: ${tokenUri}`);
+    const metadata = (await masa.metadata.retrieve(tokenUri)) as ICreditReport;
 
-      const tokenUri = patchMetadataUrl(
-        masa,
-        await identityContracts.SoulNameContract["tokenURI(uint256)"](tokenId)
-      );
-
-      const metadata = (await masa.metadata.retrieve(
-        tokenUri
-      )) as ICreditReport;
-
-      creditReports.push({
-        tokenId,
-        tokenUri,
-        metadata,
-      });
-    }
+    creditReports.push({
+      tokenId,
+      tokenUri,
+      metadata,
+    });
   }
 
   return creditReports;
