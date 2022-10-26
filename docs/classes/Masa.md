@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[src/masa.ts:16](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L16)
+[src/masa.ts:16](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L16)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/masa.ts:50](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L50)
+[src/masa.ts:50](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L50)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:14](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L14)
+[src/masa.ts:14](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L14)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:13](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L13)
+[src/masa.ts:13](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L13)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:44](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L44)
+[src/masa.ts:44](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L44)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:51](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L51)
+[src/masa.ts:51](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L51)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:49](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L49)
+[src/masa.ts:49](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L49)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:47](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L47)
+[src/masa.ts:47](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L47)
 
 ___
 
@@ -156,7 +156,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:52](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L52)
+[src/masa.ts:52](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L52)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-[src/masa.ts:46](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L46)
+[src/masa.ts:46](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L46)
 
 ___
 
@@ -190,11 +190,11 @@ ___
 | `burn` | (`soulName`: `string`) => `Promise`<`void`\> |
 | `create` | (`soulName`: `string`, `duration`: `number`, `paymentMethod`: [`PaymentMethod`](../modules.md#paymentmethod)) => `Promise`<`void`\> |
 | `list` | (`address?`: `string`) => `Promise`<`void`\> |
-| `loadSoulNamesByIdentityId` | (`identityId`: `BigNumber`) => `Promise`<{ `index`: `string` = nameIndex; `metadata`: `undefined` \| [`IISoulName`](../interfaces/IISoulName.md) ; `tokenDetails`: [`string`, `BigNumber`, `BigNumber`, `BigNumber`, `boolean`] & { `active`: `boolean` ; `expirationDate`: `BigNumber` ; `identityId`: `BigNumber` ; `sbtName`: `string` ; `tokenId`: `BigNumber`  } ; `tokenUri`: `string`  }[]\> |
+| `loadSoulNamesByIdentityId` | (`identityId`: `BigNumber`) => `Promise`<{ `index`: `string` = nameIndex; `metadata`: `undefined` \| [`ISoulName`](../interfaces/ISoulName.md) ; `tokenDetails`: [`string`, `BigNumber`, `BigNumber`, `BigNumber`, `boolean`] & { `active`: `boolean` ; `expirationDate`: `BigNumber` ; `identityId`: `BigNumber` ; `sbtName`: `string` ; `tokenId`: `BigNumber`  } ; `tokenUri`: `string`  }[]\> |
 
 #### Defined in
 
-[src/masa.ts:48](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L48)
+[src/masa.ts:48](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L48)
 
 ___
 
@@ -210,4 +210,4 @@ ___
 
 #### Defined in
 
-[src/masa.ts:56](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/masa.ts#L56)
+[src/masa.ts:56](https://github.com/masa-finance/masa-sdk/blob/a638602/src/masa.ts#L56)
