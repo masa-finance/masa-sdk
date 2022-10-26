@@ -1,8 +1,18 @@
 import Masa from "../masa";
 import { getLoginTemplate } from "./get-logintemplate";
-import { unpackSessionId } from "../helpers/unpackSessionId";
+import { unpackSessionId } from "../helpers";
+import { BigNumber } from "ethers";
 
-export const login = async (masa: Masa) => {
+export const login = async (
+  masa: Masa
+): Promise<
+  | {
+      address: string;
+      userId: BigNumber | string;
+      cookie: string;
+    }
+  | undefined
+> => {
   console.log("Logging in");
 
   if (await masa.session.checkLogin()) {
