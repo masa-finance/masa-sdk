@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:14](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L14)
+[src/utils/clients/middleware.ts:14](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L14)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:12](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L12)
+[src/utils/clients/middleware.ts:12](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L12)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:11](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L11)
+[src/utils/clients/middleware.ts:11](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L11)
 
 ## Methods
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:122](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L122)
+[src/utils/clients/middleware.ts:122](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L122)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:153](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L153)
+[src/utils/clients/middleware.ts:153](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L153)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:100](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L100)
+[src/utils/clients/middleware.ts:100](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L100)
 
 ___
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:42](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L42)
+[src/utils/clients/middleware.ts:42](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L42)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:24](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L24)
+[src/utils/clients/middleware.ts:24](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L24)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:194](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L194)
+[src/utils/clients/middleware.ts:194](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L194)
 
 ___
 
@@ -184,4 +184,4 @@ ___
 
 #### Defined in
 
-[src/utils/clients/middleware.ts:57](https://github.com/masa-finance/masa-sdk/blob/6151f86/src/utils/clients/middleware.ts#L57)
+[src/utils/clients/middleware.ts:57](https://github.com/masa-finance/masa-sdk/blob/137ba2f/src/utils/clients/middleware.ts#L57)
