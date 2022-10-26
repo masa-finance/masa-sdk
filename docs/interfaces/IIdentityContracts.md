@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/interface/contracts.ts:13](https://github.com/masa-finance/masa-sdk/blob/a638602/src/interface/contracts.ts#L13)
+[src/interface/contracts.ts:13](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/contracts.ts#L13)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[src/interface/contracts.ts:12](https://github.com/masa-finance/masa-sdk/blob/a638602/src/interface/contracts.ts#L12)
+[src/interface/contracts.ts:12](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/contracts.ts#L12)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[src/interface/contracts.ts:14](https://github.com/masa-finance/masa-sdk/blob/a638602/src/interface/contracts.ts#L14)
+[src/interface/contracts.ts:14](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/contracts.ts#L14)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/interface/contracts.ts:11](https://github.com/masa-finance/masa-sdk/blob/a638602/src/interface/contracts.ts#L11)
+[src/interface/contracts.ts:11](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/contracts.ts#L11)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[src/interface/contracts.ts:10](https://github.com/masa-finance/masa-sdk/blob/a638602/src/interface/contracts.ts#L10)
+[src/interface/contracts.ts:10](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/interface/contracts.ts#L10)

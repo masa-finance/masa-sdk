@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[src/contracts/contractService.ts:8](https://github.com/masa-finance/masa-sdk/blob/a638602/src/contracts/contractService.ts#L8)
+[src/contracts/contractService.ts:8](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/contracts/contractService.ts#L8)
 
 ## Variables
 
@@ -54,7 +54,7 @@
 
 #### Defined in
 
-[src/contracts/addresses.ts:16](https://github.com/masa-finance/masa-sdk/blob/a638602/src/contracts/addresses.ts#L16)
+[src/contracts/addresses.ts:16](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/contracts/addresses.ts#L16)
 
 ## Functions
 
@@ -78,7 +78,7 @@
 
 #### Defined in
 
-[src/utils/clients/arweave.ts:3](https://github.com/masa-finance/masa-sdk/blob/a638602/src/utils/clients/arweave.ts#L3)
+[src/utils/clients/arweave.ts:3](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/utils/clients/arweave.ts#L3)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[src/contracts/contracts.ts:6](https://github.com/masa-finance/masa-sdk/blob/a638602/src/contracts/contracts.ts#L6)
+[src/contracts/contracts.ts:6](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/contracts/contracts.ts#L6)
 
 ___
 
@@ -124,4 +124,4 @@ ___
 
 #### Defined in
 
-[src/contracts/loadIdentityContracts.ts:17](https://github.com/masa-finance/masa-sdk/blob/a638602/src/contracts/loadIdentityContracts.ts#L17)
+[src/contracts/loadIdentityContracts.ts:17](https://github.com/masa-finance/masa-sdk/blob/37930fb/src/contracts/loadIdentityContracts.ts#L17)
