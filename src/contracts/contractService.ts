@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { MASA__factory } from "@masa-finance/masa-contracts-identity";
 import { ContractReceipt, ContractTransaction, ethers, Signer } from "ethers";
 import { addresses } from "./index";
-import { IIdentityContracts } from "../interface/contracts";
+import { IIdentityContracts } from "../interface";
 import Masa from "../masa";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";

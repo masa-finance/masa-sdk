@@ -1,19 +1,26 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import Masa from "../masa";
+import { IIdentity } from "../interface";
+import { patchMetadataUrl } from "../helpers";
 
 export const loadIdentityDetails = async (
   masa: Masa,
   identityId: BigNumber
-) => {
+): Promise<{
+  tokenId: BigNumber;
+  tokenUri: string;
+  metadata?: IIdentity;
+}> => {
   const identityContracts = await masa.contracts.loadIdentityContracts();
 
-  const tokenUri = masa.metadata.patchMetadataUrl(
+  const tokenUri = patchMetadataUrl(
+    masa,
     await identityContracts.SoulboundIdentityContract["tokenURI(uint256)"](
       identityId
     )
   );
 
-  const metadata = await masa.metadata.getMetadata(tokenUri);
+  const metadata = (await masa.metadata.retrieve(tokenUri)) as IIdentity;
 
   return {
     tokenId: identityId,
@@ -22,7 +29,17 @@ export const loadIdentityDetails = async (
   };
 };
 
-export const showIdentity = async (masa: Masa, address?: string) => {
+export const showIdentity = async (
+  masa: Masa,
+  address?: string
+): Promise<
+  | {
+      tokenId: BigNumber;
+      tokenUri: string;
+      metadata?: IIdentity;
+    }
+  | undefined
+> => {
   if (await masa.session.checkLogin()) {
     address = address || (await masa.config.wallet.getAddress());
 
@@ -36,6 +53,8 @@ export const showIdentity = async (masa: Masa, address?: string) => {
     if (identity.metadata) {
       console.log(`Metadata: ${JSON.stringify(identity.metadata, null, 2)}`);
     }
+
+    return identity;
   } else {
     console.log("Not logged in please login first");
   }

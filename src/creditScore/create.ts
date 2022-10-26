@@ -1,6 +1,16 @@
 import Masa from "../masa";
+import { BigNumber } from "ethers";
 
-export const createCreditScore = async (masa: Masa) => {
+export const createCreditScore = async (
+  masa: Masa
+): Promise<
+  | {
+      tokenId: string | BigNumber;
+      success: boolean;
+      message: string;
+    }
+  | undefined
+> => {
   if (await masa.session.checkLogin()) {
     const address = await masa.config.wallet.getAddress();
 
@@ -22,13 +32,17 @@ export const createCreditScore = async (masa: Masa) => {
     const storeMetadataData = await masa.creditScore.mint(address, signature);
 
     if (storeMetadataData) {
-      const { success, message } = storeMetadataData;
+      const { success, message, tokenId } = storeMetadataData;
 
       if (!success) {
-        console.error("Creating Credit Report failed!");
+        console.error(`Creating Credit Report failed! '${message}'`);
+      } else {
+        return {
+          tokenId,
+          success,
+          message,
+        };
       }
-
-      console.log(message);
     }
   } else {
     console.log("Not logged in please login first");

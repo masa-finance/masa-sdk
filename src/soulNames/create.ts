@@ -1,5 +1,5 @@
-import { PaymentMethod } from "../contracts/contract-service";
 import Masa from "../masa";
+import { PaymentMethod } from "../contracts";
 
 const purchaseSoulname = async (
   masa: Masa,
@@ -11,7 +11,7 @@ const purchaseSoulname = async (
 
   if (await masa.contracts.service.isAvailable(identityContracts, soulName)) {
     console.log("Writing metadata");
-    const storeMetadataData = await masa.metadata.metadataStore(soulName);
+    const storeMetadataData = await masa.metadata.store(soulName);
 
     if (storeMetadataData) {
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;

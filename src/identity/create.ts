@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { PaymentMethod } from "../contracts/contract-service";
+import { PaymentMethod } from "../contracts";
 
 export const purchaseIdentityWithSoulname = async (
   masa: Masa,
@@ -11,7 +11,7 @@ export const purchaseIdentityWithSoulname = async (
 
   if (await masa.contracts.service.isAvailable(identityContracts, soulName)) {
     console.log("Writing metadata");
-    const storeMetadataData = await masa.metadata.metadataStore(soulName);
+    const storeMetadataData = await masa.metadata.store(soulName);
 
     if (storeMetadataData) {
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
@@ -41,7 +41,9 @@ export const createIdentity = async (
   soulName: string,
   duration: number,
   paymentMethod: PaymentMethod
-) => {
+): Promise<boolean> => {
+  let identityCreated = false;
+
   if (await masa.session.checkLogin()) {
     if (soulName.endsWith(".soul")) {
       soulName = soulName.replace(".soul", "");
@@ -52,11 +54,15 @@ export const createIdentity = async (
 
     if (identityId) {
       console.error("Identity already created!");
-      return;
+      return identityCreated;
     }
 
     await purchaseIdentityWithSoulname(masa, soulName, duration, paymentMethod);
+
+    identityCreated = true;
   } else {
     console.log("Not logged in please login first");
   }
+
+  return identityCreated;
 };

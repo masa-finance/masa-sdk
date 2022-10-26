@@ -1,5 +1,6 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
+import { IISoulName } from "../interface";
 
 export const loadSoulNamesByIdentityId = async (
   masa: Masa,
@@ -34,7 +35,7 @@ export const loadSoulNamesByIdentityId = async (
           // ignore
         });
 
-      metadata = JSON.parse(metadataResponse as string);
+      metadata = JSON.parse(metadataResponse as string) as IISoulName;
     } catch {
       // ignore
     }

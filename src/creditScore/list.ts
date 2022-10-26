@@ -1,10 +1,18 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
+import { ICreditReport } from "../interface";
+import { patchMetadataUrl } from "../helpers";
 
 export const loadCreditScoresByIdentityId = async (
   masa: Masa,
   identityId: BigNumber
-): Promise<any[]> => {
+): Promise<
+  {
+    tokenId: BigNumber;
+    tokenUri: string;
+    metadata: ICreditReport;
+  }[]
+> => {
   const creditReports = [];
   const identityContracts = await masa.contracts.loadIdentityContracts();
 
@@ -28,11 +36,14 @@ export const loadCreditScoresByIdentityId = async (
           creditReportIndex
         );
 
-      const tokenUri = masa.metadata.patchMetadataUrl(
+      const tokenUri = patchMetadataUrl(
+        masa,
         await identityContracts.SoulNameContract["tokenURI(uint256)"](tokenId)
       );
 
-      const metadata = await masa.metadata.getMetadata(tokenUri);
+      const metadata = (await masa.metadata.retrieve(
+        tokenUri
+      )) as ICreditReport;
 
       creditReports.push({
         tokenId,
@@ -45,7 +56,17 @@ export const loadCreditScoresByIdentityId = async (
   return creditReports;
 };
 
-export const listCreditReports = async (masa: Masa, address?: string) => {
+export const listCreditReports = async (
+  masa: Masa,
+  address?: string
+): Promise<
+  | {
+      tokenId: BigNumber;
+      tokenUri: string;
+      metadata: ICreditReport;
+    }[]
+  | undefined
+> => {
   if (await masa.session.checkLogin()) {
     address = address || (await masa.config.wallet.getAddress());
 
@@ -61,6 +82,8 @@ export const listCreditReports = async (masa: Masa, address?: string) => {
         `Metadata: ${JSON.stringify(creditReport.metadata, null, 2)}`
       );
     }
+
+    return creditReports;
   } else {
     console.log("Not logged in please login first");
   }

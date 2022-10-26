@@ -1,10 +1,12 @@
 import axios from "axios";
+import { ICreditReport, IIdentity } from "../../interface";
+import { BigNumber } from "ethers";
 
 const headers = {
   "Content-Type": "application/json",
 };
 
-export default class MasaClient {
+export class MasaClient {
   private middlewareClient;
   public cookie?: string;
 
@@ -36,7 +38,9 @@ export default class MasaClient {
     }
   };
 
-  getMetadata = async (uri: string) => {
+  getMetadata = async (
+    uri: string
+  ): Promise<IIdentity | ICreditReport | undefined> => {
     const metadataResponse = await this.middlewareClient.get(uri, {
       headers: {
         cookie: this.cookie ? [this.cookie] : undefined,
@@ -49,7 +53,7 @@ export default class MasaClient {
     }
   };
 
-  metadataStore = async (soulName: string): Promise<any | undefined> => {
+  storeMetadata = async (soulName: string): Promise<any | undefined> => {
     const storeMetadataResponse = await this.middlewareClient
       .post(
         `/storage/store`,
@@ -125,7 +129,17 @@ export default class MasaClient {
     }
   };
 
-  creditScoreMint = async (address: string, signature: string) => {
+  creditScoreMint = async (
+    address: string,
+    signature: string
+  ): Promise<
+    | {
+        tokenId: string | BigNumber;
+        success: boolean;
+        message: string;
+      }
+    | undefined
+  > => {
     const storeMetadataResponse = await this.middlewareClient
       .post(
         `/contracts/credit-score/mint`,
@@ -140,22 +154,28 @@ export default class MasaClient {
         }
       )
       .catch((err: any) => {
-        console.error(err.message);
+        console.error("Minting Credit Score failed!", err.message);
       });
 
     if (storeMetadataResponse) {
       const {
-        data: { success, message },
+        data: { success, message, tokenId },
       } = storeMetadataResponse;
 
       return {
+        tokenId,
         success,
         message,
       };
     }
   };
 
-  sessionLogout = async () => {
+  sessionLogout = async (): Promise<
+    | {
+        status: string;
+      }
+    | undefined
+  > => {
     const logoutResponse = await this.middlewareClient
       .post(`/session/logout`, undefined, {
         headers: {
@@ -163,7 +183,7 @@ export default class MasaClient {
         },
       })
       .catch((err: any) => {
-        console.error(err.message);
+        console.error("Logout failed!,", err.message);
       });
 
     if (logoutResponse) {

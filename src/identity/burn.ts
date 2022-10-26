@@ -1,7 +1,12 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
 
-export const burnIdentityById = async (masa: Masa, identityId: BigNumber) => {
+export const burnIdentityById = async (
+  masa: Masa,
+  identityId: BigNumber
+): Promise<boolean> => {
+  let success = false;
+
   const identityContracts = await masa.contracts.loadIdentityContracts();
 
   console.log("Burning Identity");
@@ -14,18 +19,25 @@ export const burnIdentityById = async (masa: Masa, identityId: BigNumber) => {
     await tx.wait();
 
     console.log(`Identity with id ${identityId} burned!`);
+    success = true;
   } catch (err: any) {
     console.error(`Burning of Identity Failed! ${err.message}`);
   }
+
+  return success;
 };
 
-export const burnIdentity = async (masa: Masa) => {
+export const burnIdentity = async (masa: Masa): Promise<boolean> => {
+  let success = false;
+
   if (await masa.session.checkLogin()) {
     const identityId = await masa.identity.load();
-    if (!identityId) return;
+    if (!identityId) return success;
 
-    await burnIdentityById(masa, identityId);
+    success = await burnIdentityById(masa, identityId);
   } else {
     console.log("Not logged in please login first");
   }
+
+  return success;
 };
