@@ -1,11 +1,9 @@
-# Masa SDK
-
 ## Installation
 
-Yarn  
+yarn  
 `yarn add @masa-finance/masa-sdk --save`
 
-NPM  
+nom
 `npm i @masa-finance/masa-sdk --save`
 
 ### Usage
