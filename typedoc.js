@@ -4,4 +4,5 @@ module.exports = {
   name: "# Masa SDK\n",
   out: "docs",
   disableSources: true,
+  includeVersion: true,
 };
