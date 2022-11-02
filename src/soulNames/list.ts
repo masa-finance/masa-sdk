@@ -79,7 +79,11 @@ export const listSoulnames = async (masa: Masa, address?: string) => {
         ).toUTCString()}`
       );
     }
+
+    return soulNames
   } else {
     console.log("Not logged in please login first");
+
+    return [];
   }
 };
