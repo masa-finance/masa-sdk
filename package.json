@@ -15,9 +15,10 @@
     "prettier": "prettier ./src --write",
     "lint": "eslint ./src",
     "doc": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts --name '# Masa SDK\n'",
-    "publish-lib": "npm run build && npm publish",
-    "publish-beta": "npm run build && npm publish --tag beta",
-    "publish-dryrun": "npm run build && npm publish --dry-run"
+    "prepublishOnly": "yarn build",
+    "publish-lib": "npm publish",
+    "publish-beta": "npm publish --tag beta",
+    "publish-dryrun": "npm publish --dry-run"
   },
   "repository": {
     "type": "git",
