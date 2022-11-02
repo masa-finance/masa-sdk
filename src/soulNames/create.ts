@@ -1,5 +1,42 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
+import { ethers } from "ethers";
+
+export const getRegistrationPrice = async (
+  masa: Masa,
+  soulName: string,
+  duration: number,
+  paymentMethod: PaymentMethod
+) => {
+  const identityContracts = await masa.contracts.loadIdentityContracts();
+
+  let price;
+  const prices = await masa.contracts.service.price(
+    identityContracts,
+    soulName,
+    duration
+  );
+
+  switch (paymentMethod) {
+    case "eth":
+      price = ethers.utils.formatEther(prices.priceInETH);
+      break;
+    case "stable":
+      price = ethers.utils.formatUnits(prices.priceInStableCoin, 6);
+      price = Number.parseFloat(price).toFixed(2).toString();
+      break;
+    case "utility":
+      price = ethers.utils.formatUnits(prices.priceInUtilityToken);
+      price = Number.parseFloat(price).toFixed(2).toString();
+      break;
+    default:
+      price = prices.priceInETH;
+  }
+
+  console.log(`Soulname price is ${price} ${paymentMethod}.`);
+
+  return price;
+};
 
 const purchaseSoulname = async (
   masa: Masa,
@@ -30,7 +67,7 @@ const purchaseSoulname = async (
       const result = await tx.wait();
 
       const purchasedEvent = result.events?.find(
-        (e) => e.event === "SoulNamePurchased"
+        (e: any) => e.event === "SoulNamePurchased"
       );
 
       let tokenId;
