@@ -14,7 +14,7 @@
     "build": "tsc",
     "prettier": "prettier ./src --write",
     "lint": "eslint ./src",
-    "doc": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts --name '# Masa SDK\n'",
+    "doc": "typedoc",
     "prepublishOnly": "yarn build",
     "publish-lib": "npm publish",
     "publish-beta": "npm publish --tag beta",
