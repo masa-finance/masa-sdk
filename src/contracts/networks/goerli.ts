@@ -3,6 +3,7 @@ import SoulboundCreditReport from "@masa-finance/masa-contracts-identity/deploym
 import SoulName from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulName.json";
 import SoulStore from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulStore.json";
 import SoulLinker from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulLinker.json";
+import Soulbound2FA from "@masa-finance/masa-contracts-identity/deployments/goerli/Soulbound2FA.json";
 
 export {
   MASA_GOERLI as MASA,
@@ -15,3 +16,4 @@ export const SoulboundCreditReportAddress = SoulboundCreditReport.address;
 export const SoulNameAddress = SoulName.address;
 export const SoulStoreAddress = SoulStore.address;
 export const SoulLinkerAddress = SoulLinker.address;
+export const Soulbound2FAAddress = Soulbound2FA.address;

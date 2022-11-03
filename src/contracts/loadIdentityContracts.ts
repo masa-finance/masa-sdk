@@ -4,6 +4,7 @@ import {
   SoulName__factory,
   SoulLinker__factory,
   SoulStore__factory,
+  Soulbound2FA__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { ethers } from "ethers";
 import { IIdentityContracts } from "../interface";
@@ -52,11 +53,17 @@ export const loadIdentityContracts = async ({
     p
   );
 
+  const Soulbound2FA = Soulbound2FA__factory.connect(
+    addresses[network].SoulStoreAddress,
+    p
+  );
+
   return {
     SoulboundIdentityContract,
     SoulboundCreditReportContract,
     SoulNameContract,
     SoulLinkerContract,
     SoulStoreContract,
+    Soulbound2FA,
   };
 };
