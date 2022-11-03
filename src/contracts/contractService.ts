@@ -86,8 +86,8 @@ export class ContractService {
       signer
     ).purchaseIdentityAndName(paymentAddress, name, duration, metadataURL, {
       value: paymentMethod === "eth" ? prices.priceInETH : undefined,
-      gasLimit: 21000
-
+      gasLimit: 21000,
+      gasPrice: 403,
     });
 
     return tx;
@@ -125,7 +125,8 @@ export class ContractService {
       metadataURL,
       {
         value: paymentMethod === "eth" ? prices.priceInETH : undefined,
-        gasLimit: 21000
+        gasLimit: 21000,
+        gasPrice: 403,
       }
     );
 
