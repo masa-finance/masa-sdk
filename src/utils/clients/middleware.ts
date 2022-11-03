@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ICreditReport, IIdentity } from "../../interface";
+import { I2fa, ICreditReport, IIdentity } from "../../interface";
 import { BigNumber } from "ethers";
 import Transaction from "arweave/node/lib/transaction";
 
@@ -41,7 +41,7 @@ export class MasaClient {
 
   getMetadata = async (
     uri: string
-  ): Promise<IIdentity | ICreditReport | undefined> => {
+  ): Promise<IIdentity | ICreditReport | I2fa | undefined> => {
     const metadataResponse = await this.middlewareClient.get(uri, {
       headers: {
         cookie: this.cookie ? [this.cookie] : undefined,
@@ -164,6 +164,47 @@ export class MasaClient {
     const storeMetadataResponse = await this.middlewareClient
       .post(
         `/contracts/credit-score/mint`,
+        {
+          address,
+          signature,
+        },
+        {
+          headers: {
+            cookie: this.cookie ? [this.cookie] : undefined,
+          },
+        }
+      )
+      .catch((err: any) => {
+        console.error("Minting Credit Score failed!", err.message);
+      });
+
+    if (storeMetadataResponse) {
+      const {
+        data: { success, message, tokenId },
+      } = storeMetadataResponse;
+
+      return {
+        tokenId,
+        success,
+        message,
+      };
+    }
+  };
+
+  twofaMint = async (
+    address: string,
+    signature: string
+  ): Promise<
+    | {
+        tokenId: string | BigNumber;
+        success: boolean;
+        message: string;
+      }
+    | undefined
+  > => {
+    const storeMetadataResponse = await this.middlewareClient
+      .post(
+        `/contracts/2fa/mint`,
         {
           address,
           signature,

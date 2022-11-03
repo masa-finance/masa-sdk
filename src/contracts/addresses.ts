@@ -10,6 +10,7 @@ export interface Addresses {
     SoulNameAddress: string;
     SoulStoreAddress: string;
     SoulLinkerAddress: string;
+    Soulbound2FAAddress: string
   };
 }
 
