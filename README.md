@@ -3,6 +3,14 @@
 **🌽🌽 THIS IS BETA SOFTWARE. IT COULD LEAD TO RAPID UNSCHEDULED DISASSEMBLY. If you run into problems, please open up a new issue. 🌽🌽**
 
 ---
+<!-- TOC -->
+
+* [Installation](#installation)
+    * [Usage](#usage)
+    * [Interface](#interface)
+    * [Configuration](#configuration)
+
+<!-- TOC -->
 
 ## Installation
 
@@ -47,7 +55,7 @@ export const masa = new Masa({ wallet });
 
 For a detailed interface description see [Masa](docs/classes/Masa.md)
 
-### Config
+### Configuration
 
 | Key              | Type                             | Description                                                                           | Default Value                             |
 |------------------|----------------------------------|---------------------------------------------------------------------------------------|-------------------------------------------|
