@@ -216,7 +216,7 @@ export class MasaClient {
         }
       )
       .catch((err: any) => {
-        console.error("Minting Credit Score failed!", err.message);
+        console.error("Minting 2fa failed!", err.message);
       });
 
     if (storeMetadataResponse) {
