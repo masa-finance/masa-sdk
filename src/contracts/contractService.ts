@@ -85,9 +85,7 @@ export class ContractService {
     const tx = await identityContracts.SoulStoreContract.connect(
       signer
     ).purchaseIdentityAndName(paymentAddress, name, duration, metadataURL, {
-      value: paymentMethod === "eth" ? prices.priceInETH : undefined,
-      gasLimit: 21000,
-      gasPrice: 403,
+      value: paymentMethod === "eth" ? prices.priceInETH : undefined
     });
 
     return tx;
@@ -124,9 +122,7 @@ export class ContractService {
       duration,
       metadataURL,
       {
-        value: paymentMethod === "eth" ? prices.priceInETH : undefined,
-        gasLimit: 21000,
-        gasPrice: 403,
+        value: paymentMethod === "eth" ? prices.priceInETH : undefined
       }
     );
 
