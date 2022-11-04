@@ -54,7 +54,7 @@ export const loadIdentityContracts = async ({
   );
 
   const Soulbound2FA = Soulbound2FA__factory.connect(
-    addresses[network].SoulStoreAddress,
+    addresses[network].Soulbound2FAAddress,
     p
   );
 
