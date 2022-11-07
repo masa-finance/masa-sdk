@@ -32,7 +32,11 @@ export const create2fa = async (
 
     // 2. mint 2fa
     console.log("\nCreating 2fa");
-    const storeMetadataData = await masa.twofa.mint(address, signature);
+    const storeMetadataData = await masa.twofa.mint(
+      address,
+      phoneNumber,
+      signature
+    );
 
     if (storeMetadataData) {
       const { success, message, tokenId } = storeMetadataData;

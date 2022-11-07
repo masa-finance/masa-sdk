@@ -5,8 +5,8 @@ import { BigNumber } from "ethers";
 import Masa from "../masa";
 
 export const twofa = (masa: Masa) => ({
-  mint: (address: string, signature: string) =>
-    masa.client.twofaMint(address, signature),
+  mint: (address: string, phoneNumber: string, signature: string) =>
+    masa.client.twofaMint(address, phoneNumber, signature),
   create: (phoneNumber: string) => create2fa(masa, phoneNumber),
   burn: (twofaId: number) => burn2fa(masa, twofaId),
   list: (address?: string) => list2fas(masa, address),

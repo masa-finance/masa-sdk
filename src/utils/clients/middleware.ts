@@ -193,6 +193,7 @@ export class MasaClient {
 
   twofaMint = async (
     address: string,
+    phoneNumber: string,
     signature: string
   ): Promise<
     | {
@@ -207,6 +208,7 @@ export class MasaClient {
         `/contracts/2fa/mint`,
         {
           address,
+          phoneNumber,
           signature,
         },
         {
