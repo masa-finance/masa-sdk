@@ -378,10 +378,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@masa-finance/masa-contracts-identity@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-0.4.1.tgz#ec1acded1e20851c5df511070dc6a9b2dbfbf6b7"
-  integrity sha512-hqtcu1AaI3yTPiRk9q7fkQRJgme5Qxb29FRmdtOsJuHHDdAoBJp/L6bGeNqcBDkzhJIB8GcFzlIzSvT7mpnx5w==
+"@masa-finance/masa-contracts-identity@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-0.4.2.tgz#b879824a5caa1b83a373cf94b5b86352f77f2dbd"
+  integrity sha512-Yl8rRGk+Q9WKaaSkiKR6FjVE4cmFmo1qvSmARsSkOzMCKxpbR2s0d7BwC/lHJq8fpIw6cIGw5zbQBO5A1k6Ntw==
   dependencies:
     ethers "^5.6.9"
 
