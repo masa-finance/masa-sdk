@@ -9,5 +9,5 @@ export const session = (masa: Masa) => ({
   sessionLogout: () => masa.client.sessionLogout(),
   login: () => login(masa),
   logout: () => logout(masa),
-  getSession: () => getSession(masa)
+  getSession: () => getSession(masa),
 });

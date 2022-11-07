@@ -80,7 +80,7 @@ export const listSoulnames = async (masa: Masa, address?: string) => {
       );
     }
 
-    return soulNames
+    return soulNames;
   } else {
     console.log("Not logged in please login first");
 

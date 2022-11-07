@@ -1,4 +1,4 @@
 export * from "./addresses";
-export * from "./contractService";
-export * from "./loadIdentityContracts";
+export * from "./contract-service";
+export * from "./load-Identity-contracts";
 export * from "./contracts";

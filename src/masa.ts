@@ -1,9 +1,9 @@
 import { session } from "./session";
 import { contracts } from "./contracts";
 import { account, createRandomWallet } from "./account";
-import { creditScore } from "./creditScore";
+import { creditScore } from "./credit-score";
 import { identity } from "./identity";
-import { soulNames } from "./soulNames";
+import { soulNames } from "./soul-names";
 import { twofa } from "./2fa";
 
 import { MasaClient, arweave as arweaveInit } from "./utils";

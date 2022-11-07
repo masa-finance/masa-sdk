@@ -1,5 +1,5 @@
-import { ContractService } from "./contractService";
-import { loadIdentityContracts } from "./loadIdentityContracts";
+import { ContractService } from "./contract-service";
+import { loadIdentityContracts } from "./load-Identity-contracts";
 import { addresses } from "./addresses";
 import Masa from "../masa";
 

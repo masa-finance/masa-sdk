@@ -1,8 +1,12 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
 
+export const get2faTemplate = (phoneNumber: string) =>
+  `Phone Number: ${phoneNumber}`;
+
 export const create2fa = async (
-  masa: Masa
+  masa: Masa,
+  phoneNumber: string
 ): Promise<
   | {
       tokenId: string | BigNumber;
@@ -17,8 +21,7 @@ export const create2fa = async (
     const identityId = await masa.identity.load(address);
     if (!identityId) return;
 
-    // todo do something cooler here
-    const msg = `${address}`;
+    const msg = get2faTemplate(phoneNumber);
 
     console.log(`Signer Address: '${address}'`);
     console.log(`Signing: \n'${msg}'\n`);

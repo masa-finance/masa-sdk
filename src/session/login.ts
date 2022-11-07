@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { getLoginTemplate } from "./get-logintemplate";
+import { getLoginTemplate } from "./get-login-template";
 import { unpackSessionId } from "../helpers";
 import { BigNumber } from "ethers";
 
