@@ -2,22 +2,21 @@
   "name": "@masa-finance/masa-sdk",
   "version": "0.3.5",
   "description": "Brand new masa SDK",
-  "main": "dist/lib/masa-sdk.cjs.js",
-  "types": "dist/src/index.d.ts",
-  "module": "dist/lib/masa-sdk.esm.js",
+  "main": "./dist/src/index.js",
+  "typings": "./dist/src/index.d.ts",
+  "unpkg": "./dist/browser/masa-sdk.cjs2.min.js",
+  "module": "./dist/browser/masa-sdk.amd.min.js",
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc --watch",
-    "compile": "tsc",
-    "build": "yarn compile && yarn bundle",
-    "bundle": "yarn bundle:cjs && yarn bundle:cjs:minify && yarn bundle:esm && yarn bundle:esm:minify",
-    "bundle:cjs": "esbuild ./src/index.ts --bundle --platform=node --outfile=./dist/lib/masa-sdk.cjs.js",
-    "bundle:cjs:minify": "yarn bundle:cjs --minify --sourcemap --outfile=./dist/lib/masa-sdk.cjs.min.js",
-    "bundle:esm": "esbuild ./src/index.ts --bundle --platform=browser --outfile=./dist/lib/masa-sdk.esm.js",
-    "bundle:esm:minify": "yarn bundle:esm --minify --sourcemap --outfile=./dist/lib/masa-sdk.esm.min.js",
+    "start": "yarn build:watch",
+    "build": "yarn build:tsc && yarn build:dist",
+    "build:tsc": "tsc",
+    "build:metadata": "./scripts/get-metadata.js > src/metadata.json",
+    "build:dist": "cross-env NODE_ENV=production webpack",
+    "build:watch": "tsc -w",
     "prettier": "prettier ./src --write",
     "lint": "eslint ./src",
     "doc": "typedoc",
@@ -45,10 +44,12 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
-    "esbuild": "^0.15.13",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
+    "terser-webpack-plugin": "^5.3.6",
     "typedoc": "^0.23.18",
-    "typedoc-plugin-markdown": "^3.13.6"
+    "typedoc-plugin-markdown": "^3.13.6",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   }
 }
