@@ -51,39 +51,31 @@ export const loadSoulNamesByIdentityId = async (
   return soulNameDetails;
 };
 
-export const listSoulnames = async (masa: Masa, address?: string) => {
-  if (await masa.session.checkLogin()) {
-    address = address || (await masa.config.wallet.getAddress());
+export const listSoulNames = async (masa: Masa, address?: string) => {
+  address = address || (await masa.config.wallet.getAddress());
 
-    // load identity
-    const identityId = await masa.identity.load(address);
-    if (!identityId) return;
+  // load identity
+  const identityId = await masa.identity.load(address);
+  if (!identityId) return;
 
-    const soulNames = await loadSoulNamesByIdentityId(masa, identityId);
+  const soulNames = await loadSoulNamesByIdentityId(masa, identityId);
 
-    for (const soulName of soulNames) {
-      console.log(`\nToken: ${parseInt(soulName.index) + 1}`);
-      console.log(`Name: ${soulName.tokenDetails.sbtName}`);
-      console.log(`Token ID: ${soulName.tokenDetails.tokenId.toNumber()}`);
-      console.log(
-        `Identity ID: ${soulName.tokenDetails.identityId.toNumber()}`
-      );
-      console.log(`Active: ${soulName.tokenDetails.active}`);
-      console.log(`Metadata Uri: ${soulName.tokenUri}`);
-      if (soulName.metadata)
-        console.log(`Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`);
+  for (const soulName of soulNames) {
+    console.log(`\nToken: ${parseInt(soulName.index) + 1}`);
+    console.log(`Name: ${soulName.tokenDetails.sbtName}`);
+    console.log(`Token ID: ${soulName.tokenDetails.tokenId.toNumber()}`);
+    console.log(`Identity ID: ${soulName.tokenDetails.identityId.toNumber()}`);
+    console.log(`Active: ${soulName.tokenDetails.active}`);
+    console.log(`Metadata Uri: ${soulName.tokenUri}`);
+    if (soulName.metadata)
+      console.log(`Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`);
 
-      console.log(
-        `Expiry Date: ${new Date(
-          soulName.tokenDetails.expirationDate.toNumber() * 1000
-        ).toUTCString()}`
-      );
-    }
-
-    return soulNames
-  } else {
-    console.log("Not logged in please login first");
-
-    return [];
+    console.log(
+      `Expiry Date: ${new Date(
+        soulName.tokenDetails.expirationDate.toNumber() * 1000
+      ).toUTCString()}`
+    );
   }
+
+  return soulNames;
 };

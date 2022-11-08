@@ -1,3 +1,3 @@
-export * from "./createRandomWallet";
-export * from "./getBalances";
+export * from "./create-random-wallet";
+export * from "./get-balances";
 export * from "./account";

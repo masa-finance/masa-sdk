@@ -1,4 +1,4 @@
-import { getBalances } from "./getBalances";
+import { getBalances } from "./get-balances";
 import Masa from "../masa";
 
 export const account = (mass: Masa) => ({

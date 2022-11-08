@@ -1,5 +1,5 @@
 import axios from "axios";
-import { I2fa, ICreditReport, IIdentity } from "../../interface";
+import { I2FA, ICreditReport, IIdentity } from "../../interface";
 import { BigNumber } from "ethers";
 import Transaction from "arweave/node/lib/transaction";
 
@@ -41,7 +41,7 @@ export class MasaClient {
 
   getMetadata = async (
     uri: string
-  ): Promise<IIdentity | ICreditReport | I2fa | undefined> => {
+  ): Promise<IIdentity | ICreditReport | I2FA | undefined> => {
     const metadataResponse = await this.middlewareClient.get(uri, {
       headers: {
         cookie: this.cookie ? [this.cookie] : undefined,
@@ -191,22 +191,27 @@ export class MasaClient {
     }
   };
 
-  twofaMint = async (
+  twoFAMint = async (
     address: string,
+    phoneNumber: string,
+    code: string,
     signature: string
   ): Promise<
     | {
         tokenId: string | BigNumber;
         success: boolean;
+        status: string;
         message: string;
       }
     | undefined
   > => {
-    const storeMetadataResponse = await this.middlewareClient
+    const mint2FAResponse = await this.middlewareClient
       .post(
-        `/contracts/2fa/mint`,
+        `/2fa/mint`,
         {
           address,
+          phoneNumber,
+          code,
           signature,
         },
         {
@@ -216,17 +221,57 @@ export class MasaClient {
         }
       )
       .catch((err: any) => {
-        console.error("Minting 2fa failed!", err.message);
+        console.error("Minting 2FA failed!", err.message);
+      });
+
+    if (mint2FAResponse) {
+      const {
+        data: { success, message, tokenId, status },
+      } = mint2FAResponse;
+
+      return {
+        tokenId,
+        status,
+        success,
+        message,
+      };
+    }
+  };
+
+  twoFAGenerate = async (
+    phoneNumber: string
+  ): Promise<
+    | {
+        success: boolean;
+        status: string;
+        message: string;
+      }
+    | undefined
+  > => {
+    const storeMetadataResponse = await this.middlewareClient
+      .post(
+        `/2fa/generate`,
+        {
+          phoneNumber,
+        },
+        {
+          headers: {
+            cookie: this.cookie ? [this.cookie] : undefined,
+          },
+        }
+      )
+      .catch((err: any) => {
+        console.error("Generating 2FA failed!", err.message);
       });
 
     if (storeMetadataResponse) {
       const {
-        data: { success, message, tokenId },
+        data: { success, message, status },
       } = storeMetadataResponse;
 
       return {
-        tokenId,
         success,
+        status,
         message,
       };
     }

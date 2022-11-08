@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.2.3](../README.md) / [Exports](../modules.md) / MasaClient
+ - v0.3.5](../README.md) / [Exports](../modules.md) / MasaClient
 
 # Class: MasaClient
 
@@ -23,7 +23,8 @@
 - [sessionCheck](MasaClient.md#sessioncheck)
 - [sessionLogout](MasaClient.md#sessionlogout)
 - [storeMetadata](MasaClient.md#storemetadata)
-- [twofaMint](MasaClient.md#twofamint)
+- [twoFAGenerate](MasaClient.md#twofagenerate)
+- [twoFAMint](MasaClient.md#twofamint)
 
 ## Constructors
 
@@ -100,7 +101,7 @@ ___
 
 ### getMetadata
 
-▸ **getMetadata**(`uri`): `Promise`<`undefined` \| [`ICreditReport`](../interfaces/ICreditReport.md) \| [`IIdentity`](../interfaces/IIdentity.md) \| [`I2fa`](../interfaces/I2fa.md)\>
+▸ **getMetadata**(`uri`): `Promise`<`undefined` \| [`ICreditReport`](../interfaces/ICreditReport.md) \| [`IIdentity`](../interfaces/IIdentity.md) \| [`I2FA`](../interfaces/I2FA.md)\>
 
 #### Parameters
 
@@ -110,7 +111,7 @@ ___
 
 #### Returns
 
-`Promise`<`undefined` \| [`ICreditReport`](../interfaces/ICreditReport.md) \| [`IIdentity`](../interfaces/IIdentity.md) \| [`I2fa`](../interfaces/I2fa.md)\>
+`Promise`<`undefined` \| [`ICreditReport`](../interfaces/ICreditReport.md) \| [`IIdentity`](../interfaces/IIdentity.md) \| [`I2FA`](../interfaces/I2FA.md)\>
 
 ___
 
@@ -150,17 +151,35 @@ ___
 
 ___
 
-### twofaMint
+### twoFAGenerate
 
-▸ **twofaMint**(`address`, `signature`): `Promise`<`undefined` \| { `message`: `string` ; `success`: `boolean` ; `tokenId`: `string` \| `BigNumber`  }\>
+▸ **twoFAGenerate**(`phoneNumber`): `Promise`<`undefined` \| { `message`: `string` ; `status`: `string` ; `success`: `boolean`  }\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `phoneNumber` | `string` |
+
+#### Returns
+
+`Promise`<`undefined` \| { `message`: `string` ; `status`: `string` ; `success`: `boolean`  }\>
+
+___
+
+### twoFAMint
+
+▸ **twoFAMint**(`address`, `phoneNumber`, `code`, `signature`): `Promise`<`undefined` \| { `message`: `string` ; `status`: `string` ; `success`: `boolean` ; `tokenId`: `string` \| `BigNumber`  }\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `address` | `string` |
+| `phoneNumber` | `string` |
+| `code` | `string` |
 | `signature` | `string` |
 
 #### Returns
 
-`Promise`<`undefined` \| { `message`: `string` ; `success`: `boolean` ; `tokenId`: `string` \| `BigNumber`  }\>
+`Promise`<`undefined` \| { `message`: `string` ; `status`: `string` ; `success`: `boolean` ; `tokenId`: `string` \| `BigNumber`  }\>
