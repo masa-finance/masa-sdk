@@ -11,6 +11,7 @@ export const create2fa = async (
 ): Promise<
   | {
       tokenId: string | BigNumber;
+      status: string;
       success: boolean;
       message: string;
     }
@@ -41,12 +42,13 @@ export const create2fa = async (
     );
 
     if (mint2FAData) {
-      const { success, message, tokenId } = mint2FAData;
+      const { success, status, message, tokenId } = mint2FAData;
 
       if (success) {
         console.log(`2FA Created: '${tokenId}'`);
         return {
           tokenId,
+          status,
           success,
           message,
         };

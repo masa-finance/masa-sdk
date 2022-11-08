@@ -200,11 +200,12 @@ export class MasaClient {
     | {
         tokenId: string | BigNumber;
         success: boolean;
+        status: string;
         message: string;
       }
     | undefined
   > => {
-    const storeMetadataResponse = await this.middlewareClient
+    const mint2FAResponse = await this.middlewareClient
       .post(
         `/2fa/mint`,
         {
@@ -223,13 +224,14 @@ export class MasaClient {
         console.error("Minting 2FA failed!", err.message);
       });
 
-    if (storeMetadataResponse) {
+    if (mint2FAResponse) {
       const {
-        data: { success, message, tokenId },
-      } = storeMetadataResponse;
+        data: { success, message, tokenId, status },
+      } = mint2FAResponse;
 
       return {
         tokenId,
+        status,
         success,
         message,
       };
