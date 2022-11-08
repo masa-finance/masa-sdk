@@ -44,7 +44,7 @@ export const create2fa = async (
       const { success, message, tokenId } = mint2FAData;
 
       if (success) {
-        console.log("2FA Created", tokenId);
+        console.log(`2FA Created: '${tokenId}'`);
         return {
           tokenId,
           success,
