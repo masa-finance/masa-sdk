@@ -44,6 +44,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.25.0",
     "prettier": "^2.7.1",
     "terser-webpack-plugin": "^5.3.6",
