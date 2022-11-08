@@ -52,24 +52,18 @@ export const listCreditReports = async (
     }[]
   | undefined
 > => {
-  if (await masa.session.checkLogin()) {
-    address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.wallet.getAddress());
 
-    const identityId = await masa.identity.load(address);
-    if (!identityId) return;
+  const identityId = await masa.identity.load(address);
+  if (!identityId) return;
 
-    const creditReports = await loadCreditScoresByIdentityId(masa, identityId);
+  const creditReports = await loadCreditScoresByIdentityId(masa, identityId);
 
-    if (creditReports.length === 0) console.log("No Credit Reports found");
+  if (creditReports.length === 0) console.log("No Credit Reports found");
 
-    for (const creditReport of creditReports) {
-      console.log(
-        `Metadata: ${JSON.stringify(creditReport.metadata, null, 2)}`
-      );
-    }
-
-    return creditReports;
-  } else {
-    console.log("Not logged in please login first");
+  for (const creditReport of creditReports) {
+    console.log(`Metadata: ${JSON.stringify(creditReport.metadata, null, 2)}`);
   }
+
+  return creditReports;
 };

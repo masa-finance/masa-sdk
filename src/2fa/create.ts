@@ -1,12 +1,13 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
 
-export const get2faTemplate = (phoneNumber: string) =>
-  `Phone Number: ${phoneNumber}`;
+export const get2faTemplate = (phoneNumber: string, code: string) =>
+  `Phone Number: ${phoneNumber} Code: ${code}`;
 
 export const create2fa = async (
   masa: Masa,
-  phoneNumber: string
+  phoneNumber: string,
+  code: string
 ): Promise<
   | {
       tokenId: string | BigNumber;
@@ -21,7 +22,7 @@ export const create2fa = async (
     const identityId = await masa.identity.load(address);
     if (!identityId) return;
 
-    const msg = get2faTemplate(phoneNumber);
+    const msg = get2faTemplate(phoneNumber, code);
 
     console.log(`Signer Address: '${address}'`);
     console.log(`Signing: \n'${msg}'\n`);
@@ -30,25 +31,27 @@ export const create2fa = async (
     const signature = await masa.config.wallet.signMessage(msg);
     console.log(`Signature: '${signature}'`);
 
-    // 2. mint 2fa
-    console.log("\nCreating 2fa");
-    const storeMetadataData = await masa.twofa.mint(
+    // 2. mint 2FA
+    console.log("\nCreating 2FA");
+    const mint2FAData = await masa.twofa.mint(
       address,
       phoneNumber,
+      code,
       signature
     );
 
-    if (storeMetadataData) {
-      const { success, message, tokenId } = storeMetadataData;
+    if (mint2FAData) {
+      const { success, message, tokenId } = mint2FAData;
 
-      if (!success) {
-        console.error(`Creating 2fa failed! '${message}'`);
-      } else {
+      if (success) {
+        console.log("2FA Created", tokenId);
         return {
           tokenId,
           success,
           message,
         };
+      } else {
+        console.error(`Creating 2FA failed! '${message}'`);
       }
     }
   } else {

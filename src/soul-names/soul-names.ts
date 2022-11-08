@@ -3,7 +3,7 @@ import { PaymentMethod } from "../contracts";
 import Masa from "../masa";
 import { burnSoulName } from "./burn";
 import { createSoulName, getRegistrationPrice } from "./create";
-import { listSoulnames, loadSoulNamesByIdentityId } from "./list";
+import { listSoulNames, loadSoulNamesByIdentityId } from "./list";
 
 export const soulNames = (masa: Masa) => ({
   getRegistrationPrice: (
@@ -11,7 +11,7 @@ export const soulNames = (masa: Masa) => ({
     duration: number,
     paymentMethod: PaymentMethod
   ) => getRegistrationPrice(masa, soulName, duration, paymentMethod),
-  list: (address?: string) => listSoulnames(masa, address),
+  list: (address?: string) => listSoulNames(masa, address),
   loadSoulNamesByIdentityId: (identityId: BigNumber) =>
     loadSoulNamesByIdentityId(masa, identityId),
   create: (soulName: string, duration: number, paymentMethod: PaymentMethod) =>
