@@ -8,12 +8,13 @@
   "files": [
     "dist"
   ],
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc --watch",
     "compile": "tsc",
     "build": "yarn compile && yarn bundle && yarn bundle:minify",
-    "bundle": "esbuild ./src/index.ts --bundle --outfile=./dist/lib/masa-sdk.esm.js",
+    "bundle": "esbuild ./src/index.ts --bundle --platform=browser --outfile=./dist/lib/masa-sdk.esm.js",
     "bundle:minify": "yarn bundle --minify --sourcemap --outfile=./dist/lib/masa-sdk.esm.min.js",
     "prettier": "prettier ./src --write",
     "lint": "eslint ./src",
