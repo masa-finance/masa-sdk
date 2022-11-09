@@ -105,10 +105,9 @@ export class MasaClient {
       });
 
     if (getChallengeResponse) {
-      const cookies = getChallengeResponse.headers["set-cookie"];
+      const cookie = getChallengeResponse.headers["set-cookie"];
 
-      let cookie;
-      if (cookies) cookie = cookies[0];
+      if (!cookie) console.warn("No cookie in response!");
 
       const { data: challengeData } = getChallengeResponse;
 
