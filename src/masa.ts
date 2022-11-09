@@ -14,19 +14,23 @@ export default class Masa {
   public readonly client: MasaClient;
   public readonly arweaveClient;
 
-  constructor({
-    cookie,
-    wallet = createRandomWallet(),
-    apiUrl = "https://dev.middleware.masa.finance",
-    environment = "dev",
-    network = "goerli",
-    arweave = {
-      host: "arweave.net",
-      port: 443,
-      protocol: "https",
-      logging: false,
-    },
-  }: MasaArgs) {
+  constructor(
+    {
+      cookie,
+      wallet,
+      apiUrl = "https://dev.middleware.masa.finance",
+      environment = "dev",
+      network = "goerli",
+      arweave = {
+        host: "arweave.net",
+        port: 443,
+        protocol: "https",
+        logging: false,
+      },
+    }: MasaArgs = {
+      wallet: createRandomWallet(),
+    }
+  ) {
     this.client = new MasaClient({
       apiUrl,
       cookie,
