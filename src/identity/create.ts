@@ -1,6 +1,20 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 
+export const purchaseIdentity = async (masa: Masa) => {
+  const identityContracts = await masa.contracts.loadIdentityContracts();
+
+  const tx = await masa.contracts.service.purchaseIdentity(
+    identityContracts,
+    masa.config.wallet
+  );
+
+  console.log("Waiting for transaction to finalize");
+  const result = await tx.wait();
+
+  console.log(result);
+};
+
 export const purchaseIdentityWithSoulname = async (
   masa: Masa,
   soulName: string,
@@ -36,7 +50,24 @@ export const purchaseIdentityWithSoulname = async (
   }
 };
 
-export const createIdentity = async (
+export const createIdentity = async (masa: Masa): Promise<boolean> => {
+  let identityCreated = false;
+
+  const address = await masa.config.wallet.getAddress();
+  const identityId = await masa.identity.load(address);
+
+  if (identityId) {
+    console.error(`Identity already created! '${identityId}'`);
+    return identityCreated;
+  }
+
+  await purchaseIdentity(masa);
+
+  identityCreated = true;
+  return identityCreated;
+};
+
+export const createIdentityWithSoulName = async (
   masa: Masa,
   soulName: string,
   duration: number,
@@ -53,7 +84,7 @@ export const createIdentity = async (
     const identityId = await masa.identity.load(address);
 
     if (identityId) {
-      console.error("Identity already created!");
+      console.error(`Identity already created! '${identityId}'`);
       return identityCreated;
     }
 
