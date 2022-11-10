@@ -276,47 +276,6 @@ export class MasaClient {
     }
   };
 
-  twoFAVerify = async (
-    phoneNumber: string,
-    code: string
-  ): Promise<
-    | {
-        success: boolean;
-        status: string;
-        message: string;
-      }
-    | undefined
-  > => {
-    const storeMetadataResponse = await this.middlewareClient
-      .post(
-        `/2fa/verify`,
-        {
-          phoneNumber,
-          code,
-        },
-        {
-          headers: {
-            cookie: this.cookie ? [this.cookie] : undefined,
-          },
-        }
-      )
-      .catch((err: any) => {
-        console.error("Verifying 2FA failed!", err.message);
-      });
-
-    if (storeMetadataResponse) {
-      const {
-        data: { success, message, status },
-      } = storeMetadataResponse;
-
-      return {
-        success,
-        status,
-        message,
-      };
-    }
-  };
-
   sessionLogout = async (): Promise<
     | {
         status: string;
