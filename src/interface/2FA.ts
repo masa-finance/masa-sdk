@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export interface I2FA {
   name: "Masa Soulbound 2FA v1.0.0";
   description: "A decentralized 2FA";
@@ -6,4 +8,11 @@ export interface I2FA {
     tokenId: string;
     account?: string;
   };
+}
+
+export interface Create2FAResult {
+  success: boolean;
+  status?: string;
+  tokenId?: string | BigNumber;
+  message?: string;
 }

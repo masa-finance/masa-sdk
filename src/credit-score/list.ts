@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
-import { ICreditReport } from "../interface";
+import { ICreditScore } from "../interface";
 import { patchMetadataUrl } from "../helpers";
 
 export const loadCreditScoresByIdentityId = async (
@@ -10,7 +10,7 @@ export const loadCreditScoresByIdentityId = async (
   {
     tokenId: BigNumber;
     tokenUri: string;
-    metadata: ICreditReport;
+    metadata: ICreditScore;
   }[]
 > => {
   const creditReports = [];
@@ -29,7 +29,7 @@ export const loadCreditScoresByIdentityId = async (
     );
 
     console.log(`Metadata Url: ${tokenUri}`);
-    const metadata = (await masa.metadata.retrieve(tokenUri)) as ICreditReport;
+    const metadata = (await masa.metadata.retrieve(tokenUri)) as ICreditScore;
 
     creditReports.push({
       tokenId,
@@ -48,7 +48,7 @@ export const listCreditReports = async (
   | {
       tokenId: BigNumber;
       tokenUri: string;
-      metadata: ICreditReport;
+      metadata: ICreditScore;
     }[]
   | undefined
 > => {
@@ -59,7 +59,7 @@ export const listCreditReports = async (
 
   const creditReports = await loadCreditScoresByIdentityId(masa, identityId);
 
-  if (creditReports.length === 0) console.log("No Credit Reports found");
+  if (creditReports.length === 0) console.log("No Credit Scores found");
 
   for (const creditReport of creditReports) {
     console.log(`Metadata: ${JSON.stringify(creditReport.metadata, null, 2)}`);

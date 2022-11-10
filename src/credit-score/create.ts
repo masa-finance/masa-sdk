@@ -1,5 +1,6 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
+import { Templates } from "../utils";
 
 export const createCreditScore = async (
   masa: Masa
@@ -17,8 +18,7 @@ export const createCreditScore = async (
     const identityId = await masa.identity.load(address);
     if (!identityId) return;
 
-    // todo do something cooler here
-    const msg = `${address}`;
+    const msg = Templates.creditScoreTemplate(identityId.toString(), address);
 
     console.log(`Signer Address: '${address}'`);
     console.log(`Signing: \n'${msg}'\n`);
@@ -27,15 +27,15 @@ export const createCreditScore = async (
     const signature = await masa.config.wallet.signMessage(msg);
     console.log(`Signature: '${signature}'`);
 
-    // 2. mint credit report
-    console.log("\nCreating Credit Report");
+    // 2. mint credit score
+    console.log("\nCreating Credit Score");
     const storeMetadataData = await masa.creditScore.mint(address, signature);
 
     if (storeMetadataData) {
       const { success, message, tokenId } = storeMetadataData;
 
       if (!success) {
-        console.error(`Creating Credit Report failed! '${message}'`);
+        console.error(`Creating Credit Score failed! '${message}'`);
       } else {
         return {
           tokenId,

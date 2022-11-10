@@ -1,6 +1,6 @@
-export interface ICreditReport {
-  name: "Masa Soulbound Credit Report v1.0.0";
-  description: "A decentralized credit report";
+export interface ICreditScore {
+  name: "Masa Soulbound Credit Score v1.0.0";
+  description: "A decentralized credit score";
   image: "https://metadata.masa.finance/v1.0/identity/credit-report.png";
   properties: {
     tokenId: string;

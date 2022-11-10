@@ -1,17 +1,8 @@
 import Masa from "../masa";
-import { BigNumber } from "ethers";
+import { Templates } from "../utils";
+import { Create2FAResult } from "../interface";
 
-export const get2faTemplate = (phoneNumber: string, code: string) =>
-  `Phone Number: ${phoneNumber} Code: ${code}`;
-
-export interface Create2FAResult {
-  success: boolean;
-  status?: string;
-  tokenId?: string | BigNumber;
-  message?: string;
-}
-
-export const create2fa = async (
+export const create2FA = async (
   masa: Masa,
   phoneNumber: string,
   code: string
@@ -30,7 +21,11 @@ export const create2fa = async (
     }
 
     // generate message to sign
-    const msg = get2faTemplate(phoneNumber, code);
+    const msg = Templates.twoFATemplate(
+      identityId.toString(),
+      phoneNumber,
+      code
+    );
 
     console.log(`Signer Address: '${address}'`);
     console.log(`Signing: \n'${msg}'\n`);
@@ -41,7 +36,7 @@ export const create2fa = async (
 
     // 2. mint 2FA
     console.log("\nCreating 2FA");
-    const mint2FAData = await masa.twofa.mint(
+    const mint2FAData = await masa.twoFA.mint(
       address,
       phoneNumber,
       code,

@@ -3,8 +3,8 @@ import { contracts } from "./contracts";
 import { account, createRandomWallet } from "./account";
 import { creditScore } from "./credit-score";
 import { identity } from "./identity";
-import { soulNames } from "./soul-names";
-import { twofa } from "./2fa";
+import { soulNames } from "./soul-name";
+import { twoFA } from "./2fa";
 
 import { MasaClient, arweave as arweaveInit } from "./utils";
 import { version } from "./helpers";
@@ -54,7 +54,7 @@ export default class Masa {
   creditScore = creditScore(this);
   account = account(this);
   contracts = contracts(this);
-  twofa = twofa(this);
+  twoFA = twoFA(this);
   metadata = {
     store: (soulName: string) => this.client.storeMetadata(soulName),
     retrieve: (url: string) => this.client.getMetadata(url),

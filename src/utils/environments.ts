@@ -2,7 +2,7 @@ import { MasaArgs } from "../interface";
 import { ethers } from "ethers";
 
 // special type for env config that makes wallet optional
-type Environment = {
+export type Environment = {
   name: string;
   wallet?: ethers.Signer | ethers.Wallet;
 } & MasaArgs;

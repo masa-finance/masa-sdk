@@ -38,7 +38,7 @@ export const load2fasByIdentityId = async (
   return twoFAs;
 };
 
-export const list2fas = async (
+export const list2FAs = async (
   masa: Masa,
   address?: string
 ): Promise<

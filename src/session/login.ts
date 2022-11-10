@@ -1,7 +1,7 @@
 import Masa from "../masa";
-import { getLoginTemplate } from "./get-login-template";
 import { unpackSessionId } from "../helpers";
 import { BigNumber } from "ethers";
+import { Templates } from "../utils";
 
 export const login = async (
   masa: Masa
@@ -23,7 +23,7 @@ export const login = async (
 
     if (challengeData) {
       // sign
-      const msg = getLoginTemplate(
+      const msg = Templates.loginTemplate(
         challengeData.challenge,
         challengeData.expires
       );

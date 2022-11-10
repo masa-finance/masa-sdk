@@ -1,5 +1,5 @@
 import axios from "axios";
-import { I2FA, ICreditReport, IIdentity } from "../../interface";
+import { I2FA, ICreditScore, IIdentity } from "../../interface";
 import { BigNumber } from "ethers";
 import Transaction from "arweave/node/lib/transaction";
 
@@ -41,7 +41,7 @@ export class MasaClient {
 
   getMetadata = async (
     uri: string
-  ): Promise<IIdentity | ICreditReport | I2FA | undefined> => {
+  ): Promise<IIdentity | ICreditScore | I2FA | undefined> => {
     const metadataResponse = await this.middlewareClient.get(uri, {
       headers: {
         cookie: this.cookie ? [this.cookie] : undefined,
