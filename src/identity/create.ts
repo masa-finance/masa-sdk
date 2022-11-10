@@ -15,7 +15,7 @@ export const purchaseIdentity = async (masa: Masa) => {
   console.log(result);
 };
 
-export const purchaseIdentityWithSoulname = async (
+export const purchaseIdentityWithSoulName = async (
   masa: Masa,
   soulName: string,
   duration: number,
@@ -88,7 +88,7 @@ export const createIdentityWithSoulName = async (
       return identityCreated;
     }
 
-    await purchaseIdentityWithSoulname(masa, soulName, duration, paymentMethod);
+    await purchaseIdentityWithSoulName(masa, soulName, duration, paymentMethod);
 
     identityCreated = true;
   } else {
