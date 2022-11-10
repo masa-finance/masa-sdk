@@ -12,6 +12,8 @@ export const twofa = (masa: Masa) => ({
     signature: string
   ) => masa.client.twoFAMint(address, phoneNumber, code, signature),
   generate: (phoneNumber: string) => masa.client.twoFAGenerate(phoneNumber),
+  verify: (phoneNumber: string, code: string) =>
+    masa.client.twoFAVerify(phoneNumber, code),
   create: (phoneNumber: string, code: string) =>
     create2fa(masa, phoneNumber, code),
   burn: (twofaId: number) => burn2fa(masa, twofaId),
