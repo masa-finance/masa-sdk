@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export interface ICreditScore {
   name: "Masa Soulbound Credit Score v1.0.0";
   description: "A decentralized credit score";
@@ -11,4 +13,10 @@ export interface ICreditScore {
     decile?: string;
     value_rating?: string;
   };
+}
+
+export interface CreateCreditScoreResult {
+  tokenId?: string | BigNumber;
+  success: boolean;
+  message: string;
 }

@@ -1,22 +1,23 @@
 import Masa from "../masa";
-import { BigNumber } from "ethers";
 import { Templates } from "../utils";
+import { CreateCreditScoreResult } from "../interface";
 
 export const createCreditScore = async (
   masa: Masa
-): Promise<
-  | {
-      tokenId: string | BigNumber;
-      success: boolean;
-      message: string;
-    }
-  | undefined
-> => {
+): Promise<CreateCreditScoreResult> => {
+  const result: CreateCreditScoreResult = {
+    success: false,
+    message: "Unknown Error",
+  };
+
   if (await masa.session.checkLogin()) {
     const address = await masa.config.wallet.getAddress();
 
     const identityId = await masa.identity.load(address);
-    if (!identityId) return;
+    if (!identityId) {
+      result.message = "No Identity";
+      return result;
+    }
 
     const msg = Templates.creditScoreTemplate(identityId.toString(), address);
 
@@ -29,22 +30,23 @@ export const createCreditScore = async (
 
     // 2. mint credit score
     console.log("\nCreating Credit Score");
-    const storeMetadataData = await masa.creditScore.mint(address, signature);
+    const creditScoreMintData = await masa.creditScore.mint(address, signature);
 
-    if (storeMetadataData) {
-      const { success, message, tokenId } = storeMetadataData;
+    if (creditScoreMintData) {
+      const { success, message, tokenId } = creditScoreMintData;
 
-      if (!success) {
-        console.error(`Creating Credit Score failed! '${message}'`);
+      result.success = success;
+      result.message = message;
+
+      if (success) {
+        result.tokenId = tokenId;
       } else {
-        return {
-          tokenId,
-          success,
-          message,
-        };
+        console.error(`Creating Credit Score failed! '${message}'`);
       }
     }
   } else {
     console.log("Not logged in please login first");
   }
+
+  return result;
 };
