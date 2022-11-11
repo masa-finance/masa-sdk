@@ -4,6 +4,7 @@ import Masa from "../masa";
 import { burnSoulName } from "./burn";
 import { createSoulName, getRegistrationPrice } from "./create";
 import { listSoulNames, loadSoulNamesByIdentityId } from "./list";
+import { sendSoulName } from "./send"
 
 export const soulNames = (masa: Masa) => ({
   getRegistrationPrice: (
@@ -17,4 +18,6 @@ export const soulNames = (masa: Masa) => ({
   create: (soulName: string, duration: number, paymentMethod: PaymentMethod) =>
     createSoulName(masa, soulName, duration, paymentMethod),
   burn: (soulName: string) => burnSoulName(masa, soulName),
+  send: (soulName: string, receiver: string) =>
+    sendSoulName(masa, soulName, receiver),
 });
