@@ -53,18 +53,42 @@ export const loadSoulNamesByIdentityId = async (
 
   return await Promise.all(
     soulNames.map(async (soulName, index) => {
-      const { tokenUri, tokenDetails, metadata } = await loadSoulNameByName(
-        masa,
-        soulName
-      );
+      const details = await loadSoulNameByName(masa, soulName);
 
       return {
         index,
-        tokenUri,
-        tokenDetails,
-        metadata,
+        ...details,
       };
     })
+  );
+};
+
+export const printSoulName = (soulName: any) => {
+  console.log("\n");
+
+  if (soulName.index) {
+    console.log(`Token: ${soulName.index + 1}`);
+  }
+
+  console.log(`Name: ${soulName.tokenDetails.sbtName}`);
+  console.log(`Token ID: ${soulName.tokenDetails.tokenId.toNumber()}`);
+  console.log(`Owner Address: ${soulName.owner}`);
+  console.log(
+    `Owner Identity ID: ${soulName.tokenDetails.identityId.toNumber()}`
+  );
+  console.log(`Active: ${soulName.tokenDetails.active}`);
+  console.log(`Metadata URL: ${soulName.tokenUri}`);
+
+  if (soulName.metadata) {
+    console.log(
+      `Loaded Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`
+    );
+  }
+
+  console.log(
+    `Expiry Date: ${new Date(
+      soulName.tokenDetails.expirationDate.toNumber() * 1000
+    ).toUTCString()}`
   );
 };
 
@@ -78,20 +102,7 @@ export const listSoulNames = async (masa: Masa, address?: string) => {
   const soulNames = await loadSoulNamesByIdentityId(masa, identityId);
 
   for (const soulName of soulNames) {
-    console.log(`\nToken: ${soulName.index + 1}`);
-    console.log(`Name: ${soulName.tokenDetails.sbtName}`);
-    console.log(`Token ID: ${soulName.tokenDetails.tokenId.toNumber()}`);
-    console.log(`Identity ID: ${soulName.tokenDetails.identityId.toNumber()}`);
-    console.log(`Active: ${soulName.tokenDetails.active}`);
-    console.log(`Metadata Uri: ${soulName.tokenUri}`);
-    if (soulName.metadata)
-      console.log(`Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`);
-
-    console.log(
-      `Expiry Date: ${new Date(
-        soulName.tokenDetails.expirationDate.toNumber() * 1000
-      ).toUTCString()}`
-    );
+    printSoulName(soulName);
   }
 
   return soulNames;
