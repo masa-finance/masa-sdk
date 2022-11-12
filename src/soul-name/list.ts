@@ -63,6 +63,26 @@ export const loadSoulNamesByIdentityId = async (
   );
 };
 
+export const loadSoulNamesByAddress = async (masa: Masa, address: string) => {
+  const identityContracts = await masa.contracts.loadIdentityContracts();
+
+  console.log(address);
+  const soulNames = await identityContracts.SoulNameContract[
+    "getSoulNames(address)"
+  ](address);
+
+  return await Promise.all(
+    soulNames.map(async (soulName, index) => {
+      const details = await loadSoulNameByName(masa, soulName);
+
+      return {
+        index,
+        ...details,
+      };
+    })
+  );
+};
+
 export const printSoulName = (soulName: any) => {
   console.log("\n");
 
@@ -95,11 +115,7 @@ export const printSoulName = (soulName: any) => {
 export const listSoulNames = async (masa: Masa, address?: string) => {
   address = address || (await masa.config.wallet.getAddress());
 
-  // load identity
-  const identityId = await masa.identity.load(address);
-  if (!identityId) return;
-
-  const soulNames = await loadSoulNamesByIdentityId(masa, identityId);
+  const soulNames = await loadSoulNamesByAddress(masa, address);
 
   for (const soulName of soulNames) {
     printSoulName(soulName);
