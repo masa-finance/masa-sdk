@@ -5,7 +5,6 @@ import Masa from "../masa";
 export const getBalances = async (masa: Masa, address: string) => {
   if (!masa.config.wallet.provider) return;
 
-  const identityContracts = await masa.contracts.loadIdentityContracts();
   const contractAddresses = addresses[masa.config.network];
   const signerAddress = masa.config.wallet.getAddress();
 
@@ -32,10 +31,12 @@ export const getBalances = async (masa: Masa, address: string) => {
       contractAddresses.WETH,
       masa.config.wallet.provider
     ).balanceOf(address),
-    identityContracts.SoulboundIdentityContract.balanceOf(signerAddress),
-    identityContracts.SoulNameContract.balanceOf(signerAddress),
-    identityContracts.SoulboundCreditReportContract.balanceOf(signerAddress),
-    identityContracts.Soulbound2FA.balanceOf(signerAddress),
+    masa.contracts.identity.SoulboundIdentityContract.balanceOf(signerAddress),
+    masa.contracts.identity.SoulNameContract.balanceOf(signerAddress),
+    masa.contracts.identity.SoulboundCreditReportContract.balanceOf(
+      signerAddress
+    ),
+    masa.contracts.identity.Soulbound2FA.balanceOf(signerAddress),
   ]);
 
   const balances = {

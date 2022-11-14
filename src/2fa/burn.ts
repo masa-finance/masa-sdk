@@ -4,10 +4,8 @@ export const burn2faById = async (
   masa: Masa,
   twofaId: number
 ): Promise<boolean> => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
   try {
-    const tx = await identityContracts.Soulbound2FA.connect(
+    const tx = await masa.contracts.identity.Soulbound2FA.connect(
       masa.config.wallet
     ).burn(twofaId);
 

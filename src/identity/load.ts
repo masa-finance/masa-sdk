@@ -10,10 +10,10 @@ export const loadIdentityByAddress = async (
   let identityId;
 
   try {
-    const identityContracts = await masa.contracts.loadIdentityContracts();
-    identityId = await identityContracts.SoulboundIdentityContract.tokenOfOwner(
-      address
-    );
+    identityId =
+      await masa.contracts.identity.SoulboundIdentityContract.tokenOfOwner(
+        address
+      );
   } catch {
     // ignore
   }
@@ -31,8 +31,7 @@ export const loadAddressByIdentity = async (
 ): Promise<string | undefined> => {
   let address;
   try {
-    const identityContracts = await masa.contracts.loadIdentityContracts();
-    address = await identityContracts.SoulboundIdentityContract[
+    address = await masa.contracts.identity.SoulboundIdentityContract[
       "ownerOf(uint256)"
     ](identityId);
   } catch {

@@ -7,11 +7,9 @@ export const burnIdentityById = async (
 ): Promise<boolean> => {
   let success = false;
 
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
   console.log("Burning Identity");
   try {
-    const tx = await identityContracts.SoulboundIdentityContract.connect(
+    const tx = await masa.contracts.identity.SoulboundIdentityContract.connect(
       masa.config.wallet
     ).burn(identityId);
 

@@ -4,12 +4,11 @@ export const burnCreditScoreById = async (
   masa: Masa,
   creditScoreId: number
 ): Promise<boolean> => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
   try {
-    const tx = await identityContracts.SoulboundCreditReportContract.connect(
-      masa.config.wallet
-    ).burn(creditScoreId);
+    const tx =
+      await masa.contracts.identity.SoulboundCreditReportContract.connect(
+        masa.config.wallet
+      ).burn(creditScoreId);
 
     console.log("Waiting for the burn tx to finalize");
     await tx.wait();

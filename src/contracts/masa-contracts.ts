@@ -1,38 +1,41 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { MASA__factory } from "@masa-finance/masa-contracts-identity";
 import { ContractReceipt, ContractTransaction, ethers, Signer } from "ethers";
-import { addresses } from "./index";
-import { IIdentityContracts } from "../interface";
-import Masa from "../masa";
+import { addresses, loadIdentityContracts } from "./index";
+import { IIdentityContracts, MasaConfig } from "../interface";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
 
-export class ContractService {
-  constructor(private masa: Masa) {}
+export class MasaContracts {
+  public identity: IIdentityContracts;
+
+  public constructor(private masaConfig: MasaConfig) {
+    this.identity = loadIdentityContracts({
+      provider: masaConfig.wallet.provider,
+      network: masaConfig.network,
+    });
+  }
 
   getPaymentAddress(paymentMethod: PaymentMethod) {
     let paymentAddress = ethers.constants.AddressZero;
 
     switch (paymentMethod) {
       case "utility":
-        paymentAddress = addresses[this.masa.config.network].MASA;
+        paymentAddress = addresses[this.masaConfig.network].MASA;
         break;
       case "stable":
-        paymentAddress = addresses[this.masa.config.network].USDC;
+        paymentAddress = addresses[this.masaConfig.network].USDC;
         break;
       case "weth":
-        paymentAddress = addresses[this.masa.config.network].WETH;
+        paymentAddress = addresses[this.masaConfig.network].WETH;
         break;
     }
 
     return paymentAddress;
   }
 
-  async getSoulNames(
-    identityContracts: IIdentityContracts,
-    address: string
-  ): Promise<string[]> {
-    const soulNames = await identityContracts.SoulboundIdentityContract[
+  async getSoulNames(address: string): Promise<string[]> {
+    const soulNames = await this.identity.SoulboundIdentityContract[
       "getSoulNames(address)"
     ](address);
 
@@ -40,33 +43,24 @@ export class ContractService {
     return soulNames;
   }
 
-  async isAvailable(
-    identityContracts: IIdentityContracts,
-    name: string
-  ): Promise<boolean> {
-    return identityContracts.SoulNameContract.isAvailable(name);
+  async isAvailable(name: string): Promise<boolean> {
+    return this.identity.SoulNameContract.isAvailable(name);
   }
 
   // purchase only identity
-  async purchaseIdentity(
-    identityContracts: IIdentityContracts,
-    signer: Signer
-  ): Promise<ContractTransaction> {
-    return identityContracts.SoulStoreContract.connect(
-      signer
-    ).purchaseIdentity();
+  async purchaseIdentity(signer: Signer): Promise<ContractTransaction> {
+    return this.identity.SoulStoreContract.connect(signer).purchaseIdentity();
   }
 
   // purchase only identity with name
   async purchaseIdentityAndName(
-    identityContracts: IIdentityContracts,
     signer: Signer,
     name: string,
     paymentMethod: PaymentMethod,
     duration = 1,
     metadataURL: string
   ): Promise<ContractTransaction> {
-    const prices = await identityContracts.SoulStoreContract.purchaseNameInfo(
+    const prices = await this.identity.SoulStoreContract.purchaseNameInfo(
       name,
       duration
     );
@@ -74,7 +68,6 @@ export class ContractService {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     await this.checkOrGiveAllowance(
-      identityContracts,
       paymentAddress,
       signer,
 
@@ -82,7 +75,7 @@ export class ContractService {
       prices
     );
 
-    const tx = await identityContracts.SoulStoreContract.connect(
+    const tx = await this.identity.SoulStoreContract.connect(
       signer
     ).purchaseIdentityAndName(paymentAddress, name, duration, metadataURL, {
       value: paymentMethod === "eth" ? prices.priceInETH : undefined,
@@ -93,14 +86,13 @@ export class ContractService {
 
   // purchase only name
   async purchaseName(
-    identityContracts: IIdentityContracts,
     signer: Signer,
     name: string,
     paymentMethod: PaymentMethod,
     duration = 1,
     metadataURL: string
   ): Promise<ContractTransaction> {
-    const prices = await identityContracts.SoulStoreContract.purchaseNameInfo(
+    const prices = await this.identity.SoulStoreContract.purchaseNameInfo(
       name,
       duration
     );
@@ -108,7 +100,6 @@ export class ContractService {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     await this.checkOrGiveAllowance(
-      identityContracts,
       paymentAddress,
       signer,
 
@@ -116,7 +107,7 @@ export class ContractService {
       prices
     );
 
-    const tx = identityContracts.SoulStoreContract.connect(signer).purchaseName(
+    const tx = this.identity.SoulStoreContract.connect(signer).purchaseName(
       paymentAddress,
       name,
       duration,
@@ -130,7 +121,6 @@ export class ContractService {
   }
 
   private async checkOrGiveAllowance(
-    identityContracts: IIdentityContracts,
     paymentAddress: string,
     signer: Signer,
     paymentMethod: PaymentMethod,
@@ -155,12 +145,12 @@ export class ContractService {
           // owner
           await signer.getAddress(),
           // spender
-          identityContracts.SoulStoreContract.address
+          this.identity.SoulStoreContract.address
         )) < paymentAmount
       ) {
         const tx: ContractTransaction = await contract.connect(signer).approve(
           // spender
-          identityContracts.SoulStoreContract.address,
+          this.identity.SoulStoreContract.address,
           // amount
           paymentAmount
         );
@@ -170,11 +160,7 @@ export class ContractService {
     }
   }
 
-  async price(
-    identityContracts: IIdentityContracts,
-    name: string,
-    duration = 1
-  ) {
-    return identityContracts.SoulStoreContract.purchaseNameInfo(name, duration);
+  async price(name: string, duration = 1) {
+    return this.identity.SoulStoreContract.purchaseNameInfo(name, duration);
   }
 }

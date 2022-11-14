@@ -2,12 +2,7 @@ import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 
 export const purchaseIdentity = async (masa: Masa) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  const tx = await masa.contracts.service.purchaseIdentity(
-    identityContracts,
-    masa.config.wallet
-  );
+  const tx = await masa.contracts.purchaseIdentity(masa.config.wallet);
 
   console.log("Waiting for transaction to finalize");
   const result = await tx.wait();
@@ -21,9 +16,7 @@ export const purchaseIdentityWithSoulName = async (
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  if (await masa.contracts.service.isAvailable(identityContracts, soulName)) {
+  if (await masa.contracts.isAvailable(soulName)) {
     console.log("Writing metadata");
     const storeMetadataData = await masa.metadata.store(soulName);
 
@@ -31,8 +24,7 @@ export const purchaseIdentityWithSoulName = async (
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
       console.log(`Matadata URL: ${metadataUrl}`);
 
-      const tx = await masa.contracts.service.purchaseIdentityAndName(
-        identityContracts,
+      const tx = await masa.contracts.purchaseIdentityAndName(
         masa.config.wallet,
         soulName,
         paymentMethod,

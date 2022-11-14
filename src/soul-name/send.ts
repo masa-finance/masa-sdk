@@ -5,9 +5,7 @@ export const sendSoulNameByName = async (
   soulName: string,
   receiver: string
 ) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  const soulNameData = await identityContracts.SoulNameContract.nameData(
+  const soulNameData = await masa.contracts.identity.SoulNameContract.nameData(
     soulName
   );
 
@@ -17,7 +15,7 @@ export const sendSoulNameByName = async (
     );
 
     try {
-      const tx = await identityContracts.SoulNameContract.connect(
+      const tx = await masa.contracts.identity.SoulNameContract.connect(
         masa.config.wallet
       ).transferFrom(
         masa.config.wallet.getAddress(),

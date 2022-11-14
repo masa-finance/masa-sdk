@@ -1,20 +1,23 @@
 import { session } from "./session";
-import { contracts } from "./contracts";
+import { MasaContracts } from "./contracts";
 import { account, createRandomWallet } from "./account";
 import { creditScore } from "./credit-score";
 import { identity } from "./identity";
 import { soulNames } from "./soul-name";
 import { twoFA } from "./2fa";
 
-import { MasaClient, arweave as arweaveInit } from "./utils";
+import { arweave as arweaveInit, MasaClient } from "./utils";
 import { version } from "./helpers";
 import { MasaArgs, MasaConfig } from "./interface";
+import Arweave from "arweave";
 
 export default class Masa {
   public readonly client: MasaClient;
-  public readonly arweaveClient;
+  public readonly arweave: Arweave;
+  public readonly config: MasaConfig;
+  public readonly contracts: MasaContracts;
 
-  constructor(
+  public constructor(
     {
       cookie,
       wallet,
@@ -36,7 +39,7 @@ export default class Masa {
       cookie,
     });
 
-    this.arweaveClient = arweaveInit(arweave);
+    this.arweave = arweaveInit(arweave);
 
     this.config = {
       apiUrl,
@@ -44,16 +47,15 @@ export default class Masa {
       network,
       wallet,
     };
-  }
 
-  public config: MasaConfig;
+    this.contracts = new MasaContracts(this.config);
+  }
 
   session = session(this);
   identity = identity(this);
   soulNames = soulNames(this);
   creditScore = creditScore(this);
   account = account(this);
-  contracts = contracts(this);
   twoFA = twoFA(this);
   metadata = {
     store: (soulName: string) => this.client.storeMetadata(soulName),

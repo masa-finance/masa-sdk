@@ -1,15 +1,15 @@
 import Masa from "../masa";
 
 export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  const nameData = await identityContracts.SoulNameContract.nameData(soulName);
+  const nameData = await masa.contracts.identity.SoulNameContract.nameData(
+    soulName
+  );
 
   if (nameData.exists) {
     console.log(`Burning ${soulName}.soul with id ${nameData.tokenId}!`);
 
     try {
-      const tx = await identityContracts.SoulNameContract.connect(
+      const tx = await masa.contracts.identity.SoulNameContract.connect(
         masa.config.wallet
       ).burn(nameData.tokenId);
 

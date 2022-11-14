@@ -1,10 +1,10 @@
 import {
-  SoulboundIdentity__factory,
-  SoulboundCreditReport__factory,
-  SoulName__factory,
-  SoulLinker__factory,
-  SoulStore__factory,
   Soulbound2FA__factory,
+  SoulboundCreditReport__factory,
+  SoulboundIdentity__factory,
+  SoulLinker__factory,
+  SoulName__factory,
+  SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { ethers } from "ethers";
 import { IIdentityContracts } from "../interface";
@@ -15,10 +15,10 @@ export interface LoadContractArgs {
   network?: string;
 }
 
-export const loadIdentityContracts = async ({
+export const loadIdentityContracts = ({
   provider,
   network = "goerli",
-}: LoadContractArgs): Promise<IIdentityContracts> => {
+}: LoadContractArgs): IIdentityContracts => {
   const p =
     // take provider as is if supplied
     provider ||

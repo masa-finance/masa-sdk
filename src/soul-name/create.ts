@@ -8,14 +8,8 @@ export const getRegistrationPrice = async (
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
   let price;
-  const prices = await masa.contracts.service.price(
-    identityContracts,
-    soulName,
-    duration
-  );
+  const prices = await masa.contracts.price(soulName, duration);
 
   switch (paymentMethod) {
     case "eth":
@@ -38,15 +32,13 @@ export const getRegistrationPrice = async (
   return price;
 };
 
-const purchaseSoulname = async (
+const purchaseSoulName = async (
   masa: Masa,
   soulName: string,
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  if (await masa.contracts.service.isAvailable(identityContracts, soulName)) {
+  if (await masa.contracts.isAvailable(soulName)) {
     console.log("Writing metadata");
     const storeMetadataData = await masa.metadata.store(soulName);
 
@@ -54,8 +46,7 @@ const purchaseSoulname = async (
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
       console.log(`Matadata URL: ${metadataUrl}`);
 
-      const tx = await masa.contracts.service.purchaseName(
-        identityContracts,
+      const tx = await masa.contracts.purchaseName(
         masa.config.wallet,
         soulName,
         paymentMethod,
@@ -99,7 +90,7 @@ export const createSoulName = async (
     const identityId = await masa.identity.load(address);
     if (!identityId) return;
 
-    await purchaseSoulname(masa, soulName, duration, paymentMethod);
+    await purchaseSoulName(masa, soulName, duration, paymentMethod);
   } else {
     console.log("Not logged in please login first");
   }

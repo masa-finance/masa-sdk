@@ -13,17 +13,16 @@ export const load2FAsByIdentityId = async (
     metadata: I2FA;
   }[]
 > => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  const twoFSIds: BigNumber[] = await identityContracts.SoulLinkerContract[
-    "getSBTLinks(uint256,address)"
-  ](identityId, identityContracts.Soulbound2FA.address);
+  const twoFSIds: BigNumber[] =
+    await masa.contracts.identity.SoulLinkerContract[
+      "getSBTLinks(uint256,address)"
+    ](identityId, masa.contracts.identity.Soulbound2FA.address);
 
   return await Promise.all(
     twoFSIds.map(async (tokenId) => {
       const tokenUri = patchMetadataUrl(
         masa,
-        await identityContracts.Soulbound2FA.tokenURI(tokenId)
+        await masa.contracts.identity.Soulbound2FA.tokenURI(tokenId)
       );
 
       const metadata = (await masa.metadata.retrieve(tokenUri)) as I2FA;

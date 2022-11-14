@@ -3,23 +3,20 @@ import { BigNumber } from "ethers";
 import { ISoulName } from "../interface";
 
 export const loadSoulNameByName = async (masa: Masa, soulName: string) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
+  const tokenDetails =
+    await masa.contracts.identity.SoulNameContract.getTokenData(soulName);
 
-  const tokenDetails = await identityContracts.SoulNameContract.getTokenData(
-    soulName
-  );
-
-  const owner = await identityContracts.SoulNameContract.ownerOf(
+  const owner = await masa.contracts.identity.SoulNameContract.ownerOf(
     tokenDetails.tokenId
   );
 
-  const tokenUri = await identityContracts.SoulNameContract[
+  const tokenUri = await masa.contracts.identity.SoulNameContract[
     "tokenURI(uint256)"
   ](tokenDetails.tokenId);
 
   let metadata;
   try {
-    const metadataResponse = await masa.arweaveClient.transactions
+    const metadataResponse = await masa.arweave.transactions
       .getData(tokenUri.replace("ar://", ""), {
         decode: true,
         string: true,
@@ -45,9 +42,7 @@ export const loadSoulNamesByIdentityId = async (
   masa: Masa,
   identityId: BigNumber
 ) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  const soulNames = await identityContracts.SoulNameContract[
+  const soulNames = await masa.contracts.identity.SoulNameContract[
     "getSoulNames(uint256)"
   ](identityId);
 
@@ -64,10 +59,7 @@ export const loadSoulNamesByIdentityId = async (
 };
 
 export const loadSoulNamesByAddress = async (masa: Masa, address: string) => {
-  const identityContracts = await masa.contracts.loadIdentityContracts();
-
-  console.log(address);
-  const soulNames = await identityContracts.SoulNameContract[
+  const soulNames = await masa.contracts.identity.SoulNameContract[
     "getSoulNames(address)"
   ](address);
 
