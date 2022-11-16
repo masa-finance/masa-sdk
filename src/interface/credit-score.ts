@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BaseResult } from "./masa";
 
 export interface ICreditScore {
   name: "Masa Soulbound Credit Score v1.0.0";
@@ -6,6 +6,7 @@ export interface ICreditScore {
   image: "https://metadata.masa.finance/v1.0/credit-score/credit-score.png";
   properties: {
     tokenId: string;
+    identityId?: string;
     account?: string;
     lastUpdated?: string;
     model_version?: string;
@@ -15,8 +16,4 @@ export interface ICreditScore {
   };
 }
 
-export interface CreateCreditScoreResult {
-  tokenId?: string | BigNumber;
-  success: boolean;
-  message: string;
-}
+export type CreateCreditScoreResult = BaseResult;

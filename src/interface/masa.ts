@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 export interface MasaArgs {
   cookie?: string;
@@ -19,4 +19,10 @@ export interface MasaConfig {
   environment: string;
   network: string;
   wallet: ethers.Signer | ethers.Wallet;
+}
+
+export interface BaseResult {
+  success: boolean;
+  message: string;
+  tokenId?: string | BigNumber;
 }

@@ -1,3 +1,5 @@
+import { BaseResult } from "./masa";
+
 export interface Attribute {
   display_type?: string;
   trait_type: string;
@@ -10,4 +12,8 @@ export interface ISoulName {
   image: string;
   name: string;
   attributes: Attribute[];
+}
+
+export interface CreateSoulNameResult extends BaseResult {
+  soulName?: string;
 }

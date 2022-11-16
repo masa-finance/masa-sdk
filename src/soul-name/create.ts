@@ -1,6 +1,7 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { ethers } from "ethers";
+import { CreateSoulNameResult } from "../interface";
 
 export const getRegistrationPrice = async (
   masa: Masa,
@@ -37,7 +38,7 @@ const purchaseSoulName = async (
   soulName: string,
   duration: number,
   paymentMethod: PaymentMethod
-) => {
+): Promise<{ tokenId: string; soulName: string } | undefined> => {
   if (await masa.contracts.isAvailable(soulName)) {
     console.log("Writing metadata");
     const storeMetadataData = await masa.metadata.store(soulName);
@@ -65,9 +66,12 @@ const purchaseSoulName = async (
       if (purchasedEvent && purchasedEvent.decode) {
         const decodedEvent = purchasedEvent.decode(purchasedEvent.data);
         tokenId = decodedEvent.tokenId.toNumber();
+        console.log(`Token with ID: ${tokenId} created.`);
+        return {
+          tokenId,
+          soulName,
+        };
       }
-
-      console.log(`Token with ID: ${tokenId} created.`);
     }
   } else {
     console.error(`Soulname ${soulName}.soul already taken.`);
@@ -79,7 +83,12 @@ export const createSoulName = async (
   soulName: string,
   duration: number,
   paymentMethod: PaymentMethod
-) => {
+): Promise<CreateSoulNameResult> => {
+  const result: CreateSoulNameResult = {
+    success: false,
+    message: "Unknown Error",
+  };
+
   if (await masa.session.checkLogin()) {
     if (soulName.endsWith(".soul")) {
       soulName = soulName.replace(".soul", "");
@@ -88,10 +97,20 @@ export const createSoulName = async (
     const address = await masa.config.wallet.getAddress();
 
     const identityId = await masa.identity.load(address);
-    if (!identityId) return;
+    if (!identityId) return result;
 
-    await purchaseSoulName(masa, soulName, duration, paymentMethod);
+    const aa = await purchaseSoulName(masa, soulName, duration, paymentMethod);
+
+    if (aa) {
+      result.success = true;
+      result.message = "Soulname created!";
+      result.tokenId = aa.tokenId;
+      result.soulName = soulName;
+    }
   } else {
-    console.log("Not logged in please login first");
+    result.message = "Not logged in please login first";
+    console.log(result.message);
   }
+
+  return result;
 };

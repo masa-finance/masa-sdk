@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BaseResult } from "./masa";
 
 export interface I2FA {
   name: "Masa Soulbound 2FA v1.0.0";
@@ -6,13 +6,11 @@ export interface I2FA {
   image: "https://metadata.masa.finance/v1.0/2fa/2fa.png";
   properties: {
     tokenId: string;
+    identityId?: string;
     account?: string;
   };
 }
 
-export interface Create2FAResult {
-  success: boolean;
+export interface Create2FAResult extends BaseResult {
   status?: string;
-  tokenId?: string | BigNumber;
-  message?: string;
 }

@@ -9,6 +9,7 @@ export const create2FA = async (
 ): Promise<Create2FAResult> => {
   const result: Create2FAResult = {
     success: false,
+    message: "Unknown Error",
   };
 
   if (await masa.session.checkLogin()) {
