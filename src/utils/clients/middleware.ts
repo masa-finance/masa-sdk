@@ -42,11 +42,15 @@ export class MasaClient {
   getMetadata = async (
     uri: string
   ): Promise<IIdentity | ICreditScore | I2FA | undefined> => {
-    const metadataResponse = await this.middlewareClient.get(uri, {
-      headers: {
-        cookie: this.cookie ? [this.cookie] : undefined,
-      },
-    });
+    const metadataResponse = await this.middlewareClient
+      .get(uri, {
+        headers: {
+          cookie: this.cookie ? [this.cookie] : undefined,
+        },
+      })
+      .catch((err) => {
+        console.error("Failed to load Metadata!", err.message, uri);
+      });
 
     if (metadataResponse) {
       const { data: metadata } = metadataResponse;

@@ -10,7 +10,7 @@ export const loadCreditScoresByIdentityId = async (
   {
     tokenId: BigNumber;
     tokenUri: string;
-    metadata: ICreditScore;
+    metadata?: ICreditScore;
   }[]
 > => {
   const creditScoreIds: BigNumber[] =
@@ -31,7 +31,9 @@ export const loadCreditScoresByIdentityId = async (
       );
 
       console.log(`Metadata Url: ${tokenUri}`);
-      const metadata = (await masa.metadata.retrieve(tokenUri)) as ICreditScore;
+      const metadata: ICreditScore | undefined = <ICreditScore | undefined>(
+        await masa.metadata.retrieve(tokenUri)
+      );
 
       return {
         tokenId,
@@ -46,25 +48,30 @@ export const listCreditReports = async (
   masa: Masa,
   address?: string
 ): Promise<
-  | {
-      tokenId: BigNumber;
-      tokenUri: string;
-      metadata: ICreditScore;
-    }[]
-  | undefined
+  {
+    tokenId: BigNumber;
+    tokenUri: string;
+    metadata?: ICreditScore;
+  }[]
 > => {
   address = address || (await masa.config.wallet.getAddress());
 
   const identityId = await masa.identity.load(address);
-  if (!identityId) return;
+  if (!identityId) return [];
 
-  const creditReports = await loadCreditScoresByIdentityId(masa, identityId);
+  const creditScores = await loadCreditScoresByIdentityId(masa, identityId);
 
-  if (creditReports.length === 0) console.log("No Credit Scores found");
+  if (creditScores.length === 0) console.log("No Credit Scores found");
 
-  for (const creditReport of creditReports) {
-    console.log(`Metadata: ${JSON.stringify(creditReport.metadata, null, 2)}`);
+  let i = 1;
+  for (const creditScore of creditScores) {
+    console.log(`Token: ${i}`);
+    console.log(`Token ID: ${creditScore.tokenId}`);
+    i++;
+    if (creditScore.metadata) {
+      console.log(`Metadata: ${JSON.stringify(creditScore.metadata, null, 2)}`);
+    }
   }
 
-  return creditReports;
+  return creditScores;
 };

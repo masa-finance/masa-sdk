@@ -10,7 +10,7 @@ export const load2FAsByIdentityId = async (
   {
     tokenId: BigNumber;
     tokenUri: string;
-    metadata: I2FA;
+    metadata?: I2FA;
   }[]
 > => {
   const twoFSIds: BigNumber[] =
@@ -25,7 +25,7 @@ export const load2FAsByIdentityId = async (
         await masa.contracts.identity.Soulbound2FA.tokenURI(tokenId)
       );
 
-      const metadata = (await masa.metadata.retrieve(tokenUri)) as I2FA;
+      const metadata = <I2FA | undefined>await masa.metadata.retrieve(tokenUri);
 
       return {
         tokenId,
@@ -43,7 +43,7 @@ export const list2FAs = async (
   {
     tokenId: BigNumber;
     tokenUri: string;
-    metadata: I2FA;
+    metadata?: I2FA;
   }[]
 > => {
   address = address || (await masa.config.wallet.getAddress());
@@ -58,8 +58,11 @@ export const list2FAs = async (
   let i = 1;
   for (const twoFA of twoFAs) {
     console.log(`Token: ${i}`);
+    console.log(`Token ID: ${twoFA.tokenId}`);
     i++;
-    console.log(`Metadata: ${JSON.stringify(twoFA.metadata, null, 2)}`);
+    if (twoFA.metadata) {
+      console.log(`Metadata: ${JSON.stringify(twoFA.metadata, null, 2)}`);
+    }
   }
 
   return twoFAs;

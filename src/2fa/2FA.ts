@@ -1,5 +1,5 @@
 import { create2FA } from "./create";
-import { burn2fa } from "./burn";
+import { burn2FA } from "./burn";
 import { list2FAs, load2FAsByIdentityId } from "./list";
 import { BigNumber } from "ethers";
 import Masa from "../masa";
@@ -14,7 +14,7 @@ export const twoFA = (masa: Masa) => ({
   generate: (phoneNumber: string) => masa.client.twoFAGenerate(phoneNumber),
   create: (phoneNumber: string, code: string) =>
     create2FA(masa, phoneNumber, code),
-  burn: (twofaId: number) => burn2fa(masa, twofaId),
+  burn: (twoFAId: number) => burn2FA(masa, twoFAId),
   list: (address?: string) => list2FAs(masa, address),
   load: (identityId: BigNumber) => load2FAsByIdentityId(masa, identityId),
 });
