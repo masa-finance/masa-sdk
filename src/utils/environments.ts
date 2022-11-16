@@ -46,7 +46,7 @@ export const environments: Environment[] = [
   } as Environment,
   {
     name: "stage",
-    environment: "stage",
+    environment: "beta",
     apiUrl: "https://beta.middleware.masa.finance/",
     network: "goerli",
     arweave: {
