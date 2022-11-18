@@ -26,3 +26,20 @@ export interface BaseResult {
   message: string;
   tokenId?: string | BigNumber;
 }
+
+export interface ISession {
+  cookie: {
+    originalMaxAge: number;
+    expires: string;
+    secure: boolean;
+    httpOnly: boolean;
+    domain: string;
+    path: string;
+    sameSite: string;
+  };
+  challenge: string;
+  user: {
+    userId: string;
+    address: string;
+  };
+}

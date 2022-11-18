@@ -1,5 +1,5 @@
 import axios from "axios";
-import { I2FA, ICreditScore, IIdentity } from "../../interface";
+import { I2FA, ICreditScore, IIdentity, ISession } from "../../interface";
 import { BigNumber } from "ethers";
 import Transaction from "arweave/node/lib/transaction";
 
@@ -21,7 +21,7 @@ export class MasaClient {
     });
   }
 
-  sessionCheck = async (): Promise<any | undefined> => {
+  sessionCheck = async (): Promise<ISession | undefined> => {
     const checkResponse = await this.middlewareClient
       .get(`/session/check`, {
         headers: {
@@ -34,7 +34,7 @@ export class MasaClient {
 
     if (checkResponse) {
       const { data: checkData } = checkResponse;
-
+      
       return checkData;
     }
   };
