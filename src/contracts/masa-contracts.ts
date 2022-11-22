@@ -43,8 +43,12 @@ export class MasaContracts {
     return soulNames;
   }
 
-  async isAvailable(name: string): Promise<boolean> {
-    return this.identity.SoulNameContract.isAvailable(name);
+  async isAvailable(soulName: string): Promise<boolean> {
+    let available = false;
+    if (soulName && soulName.length > 0) {
+      available = await this.identity.SoulNameContract.isAvailable(soulName);
+    }
+    return available;
   }
 
   // purchase only identity
