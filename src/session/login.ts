@@ -1,7 +1,7 @@
 import Masa from "../masa";
 import { unpackSessionId } from "../helpers";
 import { BigNumber } from "ethers";
-import { Templates } from "../utils";
+import { signMessage, Templates } from "../utils";
 
 export const login = async (
   masa: Masa
@@ -15,9 +15,7 @@ export const login = async (
 > => {
   console.log("Logging in");
 
-  if (await masa.session.checkLogin()) {
-    console.log("Already logged in! Please logout before logging in again.");
-  } else {
+  if (!(await masa.session.checkLogin())) {
     // get challenge
     const challengeData = await masa.client.getChallenge();
 
@@ -33,27 +31,33 @@ export const login = async (
       console.log(`Signer Address: '${address}'`);
       console.log(`Signing: \n'${msg}'\n`);
 
-      const signature = await masa.config.wallet.signMessage(msg);
+      const signature = await signMessage(msg, masa.config.wallet);
       console.log(`Signature: '${signature}'`);
 
-      const checkSignatureData = await masa.client.checkSignature(
-        address,
-        signature,
-        challengeData.cookie
-      );
-
-      if (checkSignatureData) {
-        console.log("\nLogged in as:");
-        console.log(`Address: '${address}'`);
-        console.log(`User ID: '${checkSignatureData.id}'`);
-        console.log(`Session ID: '${unpackSessionId(challengeData.cookie)}'`);
-
-        return {
+      if (signature) {
+        const checkSignatureData = await masa.client.checkSignature(
           address,
-          userId: checkSignatureData.id,
-          cookie: challengeData.cookie,
-        };
+          signature,
+          challengeData.cookie
+        );
+
+        if (checkSignatureData) {
+          console.log("\nLogged in as:");
+          console.log(`Address: '${address}'`);
+          console.log(`User ID: '${checkSignatureData.id}'`);
+          console.log(`Session ID: '${unpackSessionId(challengeData.cookie)}'`);
+
+          return {
+            address,
+            userId: checkSignatureData.id,
+            cookie: challengeData.cookie,
+          };
+        }
+      } else {
+        console.error("Creating signature failed!");
       }
     }
+  } else {
+    console.error("Already logged in! Please logout before logging in again.");
   }
 };

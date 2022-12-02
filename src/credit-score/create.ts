@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { Templates } from "../utils";
+import { signMessage, Templates } from "../utils";
 import { CreateCreditScoreResult } from "../interface";
 
 export const createCreditScore = async (
@@ -25,27 +25,37 @@ export const createCreditScore = async (
     console.log(`Signing: \n'${msg}'\n`);
 
     // 1. creat signature
-    const signature = await masa.config.wallet.signMessage(msg);
+    const signature = await signMessage(msg, masa.config.wallet);
     console.log(`Signature: '${signature}'`);
 
-    // 2. mint credit score
-    console.log("\nCreating Credit Score");
-    const creditScoreMintData = await masa.creditScore.mint(address, signature);
+    // if we have a signature
+    if (signature) {
+      // 2. mint credit score
+      console.log("\nCreating Credit Score");
+      const creditScoreMintData = await masa.creditScore.mint(
+        address,
+        signature
+      );
 
-    if (creditScoreMintData) {
-      const { success, message, tokenId } = creditScoreMintData;
+      if (creditScoreMintData) {
+        const { success, message, tokenId } = creditScoreMintData;
 
-      result.success = success;
-      result.message = message;
+        result.success = success;
+        result.message = message;
 
-      if (success) {
-        result.tokenId = tokenId;
-      } else {
-        console.error(`Creating Credit Score failed! '${message}'`);
+        if (success) {
+          result.tokenId = tokenId;
+        } else {
+          console.error(`Creating Credit Score failed! '${message}'`);
+        }
       }
+    } else {
+      result.message = "Creating signature failed!";
+      console.error(result.message);
     }
   } else {
-    console.log("Not logged in please login first");
+    result.message = "Not logged, in please login first!";
+    console.error(result.message);
   }
 
   return result;

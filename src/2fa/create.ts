@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { Templates } from "../utils";
+import { signMessage, Templates } from "../utils";
 import { Create2FAResult } from "../interface";
 
 export const create2FA = async (
@@ -32,36 +32,43 @@ export const create2FA = async (
     console.log(`Signing: \n'${msg}'\n`);
 
     // 1. creat signature
-    const signature = await masa.config.wallet.signMessage(msg);
+    const signature = await signMessage(msg, masa.config.wallet);
     console.log(`Signature: '${signature}'`);
 
-    // 2. mint 2FA
-    console.log("\nCreating 2FA");
-    const mint2FAData = await masa.twoFA.mint(
-      address,
-      phoneNumber,
-      code,
-      signature
-    );
+    // if we got a signature
+    if (signature) {
+      // 2. mint 2FA
+      console.log("\nCreating 2FA");
+      const mint2FAData = await masa.twoFA.mint(
+        address,
+        phoneNumber,
+        code,
+        signature
+      );
 
-    if (mint2FAData) {
-      const { success, status, message, tokenId } = mint2FAData;
+      if (mint2FAData) {
+        const { success, status, message, tokenId } = mint2FAData;
 
-      result.success = success;
-      result.status = status;
-      result.message = message;
+        result.success = success;
+        result.status = status;
+        result.message = message;
 
-      if (success) {
-        console.log(`2FA Created: '${tokenId}'`);
-        result.tokenId = tokenId;
-      } else {
-        console.error(`Creating 2FA failed! '${message}'`);
+        if (success) {
+          console.log(`2FA Created: '${tokenId}'`);
+          result.tokenId = tokenId;
+        } else {
+          console.error(`Creating 2FA failed! '${message}'`);
+        }
+
+        return result;
       }
-
-      return result;
+    } else {
+      result.message = "Creating signature failed!";
+      console.error(result.message);
     }
   } else {
-    console.log("Not logged in please login first");
+    result.message = "Not logged in, please login first!";
+    console.error(result.message);
   }
 
   return result;
