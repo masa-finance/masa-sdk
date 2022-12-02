@@ -11,6 +11,9 @@ export interface ISoulName {
   external_url: "https://beta.claimyoursoul.masa.finance";
   image: string;
   name: string;
+  network: string;
+  chainId: string;
+  signature?: string;
   attributes: Attribute[];
 }
 
