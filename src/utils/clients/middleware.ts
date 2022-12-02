@@ -34,7 +34,7 @@ export class MasaClient {
 
     if (checkResponse) {
       const { data: checkData } = checkResponse;
-      
+
       return checkData;
     }
   };
