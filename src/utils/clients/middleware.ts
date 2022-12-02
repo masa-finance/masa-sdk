@@ -8,13 +8,17 @@ const headers = {
 };
 
 export class MasaClient {
-  private middlewareClient;
-  public cookie?: string;
+  private _middlewareClient;
+  private _cookie?: string;
+
+  get cookie() {
+    return this._cookie;
+  }
 
   constructor({ apiUrl, cookie }: { apiUrl: string; cookie?: string }) {
-    this.cookie = cookie;
+    this._cookie = cookie;
 
-    this.middlewareClient = axios.create({
+    this._middlewareClient = axios.create({
       baseURL: apiUrl,
       withCredentials: true,
       headers,
@@ -22,7 +26,7 @@ export class MasaClient {
   }
 
   sessionCheck = async (): Promise<ISession | undefined> => {
-    const checkResponse = await this.middlewareClient
+    const checkResponse = await this._middlewareClient
       .get(`/session/check`, {
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
@@ -42,7 +46,7 @@ export class MasaClient {
   getMetadata = async (
     uri: string
   ): Promise<IIdentity | ICreditScore | I2FA | undefined> => {
-    const metadataResponse = await this.middlewareClient
+    const metadataResponse = await this._middlewareClient
       .get(uri, {
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
@@ -79,7 +83,7 @@ export class MasaClient {
       }
     | undefined
   > => {
-    const storeMetadataResponse = await this.middlewareClient
+    const storeMetadataResponse = await this._middlewareClient
       .post(
         `/storage/store`,
         {
@@ -102,7 +106,7 @@ export class MasaClient {
   };
 
   getChallenge = async (): Promise<any | undefined> => {
-    const getChallengeResponse = await this.middlewareClient
+    const getChallengeResponse = await this._middlewareClient
       .get(`/session/get-challenge`)
       .catch((err: any) => {
         console.error("Get Challenge failed!", err.message);
@@ -111,7 +115,9 @@ export class MasaClient {
     if (getChallengeResponse) {
       const cookie = getChallengeResponse.headers["set-cookie"];
 
-      if (!cookie) console.warn("No cookie in response!");
+      if (!cookie) {
+        console.warn("No cookie in response!");
+      }
 
       const { data: challengeData } = getChallengeResponse;
 
@@ -129,7 +135,7 @@ export class MasaClient {
   ): Promise<any | undefined> => {
     const cookieToUse = cookie || this.cookie;
 
-    const checkSignatureResponse = await this.middlewareClient
+    const checkSignatureResponse = await this._middlewareClient
       .post(
         `/session/check-signature`,
         {
@@ -149,6 +155,12 @@ export class MasaClient {
     if (checkSignatureResponse) {
       const { data: checkSignatureData } = checkSignatureResponse;
 
+      // set the cookie here, so we can reuse it during the lifespan of the
+      // masa object if it is not set yet
+      if (cookie && !this.cookie) {
+        this._cookie = cookie;
+      }
+
       return checkSignatureData;
     }
   };
@@ -164,7 +176,7 @@ export class MasaClient {
       }
     | undefined
   > => {
-    const storeMetadataResponse = await this.middlewareClient
+    const storeMetadataResponse = await this._middlewareClient
       .post(
         `/contracts/credit-score/mint`,
         {
@@ -208,7 +220,7 @@ export class MasaClient {
       }
     | undefined
   > => {
-    const mint2FAResponse = await this.middlewareClient
+    const mint2FAResponse = await this._middlewareClient
       .post(
         `/2fa/mint`,
         {
@@ -251,7 +263,7 @@ export class MasaClient {
       }
     | undefined
   > => {
-    const storeMetadataResponse = await this.middlewareClient
+    const storeMetadataResponse = await this._middlewareClient
       .post(
         `/2fa/generate`,
         {
@@ -286,7 +298,7 @@ export class MasaClient {
       }
     | undefined
   > => {
-    const logoutResponse = await this.middlewareClient
+    const logoutResponse = await this._middlewareClient
       .post(`/session/logout`, undefined, {
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
