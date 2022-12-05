@@ -9,11 +9,13 @@ export interface Attribute {
 export interface ISoulName {
   description: "This is a soul name!";
   external_url: "https://beta.claimyoursoul.masa.finance";
-  image: string;
   name: string;
+  image: string;
+  imageHash: string;
+  imageHashSignature: string;
   network: string;
   chainId: string;
-  signature?: string;
+  signature: string;
   attributes: Attribute[];
 }
 
