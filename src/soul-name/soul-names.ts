@@ -6,9 +6,11 @@ import { createSoulName, getRegistrationPrice } from "./create";
 import {
   listSoulNames,
   loadSoulNameByName,
+  loadSoulNameByTokenId,
   loadSoulNamesByIdentityId,
 } from "./list";
 import { sendSoulName } from "./send";
+import { verifyByName } from "./verify";
 
 export const soulNames = (masa: Masa) => ({
   getRegistrationPrice: (
@@ -20,9 +22,12 @@ export const soulNames = (masa: Masa) => ({
   loadSoulNamesByIdentityId: (identityId: BigNumber) =>
     loadSoulNamesByIdentityId(masa, identityId),
   loadSoulNameByName: (soulName: string) => loadSoulNameByName(masa, soulName),
+  loadSoulNameByTokenId: (tokenId: string | BigNumber) =>
+    loadSoulNameByTokenId(masa, tokenId),
   create: (soulName: string, duration: number, paymentMethod: PaymentMethod) =>
     createSoulName(masa, soulName, duration, paymentMethod),
   burn: (soulName: string) => burnSoulName(masa, soulName),
   send: (soulName: string, receiver: string) =>
     sendSoulName(masa, soulName, receiver),
+  verify: (soulName: string) => verifyByName(masa, soulName),
 });
