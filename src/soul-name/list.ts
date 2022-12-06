@@ -3,16 +3,29 @@ import { BigNumber } from "ethers";
 import { ISoulName } from "../interface";
 
 export const loadSoulNameByName = async (masa: Masa, soulName: string) => {
-  const tokenDetails =
-    await masa.contracts.identity.SoulNameContract.getTokenData(soulName);
-
-  const owner = await masa.contracts.identity.SoulNameContract.ownerOf(
-    tokenDetails.tokenId
+  const tokenId = await masa.contracts.identity.SoulNameContract.getTokenId(
+    soulName
   );
+
+  return loadSoulNameByTokenId(masa, tokenId);
+};
+
+export const loadSoulNameByTokenId = async (
+  masa: Masa,
+  tokenId: string | BigNumber
+) => {
+  const tokenDetails =
+    await masa.contracts.identity.SoulNameContract.getTokenData(
+      (
+        await masa.contracts.identity.SoulNameContract.tokenData(tokenId)
+      ).name
+    );
+
+  const owner = await masa.contracts.identity.SoulNameContract.ownerOf(tokenId);
 
   const tokenUri = await masa.contracts.identity.SoulNameContract[
     "tokenURI(uint256)"
-  ](tokenDetails.tokenId);
+  ](tokenId);
 
   let metadata;
   try {
