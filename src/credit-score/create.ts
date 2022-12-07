@@ -19,7 +19,7 @@ export const createCreditScore = async (
       return result;
     }
 
-    const msg = Templates.creditScoreTemplate(identityId.toString(), address);
+    const msg = Templates.creditScoreTemplate(identityId.toString(), new Date().toISOString(), address);
 
     console.log(`Signer Address: '${address}'`);
     console.log(`Signing: \n'${msg}'\n`);

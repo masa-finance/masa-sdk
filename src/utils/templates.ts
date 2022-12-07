@@ -20,7 +20,7 @@ Challenge: ${challenge}`,
    * @param lastUpdated The date of the credit score generation process
    * @param wallet The address of the wallet used in the credit score generation process
    */
-    creditScoreTemplate: (value: string, lastUpdated: string, wallet: string) =>
+  creditScoreTemplate: (value: string, lastUpdated: string, wallet: string) =>
     `${value};${lastUpdated};${wallet}`,
 
   /**
@@ -32,12 +32,4 @@ Challenge: ${challenge}`,
   twoFATemplate: (identityId: string, phoneNumber: string, code: string) =>
     `Identity: ${identityId} Phone Number: ${phoneNumber} Code: ${code}`,
     
-  /**
-   * The Masa Finance Credit Score Template used for creating credit score tokens
-   * @param value The value of the credit score
-   * @param lastUpdated The date of the credit score generation process
-   * @param wallet The address of the wallet used in the credit score generation process
-   */
-  sssbtCreditScoreTemplate: (value: string, lastUpdated: string, wallet: string) =>
-    `${value};${lastUpdated};${wallet}`,
 };
