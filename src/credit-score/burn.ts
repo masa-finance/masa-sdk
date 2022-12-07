@@ -6,7 +6,7 @@ export const burnCreditScoreById = async (
 ): Promise<boolean> => {
   try {
     const tx =
-      await masa.contracts.identity.SoulboundCreditReportContract.connect(
+      await masa.contracts.identity.SoulboundCreditScoreContract.connect(
         masa.config.wallet
       ).burn(creditScoreId);
 

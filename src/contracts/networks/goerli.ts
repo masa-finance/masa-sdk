@@ -1,5 +1,5 @@
 import SoulboundIdentity from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundIdentity.json";
-import SoulboundCreditReport from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundCreditReport.json";
+import SoulboundCreditScore from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundCreditScore.json";
 import SoulName from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulName.json";
 import SoulStore from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulStore.json";
 import SoulLinker from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulLinker.json";
@@ -12,7 +12,7 @@ export {
 } from "@masa-finance/masa-contracts-identity/dist/src/constants";
 
 export const SoulboundIdentityAddress = SoulboundIdentity.address;
-export const SoulboundCreditReportAddress = SoulboundCreditReport.address;
+export const SoulboundCreditScoreAddress = SoulboundCreditScore.address;
 export const SoulNameAddress = SoulName.address;
 export const SoulStoreAddress = SoulStore.address;
 export const SoulLinkerAddress = SoulLinker.address;

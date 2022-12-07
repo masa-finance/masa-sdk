@@ -1,6 +1,6 @@
 import {
   Soulbound2FA,
-  SoulboundCreditReport,
+  SoulboundCreditScore,
   SoulboundIdentity,
   SoulLinker,
   SoulName,
@@ -9,7 +9,7 @@ import {
 
 export interface IIdentityContracts {
   SoulboundIdentityContract: SoulboundIdentity;
-  SoulboundCreditReportContract: SoulboundCreditReport;
+  SoulboundCreditScoreContract: SoulboundCreditScore;
   SoulNameContract: SoulName;
   SoulLinkerContract: SoulLinker;
   SoulStoreContract: SoulStore;

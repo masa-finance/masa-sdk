@@ -1,6 +1,6 @@
 import {
   Soulbound2FA__factory,
-  SoulboundCreditReport__factory,
+  SoulboundCreditScore__factory,
   SoulboundIdentity__factory,
   SoulLinker__factory,
   SoulName__factory,
@@ -34,8 +34,8 @@ export const loadIdentityContracts = ({
     p
   );
 
-  const SoulboundCreditReportContract = SoulboundCreditReport__factory.connect(
-    addresses[network].SoulboundCreditReportAddress,
+  const SoulboundCreditScoreContract = SoulboundCreditScore__factory.connect(
+    addresses[network].SoulboundCreditScoreAddress,
     p
   );
 
@@ -61,7 +61,7 @@ export const loadIdentityContracts = ({
 
   return {
     SoulboundIdentityContract,
-    SoulboundCreditReportContract,
+    SoulboundCreditScoreContract,
     SoulNameContract,
     SoulLinkerContract,
     SoulStoreContract,
