@@ -167,4 +167,9 @@ export class MasaContracts {
   async price(name: string, duration = 1) {
     return this.identity.SoulStoreContract.purchaseNameInfo(name, duration);
   }
+
+  // purchase only identity
+  async mintCreditScore(signature: string): Promise<ContractTransaction> {
+    return this.identity.SoulboundCreditReportContract.mint()
+  }
 }
