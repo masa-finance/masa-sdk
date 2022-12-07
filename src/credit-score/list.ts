@@ -18,14 +18,14 @@ export const loadCreditScoresByIdentityId = async (
       "getSBTLinks(uint256,address)"
     ](
       identityId,
-      masa.contracts.identity.SoulboundCreditReportContract.address
+      masa.contracts.identity.SoulboundCreditScoreContract.address
     );
 
   return await Promise.all(
     creditScoreIds.map(async (tokenId) => {
       const tokenUri = patchMetadataUrl(
         masa,
-        await masa.contracts.identity.SoulboundCreditReportContract.tokenURI(
+        await masa.contracts.identity.SoulboundCreditScoreContract.tokenURI(
           tokenId
         )
       );

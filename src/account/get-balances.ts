@@ -33,7 +33,7 @@ export const getBalances = async (masa: Masa, address?: string) => {
     ).balanceOf(addressToLoad),
     masa.contracts.identity.SoulboundIdentityContract.balanceOf(addressToLoad),
     masa.contracts.identity.SoulNameContract.balanceOf(addressToLoad),
-    masa.contracts.identity.SoulboundCreditReportContract.balanceOf(
+    masa.contracts.identity.SoulboundCreditScoreContract.balanceOf(
       addressToLoad
     ),
     masa.contracts.identity.Soulbound2FA.balanceOf(addressToLoad),

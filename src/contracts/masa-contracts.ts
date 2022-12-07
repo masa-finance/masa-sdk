@@ -64,25 +64,26 @@ export class MasaContracts {
     duration = 1,
     metadataURL: string
   ): Promise<ContractTransaction> {
-    const prices = await this.identity.SoulStoreContract.purchaseNameInfo(
+    const paymentAddress = this.getPaymentAddress(paymentMethod);
+
+    const price = await this.identity.SoulStoreContract.getPriceForMintingName(
+      paymentAddress,
       name,
       duration
     );
-
-    const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     await this.checkOrGiveAllowance(
       paymentAddress,
       signer,
 
       paymentMethod,
-      prices
+      price
     );
 
     const tx = await this.identity.SoulStoreContract.connect(
       signer
     ).purchaseIdentityAndName(paymentAddress, name, duration, metadataURL, {
-      value: paymentMethod === "eth" ? prices.priceInETH : undefined,
+      value: paymentMethod === "eth" ? price : undefined,
     });
 
     return tx;
@@ -96,19 +97,20 @@ export class MasaContracts {
     duration = 1,
     metadataURL: string
   ): Promise<ContractTransaction> {
-    const prices = await this.identity.SoulStoreContract.purchaseNameInfo(
+    const paymentAddress = this.getPaymentAddress(paymentMethod);
+
+    const price = await this.identity.SoulStoreContract.getPriceForMintingName(
+      paymentAddress,
       name,
       duration
     );
-
-    const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     await this.checkOrGiveAllowance(
       paymentAddress,
       signer,
 
       paymentMethod,
-      prices
+      price
     );
 
     const tx = this.identity.SoulStoreContract.connect(signer).purchaseName(
@@ -116,8 +118,9 @@ export class MasaContracts {
       name,
       duration,
       metadataURL,
+      signer.getAddress(),
       {
-        value: paymentMethod === "eth" ? prices.priceInETH : undefined,
+        value: paymentMethod === "eth" ? price : undefined,
       }
     );
 
@@ -128,21 +131,10 @@ export class MasaContracts {
     paymentAddress: string,
     signer: Signer,
     paymentMethod: PaymentMethod,
-    prices: {
-      priceInStableCoin: BigNumber;
-      priceInETH: BigNumber;
-      priceInUtilityToken: BigNumber;
-    }
+    price: BigNumber
   ): Promise<ContractReceipt | undefined> {
     if (paymentMethod !== "eth") {
       const contract = MASA__factory.connect(paymentAddress, signer);
-
-      const paymentAmount =
-        paymentMethod === "stable"
-          ? prices.priceInStableCoin
-          : paymentMethod === "utility"
-          ? prices.priceInUtilityToken
-          : prices.priceInETH;
 
       if (
         (await contract.allowance(
@@ -150,13 +142,13 @@ export class MasaContracts {
           await signer.getAddress(),
           // spender
           this.identity.SoulStoreContract.address
-        )) < paymentAmount
+        )) < price
       ) {
         const tx: ContractTransaction = await contract.connect(signer).approve(
           // spender
           this.identity.SoulStoreContract.address,
           // amount
-          paymentAmount
+          price
         );
 
         return await tx.wait();
@@ -164,8 +156,12 @@ export class MasaContracts {
     }
   }
 
-  async price(name: string, duration = 1) {
-    return this.identity.SoulStoreContract.purchaseNameInfo(name, duration);
+  async price(name: string, paymentMethod: PaymentMethod, duration = 1) {
+    return this.identity.SoulStoreContract.getPriceForMintingName(
+      paymentMethod,
+      name,
+      duration
+    );
   }
 
   // purchase only identity
