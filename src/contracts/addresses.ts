@@ -6,7 +6,7 @@ export interface Addresses {
     USDC: string;
     WETH: string;
     SoulboundIdentityAddress: string;
-    SoulboundCreditReportAddress: string;
+    SoulboundCreditScoreAddress: string;
     SoulNameAddress: string;
     SoulStoreAddress: string;
     SoulLinkerAddress: string;

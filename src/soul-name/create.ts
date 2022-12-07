@@ -1,6 +1,5 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
-import { ethers } from "ethers";
 import { CreateSoulNameResult } from "../interface";
 
 export const getRegistrationPrice = async (
@@ -9,24 +8,7 @@ export const getRegistrationPrice = async (
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
-  let price;
-  const prices = await masa.contracts.price(soulName, duration);
-
-  switch (paymentMethod) {
-    case "eth":
-      price = ethers.utils.formatEther(prices.priceInETH);
-      break;
-    case "stable":
-      price = ethers.utils.formatUnits(prices.priceInStableCoin, 6);
-      price = Number.parseFloat(price).toFixed(2).toString();
-      break;
-    case "utility":
-      price = ethers.utils.formatUnits(prices.priceInUtilityToken);
-      price = Number.parseFloat(price).toFixed(2).toString();
-      break;
-    default:
-      price = prices.priceInETH;
-  }
+  const price = await masa.contracts.price(soulName, paymentMethod, duration);
 
   console.log(`Soulname price is ${price} ${paymentMethod}.`);
 
