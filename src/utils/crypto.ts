@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { Contract, ethers, TypedDataField } from "ethers";
 
 const hashData = (data: any) => ethers.utils.keccak256(data);
 
@@ -18,6 +18,26 @@ export const signMessage = async (
   }
 
   return sig;
+};
+
+export const signTypedData = async (
+  contract: Contract,
+  wallet: ethers.Wallet,
+  types: Record<string, Array<TypedDataField>>,
+  value: Record<string, any>
+) => {
+  const chainId = (await wallet.provider.getNetwork()).chainId;
+
+  const domain = {
+    name: await contract.name(),
+    version: "1.0.0",
+    chainId,
+    verifyingContract: contract.address,
+  };
+
+  const signature = await wallet._signTypedData(domain, types, value);
+
+  return { signature, domain };
 };
 
 export const recoverAddress = (
