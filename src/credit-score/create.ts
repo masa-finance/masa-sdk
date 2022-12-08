@@ -20,10 +20,14 @@ export const createCreditScore = async (masa: Masa) => {
     const creditScoreResponse = await masa.client.createCreditScore(address);
 
     console.log({ creditScoreResponse });
+    //@ts-ignore
     if (creditScoreResponse?.signature) {
-      const tx = await masa.contracts.mintCreditScore(
-        creditScoreResponse.signature
-      );
+     const wallet = masa.config.wallet;
+    //@ts-ignore
+     const date = new Date(creditScoreResponse.creditScore.lastUpdated).getTime();
+    //@ts-ignore
+      const tx = await masa.contracts.mintCreditScore(wallet, "eth", date, creditScoreResponse.creditScore.account , creditScoreResponse.signature)
+      console.log("CREDIT SCORE",{tx})
     }
   }
 };
