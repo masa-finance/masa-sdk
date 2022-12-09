@@ -172,6 +172,6 @@ export class MasaContracts {
     wallet: string,
     signature: string
   ): Promise<ContractTransaction> {
-    return this.identity.SoulboundCreditScoreContract.connect(signer)["mint(address,address,address,uint256,bytes)"](paymentMethod, wallet, "0x3c8D9f130970358b7E8cbc1DbD0a1EbA6EBE368F", date, signature)
+    return await this.identity.SoulboundCreditScoreContract.connect(signer)["mint(address,address,address,uint256,bytes)"](paymentMethod, wallet, "0x3c8D9f130970358b7E8cbc1DbD0a1EbA6EBE368F", date, signature)
   }
 }

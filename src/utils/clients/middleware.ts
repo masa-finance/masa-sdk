@@ -334,6 +334,48 @@ export class MasaClient {
     }
   };
 
+  updateCreditScore = async (
+    tx: any
+  ): Promise<
+    | {
+        creditScore: any;
+        signature: string;
+      }
+    | {
+        success: boolean;
+        status: string;
+        message: string;
+      }
+    | undefined
+  > => {
+    const creditScoreResponse = await this._middlewareClient
+      .post(
+        `/contracts/credit-score/update`,
+        {
+          tx,
+        },
+        {
+          headers: {
+            cookie: this.cookie ? [this.cookie] : undefined,
+          },
+        }
+      )
+      .catch((err: any) => {
+        console.error("Generation of credit score failed!", err.message);
+      });
+
+    if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
+      return creditScoreResponse.data;
+    } else {
+      console.error("Generation of credit score failed!");
+      return {
+        success: false,
+        status: "failed",
+        message: "Credit Score failed",
+      };
+    }
+  };
+
   sessionLogout = async (): Promise<
     | {
         status: string;
