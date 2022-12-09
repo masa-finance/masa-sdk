@@ -292,6 +292,29 @@ export class MasaClient {
     }
   };
 
+  listCreditScore = async (): Promise<any> => {
+    const creditScoreResponse = await this._middlewareClient
+      .get(`/contracts/credit-score`, {
+        headers: {
+          cookie: this.cookie ? [this.cookie] : undefined,
+        },
+      })
+      .catch((err: any) => {
+        console.error("Generation of credit score failed!", err.message);
+      });
+
+    if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
+      return creditScoreResponse.data;
+    } else {
+      console.error("Generation of credit score failed!");
+      return {
+        success: false,
+        status: "failed",
+        message: "Credit Score failed",
+      };
+    }
+  };
+
   createCreditScore = async (
     address: string
   ): Promise<
@@ -311,6 +334,48 @@ export class MasaClient {
         `/contracts/credit-score/generate`,
         {
           address,
+        },
+        {
+          headers: {
+            cookie: this.cookie ? [this.cookie] : undefined,
+          },
+        }
+      )
+      .catch((err: any) => {
+        console.error("Generation of credit score failed!", err.message);
+      });
+
+    if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
+      return creditScoreResponse.data;
+    } else {
+      console.error("Generation of credit score failed!");
+      return {
+        success: false,
+        status: "failed",
+        message: "Credit Score failed",
+      };
+    }
+  };
+
+  updateCreditScore = async (
+    tx: any
+  ): Promise<
+    | {
+        creditScore: any;
+        signature: string;
+      }
+    | {
+        success: boolean;
+        status: string;
+        message: string;
+      }
+    | undefined
+  > => {
+    const creditScoreResponse = await this._middlewareClient
+      .post(
+        `/contracts/credit-score/update`,
+        {
+          tx,
         },
         {
           headers: {
