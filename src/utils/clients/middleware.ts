@@ -319,16 +319,20 @@ export class MasaClient {
     address: string
   ): Promise<
     | {
-        creditScore: any;
-        signature: string;
-      }
-    | {
         success: boolean;
         status: string;
         message: string;
+        creditScore?: any;
+        signature?: string;
       }
     | undefined
   > => {
+    const result = {
+      success: false,
+      status: "failed",
+      message: "Credit Score failed",
+    };
+
     const creditScoreResponse = await this._middlewareClient
       .post(
         `/contracts/credit-score/generate`,
@@ -346,7 +350,10 @@ export class MasaClient {
       });
 
     if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
-      return creditScoreResponse.data;
+      result.success = true;
+      result.message = "";
+      result.status = "success";
+      return { ...result, ...creditScoreResponse.data };
     } else {
       console.error("Generation of credit score failed!");
       return {
@@ -358,24 +365,28 @@ export class MasaClient {
   };
 
   updateCreditScore = async (
-    tx: any
+    transactionHash: string
   ): Promise<
-    | {
-        creditScore: any;
-        signature: string;
-      }
     | {
         success: boolean;
         status: string;
         message: string;
+        creditScore?: any;
+        signature?: string;
       }
     | undefined
   > => {
+    const result = {
+      success: false,
+      status: "failed",
+      message: "Credit Score failed",
+    };
+
     const creditScoreResponse = await this._middlewareClient
       .post(
         `/contracts/credit-score/update`,
         {
-          tx,
+          transactionHash,
         },
         {
           headers: {
@@ -388,15 +399,15 @@ export class MasaClient {
       });
 
     if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
-      return creditScoreResponse.data;
+      result.success = true;
+      result.message = "";
+      result.status = "success";
+      return { ...result, ...creditScoreResponse.data };
     } else {
       console.error("Generation of credit score failed!");
-      return {
-        success: false,
-        status: "failed",
-        message: "Credit Score failed",
-      };
     }
+
+    return result;
   };
 
   sessionLogout = async (): Promise<
