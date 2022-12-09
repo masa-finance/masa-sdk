@@ -168,7 +168,7 @@ export class MasaContracts {
   async mintCreditScore(
     signer: Signer,
     paymentMethod: PaymentMethod,
-    date: string,
+    date: number,
     wallet: string,
     signature: string
   ): Promise<ContractTransaction> {
