@@ -9,13 +9,14 @@ export const loadIdentityByAddress = async (
 
   let identityId;
 
-  try {
+  const balance =
+    await masa.contracts.identity.SoulboundIdentityContract.balanceOf(address);
+
+  if (balance.toNumber() > 0) {
     identityId =
       await masa.contracts.identity.SoulboundIdentityContract.tokenOfOwner(
         address
       );
-  } catch {
-    // ignore
   }
 
   if (!identityId) {
@@ -25,11 +26,12 @@ export const loadIdentityByAddress = async (
   return identityId;
 };
 
-export const loadAddressByIdentity = async (
+export const loadAddressFromIdentityId = async (
   masa: Masa,
   identityId: BigNumber | number
 ): Promise<string | undefined> => {
   let address;
+
   try {
     address = await masa.contracts.identity.SoulboundIdentityContract[
       "ownerOf(uint256)"
@@ -38,7 +40,7 @@ export const loadAddressByIdentity = async (
     // ignore
   }
 
-  if (!identityId) {
+  if (!address) {
     console.error(`Identity '${identityId}' does not exist`);
   }
 
