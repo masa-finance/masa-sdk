@@ -323,7 +323,6 @@ export class MasaClient {
       generateCreditScoreResponse?.status === 200 &&
       generateCreditScoreResponse?.data
     ) {
-      console.log(generateCreditScoreResponse);
       result.success = true;
       result.message = "";
       result.status = "success";

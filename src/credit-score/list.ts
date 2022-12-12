@@ -44,7 +44,7 @@ export const loadCreditScoresByIdentityId = async (
   );
 };
 
-export const listCreditReports = async (
+export const listCreditScores = async (
   masa: Masa,
   address?: string
 ): Promise<
