@@ -67,7 +67,8 @@ export class MasaContracts {
     const { price, paymentAddress } = await this.getPaymentInformation(
       name,
       paymentMethod,
-      duration
+      duration,
+      signer
     );
 
     await this.checkOrGiveAllowance(
@@ -98,7 +99,8 @@ export class MasaContracts {
     const { price, paymentAddress } = await this.getPaymentInformation(
       name,
       paymentMethod,
-      duration
+      duration,
+      signer
     );
 
     await this.checkOrGiveAllowance(
@@ -155,8 +157,13 @@ export class MasaContracts {
   async getPaymentInformation(
     name: string,
     paymentMethod: PaymentMethod,
-    duration = 1
-  ): Promise<{ price: BigNumber; paymentAddress: string }> {
+    duration = 1,
+    signer: Signer
+  ): Promise<{
+    price: BigNumber;
+    paymentAddress: string;
+    formattedPrice: string;
+  }> {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
     const price = await this.identity.SoulStoreContract.getPriceForMintingName(
       paymentAddress,
@@ -164,9 +171,18 @@ export class MasaContracts {
       duration
     );
 
+    let decimals = 18;
+    if (paymentAddress !== ethers.constants.AddressZero) {
+      const contract = MASA__factory.connect(paymentAddress, signer);
+      decimals = await contract.decimals();
+    }
+
+    const formattedPrice = ethers.utils.formatUnits(price, decimals);
+
     return {
       price,
       paymentAddress,
+      formattedPrice,
     };
   }
 

@@ -8,11 +8,14 @@ export const getRegistrationPrice = async (
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
-  const { price } = await masa.contracts.getPaymentInformation(
+  const { price, formattedPrice } = await masa.contracts.getPaymentInformation(
     soulName,
     paymentMethod,
-    duration
+    duration,
+    masa.config.wallet
   );
+
+  console.log("adsasd", formattedPrice);
 
   console.log(`Soulname price is ${price} ${paymentMethod}.`);
 
