@@ -29,15 +29,12 @@ export const createCreditScore = async (
     if (creditScoreResponse?.signature) {
       if (!mock) {
         const wallet = masa.config.wallet;
-        const date = new Date(
-          creditScoreResponse.creditScore.lastUpdated
-        ).getTime();
 
         try {
           const tx = await masa.contracts.mintCreditScore(
             wallet,
             "eth",
-            date,
+            creditScoreResponse.signatureDate,
             creditScoreResponse.creditScore.account,
             creditScoreResponse.signature
           );

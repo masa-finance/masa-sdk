@@ -29,7 +29,7 @@ export const signTypedData = async (
   const chainId = (await wallet.provider.getNetwork()).chainId;
 
   const domain = {
-    name: await contract.name(),
+    name: "SoulboundCreditScore",
     version: "1.0.0",
     chainId,
     verifyingContract: contract.address,
