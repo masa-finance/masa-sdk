@@ -333,7 +333,7 @@ export class MasaClient {
       message: "Credit Score failed",
     };
 
-    const creditScoreResponse = await this._middlewareClient
+    const generateCreditScoreResponse = await this._middlewareClient
       .post(
         `/contracts/credit-score/generate`,
         {
@@ -349,11 +349,15 @@ export class MasaClient {
         console.error("Generation of credit score failed!", err.message);
       });
 
-    if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
+    if (
+      generateCreditScoreResponse?.status === 200 &&
+      generateCreditScoreResponse?.data
+    ) {
+      console.log(generateCreditScoreResponse);
       result.success = true;
       result.message = "";
       result.status = "success";
-      return { ...result, ...creditScoreResponse.data };
+      return { ...result, ...generateCreditScoreResponse.data };
     } else {
       console.error("Generation of credit score failed!");
       return {
@@ -382,7 +386,7 @@ export class MasaClient {
       message: "Credit Score failed",
     };
 
-    const creditScoreResponse = await this._middlewareClient
+    const updateCreditScoreResponse = await this._middlewareClient
       .post(
         `/contracts/credit-score/update`,
         {
@@ -398,11 +402,14 @@ export class MasaClient {
         console.error("Generation of credit score failed!", err.message);
       });
 
-    if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
+    if (
+      updateCreditScoreResponse?.status === 200 &&
+      updateCreditScoreResponse?.data
+    ) {
       result.success = true;
       result.message = "";
       result.status = "success";
-      return { ...result, ...creditScoreResponse.data };
+      return { ...result, ...updateCreditScoreResponse.data };
     } else {
       console.error("Generation of credit score failed!");
     }
