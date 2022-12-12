@@ -35,7 +35,7 @@ export const createCreditScore = async (
             wallet,
             "eth",
             creditScoreResponse.signatureDate,
-            creditScoreResponse.creditScore.account,
+            address,
             creditScoreResponse.signature
           );
 

@@ -1,6 +1,11 @@
 import axios from "axios";
-import { I2FA, ICreditScore, IIdentity, ISession } from "../../interface";
-import { BigNumber } from "ethers";
+import {
+  BaseResult,
+  I2FA,
+  ICreditScore,
+  IIdentity,
+  ISession,
+} from "../../interface";
 import Transaction from "arweave/node/lib/transaction";
 
 const headers = {
@@ -168,14 +173,7 @@ export class MasaClient {
   creditScoreMint = async (
     address: string,
     signature: string
-  ): Promise<
-    | {
-        tokenId: string | BigNumber;
-        success: boolean;
-        message: string;
-      }
-    | undefined
-  > => {
+  ): Promise<BaseResult | undefined> => {
     const storeMetadataResponse = await this._middlewareClient
       .post(
         `/contracts/credit-score/mint`,
@@ -212,12 +210,9 @@ export class MasaClient {
     code: string,
     signature: string
   ): Promise<
-    | {
-        tokenId: string | BigNumber;
-        success: boolean;
+    | (BaseResult & {
         status: string;
-        message: string;
-      }
+      })
     | undefined
   > => {
     const mint2FAResponse = await this._middlewareClient
@@ -256,11 +251,9 @@ export class MasaClient {
   twoFAGenerate = async (
     phoneNumber: string
   ): Promise<
-    | {
-        success: boolean;
+    | (BaseResult & {
         status: string;
-        message: string;
-      }
+      })
     | undefined
   > => {
     const storeMetadataResponse = await this._middlewareClient
@@ -288,29 +281,6 @@ export class MasaClient {
         success,
         status,
         message,
-      };
-    }
-  };
-
-  listCreditScore = async (): Promise<any> => {
-    const creditScoreResponse = await this._middlewareClient
-      .get(`/contracts/credit-score`, {
-        headers: {
-          cookie: this.cookie ? [this.cookie] : undefined,
-        },
-      })
-      .catch((err: any) => {
-        console.error("Generation of credit score failed!", err.message);
-      });
-
-    if (creditScoreResponse?.status === 200 && creditScoreResponse?.data) {
-      return creditScoreResponse.data;
-    } else {
-      console.error("Generation of credit score failed!");
-      return {
-        success: false,
-        status: "failed",
-        message: "Credit Score failed",
       };
     }
   };
