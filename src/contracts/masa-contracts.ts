@@ -16,7 +16,7 @@ export class MasaContracts {
     });
   }
 
-  getPaymentAddress(paymentMethod: PaymentMethod) {
+  private getPaymentAddress(paymentMethod: PaymentMethod) {
     let paymentAddress = ethers.constants.AddressZero;
 
     switch (paymentMethod) {
@@ -64,11 +64,9 @@ export class MasaContracts {
     duration = 1,
     metadataURL: string
   ): Promise<ContractTransaction> {
-    const paymentAddress = this.getPaymentAddress(paymentMethod);
-
-    const price = await this.identity.SoulStoreContract.getPriceForMintingName(
-      paymentAddress,
+    const { price, paymentAddress } = await this.getPaymentInformation(
       name,
+      paymentMethod,
       duration
     );
 
@@ -97,11 +95,9 @@ export class MasaContracts {
     duration = 1,
     metadataURL: string
   ): Promise<ContractTransaction> {
-    const paymentAddress = this.getPaymentAddress(paymentMethod);
-
-    const price = await this.identity.SoulStoreContract.getPriceForMintingName(
-      paymentAddress,
+    const { price, paymentAddress } = await this.getPaymentInformation(
       name,
+      paymentMethod,
       duration
     );
 
@@ -156,12 +152,22 @@ export class MasaContracts {
     }
   }
 
-  async price(name: string, paymentMethod: PaymentMethod, duration = 1) {
-    return this.identity.SoulStoreContract.getPriceForMintingName(
-      paymentMethod,
+  async getPaymentInformation(
+    name: string,
+    paymentMethod: PaymentMethod,
+    duration = 1
+  ): Promise<{ price: BigNumber; paymentAddress: string }> {
+    const paymentAddress = this.getPaymentAddress(paymentMethod);
+    const price = await this.identity.SoulStoreContract.getPriceForMintingName(
+      paymentAddress,
       name,
       duration
     );
+
+    return {
+      price,
+      paymentAddress,
+    };
   }
 
   // purchase only identity
