@@ -14,7 +14,7 @@ Login with your soulbound web3 identity to unleash the power of DeFi.
 Your signature is valid till: ${expires}.
 Challenge: ${challenge}`,
 
-   /**
+  /**
    * The Masa Finance Credit Score Template used for creating credit score tokens
    * @param value The value of the credit score
    * @param lastUpdated The date of the credit score generation process
@@ -31,5 +31,4 @@ Challenge: ${challenge}`,
    */
   twoFATemplate: (identityId: string, phoneNumber: string, code: string) =>
     `Identity: ${identityId} Phone Number: ${phoneNumber} Code: ${code}`,
-    
 };
