@@ -1,5 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { MASA__factory } from "@masa-finance/masa-contracts-identity";
+import {
+  IERC20,
+  IERC20__factory,
+  MASA__factory,
+} from "@masa-finance/masa-contracts-identity";
 import { ContractReceipt, ContractTransaction, ethers, Signer } from "ethers";
 import { addresses, loadIdentityContracts } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
@@ -32,6 +36,44 @@ export class MasaContracts {
     }
 
     return paymentAddress;
+  }
+
+  async addPermission(
+    signer: Signer,
+    tokenAddress: string,
+    paymentMethod: PaymentMethod,
+    receiverIdentityId: BigNumber,
+    ownerIdentityId: BigNumber,
+    tokenId: BigNumber,
+    signatureDate: number,
+    expirationDate: number,
+    signature: string
+  ) {
+    const { price, paymentMethodUsed } =
+      await this.identity.SoulLinkerContract.getPriceForAddPermission(
+        this.getPaymentAddress(paymentMethod)
+      );
+
+    const masaToken: IERC20 = IERC20__factory.connect(
+      paymentMethodUsed,
+      signer
+    );
+    await masaToken.approve(this.identity.SoulLinkerContract.address, price);
+
+    // 52 24
+    // 0x4cf933827818586f365fa55bb0ce3e39d61e170063a7177f08809fbc6ea157eb7c9b8756745147e72d4832b0e3dd8bc562422e2d16aa602bbfdab21f3917fa761b 1671094232 1671095132
+    await this.identity.SoulLinkerContract.connect(signer).addPermission(
+      paymentMethodUsed,
+      receiverIdentityId,
+      ownerIdentityId,
+      tokenAddress,
+      tokenId,
+      // this is rubbish
+      JSON.stringify({}),
+      signatureDate,
+      expirationDate,
+      signature
+    );
   }
 
   async getSoulNames(address: string): Promise<string[]> {

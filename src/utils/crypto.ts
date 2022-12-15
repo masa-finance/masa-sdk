@@ -22,6 +22,7 @@ export const signMessage = async (
 
 export const signTypedData = async (
   contract: Contract,
+  name: string,
   wallet: ethers.Wallet,
   types: Record<string, Array<TypedDataField>>,
   value: Record<string, any>
@@ -29,7 +30,7 @@ export const signTypedData = async (
   const chainId = (await wallet.provider.getNetwork()).chainId;
 
   const domain = {
-    name: "SoulboundCreditScore",
+    name,
     version: "1.0.0",
     chainId,
     verifyingContract: contract.address,
