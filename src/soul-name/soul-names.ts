@@ -11,6 +11,7 @@ import {
 } from "./list";
 import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
+import { validateSoulName } from "./validate"
 
 export const soulNames = (masa: Masa) => ({
   getRegistrationPrice: (
@@ -30,4 +31,5 @@ export const soulNames = (masa: Masa) => ({
   send: (soulName: string, receiver: string) =>
     sendSoulName(masa, soulName, receiver),
   verify: (soulName: string) => verifyByName(masa, soulName),
+  validate: (soulName: string) => validateSoulName(masa, soulName),
 });
