@@ -7,7 +7,7 @@ import Masa from "../masa";
 export const creditScore = (masa: Masa) => ({
   mint: (address: string, signature: string) =>
     masa.client.creditScoreMint(address, signature),
-  create: (mock?: boolean) => createCreditScore(masa, mock),
+  create: () => createCreditScore(masa),
   burn: (creditScoreId: number) => burnCreditScore(masa, creditScoreId),
   list: (address?: string) => listCreditScores(masa, address),
   load: (identityId: BigNumber) =>

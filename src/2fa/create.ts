@@ -17,7 +17,7 @@ export const create2FA = async (
 
     const identityId = await masa.identity.load(address);
     if (!identityId) {
-      result.message = "No Identity";
+      result.message = `No Identity found for address ${address}`;
       return result;
     }
 

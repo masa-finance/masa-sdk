@@ -20,7 +20,7 @@ export const loadIdentityByAddress = async (
   }
 
   if (!identityId) {
-    console.error(`No identity for '${address}'!`);
+    console.error(`No Identity found for address ${address}`);
   }
 
   return identityId;
