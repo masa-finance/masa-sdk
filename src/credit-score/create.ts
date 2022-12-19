@@ -10,11 +10,9 @@ export const createCreditScore = async (
   };
 
   if (await masa.session.checkLogin()) {
-    const address = await masa.config.wallet.getAddress();
-
     console.log("Creating Credit Score!");
 
-    const identityId = await masa.identity.load();
+    const { identityId, address } = await masa.identity.load();
     if (!identityId) {
       result.message = `No Identity found for address ${address}`;
       return result;

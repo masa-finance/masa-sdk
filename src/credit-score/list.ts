@@ -59,7 +59,7 @@ export const listCreditScores = async (
 > => {
   address = address || (await masa.config.wallet.getAddress());
 
-  const identityId = await masa.identity.load(address);
+  const { identityId } = await masa.identity.load(address);
   if (!identityId) return [];
 
   const creditScores = await loadCreditScoresByIdentityId(masa, identityId);

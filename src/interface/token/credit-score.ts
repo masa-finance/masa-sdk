@@ -1,4 +1,4 @@
-import { BaseResult } from "./masa";
+import { BaseResult } from "../masa";
 
 export interface ICreditScore {
   name: "Masa Soulbound Credit Score v1.0.0";

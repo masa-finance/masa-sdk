@@ -54,11 +54,26 @@ export class MasaContracts {
         this.getPaymentAddress(paymentMethod)
       );
 
-    const masaToken: IERC20 = IERC20__factory.connect(
-      paymentMethodUsed,
-      signer
-    );
-    await masaToken.approve(this.identity.SoulLinkerContract.address, price);
+    console.log(paymentMethodUsed);
+
+    if (paymentMethod !== "eth") {
+      const paymentToken: IERC20 = IERC20__factory.connect(
+        paymentMethodUsed,
+        signer
+      );
+
+      const allowance = await paymentToken.allowance(
+        await signer.getAddress(),
+        this.identity.SoulLinkerContract.address
+      );
+      if (allowance < price) {
+        console.log("approving allowance");
+        await paymentToken.approve(
+          this.identity.SoulLinkerContract.address,
+          price
+        );
+      }
+    }
 
     // 52 24
     // 0x4cf933827818586f365fa55bb0ce3e39d61e170063a7177f08809fbc6ea157eb7c9b8756745147e72d4832b0e3dd8bc562422e2d16aa602bbfdab21f3917fa761b 1671094232 1671095132

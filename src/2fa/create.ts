@@ -13,9 +13,7 @@ export const create2FA = async (
   };
 
   if (await masa.session.checkLogin()) {
-    const address = await masa.config.wallet.getAddress();
-
-    const identityId = await masa.identity.load(address);
+    const { identityId, address } = await masa.identity.load();
     if (!identityId) {
       result.message = `No Identity found for address ${address}`;
       return result;

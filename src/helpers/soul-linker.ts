@@ -43,7 +43,7 @@ export const signSoulLinkerLink = async (
   );
 
   const recover = verifyTypedData(domain, types, value, signature);
-  console.log({ recover }, await masa.config.wallet.getAddress());
+  console.log({ recover }, { address: await masa.config.wallet.getAddress() });
 
   return { signature, signatureDate, expirationDate };
 };

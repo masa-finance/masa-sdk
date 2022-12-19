@@ -1,6 +1,5 @@
 import { BigNumber } from "ethers";
 import { PaymentMethod } from "../contracts";
-import Masa from "../masa";
 import { burnSoulName } from "./burn";
 import { createSoulName, getRegistrationPrice } from "./create";
 import {
@@ -11,25 +10,29 @@ import {
 } from "./list";
 import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
-import { validateSoulName } from "./validate"
+import { validateSoulName } from "./validate";
+import Masa from "../masa";
 
-export const soulNames = (masa: Masa) => ({
-  getRegistrationPrice: (
+export class MasaSoulNames {
+  constructor(private masa: Masa) {}
+
+  getRegistrationPrice = (
     soulName: string,
     duration: number,
     paymentMethod: PaymentMethod
-  ) => getRegistrationPrice(masa, soulName, duration, paymentMethod),
-  list: (address?: string) => listSoulNames(masa, address),
-  loadSoulNamesByIdentityId: (identityId: BigNumber) =>
-    loadSoulNamesByIdentityId(masa, identityId),
-  loadSoulNameByName: (soulName: string) => loadSoulNameByName(masa, soulName),
-  loadSoulNameByTokenId: (tokenId: string | BigNumber) =>
-    loadSoulNameByTokenId(masa, tokenId),
-  create: (soulName: string, duration: number, paymentMethod: PaymentMethod) =>
-    createSoulName(masa, soulName, duration, paymentMethod),
-  burn: (soulName: string) => burnSoulName(masa, soulName),
-  send: (soulName: string, receiver: string) =>
-    sendSoulName(masa, soulName, receiver),
-  verify: (soulName: string) => verifyByName(masa, soulName),
-  validate: (soulName: string) => validateSoulName(masa, soulName),
-});
+  ) => getRegistrationPrice(this.masa, soulName, duration, paymentMethod);
+  list = (address?: string) => listSoulNames(this.masa, address);
+  loadSoulNamesByIdentityId = (identityId: BigNumber) =>
+    loadSoulNamesByIdentityId(this.masa, identityId);
+  loadSoulNameByName = (soulName: string) =>
+    loadSoulNameByName(this.masa, soulName);
+  loadSoulNameByTokenId = (tokenId: string | BigNumber) =>
+    loadSoulNameByTokenId(this.masa, tokenId);
+  create = (soulName: string, duration: number, paymentMethod: PaymentMethod) =>
+    createSoulName(this.masa, soulName, duration, paymentMethod);
+  burn = (soulName: string) => burnSoulName(this.masa, soulName);
+  send = (soulName: string, receiver: string) =>
+    sendSoulName(this.masa, soulName, receiver);
+  verify = (soulName: string) => verifyByName(this.masa, soulName);
+  validate = (soulName: string) => validateSoulName(this.masa, soulName);
+};

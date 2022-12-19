@@ -1,4 +1,4 @@
-import { BaseResult } from "./masa";
+import { BaseResult } from "../masa";
 
 export interface I2FA {
   name: "Masa Soulbound 2FA v1.0.0";

@@ -45,8 +45,7 @@ export const purchaseIdentityWithSoulName = async (
 export const createIdentity = async (masa: Masa): Promise<boolean> => {
   let identityCreated = false;
 
-  const address = await masa.config.wallet.getAddress();
-  const identityId = await masa.identity.load(address);
+  const { identityId } = await masa.identity.load();
 
   if (identityId) {
     console.error(`Identity already created! '${identityId}'`);
@@ -73,7 +72,7 @@ export const createIdentityWithSoulName = async (
     }
 
     const address = await masa.config.wallet.getAddress();
-    const identityId = await masa.identity.load(address);
+    const { identityId } = await masa.identity.load(address);
 
     if (identityId) {
       console.error(`Identity already created! '${identityId}'`);

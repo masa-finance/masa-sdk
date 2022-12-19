@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 export const loadIdentityByAddress = async (
   masa: Masa,
   address?: string
-): Promise<BigNumber | undefined> => {
+): Promise<{ identityId?: BigNumber; address: string }> => {
   address = address || (await masa.config.wallet.getAddress());
 
   let identityId;
@@ -23,12 +23,12 @@ export const loadIdentityByAddress = async (
     console.error(`No Identity found for address ${address}`);
   }
 
-  return identityId;
+  return { identityId, address };
 };
 
 export const loadAddressFromIdentityId = async (
   masa: Masa,
-  identityId: BigNumber | number
+  identityId: BigNumber
 ): Promise<string | undefined> => {
   let address;
 

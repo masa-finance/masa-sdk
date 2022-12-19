@@ -83,9 +83,7 @@ export const createSoulName = async (
       soulName = soulName.replace(".soul", "");
     }
 
-    const address = await masa.config.wallet.getAddress();
-
-    const identityId = await masa.identity.load(address);
+    const { identityId, address } = await masa.identity.load();
     if (!identityId) return result;
 
     const aa = await purchaseSoulName(masa, soulName, duration, paymentMethod);
