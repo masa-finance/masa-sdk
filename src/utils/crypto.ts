@@ -22,7 +22,6 @@ export const signMessage = async (
 
 export const signTypedData = async (
   contract: Contract,
-  name: string,
   wallet: ethers.Wallet,
   name: string,
   types: Record<string, Array<TypedDataField>>,
