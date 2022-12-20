@@ -11,7 +11,7 @@ import {
 } from "./list";
 import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
-import { validateSoulName } from "./validate"
+import { validateSoulName } from "./validate";
 
 export const soulNames = (masa: Masa) => ({
   getRegistrationPrice: (

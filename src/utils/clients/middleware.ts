@@ -285,15 +285,14 @@ export class MasaClient {
     }
   };
 
-  createCreditScore = async (
-    address: string
-  ): Promise<
+  createCreditScore = async (): Promise<
     | {
         success: boolean;
         status: string;
         message: string;
-        creditScore?: any;
         signature?: string;
+        signatureDate?: number;
+        authorityAddress?: string;
       }
     | undefined
   > => {
@@ -304,24 +303,19 @@ export class MasaClient {
     };
 
     const generateCreditScoreResponse = await this._middlewareClient
-      .post(
-        `/contracts/credit-score/generate`,
-        {
-          address,
+      .get(`/contracts/credit-score/generate`, {
+        headers: {
+          cookie: this.cookie ? [this.cookie] : undefined,
         },
-        {
-          headers: {
-            cookie: this.cookie ? [this.cookie] : undefined,
-          },
-        }
-      )
+      })
       .catch((err: any) => {
         console.error("Generation of credit score failed!", err.message);
       });
 
     if (
-      generateCreditScoreResponse?.status === 200 &&
-      generateCreditScoreResponse?.data
+      generateCreditScoreResponse &&
+      generateCreditScoreResponse.status === 200 &&
+      generateCreditScoreResponse.data
     ) {
       result.success = true;
       result.message = "";
