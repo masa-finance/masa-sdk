@@ -3,6 +3,7 @@ import { login } from "./login";
 import { logout } from "./logout";
 import Masa from "../masa";
 import { getSession } from "./get-session";
+import { checkAllowlist } from "./allowlist";
 
 export const session = (masa: Masa) => ({
   checkLogin: () => checkLogin(masa),
@@ -10,4 +11,5 @@ export const session = (masa: Masa) => ({
   login: () => login(masa),
   logout: () => logout(masa),
   getSession: () => getSession(masa),
+  checkAllowlist: () => checkAllowlist(masa),
 });

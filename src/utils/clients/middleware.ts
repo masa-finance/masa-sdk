@@ -47,6 +47,23 @@ export class MasaClient {
       return checkData;
     }
   };
+  allowlistCheck  = async (): Promise<ISession | undefined> => {
+    const checkResponse = await this._middlewareClient
+      .get(`/session/allowlist`, {
+        headers: {
+          cookie: this.cookie ? [this.cookie] : undefined,
+        },
+      })
+      .catch(() => {
+        // ignore
+      });
+
+    if (checkResponse) {
+      const { data: checkData } = checkResponse;
+
+      return checkData.success;
+    }
+  };
 
   getMetadata = async (
     uri: string
