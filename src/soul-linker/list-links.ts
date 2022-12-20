@@ -24,13 +24,13 @@ export const listLinks = async (
 
   const creditScoreIds: BigNumber[] =
     await masa.contracts.identity.SoulLinkerContract[
-      "getSBTLinks(uint256,address)"
+      "getSBTConnections(uint256,address)"
     ](identityId, masa.contracts.identity.SoulboundCreditScoreContract.address);
 
   console.log(creditScoreIds[0].toString());
 
   const signatureDates =
-    await masa.contracts.identity.SoulLinkerContract.getPermissionSignatureDates(
+    await masa.contracts.identity.SoulLinkerContract.getLinkSignatureDates(
       contract.address,
       tokenId,
       readerIdentityId
@@ -39,13 +39,12 @@ export const listLinks = async (
   console.log(signatureDates);
 
   for (const signatureDate of signatureDates) {
-    const info =
-      await masa.contracts.identity.SoulLinkerContract.getPermissionInfo(
-        contract.address,
-        tokenId,
-        readerIdentityId,
-        signatureDate
-      );
+    const info = await masa.contracts.identity.SoulLinkerContract.getLinkInfo(
+      contract.address,
+      tokenId,
+      readerIdentityId,
+      signatureDate
+    );
 
     console.log(info);
   }

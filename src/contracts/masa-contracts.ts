@@ -51,10 +51,11 @@ export class MasaContracts {
     expirationDate: number,
     signature: string
   ) {
-    const { price, paymentMethodUsed } =
-      await this.identity.SoulLinkerContract.getPriceForAddPermission(
-        this.getPaymentAddress(paymentMethod)
-      );
+    const paymentMethodUsed = this.getPaymentAddress(paymentMethod);
+    const price = await this.identity.SoulLinkerContract.getPriceForAddLink(
+      paymentMethodUsed,
+      tokenAddress
+    );
 
     console.log(paymentMethodUsed);
 
@@ -79,14 +80,12 @@ export class MasaContracts {
 
     // 52 24
     // 0x4cf933827818586f365fa55bb0ce3e39d61e170063a7177f08809fbc6ea157eb7c9b8756745147e72d4832b0e3dd8bc562422e2d16aa602bbfdab21f3917fa761b 1671094232 1671095132
-    await this.identity.SoulLinkerContract.connect(signer).addPermission(
+    await this.identity.SoulLinkerContract.connect(signer).addLink(
       paymentMethodUsed,
       receiverIdentityId,
       ownerIdentityId,
       tokenAddress,
       tokenId,
-      // this is rubbish
-      JSON.stringify({}),
       signatureDate,
       expirationDate,
       signature

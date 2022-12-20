@@ -15,7 +15,7 @@ export const loadCreditScoresByIdentityId = async (
 > => {
   const creditScoreIds: BigNumber[] =
     await masa.contracts.identity.SoulLinkerContract[
-      "getSBTLinks(uint256,address)"
+      "getSBTConnections(uint256,address)"
     ](identityId, masa.contracts.identity.SoulboundCreditScoreContract.address);
 
   const creditScores = await Promise.all(

@@ -27,7 +27,7 @@ export const breakLink = async (
   }
 
   const linkDates =
-    await masa.contracts.identity.SoulLinkerContract.getPermissionSignatureDates(
+    await masa.contracts.identity.SoulLinkerContract.getLinkSignatureDates(
       contract.address,
       tokenId,
       readerIdentityId
@@ -35,7 +35,7 @@ export const breakLink = async (
 
   for (const linkDate of linkDates) {
     const linkData =
-      await masa.contracts.identity.SoulLinkerContract.getPermissionInfo(
+      await masa.contracts.identity.SoulLinkerContract.getLinkInfo(
         contract.address,
         tokenId,
         readerIdentityId,
@@ -44,7 +44,7 @@ export const breakLink = async (
 
     console.log(linkData);
 
-    await masa.contracts.identity.SoulLinkerContract.revokePermission(
+    await masa.contracts.identity.SoulLinkerContract.revokeLink(
       readerIdentityId,
       identityId,
       contract.address,

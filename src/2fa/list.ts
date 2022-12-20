@@ -15,7 +15,7 @@ export const load2FAsByIdentityId = async (
 > => {
   const twoFSIds: BigNumber[] =
     await masa.contracts.identity.SoulLinkerContract[
-      "getSBTLinks(uint256,address)"
+      "getSBTConnections(uint256,address)"
     ](identityId, masa.contracts.identity.Soulbound2FAContract.address);
 
   return await Promise.all(

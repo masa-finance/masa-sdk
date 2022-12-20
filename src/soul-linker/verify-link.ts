@@ -30,7 +30,7 @@ export const verifyLink = async (
     return result;
   }
 
-  await masa.contracts.identity.SoulLinkerContract.validatePermission(
+  await masa.contracts.identity.SoulLinkerContract.validateLink(
     identityId,
     ownerIdentityId,
     contract.address,

@@ -10,6 +10,7 @@ export const signSoulLinkerLink = async (
   tokenAddress: string,
   tokenId: BigNumber,
   signatureDate: number = Math.floor(Date.now() / 1000),
+  // default to 15 minutes
   expirationDate: number = Math.floor(Date.now() / 1000) + 60 * 15
 ) => {
   const types = {
@@ -18,7 +19,6 @@ export const signSoulLinkerLink = async (
       { name: "ownerIdentityId", type: "uint256" },
       { name: "token", type: "address" },
       { name: "tokenId", type: "uint256" },
-      { name: "data", type: "string" },
       { name: "signatureDate", type: "uint256" },
       { name: "expirationDate", type: "uint256" },
     ],
@@ -29,7 +29,6 @@ export const signSoulLinkerLink = async (
     ownerIdentityId: ownerIdentityId,
     token: tokenAddress,
     tokenId: tokenId,
-    data: JSON.stringify({}),
     signatureDate: signatureDate,
     expirationDate: expirationDate,
   };
