@@ -13,5 +13,5 @@ export class MasaSession {
   login = () => login(this.masa);
   logout = () => logout(this.masa);
   getSession = () => getSession(this.masa);
-  checkAllowlist = () => checkAllowlist(this.masa),
+  checkAllowlist = () => checkAllowlist(this.masa);
 }
