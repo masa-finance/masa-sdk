@@ -1,8 +1,11 @@
 import Masa from "../masa";
 import { CreateCreditScoreResult } from "../interface";
+import { PaymentMethod } from "../contracts";
+import { ethers } from "ethers";
 
 export const createCreditScore = async (
-  masa: Masa
+  masa: Masa,
+  paymentMethod: PaymentMethod = "eth"
 ): Promise<CreateCreditScoreResult | undefined> => {
   const result: CreateCreditScoreResult = {
     success: false,
@@ -28,33 +31,36 @@ export const createCreditScore = async (
       return result;
     }
 
-    const creditScoreResponse: any = await masa.client.createCreditScore(
-      address
-    );
+    const creditScoreResponse = await masa.client.createCreditScore();
 
-    if (creditScoreResponse?.signature) {
-      const wallet = masa.config.wallet;
-
+    if (
+      creditScoreResponse?.signature &&
+      creditScoreResponse?.signatureDate &&
+      creditScoreResponse?.authorityAddress
+    ) {
       try {
         const tx = await masa.contracts.mintCreditScore(
-          wallet,
-          "eth",
+          masa.config.wallet as ethers.Wallet,
+          paymentMethod,
+          identityId,
+          creditScoreResponse.authorityAddress,
           creditScoreResponse.signatureDate,
-          address,
           creditScoreResponse.signature
         );
 
         console.log("Waiting for transaction to finalize");
 
         const transactionReceipt = await tx.wait();
+
+        console.log("Updating Credit Score Record!");
         const creditScoreUpdateResponse = await masa.client.updateCreditScore(
           transactionReceipt.transactionHash
         );
 
         return { ...result, ...creditScoreUpdateResponse };
-      } catch (e: any) {
+      } catch (err: any) {
         result.success = false;
-        result.message = `Unexpected error: ${e.message}`;
+        result.message = `Unexpected error: ${err.message}`;
         console.error(result.message);
       }
     }

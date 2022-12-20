@@ -4,9 +4,11 @@ import {
   IERC20__factory,
   MASA__factory,
 } from "@masa-finance/masa-contracts-identity";
-import { ContractReceipt, ContractTransaction, ethers, Signer } from "ethers";
+import { ethers } from "ethers";
 import { addresses, loadIdentityContracts } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
+import { verifyTypedData } from "ethers/lib/utils";
+import { generateSignatureDomain } from "../utils";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
 
@@ -39,7 +41,7 @@ export class MasaContracts {
   }
 
   async addPermission(
-    signer: Signer,
+    signer: ethers.Signer,
     tokenAddress: string,
     paymentMethod: PaymentMethod,
     receiverIdentityId: BigNumber,
@@ -109,18 +111,20 @@ export class MasaContracts {
   }
 
   // purchase only identity
-  async purchaseIdentity(signer: Signer): Promise<ContractTransaction> {
+  async purchaseIdentity(
+    signer: ethers.Signer
+  ): Promise<ethers.ContractTransaction> {
     return this.identity.SoulStoreContract.connect(signer).purchaseIdentity();
   }
 
   // purchase only identity with name
   async purchaseIdentityAndName(
-    signer: Signer,
+    signer: ethers.Signer,
     name: string,
     paymentMethod: PaymentMethod,
     duration = 1,
     metadataURL: string
-  ): Promise<ContractTransaction> {
+  ): Promise<ethers.ContractTransaction> {
     const { price, paymentAddress } = await this.getPaymentInformation(
       name,
       paymentMethod,
@@ -147,12 +151,12 @@ export class MasaContracts {
 
   // purchase only name
   async purchaseName(
-    signer: Signer,
+    signer: ethers.Signer,
     name: string,
     paymentMethod: PaymentMethod,
     duration = 1,
     metadataURL: string
-  ): Promise<ContractTransaction> {
+  ): Promise<ethers.ContractTransaction> {
     const { price, paymentAddress } = await this.getPaymentInformation(
       name,
       paymentMethod,
@@ -184,10 +188,10 @@ export class MasaContracts {
 
   private async checkOrGiveAllowance(
     paymentAddress: string,
-    signer: Signer,
+    signer: ethers.Signer,
     paymentMethod: PaymentMethod,
     price: BigNumber
-  ): Promise<ContractReceipt | undefined> {
+  ): Promise<ethers.ContractReceipt | undefined> {
     if (paymentMethod !== "eth") {
       const contract = MASA__factory.connect(paymentAddress, signer);
 
@@ -199,12 +203,14 @@ export class MasaContracts {
           this.identity.SoulStoreContract.address
         )) < price
       ) {
-        const tx: ContractTransaction = await contract.connect(signer).approve(
-          // spender
-          this.identity.SoulStoreContract.address,
-          // amount
-          price
-        );
+        const tx: ethers.ContractTransaction = await contract
+          .connect(signer)
+          .approve(
+            // spender
+            this.identity.SoulStoreContract.address,
+            // amount
+            price
+          );
 
         return await tx.wait();
       }
@@ -215,7 +221,7 @@ export class MasaContracts {
     name: string,
     paymentMethod: PaymentMethod,
     duration = 1,
-    signer: Signer
+    signer: ethers.Signer
   ): Promise<{
     price: BigNumber;
     paymentAddress: string;
@@ -245,20 +251,38 @@ export class MasaContracts {
 
   // purchase only identity
   async mintCreditScore(
-    signer: Signer,
+    wallet: ethers.Wallet,
     paymentMethod: PaymentMethod,
-    date: number,
-    wallet: string,
+    identityId: BigNumber,
+    authorityAddress: string,
+    signatureDate: number,
     signature: string
-  ): Promise<ContractTransaction> {
-    return await this.identity.SoulboundCreditScoreContract.connect(signer)[
-      "mint(address,address,address,uint256,bytes)"
-    ](
-      paymentMethod,
+  ): Promise<ethers.ContractTransaction> {
+    const types = {
+      MintCreditScore: [
+        { name: "identityId", type: "uint256" },
+        { name: "authorityAddress", type: "address" },
+        { name: "signatureDate", type: "uint256" },
+      ],
+    };
+
+    const value = {
+      identityId,
+      authorityAddress,
+      signatureDate,
+    };
+
+    const domain = await generateSignatureDomain(
       wallet,
-      "0x3c8D9f130970358b7E8cbc1DbD0a1EbA6EBE368F",
-      date,
-      signature
+      "SoulboundCreditScore",
+      this.identity.SoulboundCreditScoreContract.address
     );
+
+    const recoveredAddress = verifyTypedData(domain, types, value, signature);
+    console.log("lala", { recoveredAddress }, { authorityAddress });
+
+    return await this.identity.SoulboundCreditScoreContract.connect(wallet)[
+      "mint(address,uint256,address,uint256,bytes)"
+    ](paymentMethod, identityId, authorityAddress, signatureDate, signature);
   }
 }
