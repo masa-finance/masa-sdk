@@ -3,7 +3,7 @@ import { burn2FA } from "./burn";
 import { list2FAs, load2FAsByIdentityId } from "./list";
 import { BigNumber } from "ethers";
 import Masa from "../masa";
-import { MasaSoulLinker } from "../soul-linker"
+import { MasaSoulLinker } from "../soul-linker";
 
 export class Masa2FA {
   public readonly links: MasaSoulLinker;

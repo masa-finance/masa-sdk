@@ -4,6 +4,7 @@ import {
   Masa2FA,
   MasaAccount,
   MasaArgs,
+  MasaArweave,
   MasaClient,
   MasaConfig,
   MasaContracts,
@@ -13,10 +14,9 @@ import {
   MasaSoulNames,
   version,
 } from "./";
-import Arweave from "arweave";
 
 export default class Masa {
-  public readonly arweave: Arweave;
+  public readonly arweave: MasaArweave;
 
   public readonly client: MasaClient;
   public readonly config: MasaConfig;

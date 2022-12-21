@@ -34,7 +34,7 @@ export const establishLink = async (
     return result;
   }
 
-  console.log(paymentMethod)
+  console.log(paymentMethod);
 
   await masa.contracts.addPermission(
     masa.config.wallet as Signer,

@@ -35,4 +35,4 @@ export class MasaSoulNames {
     sendSoulName(this.masa, soulName, receiver);
   verify = (soulName: string) => verifyByName(this.masa, soulName);
   validate = (soulName: string) => validateSoulName(this.masa, soulName);
-};
+}
