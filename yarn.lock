@@ -787,10 +787,22 @@ array-union@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
 
-arweave@^1.10.13, arweave@^1.11.6:
+arweave@^1.10.13:
   version "1.11.6"
   resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.11.6.tgz#5afcded201c6f123dd62e5bfae1b72ca793ec7c2"
   integrity sha512-D6N6e2z7oZoxFhu/qElLwQ2T8DxZ8xIqDB+Y16KHvZbassIrrS9iALwxLdaFYNInuyElg6i7qotBMcShWbFSTw==
+  dependencies:
+    arconnect "^0.4.2"
+    asn1.js "^5.4.1"
+    axios "^0.27.2"
+    base64-js "^1.5.1"
+    bignumber.js "^9.0.2"
+    util "^0.12.4"
+
+arweave@^1.11.8:
+  version "1.11.8"
+  resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.11.8.tgz#09376e0c6cec40a661cbb27a306cb11c0a663cd8"
+  integrity sha512-58ODeNPIC4OjaOCl2bXjKbOFGsiVZFs+DkQg3BvQGvFWNqw1zTJ4Jp01xGUz+GbdOaDyJcCC0g3l0HwdJfFPyw==
   dependencies:
     arconnect "^0.4.2"
     asn1.js "^5.4.1"

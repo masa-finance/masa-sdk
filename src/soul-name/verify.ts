@@ -32,13 +32,7 @@ export const verifyByName = async (
     metadataOwnerIsMasaAccount: false,
   };
 
-  let soulNameInstance;
-  try {
-    soulNameInstance = await loadSoulNameByName(masa, soulName);
-  } catch (err: any) {
-    console.error("Name not found", err.message);
-    return result;
-  }
+  const soulNameInstance = await loadSoulNameByName(masa, soulName);
 
   if (soulNameInstance) {
     // check if name matches onchain and in the metadata
@@ -49,49 +43,60 @@ export const verifyByName = async (
     const metadataTxId = soulNameInstance.tokenUri.replace("ar://", "");
 
     if (metadataTxId) {
-      const metadataTxData = await masa.arweave.transactions.get(metadataTxId);
-      const metadataOwner = await masa.arweave.wallets.ownerToAddress(
-        metadataTxData.owner
-      );
-      result.metadataOwnerIsMasaAccount =
-        !!metadataOwner && arAccounts.indexOf(metadataOwner) > -1;
+      try {
+        const metadataTxData = await masa.arweave.transactions.get(
+          metadataTxId
+        );
+        const metadataOwner = await masa.arweave.wallets.ownerToAddress(
+          metadataTxData.owner
+        );
+        result.metadataOwnerIsMasaAccount =
+          !!metadataOwner && arAccounts.indexOf(metadataOwner) > -1;
+      } catch {
+        console.error("Failed to load metadata transaction!", metadataTxId);
+      }
     }
 
     const imageTxId = soulNameInstance.metadata?.image?.replace("ar://", "");
 
     if (imageTxId) {
-      // check if image data was deployed to arweave by masa
-      const imageTxData = await masa.arweave.transactions.get(imageTxId);
-      const imageDataOwner = await masa.arweave.wallets.ownerToAddress(
-        imageTxData.owner
-      );
-      result.imageOwnerIsMasaAccount =
-        !!imageDataOwner && arAccounts.indexOf(imageDataOwner) > -1;
-
-      const imageData = (await masa.arweave.transactions
-        .getData(imageTxId, {
-          decode: true,
-        })
-        .catch(() => {
-          // ignore
-        })) as Uint8Array;
-
-      const imageHash = ethers.utils.keccak256(imageData);
-
-      // check if image data hash matches the hash from the metadata
-      result.imageHashMatch =
-        imageHash === soulNameInstance.metadata?.imageHash;
-
-      // check that image hash signature matches one of the masa addresses
-      if (soulNameInstance.metadata?.imageHashSignature) {
-        const recoveredImageAddress = recoverAddress(
-          imageHash,
-          soulNameInstance.metadata.imageHashSignature
+      try {
+        // check if image data was deployed to arweave by masa
+        const imageTxData = await masa.arweave.transactions.get(imageTxId);
+        const imageDataOwner = await masa.arweave.wallets.ownerToAddress(
+          imageTxData.owner
         );
+        result.imageOwnerIsMasaAccount =
+          !!imageDataOwner && arAccounts.indexOf(imageDataOwner) > -1;
+      } catch {
+        console.error("Failed to load image transaction!", imageTxId);
+      }
 
-        result.imageSignatureMatch =
-          !!recoveredImageAddress &&
-          minters.indexOf(recoveredImageAddress) > -1;
+      try {
+        const imageData = (await masa.arweave.loadTransactionData(
+          imageTxId,
+          false
+        )) as Uint8Array;
+
+        const imageHash = ethers.utils.keccak256(imageData);
+
+        // check if image data hash matches the hash from the metadata
+        result.imageHashMatch =
+          imageHash === soulNameInstance.metadata?.imageHash;
+
+        // check that image hash signature matches one of the masa addresses
+        if (soulNameInstance.metadata?.imageHashSignature) {
+          const recoveredImageAddress = recoverAddress(
+            imageHash,
+            soulNameInstance.metadata.imageHashSignature
+          );
+
+          result.imageSignatureMatch =
+            !!recoveredImageAddress &&
+            minters.indexOf(recoveredImageAddress) > -1;
+        }
+      } catch (err: any) {
+        console.error("Failed to load image data!", imageTxId, err.message);
       }
     }
 
@@ -112,6 +117,8 @@ export const verifyByName = async (
         !!recoveredMetadataAddress &&
         minters.indexOf(recoveredMetadataAddress) > -1;
     }
+  } else {
+    console.error(`Soul Name '${soulName}' not found!`);
   }
 
   return result;
