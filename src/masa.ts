@@ -6,14 +6,13 @@ import { identity } from "./identity";
 import { soulNames } from "./soul-name";
 import { twoFA } from "./2fa";
 
-import { arweave as arweaveInit, MasaClient } from "./utils";
+import { arweave as arweaveInit, MasaArweave, MasaClient } from "./utils";
 import { version } from "./helpers";
 import { MasaArgs, MasaConfig } from "./interface";
-import Arweave from "arweave";
 
 export default class Masa {
   public readonly client: MasaClient;
-  public readonly arweave: Arweave;
+  public readonly arweave: MasaArweave;
   public readonly config: MasaConfig;
   public readonly contracts: MasaContracts;
 

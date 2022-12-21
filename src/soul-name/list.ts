@@ -3,52 +3,48 @@ import { BigNumber } from "ethers";
 import { ISoulName } from "../interface";
 
 export const loadSoulNameByName = async (masa: Masa, soulName: string) => {
-  const tokenId = await masa.contracts.identity.SoulNameContract.getTokenId(
-    soulName
-  );
+  try {
+    const tokenId = await masa.contracts.identity.SoulNameContract.getTokenId(
+      soulName
+    );
 
-  return loadSoulNameByTokenId(masa, tokenId);
+    return await loadSoulNameByTokenId(masa, tokenId);
+  } catch (err: any) {
+    console.error(`Failed to load Soul Name '${soulName}'`);
+  }
 };
 
 export const loadSoulNameByTokenId = async (
   masa: Masa,
   tokenId: string | BigNumber
 ) => {
-  const tokenDetails =
-    await masa.contracts.identity.SoulNameContract.getTokenData(
-      (
-        await masa.contracts.identity.SoulNameContract.tokenData(tokenId)
-      ).name
-    );
-
-  const owner = await masa.contracts.identity.SoulNameContract.ownerOf(tokenId);
-
-  const tokenUri = await masa.contracts.identity.SoulNameContract[
-    "tokenURI(uint256)"
-  ](tokenId);
-
-  let metadata;
   try {
-    const metadataResponse = await masa.arweave.transactions
-      .getData(tokenUri.replace("ar://", ""), {
-        decode: true,
-        string: true,
-      })
-      .catch(() => {
-        // ignore
-      });
+    const [tokenDetails, owner, tokenUri] = await Promise.all([
+      masa.contracts.identity.SoulNameContract.getTokenData(
+        (
+          await masa.contracts.identity.SoulNameContract.tokenData(tokenId)
+        ).name
+      ),
+      masa.contracts.identity.SoulNameContract.ownerOf(tokenId),
+      masa.contracts.identity.SoulNameContract["tokenURI(uint256)"](tokenId),
+    ]);
 
-    metadata = JSON.parse(metadataResponse as string) as ISoulName;
-  } catch {
-    // ignore
+    const metadata = (await masa.arweave.loadTransactionData(
+      tokenUri.replace("ar://", "")
+    )) as ISoulName;
+
+    return {
+      owner,
+      tokenUri,
+      tokenDetails,
+      metadata,
+    };
+  } catch (err: any) {
+    console.error(
+      `Failed to load Soul Name with TokenID ${tokenId.toString}`,
+      err.message
+    );
   }
-
-  return {
-    owner,
-    tokenUri,
-    tokenDetails,
-    metadata,
-  };
 };
 
 export const loadSoulNamesByIdentityId = async (
