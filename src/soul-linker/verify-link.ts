@@ -1,8 +1,9 @@
 import Masa from "../masa";
 import { BaseResult } from "../interface";
 import { BigNumber, Contract } from "ethers";
+import { loadLinks } from "./list-links";
 
-export type VerifyLinkResult = BaseResult;
+export type VerifyLinkResult = BaseResult & { verified?: boolean };
 
 export const verifyLink = async (
   masa: Masa,
@@ -30,13 +31,17 @@ export const verifyLink = async (
     return result;
   }
 
-  await masa.contracts.identity.SoulLinkerContract.validateLink(
-    identityId,
-    ownerIdentityId,
-    contract.address,
-    tokenId,
-    BigNumber.from(1)
-  );
+  const links = await loadLinks(masa, contract, tokenId);
+
+  for (const link of links) {
+    await masa.contracts.identity.SoulLinkerContract.validateLink(
+      readerIdentityId,
+      ownerIdentityId,
+      contract.address,
+      tokenId,
+      link.expirationDate
+    );
+  }
 
   return result;
 };

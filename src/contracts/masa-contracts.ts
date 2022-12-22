@@ -78,9 +78,9 @@ export class MasaContracts {
       }
     }
 
-    // 52 24
-    // 0x4cf933827818586f365fa55bb0ce3e39d61e170063a7177f08809fbc6ea157eb7c9b8756745147e72d4832b0e3dd8bc562422e2d16aa602bbfdab21f3917fa761b 1671094232 1671095132
-    await this.identity.SoulLinkerContract.connect(signer).addLink(
+    const response = await this.identity.SoulLinkerContract.connect(
+      signer
+    ).addLink(
       paymentMethodUsed,
       receiverIdentityId,
       ownerIdentityId,
@@ -88,8 +88,12 @@ export class MasaContracts {
       tokenId,
       signatureDate,
       expirationDate,
-      signature
+      signature,
+      paymentMethod === "eth" ? { value: price } : undefined
     );
+
+    const tx = await response.wait();
+    console.log(tx.transactionHash);
   }
 
   async getSoulNames(address: string): Promise<string[]> {

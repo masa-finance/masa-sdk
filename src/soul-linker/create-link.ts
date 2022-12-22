@@ -1,9 +1,10 @@
 import Masa from "../masa";
 import { signSoulLinkerLink } from "../helpers";
 import { BigNumber, Contract } from "ethers";
-import { BaseResult } from "../interface";
+import { BaseResult, IPassport } from "../interface";
+import { loadAddressFromIdentityId } from "../identity";
 
-export type CreateLinkResult = BaseResult;
+export type CreateLinkResult = BaseResult & { passport?: string };
 
 export const createLink = async (
   masa: Masa,
@@ -23,6 +24,26 @@ export const createLink = async (
     return result;
   }
 
+  const receiverAddress = await loadAddressFromIdentityId(
+    masa,
+    receiverIdentityId
+  );
+
+  if (!receiverAddress) {
+    result.message = `Receiver identity not found! ${receiverIdentityId}`;
+    return result;
+  }
+
+  console.log(
+    `Creating link for '${await contract.name()}' (${
+      contract.address
+    }) ID: ${tokenId.toString()}`
+  );
+  console.log(`from identity ${identityId.toString()} (${address})`);
+  console.log(
+    `to identity ${receiverIdentityId.toString()} (${receiverAddress})`
+  );
+
   const { signature, signatureDate, expirationDate } = await signSoulLinkerLink(
     masa,
     BigNumber.from(receiverIdentityId),
@@ -31,11 +52,15 @@ export const createLink = async (
     BigNumber.from(tokenId)
   );
 
-  console.log(signature, signatureDate, expirationDate);
+  const passport: IPassport = {
+    signature,
+    signatureDate,
+    expirationDate,
+    tokenId: tokenId.toString(),
+  };
 
-  console.log(
-    btoa(JSON.stringify({ signature, signatureDate, expirationDate }, null, 2))
-  );
+  result.passport = btoa(JSON.stringify(passport, null, 2));
+  console.log("\nLink passport:", result.passport, "\n");
 
   result.success = true;
 

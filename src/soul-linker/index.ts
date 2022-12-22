@@ -1,10 +1,11 @@
 import Masa from "../masa";
 import { createLink } from "./create-link";
 import { PaymentMethod } from "../contracts";
-import { establishLink } from "./establish-link";
+import { establishLinkFromPassport } from "./establish-link";
 import { BigNumber, Contract } from "ethers";
 import { verifyLink } from "./verify-link";
 import { listLinks } from "./list-links";
+import { breakLink } from "./break-link";
 
 export * from "./create-link";
 export * from "./establish-link";
@@ -12,28 +13,20 @@ export * from "./verify-link";
 export * from "./list-links";
 
 export class MasaSoulLinker {
-  constructor(private masa: Masa, private sbtContract: Contract) {}
+  constructor(private masa: Masa, private contract: Contract) {}
 
   create = (tokenId: BigNumber, receiverIdentityId: BigNumber) =>
-    createLink(this.masa, this.sbtContract, tokenId, receiverIdentityId);
-  establish = (
-    tokenId: BigNumber,
-    signature: string,
-    signatureDate: number,
-    expirationDate: number,
-    paymentMethod: PaymentMethod = "eth"
-  ) =>
-    establishLink(
+    createLink(this.masa, this.contract, tokenId, receiverIdentityId);
+  establish = (passport: string, paymentMethod: PaymentMethod = "eth") =>
+    establishLinkFromPassport(
       this.masa,
-      this.sbtContract,
-      tokenId,
-      signature,
-      paymentMethod,
-      signatureDate,
-      expirationDate
+      this.contract,
+      passport,
+      paymentMethod
     );
   verify = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
-    verifyLink(this.masa, this.sbtContract, tokenId, readerIdentityId);
-  list = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
-    listLinks(this.masa, this.sbtContract, tokenId, readerIdentityId);
+    verifyLink(this.masa, this.contract, tokenId, readerIdentityId);
+  list = (tokenId: BigNumber) => listLinks(this.masa, this.contract, tokenId);
+  break = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
+    breakLink(this.masa, this.contract, tokenId, readerIdentityId);
 }

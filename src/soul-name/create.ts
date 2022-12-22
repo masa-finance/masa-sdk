@@ -83,15 +83,20 @@ export const createSoulName = async (
       soulName = soulName.replace(".soul", "");
     }
 
-    const { identityId, address } = await masa.identity.load();
+    const { identityId } = await masa.identity.load();
     if (!identityId) return result;
 
-    const aa = await purchaseSoulName(masa, soulName, duration, paymentMethod);
+    const soulNameInstance = await purchaseSoulName(
+      masa,
+      soulName,
+      duration,
+      paymentMethod
+    );
 
-    if (aa) {
+    if (soulNameInstance) {
       result.success = true;
       result.message = "Soulname created!";
-      result.tokenId = aa.tokenId;
+      result.tokenId = soulNameInstance.tokenId;
       result.soulName = soulName;
     }
   } else {

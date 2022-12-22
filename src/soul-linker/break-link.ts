@@ -1,14 +1,15 @@
 import Masa from "../masa";
 import { BaseResult } from "../interface";
-import { Contract } from "ethers";
+import { BigNumber, Contract } from "ethers";
+import { loadLinks } from "./list-links";
 
 export type BreakLinkResult = BaseResult;
 
 export const breakLink = async (
   masa: Masa,
   contract: Contract,
-  tokenId: number,
-  readerIdentityId: number
+  tokenId: BigNumber,
+  readerIdentityId: BigNumber
 ): Promise<BreakLinkResult> => {
   const result: BreakLinkResult = {
     success: false,
@@ -26,31 +27,31 @@ export const breakLink = async (
     return result;
   }
 
-  const linkDates =
-    await masa.contracts.identity.SoulLinkerContract.getLinkSignatureDates(
-      contract.address,
-      tokenId,
-      readerIdentityId
-    );
+  const links = await loadLinks(masa, contract, tokenId);
 
-  for (const linkDate of linkDates) {
-    const linkData =
-      await masa.contracts.identity.SoulLinkerContract.getLinkInfo(
-        contract.address,
-        tokenId,
-        readerIdentityId,
-        linkDate
-      );
+  console.log(links, readerIdentityId);
 
-    console.log(linkData);
+  const filteredLinks = links.filter(
+    (link) => link.readerIdentityId.toString() === readerIdentityId.toString()
+  );
 
-    await masa.contracts.identity.SoulLinkerContract.revokeLink(
+  console.log(filteredLinks);
+  for (const link of filteredLinks) {
+    if (link.isRevoked) continue;
+
+    console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
+    const response = await masa.contracts.identity.SoulLinkerContract.connect(
+      masa.config.wallet
+    ).revokeLink(
       readerIdentityId,
       identityId,
       contract.address,
       tokenId,
-      linkDate
+      link.expirationDate
     );
+
+    const tx = await response.wait();
+    console.log(tx.transactionHash);
   }
 
   return result;
