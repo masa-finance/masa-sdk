@@ -278,7 +278,7 @@ export class MasaContracts {
     );
 
     const recoveredAddress = verifyTypedData(domain, types, value, signature);
-    console.log("lala", { recoveredAddress }, { authorityAddress });
+    console.log({ recoveredAddress, authorityAddress });
 
     return await this.identity.SoulboundCreditScoreContract.connect(wallet)[
       "mint(address,uint256,address,uint256,bytes)"
