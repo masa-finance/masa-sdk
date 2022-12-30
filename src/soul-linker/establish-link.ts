@@ -44,8 +44,9 @@ export const establishLink = async (
     return result;
   }
 
+  let ownerAddress;
   const { identityId: ownerIdentityId } = await masa.identity.load(
-    await contract.ownerOf(tokenId)
+    (ownerAddress = await contract.ownerOf(tokenId))
   );
 
   if (!ownerIdentityId) {
@@ -53,7 +54,13 @@ export const establishLink = async (
     return result;
   }
 
-  console.log(paymentMethod);
+  console.log(
+    `Establishing link for '${await contract.name()}' (${
+      contract.address
+    }) ID: ${tokenId.toString()}`
+  );
+  console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
+  console.log(`to Identity ${identityId.toString()} (${address})\n`);
 
   await masa.contracts.addPermission(
     masa.config.wallet as Signer,

@@ -49,7 +49,6 @@ export const createCreditScore = async (
         );
 
         console.log("Waiting for transaction to finalize");
-
         const transactionReceipt = await tx.wait();
 
         console.log("Updating Credit Score Record!");

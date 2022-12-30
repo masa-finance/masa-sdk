@@ -16,14 +16,23 @@ export const verifyLink = async (
     message: "Unknown Error",
   };
 
-  const { identityId, address } = await masa.identity.load();
-  if (!identityId) {
-    result.message = `No Identity found for address ${address}`;
-    return result;
+  let readerAddress;
+  try {
+    readerAddress = await masa.contracts.identity.SoulboundIdentityContract[
+      "ownerOf(uint256)"
+    ](readerIdentityId);
+
+    if (!readerAddress) {
+      result.message = `No Identity address found for Identity ${readerIdentityId}`;
+      return result;
+    }
+  } catch {
+    //
   }
 
+  let ownerAddress;
   const { identityId: ownerIdentityId } = await masa.identity.load(
-    await contract.ownerOf(tokenId)
+    (ownerAddress = await contract.ownerOf(tokenId))
   );
 
   if (!ownerIdentityId) {
@@ -31,17 +40,43 @@ export const verifyLink = async (
     return result;
   }
 
-  const links = await loadLinks(masa, contract, tokenId);
+  console.log(
+    `Verifying link for '${await contract.name()}' (${
+      contract.address
+    }) ID: ${tokenId.toString()}`
+  );
+  console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
+  console.log(
+    `to Identity ${readerIdentityId.toString()} (${readerAddress})\n`
+  );
 
+  const links = (await loadLinks(masa, contract, tokenId)).filter(
+    (link) => link.exists && !link.isRevoked
+  );
+
+  result.verified = false;
   for (const link of links) {
-    await masa.contracts.identity.SoulLinkerContract.validateLink(
-      readerIdentityId,
-      ownerIdentityId,
-      contract.address,
-      tokenId,
-      link.expirationDate
-    );
+    try {
+      result.verified =
+        await masa.contracts.identity.SoulLinkerContract.validateLink(
+          readerIdentityId,
+          ownerIdentityId,
+          contract.address,
+          tokenId,
+          link.signatureDate
+        );
+
+      if (result.verified) {
+        result.message = "";
+        result.success = true;
+        break;
+      }
+    } catch (err: any) {
+      // ignore
+    }
   }
+
+  console.log({ validateLinkResult: result });
 
   return result;
 };

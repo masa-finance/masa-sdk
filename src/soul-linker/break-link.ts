@@ -29,16 +29,17 @@ export const breakLink = async (
 
   const links = await loadLinks(masa, contract, tokenId);
 
-  console.log(links, readerIdentityId);
+  console.log({ links, readerIdentityId });
 
   const filteredLinks = links.filter(
-    (link) => link.readerIdentityId.toString() === readerIdentityId.toString()
+    (link) =>
+      link.readerIdentityId.toString() === readerIdentityId.toString() &&
+      link.exists &&
+      !link.isRevoked
   );
 
-  console.log(filteredLinks);
+  console.log({ filteredLinks });
   for (const link of filteredLinks) {
-    if (link.isRevoked) continue;
-
     console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
     const response = await masa.contracts.identity.SoulLinkerContract.connect(
       masa.config.wallet
@@ -47,7 +48,7 @@ export const breakLink = async (
       identityId,
       contract.address,
       tokenId,
-      link.expirationDate
+      link.signatureDate
     );
 
     const tx = await response.wait();

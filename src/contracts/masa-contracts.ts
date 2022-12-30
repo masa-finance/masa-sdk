@@ -1,14 +1,11 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import {
-  IERC20,
-  IERC20__factory,
-  MASA__factory,
-} from "@masa-finance/masa-contracts-identity";
+import { IERC20, IERC20__factory } from "@masa-finance/masa-contracts-identity";
 import { ethers } from "ethers";
 import { addresses, loadIdentityContracts } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain } from "../utils";
+import { ERC20__factory } from "./stubs/ERC20__factory";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
 
@@ -196,7 +193,7 @@ export class MasaContracts {
     price: BigNumber
   ): Promise<ethers.ContractReceipt | undefined> {
     if (paymentMethod !== "eth") {
-      const contract = MASA__factory.connect(paymentAddress, signer);
+      const contract = IERC20__factory.connect(paymentAddress, signer);
 
       if (
         (await contract.allowance(
@@ -239,7 +236,7 @@ export class MasaContracts {
 
     let decimals = 18;
     if (paymentAddress !== ethers.constants.AddressZero) {
-      const contract = MASA__factory.connect(paymentAddress, signer);
+      const contract = ERC20__factory.connect(paymentAddress, signer);
       decimals = await contract.decimals();
     }
 

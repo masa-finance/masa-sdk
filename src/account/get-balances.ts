@@ -1,5 +1,5 @@
 import { addresses } from "../contracts";
-import { MASA__factory } from "@masa-finance/masa-contracts-identity";
+import { IERC20__factory } from "@masa-finance/masa-contracts-identity";
 import Masa from "../masa";
 
 export const getBalances = async (masa: Masa, address?: string) => {
@@ -19,15 +19,15 @@ export const getBalances = async (masa: Masa, address?: string) => {
     soulbound2FABalance,
   ] = await Promise.all([
     masa.config.wallet.provider.getBalance(addressToLoad),
-    MASA__factory.connect(
+    IERC20__factory.connect(
       contractAddresses.MASA,
       masa.config.wallet.provider
     ).balanceOf(addressToLoad),
-    MASA__factory.connect(
+    IERC20__factory.connect(
       contractAddresses.USDC,
       masa.config.wallet.provider
     ).balanceOf(addressToLoad),
-    MASA__factory.connect(
+    IERC20__factory.connect(
       contractAddresses.WETH,
       masa.config.wallet.provider
     ).balanceOf(addressToLoad),

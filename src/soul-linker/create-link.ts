@@ -39,17 +39,27 @@ export const createLink = async (
       contract.address
     }) ID: ${tokenId.toString()}`
   );
-  console.log(`from identity ${identityId.toString()} (${address})`);
+  console.log(`from Identity ${identityId.toString()} (${address})`);
   console.log(
-    `to identity ${receiverIdentityId.toString()} (${receiverAddress})`
+    `to Identity ${receiverIdentityId.toString()} (${receiverAddress})\n`
   );
 
+  const now = Date.now();
+  const currentDate = new Date(now);
   const { signature, signatureDate, expirationDate } = await signSoulLinkerLink(
     masa,
     BigNumber.from(receiverIdentityId),
     identityId,
     contract.address,
-    BigNumber.from(tokenId)
+    BigNumber.from(tokenId),
+    Math.floor(now / 1000),
+    // 1 day
+    24 * 60 * 60
+  );
+
+  console.log(`Signature Date: ${currentDate.toUTCString()}`);
+  console.log(
+    `Expiration Date: ${new Date(expirationDate * 1000).toUTCString()}`
   );
 
   const passport: IPassport = {
