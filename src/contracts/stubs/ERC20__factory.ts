@@ -1,8 +1,8 @@
 import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
 
-import { PromiseOrValue } from "@masa-finance/masa-contracts-identity/dist/typechain/common"
-import { ERC20, ERC20Interface } from "./ERC20"
+import { PromiseOrValue } from "@masa-finance/masa-contracts-identity/dist/typechain/common";
+import { ERC20, ERC20Interface } from "./ERC20";
 
 const _abi = [
   {
