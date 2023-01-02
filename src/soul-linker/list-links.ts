@@ -83,8 +83,20 @@ export const listLinks = async (
   let x = 1;
   for (const linkDetail of result.links) {
     console.log(`\nLink #${x}`);
-    console.log("Owner identity", linkDetail.ownerIdentityId.toString());
-    console.log("Reader identity", linkDetail.readerIdentityId.toString());
+    console.log(
+      "Owner identity",
+      linkDetail.ownerIdentityId.toString(),
+      linkDetail.ownerIdentityId.toString() === identityId.toString()
+        ? "(you)"
+        : ""
+    );
+    console.log(
+      "Reader identity",
+      linkDetail.readerIdentityId.toString(),
+      linkDetail.readerIdentityId.toString() === identityId.toString()
+        ? "(you)"
+        : ""
+    );
     console.log(
       "Signature Date",
       new Date(linkDetail.signatureDate.toNumber() * 1000).toUTCString(),
@@ -95,13 +107,22 @@ export const listLinks = async (
       new Date(linkDetail.expirationDate.toNumber() * 1000).toUTCString(),
       linkDetail.expirationDate.toNumber()
     );
-    console.log("Link exists?:", linkDetail.exists);
-    console.log("Link revoked?:", linkDetail.isRevoked);
+    console.log(
+      `Link expired?: ${
+        new Date() > new Date(linkDetail.expirationDate.toNumber() * 1000)
+          ? "Yes"
+          : "No"
+      }`
+    );
+    console.log(`Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
+    console.log(`Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);
     x++;
   }
 
   if (result.links.length === 0) {
-    console.error(`No link for ${tokenId.toString()}`);
+    result.message = `No link for ${tokenId.toString()}`;
+    console.error(result.message);
+    return result;
   }
 
   result.success = true;

@@ -24,7 +24,7 @@ export class MasaSoulLinker {
       passport,
       paymentMethod
     );
-  verify = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
+  verify = (tokenId: BigNumber, readerIdentityId?: BigNumber) =>
     verifyLink(this.masa, this.contract, tokenId, readerIdentityId);
   list = (tokenId: BigNumber) => listLinks(this.masa, this.contract, tokenId);
   break = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
