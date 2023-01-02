@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.7.12](../README.md) / [Exports](../modules.md) / MasaClient
+ - v0.8.0-beta](../README.md) / [Exports](../modules.md) / MasaClient
 
 # Class: MasaClient
 
@@ -138,7 +138,7 @@ ___
 
 ### getMetadata
 
-▸ **getMetadata**(`uri`): `Promise`<`undefined` \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`IIdentity`](../interfaces/IIdentity.md) \| [`I2FA`](../interfaces/I2FA.md)\>
+▸ **getMetadata**(`uri`): `Promise`<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`I2FA`](../interfaces/I2FA.md)\>
 
 #### Parameters
 
@@ -148,7 +148,7 @@ ___
 
 #### Returns
 
-`Promise`<`undefined` \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`IIdentity`](../interfaces/IIdentity.md) \| [`I2FA`](../interfaces/I2FA.md)\>
+`Promise`<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`I2FA`](../interfaces/I2FA.md)\>
 
 ___
 

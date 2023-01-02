@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.7.12](../README.md) / [Exports](../modules.md) / MasaContracts
+ - v0.8.0-beta](../README.md) / [Exports](../modules.md) / MasaContracts
 
 # Class: MasaContracts
 
@@ -16,6 +16,7 @@
 
 ### Methods
 
+- [addPermission](MasaContracts.md#addpermission)
 - [checkOrGiveAllowance](MasaContracts.md#checkorgiveallowance)
 - [getPaymentAddress](MasaContracts.md#getpaymentaddress)
 - [getPaymentInformation](MasaContracts.md#getpaymentinformation)
@@ -51,6 +52,30 @@ ___
 • `Private` **masaConfig**: [`MasaConfig`](../interfaces/MasaConfig.md)
 
 ## Methods
+
+### addPermission
+
+▸ **addPermission**(`signer`, `tokenAddress`, `paymentMethod`, `receiverIdentityId`, `ownerIdentityId`, `tokenId`, `signatureDate`, `expirationDate`, `signature`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `signer` | `Signer` |
+| `tokenAddress` | `string` |
+| `paymentMethod` | [`PaymentMethod`](../modules.md#paymentmethod) |
+| `receiverIdentityId` | `BigNumber` |
+| `ownerIdentityId` | `BigNumber` |
+| `tokenId` | `BigNumber` |
+| `signatureDate` | `number` |
+| `expirationDate` | `number` |
+| `signature` | `string` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+___
 
 ### checkOrGiveAllowance
 
