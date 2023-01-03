@@ -15,8 +15,8 @@ export const verifyLink = async (
     success: false,
     message: "Unknown Error",
   };
-  const { identityId } = await masa.identity.load();
 
+  const { identityId } = await masa.identity.load();
   if (!readerIdentityId && identityId) {
     readerIdentityId = identityId;
   }

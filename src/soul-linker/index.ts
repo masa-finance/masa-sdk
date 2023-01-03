@@ -6,6 +6,7 @@ import { BigNumber, Contract } from "ethers";
 import { verifyLink } from "./verify-link";
 import { listLinks } from "./list-links";
 import { breakLink } from "./break-link";
+import { queryLinkFromPassport } from "./query-link";
 
 export * from "./create-link";
 export * from "./establish-link";
@@ -15,8 +16,8 @@ export * from "./list-links";
 export class MasaSoulLinker {
   constructor(private masa: Masa, private contract: Contract) {}
 
-  create = (tokenId: BigNumber, receiverIdentityId: BigNumber) =>
-    createLink(this.masa, this.contract, tokenId, receiverIdentityId);
+  create = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
+    createLink(this.masa, this.contract, tokenId, readerIdentityId);
   establish = (passport: string, paymentMethod: PaymentMethod = "eth") =>
     establishLinkFromPassport(
       this.masa,
@@ -29,4 +30,6 @@ export class MasaSoulLinker {
   list = (tokenId: BigNumber) => listLinks(this.masa, this.contract, tokenId);
   break = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
     breakLink(this.masa, this.contract, tokenId, readerIdentityId);
+  query = (passport: string, paymentMethod: PaymentMethod = "eth") =>
+    queryLinkFromPassport(this.masa, this.contract, passport, paymentMethod);
 }

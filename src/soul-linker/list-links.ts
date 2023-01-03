@@ -84,14 +84,14 @@ export const listLinks = async (
   for (const linkDetail of result.links) {
     console.log(`\nLink #${x}`);
     console.log(
-      "Owner identity",
+      "Owner Identity",
       linkDetail.ownerIdentityId.toString(),
       linkDetail.ownerIdentityId.toString() === identityId.toString()
         ? "(you)"
         : ""
     );
     console.log(
-      "Reader identity",
+      "Reader Identity",
       linkDetail.readerIdentityId.toString(),
       linkDetail.readerIdentityId.toString() === identityId.toString()
         ? "(you)"

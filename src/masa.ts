@@ -70,8 +70,10 @@ export default class Masa {
 
   metadata = {
     store: (soulName: string) => this.client.storeMetadata(soulName),
-    retrieve: (url: string) => this.client.getMetadata(url),
+    retrieve: (url: string, additionalHeaders?: Record<string, string>) =>
+      this.client.getMetadata(url, additionalHeaders),
   };
+
   utils = {
     version,
   };

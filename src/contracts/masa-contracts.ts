@@ -37,17 +37,17 @@ export class MasaContracts {
     return paymentAddress;
   }
 
-  async addPermission(
+  async addLink(
     signer: ethers.Signer,
     tokenAddress: string,
     paymentMethod: PaymentMethod,
-    receiverIdentityId: BigNumber,
+    readerIdentityId: BigNumber,
     ownerIdentityId: BigNumber,
     tokenId: BigNumber,
     signatureDate: number,
     expirationDate: number,
     signature: string
-  ) {
+  ): Promise<boolean> {
     const paymentMethodUsed = this.getPaymentAddress(paymentMethod);
     const price = await this.identity.SoulLinkerContract.getPriceForAddLink(
       paymentMethodUsed,
@@ -79,7 +79,7 @@ export class MasaContracts {
       signer
     ).addLink(
       paymentMethodUsed,
-      receiverIdentityId,
+      readerIdentityId,
       ownerIdentityId,
       tokenAddress,
       tokenId,
@@ -91,6 +91,66 @@ export class MasaContracts {
 
     const tx = await response.wait();
     console.log(tx.transactionHash);
+
+    return true;
+  }
+
+  async queryLink(
+    signer: ethers.Signer,
+    tokenAddress: string,
+    paymentMethod: PaymentMethod,
+    readerIdentityId: BigNumber,
+    ownerIdentityId: BigNumber,
+    tokenId: BigNumber,
+    signatureDate: number,
+    expirationDate: number,
+    signature: string
+  ): Promise<string> {
+    const paymentMethodUsed = this.getPaymentAddress(paymentMethod);
+    const price = await this.identity.SoulLinkerContract.getPriceForAddLink(
+      paymentMethodUsed,
+      tokenAddress
+    );
+
+    console.log(paymentMethodUsed);
+
+    if (paymentMethod !== "eth") {
+      const paymentToken: IERC20 = IERC20__factory.connect(
+        paymentMethodUsed,
+        signer
+      );
+
+      const allowance = await paymentToken.allowance(
+        await signer.getAddress(),
+        this.identity.SoulLinkerContract.address
+      );
+      if (allowance < price) {
+        console.log("approving allowance");
+        await paymentToken.approve(
+          this.identity.SoulLinkerContract.address,
+          price
+        );
+      }
+    }
+
+    const response = await this.identity.SoulLinkerContract.connect(
+      signer
+    ).queryLink(
+      paymentMethodUsed,
+      readerIdentityId,
+      ownerIdentityId,
+      tokenAddress,
+      tokenId,
+      signatureDate,
+      expirationDate,
+      signature,
+      paymentMethod === "eth" ? { value: price } : undefined
+    );
+
+    const tx = await response.wait();
+    console.log(tx.transactionHash);
+
+    return tx.transactionHash;
   }
 
   async getSoulNames(address: string): Promise<string[]> {

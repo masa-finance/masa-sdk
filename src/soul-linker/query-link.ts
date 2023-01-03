@@ -3,10 +3,11 @@ import { PaymentMethod } from "../contracts";
 import { BigNumber, Contract, Signer } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { parsePassport } from "./passport";
+import { patchMetadataUrl } from "../helpers";
 
-export type EstablishLinkResult = BaseResult;
+export type QueryLinkResult = BaseResult;
 
-export const establishLinkFromPassport = async (
+export const queryLinkFromPassport = async (
   masa: Masa,
   contract: Contract,
   passport: string,
@@ -14,7 +15,7 @@ export const establishLinkFromPassport = async (
 ) => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
-  return establishLink(
+  return queryLink(
     masa,
     contract,
     paymentMethod,
@@ -26,7 +27,7 @@ export const establishLinkFromPassport = async (
   );
 };
 
-export const establishLink = async (
+export const queryLink = async (
   masa: Masa,
   contract: Contract,
   paymentMethod: PaymentMethod,
@@ -35,8 +36,8 @@ export const establishLink = async (
   signature: string,
   signatureDate: number,
   expirationDate: number
-): Promise<EstablishLinkResult> => {
-  const result: EstablishLinkResult = {
+): Promise<QueryLinkResult> => {
+  const result: QueryLinkResult = {
     success: false,
     message: "Unknown Error",
   };
@@ -64,24 +65,37 @@ export const establishLink = async (
   }
 
   console.log(
-    `Establishing link for '${await contract.name()}' (${
+    `Querying link for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`
   );
   console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
-  console.log(`to Identity ${identityId.toString()} (${address})\n`);
+  console.log(`to Identity ${readerIdentityId.toString()} (${address})\n`);
 
-  await masa.contracts.addLink(
+  const txHash = await masa.contracts.queryLink(
     masa.config.wallet as Signer,
     contract.address,
     paymentMethod,
     readerIdentityId,
     ownerIdentityId,
-    BigNumber.from(tokenId),
+    tokenId,
     signatureDate,
     expirationDate,
     signature
   );
+
+  console.log("tx hash for middleware", txHash);
+
+  const tokenUri = patchMetadataUrl(
+    masa,
+    await contract["tokenURI(uint256)"](tokenId)
+  );
+
+  const metadata = await masa.metadata.retrieve(tokenUri, {
+    "masa-query-link-tx-hash": txHash,
+  });
+
+  console.log({ metadata });
 
   result.success = true;
 

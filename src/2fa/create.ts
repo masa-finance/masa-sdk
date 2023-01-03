@@ -34,7 +34,7 @@ export const create2FA = async (
     console.log(`Signature: '${signature}'`);
 
     // if we got a signature
-    if (signature) {
+    if (address && signature) {
       // 2. mint 2FA
       console.log("\nCreating 2FA");
       const mint2FAData = await masa.twoFA.mint(

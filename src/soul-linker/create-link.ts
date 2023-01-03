@@ -10,7 +10,7 @@ export const createLink = async (
   masa: Masa,
   contract: Contract,
   tokenId: BigNumber,
-  receiverIdentityId: BigNumber
+  readerIdentityId: BigNumber
 ): Promise<CreateLinkResult> => {
   const result: CreateLinkResult = {
     success: false,
@@ -26,11 +26,11 @@ export const createLink = async (
 
   const receiverAddress = await loadAddressFromIdentityId(
     masa,
-    receiverIdentityId
+    readerIdentityId
   );
 
   if (!receiverAddress) {
-    result.message = `Receiver identity not found! ${receiverIdentityId}`;
+    result.message = `Receiver identity not found! ${readerIdentityId}`;
     return result;
   }
 
@@ -41,17 +41,17 @@ export const createLink = async (
   );
   console.log(`from Identity ${identityId.toString()} (${address})`);
   console.log(
-    `to Identity ${receiverIdentityId.toString()} (${receiverAddress})\n`
+    `to Identity ${readerIdentityId.toString()} (${receiverAddress})\n`
   );
 
   const now = Date.now();
   const currentDate = new Date(now);
   const { signature, signatureDate, expirationDate } = await signSoulLinkerLink(
     masa,
-    BigNumber.from(receiverIdentityId),
+    readerIdentityId,
     identityId,
     contract.address,
-    BigNumber.from(tokenId),
+    tokenId,
     Math.floor(now / 1000),
     // 1 day
     24 * 60 * 60
@@ -67,6 +67,7 @@ export const createLink = async (
     signatureDate,
     expirationDate,
     tokenId: tokenId.toString(),
+    readerIdentityId: readerIdentityId.toString(),
   };
 
   result.passport = btoa(JSON.stringify(passport, null, 2));
