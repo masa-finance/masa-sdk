@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.8.0-beta](../README.md) / [Exports](../modules.md) / BaseResult
+ - v0.8.0](../README.md) / [Exports](../modules.md) / BaseResult
 
 # Interface: BaseResult
 

@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.8.0-beta](../README.md) / [Exports](../modules.md) / MasaContracts
+ - v0.8.0](../README.md) / [Exports](../modules.md) / MasaContracts
 
 # Class: MasaContracts
 
@@ -16,7 +16,7 @@
 
 ### Methods
 
-- [addPermission](MasaContracts.md#addpermission)
+- [addLink](MasaContracts.md#addlink)
 - [checkOrGiveAllowance](MasaContracts.md#checkorgiveallowance)
 - [getPaymentAddress](MasaContracts.md#getpaymentaddress)
 - [getPaymentInformation](MasaContracts.md#getpaymentinformation)
@@ -26,6 +26,7 @@
 - [purchaseIdentity](MasaContracts.md#purchaseidentity)
 - [purchaseIdentityAndName](MasaContracts.md#purchaseidentityandname)
 - [purchaseName](MasaContracts.md#purchasename)
+- [queryLink](MasaContracts.md#querylink)
 
 ## Constructors
 
@@ -53,9 +54,9 @@ ___
 
 ## Methods
 
-### addPermission
+### addLink
 
-▸ **addPermission**(`signer`, `tokenAddress`, `paymentMethod`, `receiverIdentityId`, `ownerIdentityId`, `tokenId`, `signatureDate`, `expirationDate`, `signature`): `Promise`<`void`\>
+▸ **addLink**(`signer`, `tokenAddress`, `paymentMethod`, `readerIdentityId`, `ownerIdentityId`, `tokenId`, `signatureDate`, `expirationDate`, `signature`): `Promise`<`boolean`\>
 
 #### Parameters
 
@@ -64,7 +65,7 @@ ___
 | `signer` | `Signer` |
 | `tokenAddress` | `string` |
 | `paymentMethod` | [`PaymentMethod`](../modules.md#paymentmethod) |
-| `receiverIdentityId` | `BigNumber` |
+| `readerIdentityId` | `BigNumber` |
 | `ownerIdentityId` | `BigNumber` |
 | `tokenId` | `BigNumber` |
 | `signatureDate` | `number` |
@@ -73,7 +74,7 @@ ___
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`<`boolean`\>
 
 ___
 
@@ -237,3 +238,27 @@ ___
 #### Returns
 
 `Promise`<`ContractTransaction`\>
+
+___
+
+### queryLink
+
+▸ **queryLink**(`signer`, `tokenAddress`, `paymentMethod`, `readerIdentityId`, `ownerIdentityId`, `tokenId`, `signatureDate`, `expirationDate`, `signature`): `Promise`<`string`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `signer` | `Signer` |
+| `tokenAddress` | `string` |
+| `paymentMethod` | [`PaymentMethod`](../modules.md#paymentmethod) |
+| `readerIdentityId` | `BigNumber` |
+| `ownerIdentityId` | `BigNumber` |
+| `tokenId` | `BigNumber` |
+| `signatureDate` | `number` |
+| `expirationDate` | `number` |
+| `signature` | `string` |
+
+#### Returns
+
+`Promise`<`string`\>

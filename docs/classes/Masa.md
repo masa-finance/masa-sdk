@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.8.0-beta](../README.md) / [Exports](../modules.md) / Masa
+ - v0.8.0](../README.md) / [Exports](../modules.md) / Masa
 
 # Class: Masa
 
@@ -88,7 +88,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `retrieve` | (`url`: `string`) => `Promise`<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`I2FA`](../interfaces/I2FA.md)\> |
+| `retrieve` | (`url`: `string`, `additionalHeaders?`: `Record`<`string`, `string`\>) => `Promise`<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`I2FA`](../interfaces/I2FA.md)\> |
 | `store` | (`soulName`: `string`) => `Promise`<`undefined` \| { `imageResponse`: { `data`: `any` ; `status`: `number` ; `statusText`: `string`  } ; `imageTransaction`: `default` ; `metadataResponse`: { `data`: `any` ; `status`: `number` ; `statusText`: `string`  } ; `metadataTransaction`: `default`  }\> |
 
 ___

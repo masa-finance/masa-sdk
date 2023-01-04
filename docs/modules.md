@@ -1,8 +1,8 @@
 [# Masa SDK
- - v0.8.0-beta](README.md) / Exports
+ - v0.8.0](README.md) / Exports
 
 # # Masa SDK
- - v0.8.0-beta
+ - v0.8.0
 
 ## Table of contents
 
@@ -87,6 +87,7 @@
 - [listSoulNames](modules.md#listsoulnames)
 - [load2FAsByIdentityId](modules.md#load2fasbyidentityid)
 - [loadAddressFromIdentityId](modules.md#loadaddressfromidentityid)
+- [loadCreditScoreByTokenId](modules.md#loadcreditscorebytokenid)
 - [loadCreditScoresByIdentityId](modules.md#loadcreditscoresbyidentityid)
 - [loadIdentityByAddress](modules.md#loadidentitybyaddress)
 - [loadIdentityContracts](modules.md#loadidentitycontracts)
@@ -459,7 +460,7 @@ ___
 
 ### createLink
 
-▸ **createLink**(`masa`, `contract`, `tokenId`, `receiverIdentityId`): `Promise`<[`CreateLinkResult`](modules.md#createlinkresult)\>
+▸ **createLink**(`masa`, `contract`, `tokenId`, `readerIdentityId`): `Promise`<[`CreateLinkResult`](modules.md#createlinkresult)\>
 
 #### Parameters
 
@@ -468,7 +469,7 @@ ___
 | `masa` | [`Masa`](classes/Masa.md) |
 | `contract` | `Contract` |
 | `tokenId` | `BigNumber` |
-| `receiverIdentityId` | `BigNumber` |
+| `readerIdentityId` | `BigNumber` |
 
 #### Returns
 
@@ -507,7 +508,7 @@ ___
 
 ### establishLink
 
-▸ **establishLink**(`masa`, `contract`, `tokenId`, `signature`, `paymentMethod`, `signatureDate`, `expirationDate`): `Promise`<[`BaseResult`](interfaces/BaseResult.md)\>
+▸ **establishLink**(`masa`, `contract`, `paymentMethod`, `tokenId`, `readerIdentityId`, `signature`, `signatureDate`, `expirationDate`): `Promise`<[`BaseResult`](interfaces/BaseResult.md)\>
 
 #### Parameters
 
@@ -515,9 +516,10 @@ ___
 | :------ | :------ |
 | `masa` | [`Masa`](classes/Masa.md) |
 | `contract` | `Contract` |
-| `tokenId` | `BigNumber` |
-| `signature` | `string` |
 | `paymentMethod` | [`PaymentMethod`](modules.md#paymentmethod) |
+| `tokenId` | `BigNumber` |
+| `readerIdentityId` | `BigNumber` |
+| `signature` | `string` |
 | `signatureDate` | `number` |
 | `expirationDate` | `number` |
 
@@ -719,6 +721,23 @@ ___
 
 ___
 
+### loadCreditScoreByTokenId
+
+▸ **loadCreditScoreByTokenId**(`masa`, `creditScoreId`): `Promise`<{ `metadata?`: [`ICreditScore`](interfaces/ICreditScore.md) ; `tokenId`: `BigNumber` ; `tokenUri`: `string`  }\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `masa` | [`Masa`](classes/Masa.md) |
+| `creditScoreId` | `BigNumber` |
+
+#### Returns
+
+`Promise`<{ `metadata?`: [`ICreditScore`](interfaces/ICreditScore.md) ; `tokenId`: `BigNumber` ; `tokenUri`: `string`  }\>
+
+___
+
 ### loadCreditScoresByIdentityId
 
 ▸ **loadCreditScoresByIdentityId**(`masa`, `identityId`): `Promise`<{ `metadata?`: [`ICreditScore`](interfaces/ICreditScore.md) ; `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
@@ -738,7 +757,7 @@ ___
 
 ### loadIdentityByAddress
 
-▸ **loadIdentityByAddress**(`masa`, `address?`): `Promise`<{ `address`: `string` ; `identityId?`: `BigNumber`  }\>
+▸ **loadIdentityByAddress**(`masa`, `address?`): `Promise`<{ `address?`: `string` ; `identityId?`: `BigNumber`  }\>
 
 #### Parameters
 
@@ -749,7 +768,7 @@ ___
 
 #### Returns
 
-`Promise`<{ `address`: `string` ; `identityId?`: `BigNumber`  }\>
+`Promise`<{ `address?`: `string` ; `identityId?`: `BigNumber`  }\>
 
 ___
 
@@ -1143,7 +1162,7 @@ ___
 
 ### verifyLink
 
-▸ **verifyLink**(`masa`, `contract`, `tokenId`, `readerIdentityId`): `Promise`<[`VerifyLinkResult`](modules.md#verifylinkresult)\>
+▸ **verifyLink**(`masa`, `contract`, `tokenId`, `readerIdentityId?`): `Promise`<[`VerifyLinkResult`](modules.md#verifylinkresult)\>
 
 #### Parameters
 
@@ -1152,7 +1171,7 @@ ___
 | `masa` | [`Masa`](classes/Masa.md) |
 | `contract` | `Contract` |
 | `tokenId` | `BigNumber` |
-| `readerIdentityId` | `BigNumber` |
+| `readerIdentityId?` | `BigNumber` |
 
 #### Returns
 

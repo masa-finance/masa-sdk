@@ -1,5 +1,5 @@
 [# Masa SDK
- - v0.8.0-beta](../README.md) / [Exports](../modules.md) / MasaClient
+ - v0.8.0](../README.md) / [Exports](../modules.md) / MasaClient
 
 # Class: MasaClient
 
@@ -138,13 +138,14 @@ ___
 
 ### getMetadata
 
-▸ **getMetadata**(`uri`): `Promise`<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`I2FA`](../interfaces/I2FA.md)\>
+▸ **getMetadata**(`uri`, `additionalHeaders?`): `Promise`<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`I2FA`](../interfaces/I2FA.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `uri` | `string` |
+| `additionalHeaders?` | `Record`<`string`, `string`\> |
 
 #### Returns
 
