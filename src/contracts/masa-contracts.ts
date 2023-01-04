@@ -1,10 +1,11 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { MASA__factory } from "@masa-finance/masa-contracts-identity";
+import { IERC20, IERC20__factory } from "@masa-finance/masa-contracts-identity";
 import { ethers } from "ethers";
 import { addresses, loadIdentityContracts } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain } from "../utils";
+import { ERC20__factory } from "./stubs/ERC20__factory";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
 
@@ -34,6 +35,122 @@ export class MasaContracts {
     }
 
     return paymentAddress;
+  }
+
+  async addLink(
+    signer: ethers.Signer,
+    tokenAddress: string,
+    paymentMethod: PaymentMethod,
+    readerIdentityId: BigNumber,
+    ownerIdentityId: BigNumber,
+    tokenId: BigNumber,
+    signatureDate: number,
+    expirationDate: number,
+    signature: string
+  ): Promise<boolean> {
+    const paymentMethodUsed = this.getPaymentAddress(paymentMethod);
+    const price = await this.identity.SoulLinkerContract.getPriceForAddLink(
+      paymentMethodUsed,
+      tokenAddress
+    );
+
+    console.log(paymentMethodUsed);
+
+    if (paymentMethod !== "eth") {
+      const paymentToken: IERC20 = IERC20__factory.connect(
+        paymentMethodUsed,
+        signer
+      );
+
+      const allowance = await paymentToken.allowance(
+        await signer.getAddress(),
+        this.identity.SoulLinkerContract.address
+      );
+      if (allowance < price) {
+        console.log("approving allowance");
+        await paymentToken.approve(
+          this.identity.SoulLinkerContract.address,
+          price
+        );
+      }
+    }
+
+    const response = await this.identity.SoulLinkerContract.connect(
+      signer
+    ).addLink(
+      paymentMethodUsed,
+      readerIdentityId,
+      ownerIdentityId,
+      tokenAddress,
+      tokenId,
+      signatureDate,
+      expirationDate,
+      signature,
+      paymentMethod === "eth" ? { value: price } : undefined
+    );
+
+    const tx = await response.wait();
+    console.log(tx.transactionHash);
+
+    return true;
+  }
+
+  async queryLink(
+    signer: ethers.Signer,
+    tokenAddress: string,
+    paymentMethod: PaymentMethod,
+    readerIdentityId: BigNumber,
+    ownerIdentityId: BigNumber,
+    tokenId: BigNumber,
+    signatureDate: number,
+    expirationDate: number,
+    signature: string
+  ): Promise<string> {
+    const paymentMethodUsed = this.getPaymentAddress(paymentMethod);
+    const price = await this.identity.SoulLinkerContract.getPriceForAddLink(
+      paymentMethodUsed,
+      tokenAddress
+    );
+
+    console.log(paymentMethodUsed);
+
+    if (paymentMethod !== "eth") {
+      const paymentToken: IERC20 = IERC20__factory.connect(
+        paymentMethodUsed,
+        signer
+      );
+
+      const allowance = await paymentToken.allowance(
+        await signer.getAddress(),
+        this.identity.SoulLinkerContract.address
+      );
+      if (allowance < price) {
+        console.log("approving allowance");
+        await paymentToken.approve(
+          this.identity.SoulLinkerContract.address,
+          price
+        );
+      }
+    }
+
+    const response = await this.identity.SoulLinkerContract.connect(
+      signer
+    ).queryLink(
+      paymentMethodUsed,
+      readerIdentityId,
+      ownerIdentityId,
+      tokenAddress,
+      tokenId,
+      signatureDate,
+      expirationDate,
+      signature,
+      paymentMethod === "eth" ? { value: price } : undefined
+    );
+
+    const tx = await response.wait();
+    console.log(tx.transactionHash);
+
+    return tx.transactionHash;
   }
 
   async getSoulNames(address: string): Promise<string[]> {
@@ -136,7 +253,7 @@ export class MasaContracts {
     price: BigNumber
   ): Promise<ethers.ContractReceipt | undefined> {
     if (paymentMethod !== "eth") {
-      const contract = MASA__factory.connect(paymentAddress, signer);
+      const contract = IERC20__factory.connect(paymentAddress, signer);
 
       if (
         (await contract.allowance(
@@ -179,7 +296,7 @@ export class MasaContracts {
 
     let decimals = 18;
     if (paymentAddress !== ethers.constants.AddressZero) {
-      const contract = MASA__factory.connect(paymentAddress, signer);
+      const contract = ERC20__factory.connect(paymentAddress, signer);
       decimals = await contract.decimals();
     }
 
@@ -222,10 +339,18 @@ export class MasaContracts {
     );
 
     const recoveredAddress = verifyTypedData(domain, types, value, signature);
-    console.log("lala", { recoveredAddress }, { authorityAddress });
+    console.log({ recoveredAddress, authorityAddress });
+
+    const paymentAddress = this.getPaymentAddress(paymentMethod);
+
+    const price = await this.identity.SoulboundCreditScoreContract.getMintPrice(
+      paymentAddress
+    );
 
     return await this.identity.SoulboundCreditScoreContract.connect(wallet)[
       "mint(address,uint256,address,uint256,bytes)"
-    ](paymentMethod, identityId, authorityAddress, signatureDate, signature);
+    ](paymentAddress, identityId, authorityAddress, signatureDate, signature, {
+      value: price,
+    });
   }
 }

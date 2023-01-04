@@ -43,7 +43,7 @@ export const showIdentity = async (
   if (await masa.session.checkLogin()) {
     address = address || (await masa.config.wallet.getAddress());
 
-    const identityId = await masa.identity.load(address);
+    const { identityId } = await masa.identity.load(address);
     if (!identityId) return;
 
     const identity = await loadIdentityDetails(masa, identityId);

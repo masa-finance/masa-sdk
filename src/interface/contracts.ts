@@ -13,5 +13,5 @@ export interface IIdentityContracts {
   SoulNameContract: SoulName;
   SoulLinkerContract: SoulLinker;
   SoulStoreContract: SoulStore;
-  Soulbound2FA: Soulbound2FA;
+  Soulbound2FAContract: Soulbound2FA;
 }

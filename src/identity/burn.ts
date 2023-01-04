@@ -29,7 +29,7 @@ export const burnIdentity = async (masa: Masa): Promise<boolean> => {
   let success = false;
 
   if (await masa.session.checkLogin()) {
-    const identityId = await masa.identity.load();
+    const { identityId } = await masa.identity.load();
     if (!identityId) return success;
 
     success = await burnIdentityById(masa, identityId);

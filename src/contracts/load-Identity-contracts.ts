@@ -54,7 +54,7 @@ export const loadIdentityContracts = ({
     p
   );
 
-  const Soulbound2FA = Soulbound2FA__factory.connect(
+  const Soulbound2FAContract = Soulbound2FA__factory.connect(
     addresses[network].Soulbound2FAAddress,
     p
   );
@@ -65,6 +65,6 @@ export const loadIdentityContracts = ({
     SoulNameContract,
     SoulLinkerContract,
     SoulStoreContract,
-    Soulbound2FA,
+    Soulbound2FAContract,
   };
 };

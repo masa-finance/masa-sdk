@@ -45,7 +45,7 @@ export const sendSoulName = async (
       soulName = soulName.replace(".soul", "");
     }
 
-    const identityId = await masa.identity.load();
+    const { identityId } = await masa.identity.load();
     if (!identityId) return;
 
     await sendSoulNameByName(masa, soulName, receiver);

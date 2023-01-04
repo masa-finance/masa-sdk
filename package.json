@@ -1,6 +1,6 @@
 {
   "name": "@masa-finance/masa-sdk",
-  "version": "0.7.12",
+  "version": "0.8.0",
   "description": "Brand new masa SDK",
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -35,7 +35,7 @@
   "author": "Masa Finance",
   "license": "MIT",
   "dependencies": {
-    "@masa-finance/masa-contracts-identity": "^0.5.0",
+    "@masa-finance/masa-contracts-identity": "^0.6.1",
     "arweave": "^1.11.8",
     "axios": "1.1.0",
     "ethers": "^5.7.2",

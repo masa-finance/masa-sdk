@@ -4,15 +4,25 @@ import { loadIdentityByAddress } from "./load";
 import { burnIdentity } from "./burn";
 import { showIdentity } from "./show";
 import Masa from "../masa";
+import { MasaSoulLinker } from "../soul-linker";
 
-export const identity = (masa: Masa) => ({
-  create: () => createIdentity(masa),
-  createWithSoulName: (
+export class MasaIdentity {
+  public readonly links: MasaSoulLinker;
+
+  constructor(private masa: Masa) {
+    this.links = new MasaSoulLinker(
+      this.masa,
+      this.masa.contracts.identity.SoulboundIdentityContract
+    );
+  }
+
+  create = () => createIdentity(this.masa);
+  createWithSoulName = (
     soulName: string,
     duration: number,
     paymentMethod: PaymentMethod
-  ) => createIdentityWithSoulName(masa, soulName, duration, paymentMethod),
-  load: (address?: string) => loadIdentityByAddress(masa, address),
-  burn: () => burnIdentity(masa),
-  show: (address?: string) => showIdentity(masa, address),
-});
+  ) => createIdentityWithSoulName(this.masa, soulName, duration, paymentMethod);
+  load = (address?: string) => loadIdentityByAddress(this.masa, address);
+  burn = () => burnIdentity(this.masa);
+  show = (address?: string) => showIdentity(this.masa, address);
+}

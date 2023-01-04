@@ -1,15 +1,17 @@
 import { checkLogin } from "./check-login";
 import { login } from "./login";
 import { logout } from "./logout";
-import Masa from "../masa";
 import { getSession } from "./get-session";
+import Masa from "../masa";
 import { checkAllowlist } from "./allowlist";
 
-export const session = (masa: Masa) => ({
-  checkLogin: () => checkLogin(masa),
-  sessionLogout: () => masa.client.sessionLogout(),
-  login: () => login(masa),
-  logout: () => logout(masa),
-  getSession: () => getSession(masa),
-  checkAllowlist: () => checkAllowlist(masa),
-});
+export class MasaSession {
+  constructor(private masa: Masa) {}
+
+  checkLogin = () => checkLogin(this.masa);
+  sessionLogout = () => this.masa.client.sessionLogout();
+  login = () => login(this.masa);
+  logout = () => logout(this.masa);
+  getSession = () => getSession(this.masa);
+  checkAllowlist = () => checkAllowlist(this.masa);
+}

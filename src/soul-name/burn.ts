@@ -31,7 +31,7 @@ export const burnSoulName = async (masa: Masa, soulName: string) => {
       soulName = soulName.replace(".soul", "");
     }
 
-    const identityId = await masa.identity.load();
+    const { identityId } = await masa.identity.load();
     if (!identityId) return;
 
     await burnSoulNameByName(masa, soulName);

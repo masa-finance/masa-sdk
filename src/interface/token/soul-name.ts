@@ -1,4 +1,4 @@
-import { BaseResult } from "./masa";
+import { BaseResult } from "../masa";
 
 export interface Attribute {
   display_type?: string;

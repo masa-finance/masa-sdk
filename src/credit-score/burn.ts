@@ -1,8 +1,9 @@
 import Masa from "../masa";
+import { BigNumber } from "ethers";
 
 export const burnCreditScoreById = async (
   masa: Masa,
-  creditScoreId: number
+  creditScoreId: BigNumber
 ): Promise<boolean> => {
   try {
     const tx =
@@ -25,12 +26,12 @@ export const burnCreditScoreById = async (
 
 export const burnCreditScore = async (
   masa: Masa,
-  creditScoreId: number
+  creditScoreId: BigNumber
 ): Promise<boolean> => {
   let success = false;
 
   if (await masa.session.checkLogin()) {
-    const identityId = await masa.identity.load();
+    const { identityId } = await masa.identity.load();
     if (!identityId) {
       return success;
     }
