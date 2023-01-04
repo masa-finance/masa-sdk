@@ -3,6 +3,33 @@ import Masa from "../masa";
 import { ICreditScore } from "../interface";
 import { patchMetadataUrl } from "../helpers";
 
+export const loadCreditScoreByTokenId = async (
+  masa: Masa,
+  creditScoreId: BigNumber
+): Promise<{
+  tokenId: BigNumber;
+  tokenUri: string;
+  metadata?: ICreditScore;
+}> => {
+  const tokenUri = patchMetadataUrl(
+    masa,
+    await masa.contracts.identity.SoulboundCreditScoreContract.tokenURI(
+      creditScoreId
+    )
+  );
+
+  console.log(`Metadata Url: ${tokenUri}`);
+  const metadata: ICreditScore | undefined = <ICreditScore | undefined>(
+    await masa.metadata.retrieve(tokenUri)
+  );
+
+  return {
+    tokenId: creditScoreId,
+    tokenUri,
+    metadata,
+  };
+};
+
 export const loadCreditScoresByIdentityId = async (
   masa: Masa,
   identityId: BigNumber
@@ -19,30 +46,12 @@ export const loadCreditScoresByIdentityId = async (
     ](identityId, masa.contracts.identity.SoulboundCreditScoreContract.address);
 
   const creditScores = await Promise.all(
-    creditScoreIds.map(async (tokenId) => {
-      const tokenUri = patchMetadataUrl(
-        masa,
-        await masa.contracts.identity.SoulboundCreditScoreContract.tokenURI(
-          tokenId
-        )
-      );
-
-      console.log(`Metadata Url: ${tokenUri}`);
-      const metadata: ICreditScore | undefined = <ICreditScore | undefined>(
-        await masa.metadata.retrieve(tokenUri)
-      );
-
-      return {
-        tokenId,
-        tokenUri,
-        metadata,
-      };
-    })
+    creditScoreIds.map(async (creditScoreId) =>
+      loadCreditScoreByTokenId(masa, creditScoreId)
+    )
   );
 
-  const creditScoresWithMetadata = creditScores.filter(
-    (m) => m.metadata !== null
-  );
+  const creditScoresWithMetadata = creditScores.filter((m) => !!m.metadata);
 
   return creditScoresWithMetadata;
 };
