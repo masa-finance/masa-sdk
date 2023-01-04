@@ -47,7 +47,10 @@ export class MasaClient {
       return checkData;
     }
   };
-  allowlistCheck = async (): Promise<ISession | undefined> => {
+  allowlistCheck = async (): Promise<
+    | { isActive: boolean; success: boolean; wallet: string; endDate: string }
+    | undefined
+  > => {
     const checkResponse = await this._middlewareClient
       .get(`/session/allowlist`, {
         headers: {
@@ -61,7 +64,7 @@ export class MasaClient {
     if (checkResponse) {
       const { data: checkData } = checkResponse;
 
-      return checkData.success;
+      return checkData;
     }
   };
 

@@ -1,16 +1,15 @@
 import Masa from "../masa";
 
-export const checkAllowlist = async (masa: Masa): Promise<boolean> => {
-  let loggedIn = false;
+export const checkAllowlist = async (masa: Masa): Promise<any> => {
+  const checkAllowlistResponse = await masa.client.allowlistCheck();
+  if (checkAllowlistResponse) {
+    console.log(`Allowlist enabled: ${checkAllowlistResponse.isActive}`);
+    console.log(`Allowlist enabled until: ${checkAllowlistResponse.endDate}`);
 
-  const checkSessionResponse = await masa.client.sessionCheck();
-  if (checkSessionResponse) {
-    console.log(`User ID: '${checkSessionResponse.user.userId}'`);
     console.log(`Signer Address: '${await masa.config.wallet.getAddress()}'`);
     console.log("\n");
-
-    loggedIn = true;
+    return checkAllowlistResponse;
   }
 
-  return loggedIn;
+  return null;
 };
