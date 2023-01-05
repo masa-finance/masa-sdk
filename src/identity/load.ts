@@ -1,5 +1,6 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
+import { ErrorMessage } from "../utils";
 
 export const loadIdentityByAddress = async (
   masa: Masa,
@@ -23,7 +24,7 @@ export const loadIdentityByAddress = async (
     }
 
     if (!identityId) {
-      console.error(`No Identity found for address ${address}`);
+      console.error(ErrorMessage.NoIdentity(address));
     }
   } catch {
     // ignore

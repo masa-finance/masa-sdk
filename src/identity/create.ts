@@ -13,12 +13,17 @@ export const purchaseIdentity = async (masa: Masa) => {
 export const purchaseIdentityWithSoulName = async (
   masa: Masa,
   soulName: string,
+  soulNameLength: number,
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
   if (await masa.contracts.isAvailable(soulName)) {
     console.log("Writing metadata");
-    const storeMetadataData = await masa.metadata.store(soulName);
+    const storeMetadataData = await masa.metadata.store(
+      soulName,
+      await masa.config.wallet.getAddress(),
+      duration
+    );
 
     if (storeMetadataData) {
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
@@ -26,10 +31,13 @@ export const purchaseIdentityWithSoulName = async (
 
       const tx = await masa.contracts.purchaseIdentityAndName(
         masa.config.wallet,
-        soulName,
         paymentMethod,
+        soulName,
+        soulNameLength,
         duration,
-        metadataUrl
+        metadataUrl,
+        storeMetadataData.authorityAddress,
+        storeMetadataData.signature
       );
 
       console.log("Waiting for transaction to finalize");
@@ -71,6 +79,13 @@ export const createIdentityWithSoulName = async (
       soulName = soulName.replace(".soul", "");
     }
 
+    const { isValid, length } = masa.soulName.validate(soulName);
+
+    if (!isValid) {
+      console.error("Soulname not valid!");
+      return identityCreated;
+    }
+
     const address = await masa.config.wallet.getAddress();
     const { identityId } = await masa.identity.load(address);
 
@@ -79,7 +94,13 @@ export const createIdentityWithSoulName = async (
       return identityCreated;
     }
 
-    await purchaseIdentityWithSoulName(masa, soulName, duration, paymentMethod);
+    await purchaseIdentityWithSoulName(
+      masa,
+      soulName,
+      length,
+      duration,
+      paymentMethod
+    );
 
     identityCreated = true;
   } else {

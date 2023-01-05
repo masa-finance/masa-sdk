@@ -2,6 +2,7 @@ import Masa from "../masa";
 import { BaseResult } from "../interface";
 import { BigNumber, Contract } from "ethers";
 import { loadLinks } from "./list-links";
+import { ErrorMessage } from "../utils";
 
 export type BreakLinkResult = BaseResult;
 
@@ -18,7 +19,7 @@ export const breakLink = async (
 
   const { identityId, address } = await masa.identity.load();
   if (!identityId) {
-    result.message = `No Identity found for address ${address}`;
+    result.message = ErrorMessage.NoIdentity(address);
     return result;
   }
 

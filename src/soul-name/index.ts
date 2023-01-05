@@ -1,4 +1,4 @@
-export * from "./soul-names";
+export * from "./soul-name";
 export * from "./create";
 export * from "./list";
 export * from "./burn";
