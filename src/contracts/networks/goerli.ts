@@ -9,7 +9,7 @@ export {
   MASA_GOERLI as MASA,
   USDC_GOERLI as USDC,
   WETH_GOERLI as WETH,
-} from "@masa-finance/masa-contracts-identity/dist/src/constants";
+} from "@masa-finance/masa-contracts-identity/dist/src/Constants";
 
 export const SoulboundIdentityAddress = SoulboundIdentity.address;
 export const SoulboundCreditScoreAddress = SoulboundCreditScore.address;
