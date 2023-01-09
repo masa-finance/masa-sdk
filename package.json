@@ -10,7 +10,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-mocha test/**/*.test.ts",
     "start": "yarn build:watch",
     "build": "yarn build:tsc && yarn build:dist",
     "build:tsc": "tsc",
@@ -43,12 +43,17 @@
     "typescript": "^4.2.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
+    "chai": "^4.3.7",
     "cross-env": "^7.0.3",
     "eslint": "^8.25.0",
+    "mocha": "^10.2.0",
     "prettier": "^2.7.1",
     "terser-webpack-plugin": "^5.3.6",
+    "ts-mocha": "^10.0.0",
     "typedoc": "^0.23.18",
     "typedoc-plugin-markdown": "^3.13.6",
     "webpack": "^5.74.0",
