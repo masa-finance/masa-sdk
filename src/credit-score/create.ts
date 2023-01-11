@@ -2,6 +2,7 @@ import Masa from "../masa";
 import { CreateCreditScoreResult } from "../interface";
 import { PaymentMethod } from "../contracts";
 import { ethers } from "ethers";
+import { ErrorMessage } from "../utils";
 
 export const createCreditScore = async (
   masa: Masa,
@@ -17,7 +18,7 @@ export const createCreditScore = async (
 
     const { identityId, address } = await masa.identity.load();
     if (!identityId || !address) {
-      result.message = `No Identity found for address ${address}`;
+      result.message = ErrorMessage.NoIdentity(address);
       return result;
     }
 

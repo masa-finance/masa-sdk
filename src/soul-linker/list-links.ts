@@ -2,6 +2,7 @@ import Masa from "../masa";
 import { BigNumber, Contract } from "ethers";
 import { BaseResult } from "../interface";
 import { SoulLinker } from "@masa-finance/masa-contracts-identity";
+import { ErrorMessage } from "../utils";
 
 export type Link = {
   readerIdentityId: BigNumber;
@@ -61,7 +62,7 @@ export const listLinks = async (
   const { identityId, address } = await masa.identity.load();
 
   if (!identityId) {
-    result.message = `No Identity found for address ${address}`;
+    result.message = ErrorMessage.NoIdentity(address);
     return result;
   }
 

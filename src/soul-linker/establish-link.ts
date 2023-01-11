@@ -3,6 +3,7 @@ import { PaymentMethod } from "../contracts";
 import { BigNumber, Contract, Signer } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { parsePassport } from "./passport";
+import { ErrorMessage } from "../utils";
 
 export type EstablishLinkResult = BaseResult;
 
@@ -43,7 +44,7 @@ export const establishLink = async (
 
   const { identityId, address } = await masa.identity.load();
   if (!identityId) {
-    result.message = `No Identity found for address ${address}`;
+    result.message = ErrorMessage.NoIdentity(address);
     return result;
   }
 

@@ -13,7 +13,7 @@ import { verifyByName } from "./verify";
 import { validateSoulName } from "./validate";
 import Masa from "../masa";
 
-export class MasaSoulNames {
+export class MasaSoulName {
   constructor(private masa: Masa) {}
 
   getRegistrationPrice = (

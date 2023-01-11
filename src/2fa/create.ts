@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { signMessage, Templates } from "../utils";
+import { ErrorMessage, signMessage, Templates } from "../utils";
 import { Create2FAResult } from "../interface";
 
 export const create2FA = async (
@@ -15,7 +15,7 @@ export const create2FA = async (
   if (await masa.session.checkLogin()) {
     const { identityId, address } = await masa.identity.load();
     if (!identityId) {
-      result.message = `No Identity found for address ${address}`;
+      result.message = ErrorMessage.NoIdentity(address);
       return result;
     }
 

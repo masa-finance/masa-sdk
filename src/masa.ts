@@ -11,21 +11,22 @@ import {
   MasaCreditScore,
   MasaIdentity,
   MasaSession,
-  MasaSoulNames,
+  MasaSoulName,
   version,
 } from "./";
 
 export default class Masa {
-  public readonly arweave: MasaArweave;
-
-  public readonly client: MasaClient;
   public readonly config: MasaConfig;
+
+  public readonly arweave: MasaArweave;
+  public readonly client: MasaClient;
+
   public readonly contracts: MasaContracts;
+  public readonly account: MasaAccount;
   public readonly session: MasaSession;
   public readonly identity: MasaIdentity;
-  public readonly soulNames: MasaSoulNames;
+  public readonly soulName: MasaSoulName;
   public readonly creditScore: MasaCreditScore;
-  public readonly account: MasaAccount;
   public readonly twoFA: Masa2FA;
 
   public constructor(
@@ -60,16 +61,17 @@ export default class Masa {
     };
 
     this.contracts = new MasaContracts(this.config);
+    this.account = new MasaAccount(this);
     this.session = new MasaSession(this);
     this.identity = new MasaIdentity(this);
-    this.soulNames = new MasaSoulNames(this);
+    this.soulName = new MasaSoulName(this);
     this.creditScore = new MasaCreditScore(this);
-    this.account = new MasaAccount(this);
     this.twoFA = new Masa2FA(this);
   }
 
   metadata = {
-    store: (soulName: string) => this.client.storeMetadata(soulName),
+    store: (soulName: string, receiver: string, duration: number) =>
+      this.client.storeMetadata(soulName, receiver, duration),
     retrieve: (url: string, additionalHeaders?: Record<string, string>) =>
       this.client.getMetadata(url, additionalHeaders),
   };

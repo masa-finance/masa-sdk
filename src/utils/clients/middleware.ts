@@ -92,7 +92,9 @@ export class MasaClient {
   };
 
   storeMetadata = async (
-    soulName: string
+    soulName: string,
+    receiver: string,
+    duration: number
   ): Promise<
     | {
         // image info
@@ -109,6 +111,10 @@ export class MasaClient {
           statusText: string;
           data: any;
         };
+        // signature from the authority to be verified in the contract
+        signature: string;
+        // signer address
+        authorityAddress: string;
       }
     | undefined
   > => {
@@ -117,6 +123,8 @@ export class MasaClient {
         `/storage/store`,
         {
           soulName: `${soulName}.soul`,
+          receiver,
+          duration,
         },
         {
           headers: {

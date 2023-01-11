@@ -8,16 +8,16 @@ export const getRegistrationPrice = async (
   duration: number,
   paymentMethod: PaymentMethod
 ) => {
+  const { length } = masa.soulName.validate(soulName);
+
   const { price, formattedPrice } = await masa.contracts.getPaymentInformation(
-    soulName,
+    masa.config.wallet,
     paymentMethod,
-    duration,
-    masa.config.wallet
+    length,
+    duration
   );
 
-  console.log("adsasd", formattedPrice);
-
-  console.log(`Soulname price is ${price} ${paymentMethod}.`);
+  console.log(`Soulname price is ${formattedPrice} ${paymentMethod}.`);
 
   return price;
 };
@@ -25,12 +25,17 @@ export const getRegistrationPrice = async (
 const purchaseSoulName = async (
   masa: Masa,
   soulName: string,
+  soulNameLength: number,
   duration: number,
   paymentMethod: PaymentMethod
 ): Promise<{ tokenId: string; soulName: string } | undefined> => {
   if (await masa.contracts.isAvailable(soulName)) {
     console.log("Writing metadata");
-    const storeMetadataData = await masa.metadata.store(soulName);
+    const storeMetadataData = await masa.metadata.store(
+      soulName,
+      await masa.config.wallet.getAddress(),
+      duration
+    );
 
     if (storeMetadataData) {
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
@@ -38,10 +43,13 @@ const purchaseSoulName = async (
 
       const tx = await masa.contracts.purchaseName(
         masa.config.wallet,
-        soulName,
         paymentMethod,
+        soulName,
+        soulNameLength,
         duration,
-        metadataUrl
+        metadataUrl,
+        storeMetadataData.authorityAddress,
+        storeMetadataData.signature
       );
 
       console.log("Waiting for transaction to finalize");
@@ -83,12 +91,21 @@ export const createSoulName = async (
       soulName = soulName.replace(".soul", "");
     }
 
+    const { isValid, length } = masa.soulName.validate(soulName);
+
+    if (!isValid) {
+      result.message = "Soulname not valid!";
+      console.error(result.message);
+      return result;
+    }
+
     const { identityId } = await masa.identity.load();
     if (!identityId) return result;
 
     const soulNameInstance = await purchaseSoulName(
       masa,
       soulName,
+      length,
       duration,
       paymentMethod
     );
