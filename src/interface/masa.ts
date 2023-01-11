@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 
 export interface MasaArgs {
   cookie?: string;
-  wallet: ethers.Signer | ethers.Wallet;
+  wallet?: ethers.Signer | ethers.Wallet;
   apiUrl?: string;
   environment?: string;
   network?: string;

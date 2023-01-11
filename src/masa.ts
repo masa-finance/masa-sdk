@@ -32,7 +32,7 @@ export default class Masa {
   public constructor(
     {
       cookie,
-      wallet,
+      wallet = createRandomWallet(),
       apiUrl = "https://dev.middleware.masa.finance",
       environment = "dev",
       network = "goerli",
