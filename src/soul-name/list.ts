@@ -98,7 +98,7 @@ export const printSoulName = (soulName: any) => {
     `Owner Identity ID: ${soulName.tokenDetails.identityId.toNumber()}`
   );
   console.log(`Active: ${soulName.tokenDetails.active}`);
-  console.log(`Metadata URL: ${soulName.tokenUri}`);
+  console.log(`Metadata URL: '${soulName.tokenUri}'`);
 
   if (soulName.metadata) {
     console.log(

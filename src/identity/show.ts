@@ -48,7 +48,7 @@ export const showIdentity = async (
 
     const identity = await loadIdentityDetails(masa, identityId);
 
-    console.log(`Identity Metadata URL: ${identity.tokenUri}`);
+    console.log(`Identity Metadata URL: '${identity.tokenUri}'`);
 
     if (identity.metadata) {
       console.log(`Metadata: ${JSON.stringify(identity.metadata, null, 2)}`);

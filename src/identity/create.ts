@@ -18,7 +18,6 @@ export const purchaseIdentityWithSoulName = async (
   paymentMethod: PaymentMethod
 ) => {
   if (await masa.contracts.isAvailable(soulName)) {
-    console.log("Writing metadata");
     const storeMetadataData = await masa.metadata.store(
       soulName,
       await masa.config.wallet.getAddress(),
@@ -27,7 +26,7 @@ export const purchaseIdentityWithSoulName = async (
 
     if (storeMetadataData) {
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
-      console.log(`Matadata URL: ${metadataUrl}`);
+      console.log(`Identity Metadata URL: '${metadataUrl}'`);
 
       const tx = await masa.contracts.purchaseIdentityAndName(
         masa.config.wallet,

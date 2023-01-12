@@ -118,6 +118,8 @@ export class MasaClient {
       }
     | undefined
   > => {
+    console.log(`Writing metadata for '${soulName}.soul'`);
+
     const storeMetadataResponse = await this._middlewareClient
       .post(
         `/storage/store`,

@@ -30,7 +30,6 @@ const purchaseSoulName = async (
   paymentMethod: PaymentMethod
 ): Promise<{ tokenId: string; soulName: string } | undefined> => {
   if (await masa.contracts.isAvailable(soulName)) {
-    console.log("Writing metadata");
     const storeMetadataData = await masa.metadata.store(
       soulName,
       await masa.config.wallet.getAddress(),
@@ -39,7 +38,7 @@ const purchaseSoulName = async (
 
     if (storeMetadataData) {
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
-      console.log(`Matadata URL: ${metadataUrl}`);
+      console.log(`Soul Name Metadata URL: '${metadataUrl}'`);
 
       const tx = await masa.contracts.purchaseName(
         masa.config.wallet,
