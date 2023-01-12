@@ -1,5 +1,5 @@
 import { describe } from "mocha";
-import { validateSoulName } from "../../src";
+import { calculateSoulNameLength, validateSoulName } from "../../src";
 import { testMasa } from "../tools/masa";
 import { assert } from "chai";
 
@@ -235,6 +235,23 @@ describe("Soul Name", () => {
         );
         assert(isValid === false, message);
         assert(length === 6);
+      });
+    });
+
+    describe("calculateSoulNameLength", () => {
+      it("should count normal strings", () => {
+        const count = calculateSoulNameLength("1234");
+        assert(count === 4);
+      });
+
+      it("should calculate Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍A̴̵̜̰͔ͫ͗͢L̠ͨͧͩ͘G̴̻͈͍͔̹̑͗̎̅͛́Ǫ̵̹̻̝̳͂̌̌͘  correctly!", () => {
+        const length = calculateSoulNameLength("Z͑ͫ̓ͪ̂ͫ̽͏̴̙̤̞͉͚̯̞̠͍A̴̵̜̰͔ͫ͗͢L̠ͨͧͩ͘G̴̻͈͍͔̹̑͗̎̅͛́Ǫ̵̹̻̝̳͂̌̌͘");
+        assert(length === 5);
+      });
+
+      it("should count 🎉🎉 emojis properly", () => {
+        const length = calculateSoulNameLength("🎉🎉");
+        assert(length === 2);
       });
     });
   });
