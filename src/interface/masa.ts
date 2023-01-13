@@ -4,7 +4,7 @@ export interface MasaArgs {
   cookie?: string;
   wallet: ethers.Signer | ethers.Wallet;
   apiUrl?: string;
-  environment?: string;
+  environment?: "dev" | "test" | "beta" | "production";
   network?: string;
   arweave?: {
     host: string;

@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 // special type for env config that makes wallet optional
 export type Environment = {
-  name: string;
+  name: "local" | "dev" | "test" | "stage" | "production";
   wallet?: ethers.Signer | ethers.Wallet;
 } & MasaArgs;
 
