@@ -36,7 +36,7 @@
   "author": "Masa Finance",
   "license": "MIT",
   "dependencies": {
-    "@masa-finance/masa-contracts-identity": "^0.7.1",
+    "@masa-finance/masa-contracts-identity": "^1.0.0",
     "arweave": "^1.11.8",
     "axios": "1.1.0",
     "ethers": "^5.7.2",

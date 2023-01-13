@@ -1,19 +1,20 @@
-import * as goerli from "./networks/goerli";
+import { goerli, mainnet } from "./networks";
 
 export interface Addresses {
   [index: string]: {
-    MASA: string;
     USDC: string;
-    WETH: string;
+    WETH?: string;
+    MASA?: string;
     SoulboundIdentityAddress: string;
     SoulboundCreditScoreAddress: string;
     SoulNameAddress: string;
     SoulStoreAddress: string;
     SoulLinkerAddress: string;
-    Soulbound2FAAddress: string;
+    Soulbound2FAAddress?: string;
   };
 }
 
 export const addresses: Addresses = {
   goerli,
+  mainnet,
 };

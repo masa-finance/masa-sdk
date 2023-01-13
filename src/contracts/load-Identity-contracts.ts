@@ -55,7 +55,8 @@ export const loadIdentityContracts = ({
   );
 
   const Soulbound2FAContract = Soulbound2FA__factory.connect(
-    addresses[network].Soulbound2FAAddress,
+    // this might be empty
+    addresses[network].Soulbound2FAAddress || ethers.constants.AddressZero,
     p
   );
 

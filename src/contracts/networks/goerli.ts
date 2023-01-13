@@ -5,11 +5,9 @@ import SoulStore from "@masa-finance/masa-contracts-identity/deployments/goerli/
 import SoulLinker from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulLinker.json";
 import Soulbound2FA from "@masa-finance/masa-contracts-identity/deployments/goerli/Soulbound2FA.json";
 
-export {
-  MASA_GOERLI as MASA,
-  USDC_GOERLI as USDC,
-  WETH_GOERLI as WETH,
-} from "@masa-finance/masa-contracts-identity/dist/src/Constants";
+export const MASA = undefined;
+export const USDC = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+export const WETH = undefined;
 
 export const SoulboundIdentityAddress = SoulboundIdentity.address;
 export const SoulboundCreditScoreAddress = SoulboundCreditScore.address;

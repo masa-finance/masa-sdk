@@ -1,6 +1,5 @@
 import {
   arweave as arweaveInit,
-  createRandomWallet,
   Masa2FA,
   MasaAccount,
   MasaArgs,
@@ -29,21 +28,19 @@ export default class Masa {
   public readonly creditScore: MasaCreditScore;
   public readonly twoFA: Masa2FA;
 
-  public constructor(
-    {
-      cookie,
-      wallet,
-      apiUrl = "https://dev.middleware.masa.finance",
-      environment = "dev",
-      network = "goerli",
-      arweave = {
-        host: "arweave.net",
-        port: 443,
-        protocol: "https",
-        logging: false,
-      },
-    }: MasaArgs
-  ) {
+  public constructor({
+    cookie,
+    wallet,
+    apiUrl = "https://dev.middleware.masa.finance",
+    environment = "dev",
+    network = "goerli",
+    arweave = {
+      host: "arweave.net",
+      port: 443,
+      protocol: "https",
+      logging: false,
+    },
+  }: MasaArgs) {
     this.client = new MasaClient({
       apiUrl,
       cookie,

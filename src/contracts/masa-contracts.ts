@@ -24,13 +24,19 @@ export class MasaContracts {
 
     switch (paymentMethod) {
       case "utility":
-        paymentAddress = addresses[this.masaConfig.network].MASA;
+        paymentAddress =
+          addresses[this.masaConfig.network].MASA ||
+          ethers.constants.AddressZero;
         break;
       case "stable":
-        paymentAddress = addresses[this.masaConfig.network].USDC;
+        paymentAddress =
+          addresses[this.masaConfig.network].USDC ||
+          ethers.constants.AddressZero;
         break;
       case "weth":
-        paymentAddress = addresses[this.masaConfig.network].WETH;
+        paymentAddress =
+          addresses[this.masaConfig.network].WETH ||
+          ethers.constants.AddressZero;
         break;
     }
 
