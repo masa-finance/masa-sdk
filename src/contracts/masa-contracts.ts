@@ -274,18 +274,25 @@ export class MasaContracts {
     signer: ethers.Signer,
     paymentMethod: PaymentMethod,
     nameLength: number,
-    duration = 1
+    duration = 1,
+    slippage: number | undefined = 250
   ): Promise<{
     price: BigNumber;
     paymentAddress: string;
     formattedPrice: string;
   }> {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
-    const price = await this.identity.SoulStoreContract.getPriceForMintingName(
+    let price = await this.identity.SoulStoreContract.getPriceForMintingName(
       paymentAddress,
       nameLength,
       duration
     );
+
+    if (slippage) {
+      if (paymentMethod === "eth") {
+        price = price.add(price.mul(slippage).div(10000));
+      }
+    }
 
     let decimals = 18;
     if (paymentAddress !== ethers.constants.AddressZero) {
