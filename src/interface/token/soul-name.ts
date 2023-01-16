@@ -8,7 +8,7 @@ export interface Attribute {
 
 export interface ISoulName {
   description: "This is a soul name!";
-  external_url: "https://beta.app.masa.finance" | "https://app.masa.finance";
+  external_url: "https://testnet.app.masa.finance" | "https://app.masa.finance";
   name: string;
   image: string;
   imageHash: string;
