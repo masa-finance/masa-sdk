@@ -275,6 +275,7 @@ export class MasaContracts {
     paymentMethod: PaymentMethod,
     nameLength: number,
     duration = 1,
+    // slippage in bps where 10000 is 100%. 250 would be 2,5%
     slippage: number | undefined = 250
   ): Promise<{
     price: BigNumber;
