@@ -52,15 +52,22 @@ export class MasaContracts {
     tokenId: BigNumber,
     signatureDate: number,
     expirationDate: number,
-    signature: string
+    signature: string,
+    slippage: number | undefined = 250
   ): Promise<boolean> {
     const paymentMethodUsed = this.getPaymentAddress(paymentMethod);
-    const price = await this.identity.SoulLinkerContract.getPriceForAddLink(
+    let price = await this.identity.SoulLinkerContract.getPriceForAddLink(
       paymentMethodUsed,
       tokenAddress
     );
 
-    console.log(paymentMethodUsed);
+    if (slippage) {
+      if (paymentMethod === "eth") {
+        price = price.add(price.mul(slippage).div(10000));
+      }
+    }
+
+    console.log({ paymentMethodUsed, price });
 
     if (paymentMethod !== "eth") {
       const paymentToken: IERC20 = IERC20__factory.connect(
@@ -317,7 +324,8 @@ export class MasaContracts {
     identityId: BigNumber,
     authorityAddress: string,
     signatureDate: number,
-    signature: string
+    signature: string,
+    slippage: number | undefined = 250
   ): Promise<ethers.ContractTransaction> {
     const types = {
       MintCreditScore: [
@@ -344,9 +352,15 @@ export class MasaContracts {
 
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
-    const price = await this.identity.SoulboundCreditScoreContract.getMintPrice(
+    let price = await this.identity.SoulboundCreditScoreContract.getMintPrice(
       paymentAddress
     );
+
+    if (slippage) {
+      if (paymentMethod === "eth") {
+        price = price.add(price.mul(slippage).div(10000));
+      }
+    }
 
     return await this.identity.SoulboundCreditScoreContract.connect(wallet)[
       "mint(address,uint256,address,uint256,bytes)"
