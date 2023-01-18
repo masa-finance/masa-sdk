@@ -1,9 +1,9 @@
-import { Contract, ethers, TypedDataField } from "ethers";
+import { BytesLike, Contract, ethers, TypedDataField } from "ethers";
 
-const hashData = (data: any) => ethers.utils.keccak256(data);
+const hashData = (data: BytesLike) => ethers.utils.keccak256(data);
 
 export const signMessage = async (
-  msg: any,
+  msg: string,
   wallet: ethers.Signer | ethers.Wallet,
   doHash = false
 ): Promise<string | undefined> => {
@@ -51,7 +51,7 @@ export const generateSignatureDomain = async (
 };
 
 export const recoverAddress = (
-  msg: any,
+  msg: string,
   signature: string,
   doHash = false
 ): string | undefined => {

@@ -2,22 +2,24 @@ import Masa from "../masa";
 import { BigNumber } from "ethers";
 import { ISoulName } from "../interface";
 
-export const loadSoulNameByName = async (masa: Masa, soulName: string) => {
-  try {
-    const tokenId = await masa.contracts.identity.SoulNameContract.getTokenId(
-      soulName
-    );
-
-    return await loadSoulNameByTokenId(masa, tokenId);
-  } catch (err: any) {
-    console.error(`Failed to load Soul Name '${soulName}'`);
-  }
-};
+export interface SoulNameDetails {
+  owner: string;
+  tokenUri: string;
+  tokenDetails: {
+    sbtName: string;
+    linked: boolean;
+    identityId: BigNumber;
+    tokenId: BigNumber;
+    expirationDate: BigNumber;
+    active: boolean;
+  };
+  metadata: ISoulName;
+}
 
 export const loadSoulNameByTokenId = async (
   masa: Masa,
   tokenId: string | BigNumber
-) => {
+): Promise<SoulNameDetails | undefined> => {
   try {
     const [tokenDetails, owner, tokenUri] = await Promise.all([
       masa.contracts.identity.SoulNameContract.getTokenData(
@@ -47,48 +49,59 @@ export const loadSoulNameByTokenId = async (
   }
 };
 
+export const loadSoulNameByName = async (
+  masa: Masa,
+  soulName: string
+): Promise<SoulNameDetails | undefined> => {
+  try {
+    const tokenId = await masa.contracts.identity.SoulNameContract.getTokenId(
+      soulName
+    );
+
+    return await loadSoulNameByTokenId(masa, tokenId);
+  } catch (err: any) {
+    console.error(`Failed to load Soul Name '${soulName}'`);
+  }
+};
+
+export const loadSoulNamesByName = async (
+  masa: Masa,
+  soulNames: string[]
+): Promise<SoulNameDetails[]> => {
+  const soulNameDetails: (SoulNameDetails | undefined)[] = await Promise.all(
+    soulNames.map((soulName) => loadSoulNameByName(masa, soulName))
+  );
+
+  return soulNameDetails.filter((sn) => !!sn) as SoulNameDetails[];
+};
+
 export const loadSoulNamesByIdentityId = async (
   masa: Masa,
   identityId: BigNumber
-) => {
+): Promise<SoulNameDetails[]> => {
   const soulNames = await masa.contracts.identity.SoulNameContract[
     "getSoulNames(uint256)"
   ](identityId);
 
-  return await Promise.all(
-    soulNames.map(async (soulName, index) => {
-      const details = await loadSoulNameByName(masa, soulName);
-
-      return {
-        index,
-        ...details,
-      };
-    })
-  );
+  return loadSoulNamesByName(masa, soulNames);
 };
 
-export const loadSoulNamesByAddress = async (masa: Masa, address: string) => {
+export const loadSoulNamesByAddress = async (
+  masa: Masa,
+  address: string
+): Promise<SoulNameDetails[]> => {
   const soulNames = await masa.contracts.identity.SoulNameContract[
     "getSoulNames(address)"
   ](address);
 
-  return await Promise.all(
-    soulNames.map(async (soulName, index) => {
-      const details = await loadSoulNameByName(masa, soulName);
-
-      return {
-        index,
-        ...details,
-      };
-    })
-  );
+  return loadSoulNamesByName(masa, soulNames);
 };
 
-export const printSoulName = (soulName: any) => {
+export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
   console.log("\n");
 
-  if (soulName.index) {
-    console.log(`Token: ${soulName.index + 1}`);
+  if (index) {
+    console.log(`Token: ${index + 1}`);
   }
 
   console.log(`Name: ${soulName.tokenDetails.sbtName}`);
@@ -118,8 +131,14 @@ export const listSoulNames = async (masa: Masa, address?: string) => {
 
   const soulNames = await loadSoulNamesByAddress(masa, address);
 
-  for (const soulName of soulNames) {
-    printSoulName(soulName);
+  if (soulNames.length > 0) {
+    let index = 0;
+    for (const soulName of soulNames) {
+      printSoulName(soulName, index);
+      index++;
+    }
+  } else {
+    console.error("No soulnames found!");
   }
 
   return soulNames;

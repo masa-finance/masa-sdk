@@ -372,7 +372,6 @@ export class MasaClient {
         success: boolean;
         status: string;
         message: string;
-        creditScore?: any;
         signature?: string;
       }
     | undefined

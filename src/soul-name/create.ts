@@ -55,7 +55,7 @@ const purchaseSoulName = async (
       const result = await tx.wait();
 
       const purchasedEvent = result.events?.find(
-        (e: any) => e.event === "SoulNamePurchased"
+        (err: any) => err.event === "SoulNamePurchased"
       );
 
       let tokenId;
