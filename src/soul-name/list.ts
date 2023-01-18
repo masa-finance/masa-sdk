@@ -43,7 +43,7 @@ export const loadSoulNameByTokenId = async (
     };
   } catch (err: any) {
     console.error(
-      `Failed to load Soul Name with TokenID ${tokenId.toString}`,
+      `Failed to load Soul Name with TokenID ${tokenId.toString()}`,
       err.message
     );
   }
