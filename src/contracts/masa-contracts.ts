@@ -1,6 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { IERC20, IERC20__factory } from "@masa-finance/masa-contracts-identity";
-import { ethers } from "ethers";
+import { BigNumberish, BytesLike, ethers } from "ethers";
 import { addresses, loadIdentityContracts } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
@@ -141,7 +141,8 @@ export class MasaContracts {
     duration = 1,
     metadataURL: string,
     authorityAddress: string,
-    signature: string
+    signature: string,
+    debug = false
   ): Promise<ethers.ContractTransaction> {
     const { price, paymentAddress } = await this.getPaymentInformation(
       signer,
@@ -158,17 +159,15 @@ export class MasaContracts {
       price
     );
 
-    /**
-     paymentMethod: PromiseOrValue<string>,
-     name: PromiseOrValue<string>,
-     nameLength: PromiseOrValue<BigNumberish>,
-     yearsPeriod: PromiseOrValue<BigNumberish>,
-     tokenURI: PromiseOrValue<string>,
-     authorityAddress: PromiseOrValue<string>,
-     signature: PromiseOrValue<BytesLike>
-     */
-
-    console.log([
+    const params: [
+      string, // paymentMethod: PromiseOrValue<string>
+      string, // name: PromiseOrValue<string>
+      BigNumberish, // nameLength: PromiseOrValue<BigNumberish>
+      BigNumberish, // yearsPeriod: PromiseOrValue<BigNumberish>
+      string, // tokenURI: PromiseOrValue<string>
+      string, // authorityAddress: PromiseOrValue<string>
+      BytesLike //signature: PromiseOrValue<BytesLike>
+    ] = [
       paymentAddress,
       name,
       nameLength,
@@ -176,21 +175,25 @@ export class MasaContracts {
       metadataURL,
       authorityAddress,
       signature,
-    ]);
+    ];
+
+    const overrides = {
+      value: paymentMethod === "eth" ? price : undefined,
+    };
+
+    if (debug) {
+      console.log("purchaseIdentityAndName", params, overrides);
+    }
+
+    const gasLimit =
+      await this.identity.SoulStoreContract.estimateGas.purchaseIdentityAndName(
+        ...params,
+        overrides
+      );
+
     const tx = await this.identity.SoulStoreContract.connect(
       signer
-    ).purchaseIdentityAndName(
-      paymentAddress,
-      name,
-      nameLength,
-      duration,
-      metadataURL,
-      authorityAddress,
-      signature,
-      {
-        value: paymentMethod === "eth" ? price : undefined,
-      }
-    );
+    ).purchaseIdentityAndName(...params, { ...overrides, gasLimit });
     return tx;
   }
 
@@ -203,7 +206,8 @@ export class MasaContracts {
     duration = 1,
     metadataURL: string,
     authorityAddress: string,
-    signature: string
+    signature: string,
+    debug = false
   ): Promise<ethers.ContractTransaction> {
     const { price, paymentAddress } = await this.getPaymentInformation(
       signer,
@@ -220,29 +224,44 @@ export class MasaContracts {
       price
     );
 
-    /**
-     paymentMethod: PromiseOrValue<string>,
-     to: PromiseOrValue<string>,
-     name: PromiseOrValue<string>,
-     nameLength: PromiseOrValue<BigNumberish>,
-     yearsPeriod: PromiseOrValue<BigNumberish>,
-     tokenURI: PromiseOrValue<string>,
-     authorityAddress: PromiseOrValue<string>,
-     signature: PromiseOrValue<BytesLike>
-     */
-    const tx = this.identity.SoulStoreContract.connect(signer).purchaseName(
+    const params: [
+      string, // paymentMethod: PromiseOrValue<string>
+      string, // to: PromiseOrValue<string>
+      string, // name: PromiseOrValue<string>
+      BigNumberish, // nameLength: PromiseOrValue<BigNumberish>
+      BigNumberish, // yearsPeriod: PromiseOrValue<BigNumberish>
+      string, // tokenURI: PromiseOrValue<string>
+      string, // authorityAddress: PromiseOrValue<string>
+      BytesLike // signature: PromiseOrValue<BytesLike>
+    ] = [
       paymentAddress,
-      signer.getAddress(),
+      await signer.getAddress(),
       name,
       nameLength,
       duration,
       metadataURL,
       authorityAddress,
       signature,
-      {
-        value: paymentMethod === "eth" ? price : undefined,
-      }
-    );
+    ];
+
+    const overrides = {
+      value: paymentMethod === "eth" ? price : undefined,
+    };
+
+    if (debug) {
+      console.log("purchaseName", params, overrides);
+    }
+
+    const gasLimit =
+      await this.identity.SoulStoreContract.estimateGas.purchaseName(
+        ...params,
+        overrides
+      );
+
+    const tx = await this.identity.SoulStoreContract.connect(
+      signer
+    ).purchaseName(...params, { ...overrides, gasLimit });
+
     return tx;
   }
 
