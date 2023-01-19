@@ -9,7 +9,7 @@ export const login = async (
   | {
       address: string;
       userId: BigNumber | string;
-      cookie: string;
+      cookie?: string;
     }
   | undefined
 > => {

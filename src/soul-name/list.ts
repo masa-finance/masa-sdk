@@ -138,7 +138,7 @@ export const listSoulNames = async (masa: Masa, address?: string) => {
       index++;
     }
   } else {
-    console.error("No soulnames found!");
+    console.error(`No soulnames found for '${address}'`);
   }
 
   return soulNames;

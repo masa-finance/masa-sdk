@@ -144,7 +144,14 @@ export class MasaClient {
     }
   };
 
-  getChallenge = async (): Promise<any | undefined> => {
+  getChallenge = async (): Promise<
+    | {
+        challenge: string;
+        expires: string;
+        cookie?: string;
+      }
+    | undefined
+  > => {
     const getChallengeResponse = await this._middlewareClient
       .get(`/session/get-challenge`)
       .catch((err: any) => {
@@ -152,10 +159,13 @@ export class MasaClient {
       });
 
     if (getChallengeResponse) {
-      const cookie = getChallengeResponse.headers["set-cookie"];
+      const cookies = getChallengeResponse.headers["set-cookie"];
 
-      if (!cookie) {
-        console.warn("No cookie in response!");
+      let cookie;
+      if (!cookies || cookies.length < 1) {
+        console.warn("No cookies in response!");
+      } else {
+        cookie = cookies[0];
       }
 
       const { data: challengeData } = getChallengeResponse;
