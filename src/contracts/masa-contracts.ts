@@ -185,15 +185,19 @@ export class MasaContracts {
       console.log("purchaseIdentityAndName", params, overrides);
     }
 
-    const gasLimit =
-      await this.identity.SoulStoreContract.estimateGas.purchaseIdentityAndName(
-        ...params,
-        overrides
-      );
+    // connect
+    const store = this.identity.SoulStoreContract.connect(signer);
+    // estimate gas
+    const gasLimit = await store.estimateGas.purchaseIdentityAndName(
+      ...params,
+      overrides
+    );
+    // execute tx
+    const tx = await store.purchaseIdentityAndName(...params, {
+      ...overrides,
+      gasLimit,
+    });
 
-    const tx = await this.identity.SoulStoreContract.connect(
-      signer
-    ).purchaseIdentityAndName(...params, { ...overrides, gasLimit });
     return tx;
   }
 
@@ -252,15 +256,12 @@ export class MasaContracts {
       console.log("purchaseName", params, overrides);
     }
 
-    const gasLimit =
-      await this.identity.SoulStoreContract.estimateGas.purchaseName(
-        ...params,
-        overrides
-      );
-
-    const tx = await this.identity.SoulStoreContract.connect(
-      signer
-    ).purchaseName(...params, { ...overrides, gasLimit });
+    // connect
+    const store = this.identity.SoulStoreContract.connect(signer);
+    // estimate gas
+    const gasLimit = await store.estimateGas.purchaseName(...params, overrides);
+    // execute
+    const tx = await store.purchaseName(...params, { ...overrides, gasLimit });
 
     return tx;
   }
