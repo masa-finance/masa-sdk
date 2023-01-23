@@ -73,7 +73,7 @@ export const listCreditScores = async (
 
   const creditScores = await loadCreditScoresByIdentityId(masa, identityId);
 
-  if (creditScores.length === 0) console.log("No Credit Scores found");
+  if (creditScores.length === 0) console.log("No Credit Scores found!");
 
   let i = 1;
   for (const creditScore of creditScores) {
