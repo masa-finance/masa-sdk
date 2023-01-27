@@ -38,17 +38,17 @@ export const getBalances = async (masa: Masa, address?: string) => {
     // WETH
     loadBalance(addressToLoad, contractAddresses.WETH),
     // SBI
-    masa.contracts.identity.SoulboundIdentityContract.balanceOf(addressToLoad),
+    masa.contracts.instances.SoulboundIdentityContract.balanceOf(addressToLoad),
     // MSN
-    masa.contracts.identity.SoulNameContract.balanceOf(addressToLoad),
+    masa.contracts.instances.SoulNameContract.balanceOf(addressToLoad),
     // SCS
-    masa.contracts.identity.SoulboundCreditScoreContract.balanceOf(
+    masa.contracts.instances.SoulboundCreditScoreContract.balanceOf(
       addressToLoad
     ),
     // 2FA
-    masa.contracts.identity.Soulbound2FAContract.address !==
+    masa.contracts.instances.Soulbound2FAContract.address !==
     constants.AddressZero
-      ? masa.contracts.identity.Soulbound2FAContract.balanceOf(addressToLoad)
+      ? masa.contracts.instances.Soulbound2FAContract.balanceOf(addressToLoad)
       : BigNumber.from(0),
   ]);
 

@@ -1,11 +1,12 @@
 import Masa from "../masa";
+import { Messages } from "../utils/messages";
 
 export const sendSoulNameByName = async (
   masa: Masa,
   soulName: string,
   receiver: string
 ) => {
-  const soulNameData = await masa.contracts.identity.SoulNameContract.nameData(
+  const soulNameData = await masa.contracts.instances.SoulNameContract.nameData(
     soulName
   );
 
@@ -15,7 +16,7 @@ export const sendSoulNameByName = async (
     );
 
     try {
-      const tx = await masa.contracts.identity.SoulNameContract.connect(
+      const tx = await masa.contracts.instances.SoulNameContract.connect(
         masa.config.wallet
       ).transferFrom(
         masa.config.wallet.getAddress(),
@@ -23,7 +24,7 @@ export const sendSoulNameByName = async (
         soulNameData.tokenId
       );
 
-      console.log("Waiting for the send tx to finalize");
+      console.log(Messages.WaitingToFinalize(tx.hash));
       await tx.wait();
 
       console.log(`${soulName}.soul with id ${soulNameData.tokenId} sent!`);

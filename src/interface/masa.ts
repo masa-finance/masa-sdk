@@ -1,13 +1,23 @@
 import { BigNumber, ethers } from "ethers";
 
 export type EnvironmentName = "dev" | "test" | "beta" | "production";
+export type NetworkName =
+  // eth
+  | "goerli"
+  | "mainnet"
+  // celo
+  | "alfajores"
+  | "celo"
+  // polygon
+  | "mumbai"
+  | "polygon";
 
 export interface MasaArgs {
   cookie?: string;
   wallet: ethers.Signer | ethers.Wallet;
   apiUrl?: string;
   environment?: EnvironmentName;
-  network?: string;
+  network?: NetworkName;
   arweave?: {
     host: string;
     port: number;

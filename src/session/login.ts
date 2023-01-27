@@ -17,7 +17,7 @@ export const login = async (
 
   if (!(await masa.session.checkLogin())) {
     // get challenge
-    const challengeData = await masa.client.getChallenge();
+    const challengeData = await masa.client.session.getChallenge();
 
     if (challengeData) {
       // sign
@@ -35,7 +35,7 @@ export const login = async (
       console.log(`Signature: '${signature}'`);
 
       if (signature) {
-        const checkSignatureData = await masa.client.checkSignature(
+        const checkSignatureData = await masa.client.session.checkSignature(
           address,
           signature,
           challengeData.cookie

@@ -1,6 +1,5 @@
 import {
   arweave as arweaveInit,
-  Masa2FA,
   MasaAccount,
   MasaArgs,
   MasaArweave,
@@ -8,6 +7,7 @@ import {
   MasaConfig,
   MasaContracts,
   MasaCreditScore,
+  MasaGreen,
   MasaIdentity,
   MasaSession,
   MasaSoulName,
@@ -26,7 +26,7 @@ export default class Masa {
   public readonly identity: MasaIdentity;
   public readonly soulName: MasaSoulName;
   public readonly creditScore: MasaCreditScore;
-  public readonly twoFA: Masa2FA;
+  public readonly green: MasaGreen;
 
   public constructor({
     cookie,
@@ -61,14 +61,14 @@ export default class Masa {
     this.identity = new MasaIdentity(this);
     this.soulName = new MasaSoulName(this);
     this.creditScore = new MasaCreditScore(this);
-    this.twoFA = new Masa2FA(this);
+    this.green = new MasaGreen(this);
   }
 
   metadata = {
     store: (soulName: string, receiver: string, duration: number) =>
-      this.client.storeMetadata(soulName, receiver, duration),
+      this.client.soulName.store(soulName, receiver, duration),
     retrieve: (url: string, additionalHeaders?: Record<string, string>) =>
-      this.client.getMetadata(url, additionalHeaders),
+      this.client.metadata.get(url, additionalHeaders),
   };
 
   utils = {

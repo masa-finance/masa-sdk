@@ -4,7 +4,7 @@ import { BigNumber, Contract, Signer } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { parsePassport } from "./passport";
 import { patchMetadataUrl } from "../helpers";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils";
 
 export type QueryLinkResult = BaseResult;
 
@@ -45,7 +45,7 @@ export const queryLink = async (
 
   const { identityId, address } = await masa.identity.load();
   if (!identityId) {
-    result.message = ErrorMessage.NoIdentity(address);
+    result.message = Messages.NoIdentity(address);
     return result;
   }
 
@@ -73,7 +73,7 @@ export const queryLink = async (
   console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
   console.log(`to Identity ${readerIdentityId.toString()} (${address})\n`);
 
-  const txHash = await masa.contracts.addLink(
+  const txHash = await masa.contracts.soulLinker.addLink(
     masa.config.wallet as Signer,
     contract.address,
     paymentMethod,

@@ -1,6 +1,6 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils";
 
 export const loadIdentityByAddress = async (
   masa: Masa,
@@ -12,19 +12,19 @@ export const loadIdentityByAddress = async (
     address = address || (await masa.config.wallet.getAddress());
 
     const balance =
-      await masa.contracts.identity.SoulboundIdentityContract.balanceOf(
+      await masa.contracts.instances.SoulboundIdentityContract.balanceOf(
         address
       );
 
     if (balance.toNumber() > 0) {
       identityId =
-        await masa.contracts.identity.SoulboundIdentityContract.tokenOfOwner(
+        await masa.contracts.instances.SoulboundIdentityContract.tokenOfOwner(
           address
         );
     }
 
     if (!identityId) {
-      console.error(ErrorMessage.NoIdentity(address));
+      console.error(Messages.NoIdentity(address));
     }
   } catch {
     // ignore
@@ -40,7 +40,7 @@ export const loadAddressFromIdentityId = async (
   let address;
 
   try {
-    address = await masa.contracts.identity.SoulboundIdentityContract[
+    address = await masa.contracts.instances.SoulboundIdentityContract[
       "ownerOf(uint256)"
     ](identityId);
   } catch {

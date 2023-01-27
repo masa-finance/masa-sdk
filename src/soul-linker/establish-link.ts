@@ -3,7 +3,7 @@ import { PaymentMethod } from "../contracts";
 import { BigNumber, Contract, Signer } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { parsePassport } from "./passport";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils";
 
 export type EstablishLinkResult = BaseResult;
 
@@ -44,7 +44,7 @@ export const establishLink = async (
 
   const { identityId, address } = await masa.identity.load();
   if (!identityId) {
-    result.message = ErrorMessage.NoIdentity(address);
+    result.message = Messages.NoIdentity(address);
     return result;
   }
 
@@ -72,7 +72,7 @@ export const establishLink = async (
   console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
   console.log(`to Identity ${identityId.toString()} (${address})\n`);
 
-  await masa.contracts.addLink(
+  await masa.contracts.soulLinker.addLink(
     masa.config.wallet as Signer,
     contract.address,
     paymentMethod,

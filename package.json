@@ -37,8 +37,8 @@
   "license": "MIT",
   "dependencies": {
     "@masa-finance/masa-contracts-identity": "^1.0.0",
-    "arweave": "^1.11.8",
-    "axios": "^1.2.3",
+    "arweave": "^1.12.4",
+    "axios": "^1.2.5",
     "ethers": "^5.7.2",
     "grapheme-splitter": "^1.0.4",
     "typescript": "^4.2.3"

@@ -1,31 +1,33 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
-import { I2FA } from "../interface";
+import { IGreen } from "../interface";
 import { patchMetadataUrl } from "../helpers";
 
-export const load2FAsByIdentityId = async (
+export const loadGreensByIdentityId = async (
   masa: Masa,
   identityId: BigNumber
 ): Promise<
   {
     tokenId: BigNumber;
     tokenUri: string;
-    metadata?: I2FA;
+    metadata?: IGreen;
   }[]
 > => {
   const twoFSIds: BigNumber[] =
-    await masa.contracts.identity.SoulLinkerContract[
+    await masa.contracts.instances.SoulLinkerContract[
       "getSBTConnections(uint256,address)"
-    ](identityId, masa.contracts.identity.Soulbound2FAContract.address);
+    ](identityId, masa.contracts.instances.Soulbound2FAContract.address);
 
   return await Promise.all(
     twoFSIds.map(async (tokenId) => {
       const tokenUri = patchMetadataUrl(
         masa,
-        await masa.contracts.identity.Soulbound2FAContract.tokenURI(tokenId)
+        await masa.contracts.instances.Soulbound2FAContract.tokenURI(tokenId)
       );
 
-      const metadata = <I2FA | undefined>await masa.metadata.retrieve(tokenUri);
+      const metadata = <IGreen | undefined>(
+        await masa.metadata.retrieve(tokenUri)
+      );
 
       return {
         tokenId,
@@ -36,14 +38,14 @@ export const load2FAsByIdentityId = async (
   );
 };
 
-export const list2FAs = async (
+export const listGreens = async (
   masa: Masa,
   address?: string
 ): Promise<
   {
     tokenId: BigNumber;
     tokenUri: string;
-    metadata?: I2FA;
+    metadata?: IGreen;
   }[]
 > => {
   address = address || (await masa.config.wallet.getAddress());
@@ -51,9 +53,9 @@ export const list2FAs = async (
   const { identityId } = await masa.identity.load(address);
   if (!identityId) return [];
 
-  const twoFAs = await load2FAsByIdentityId(masa, identityId);
+  const twoFAs = await loadGreensByIdentityId(masa, identityId);
 
-  if (twoFAs.length === 0) console.log("No 2FAs found");
+  if (twoFAs.length === 0) console.log("No Masa Green found");
 
   let i = 1;
   for (const twoFA of twoFAs) {

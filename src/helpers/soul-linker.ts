@@ -36,7 +36,7 @@ export const signSoulLinkerLink = async (
   };
 
   const { signature, domain } = await signTypedData(
-    masa.contracts.identity.SoulLinkerContract,
+    masa.contracts.instances.SoulLinkerContract,
     masa.config.wallet as ethers.Wallet,
     "SoulLinker",
     types,
