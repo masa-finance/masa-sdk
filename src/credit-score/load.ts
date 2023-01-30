@@ -13,7 +13,7 @@ export const loadCreditScoreByTokenId = async (
 }> => {
   const tokenUri = patchMetadataUrl(
     masa,
-    await masa.contracts.identity.SoulboundCreditScoreContract.tokenURI(
+    await masa.contracts.instances.SoulboundCreditScoreContract.tokenURI(
       creditScoreId
     )
   );
@@ -41,9 +41,12 @@ export const loadCreditScoresByIdentityId = async (
   }[]
 > => {
   const creditScoreIds: BigNumber[] =
-    await masa.contracts.identity.SoulLinkerContract[
+    await masa.contracts.instances.SoulLinkerContract[
       "getSBTConnections(uint256,address)"
-    ](identityId, masa.contracts.identity.SoulboundCreditScoreContract.address);
+    ](
+      identityId,
+      masa.contracts.instances.SoulboundCreditScoreContract.address
+    );
 
   const creditScores = await Promise.all(
     creditScoreIds.map(async (creditScoreId) =>

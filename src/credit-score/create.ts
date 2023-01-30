@@ -2,7 +2,7 @@ import Masa from "../masa";
 import { CreateCreditScoreResult } from "../interface";
 import { PaymentMethod } from "../contracts";
 import { ethers } from "ethers";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils/messages";
 
 export const createCreditScore = async (
   masa: Masa,
@@ -18,12 +18,12 @@ export const createCreditScore = async (
 
     const { identityId, address } = await masa.identity.load();
     if (!identityId || !address) {
-      result.message = ErrorMessage.NoIdentity(address);
+      result.message = Messages.NoIdentity(address);
       return result;
     }
 
     const balance =
-      await masa.contracts.identity.SoulboundCreditScoreContract.balanceOf(
+      await masa.contracts.instances.SoulboundCreditScoreContract.balanceOf(
         address
       );
 
@@ -32,7 +32,7 @@ export const createCreditScore = async (
       return result;
     }
 
-    const creditScoreResponse = await masa.client.createCreditScore();
+    const creditScoreResponse = await masa.client.creditScore.create();
 
     if (
       creditScoreResponse?.signature &&
@@ -40,7 +40,7 @@ export const createCreditScore = async (
       creditScoreResponse?.authorityAddress
     ) {
       try {
-        const tx = await masa.contracts.mintCreditScore(
+        const tx = await masa.contracts.creditScore.mint(
           masa.config.wallet as ethers.Wallet,
           paymentMethod,
           identityId,
@@ -49,11 +49,11 @@ export const createCreditScore = async (
           creditScoreResponse.signature
         );
 
-        console.log("Waiting for transaction to finalize");
+        console.log(Messages.WaitingToFinalize(tx.hash));
         const transactionReceipt = await tx.wait();
 
         console.log("Updating Credit Score Record!");
-        const creditScoreUpdateResponse = await masa.client.updateCreditScore(
+        const creditScoreUpdateResponse = await masa.client.creditScore.update(
           transactionReceipt.transactionHash
         );
 

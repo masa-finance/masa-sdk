@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
+import { Messages } from "../utils/messages";
 
 export const burnIdentityById = async (
   masa: Masa,
@@ -9,11 +10,11 @@ export const burnIdentityById = async (
 
   console.log("Burning Identity");
   try {
-    const tx = await masa.contracts.identity.SoulboundIdentityContract.connect(
+    const tx = await masa.contracts.instances.SoulboundIdentityContract.connect(
       masa.config.wallet
     ).burn(identityId);
 
-    console.log("Waiting for the burn tx to finalize");
+    console.log(Messages.WaitingToFinalize(tx.hash));
     await tx.wait();
 
     console.log(`Identity with id ${identityId} burned!`);

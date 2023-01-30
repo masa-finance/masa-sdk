@@ -2,7 +2,7 @@ import Masa from "../masa";
 import { BigNumber, Contract } from "ethers";
 import { BaseResult } from "../interface";
 import { SoulLinker } from "@masa-finance/masa-contracts-identity";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils";
 
 export type Link = {
   readerIdentityId: BigNumber;
@@ -25,14 +25,14 @@ export const loadLinks = async (
   const result = [];
 
   const links: SoulLinker.LinkKeyStructOutput[] =
-    await masa.contracts.identity.SoulLinkerContract.getLinks(
+    await masa.contracts.instances.SoulLinkerContract.getLinks(
       contract.address,
       tokenId
     );
 
   for (const link of links) {
     const linkInfo: SoulLinker.LinkDataStructOutput =
-      await masa.contracts.identity.SoulLinkerContract.getLinkInfo(
+      await masa.contracts.instances.SoulLinkerContract.getLinkInfo(
         contract.address,
         tokenId,
         link.readerIdentityId,
@@ -62,7 +62,7 @@ export const listLinks = async (
   const { identityId, address } = await masa.identity.load();
 
   if (!identityId) {
-    result.message = ErrorMessage.NoIdentity(address);
+    result.message = Messages.NoIdentity(address);
     return result;
   }
 

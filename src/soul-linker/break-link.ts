@@ -2,7 +2,7 @@ import Masa from "../masa";
 import { BaseResult } from "../interface";
 import { BigNumber, Contract } from "ethers";
 import { loadLinks } from "./list-links";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils";
 
 export type BreakLinkResult = BaseResult;
 
@@ -19,7 +19,7 @@ export const breakLink = async (
 
   const { identityId, address } = await masa.identity.load();
   if (!identityId) {
-    result.message = ErrorMessage.NoIdentity(address);
+    result.message = Messages.NoIdentity(address);
     return result;
   }
 
@@ -42,7 +42,7 @@ export const breakLink = async (
   console.log({ filteredLinks });
   for (const link of filteredLinks) {
     console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
-    const response = await masa.contracts.identity.SoulLinkerContract.connect(
+    const response = await masa.contracts.instances.SoulLinkerContract.connect(
       masa.config.wallet
     ).revokeLink(
       readerIdentityId,

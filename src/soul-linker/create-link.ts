@@ -3,7 +3,7 @@ import { signSoulLinkerLink } from "../helpers";
 import { BigNumber, Contract } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { loadAddressFromIdentityId } from "../identity";
-import { ErrorMessage } from "../utils";
+import { Messages } from "../utils";
 
 export type CreateLinkResult = BaseResult & { passport?: string };
 
@@ -21,7 +21,7 @@ export const createLink = async (
   const { identityId, address } = await masa.identity.load();
 
   if (!identityId) {
-    result.message = ErrorMessage.NoIdentity(address);
+    result.message = Messages.NoIdentity(address);
     return result;
   }
 

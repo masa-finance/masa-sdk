@@ -13,7 +13,7 @@ export const loadIdentityDetails = async (
 }> => {
   const tokenUri = patchMetadataUrl(
     masa,
-    await masa.contracts.identity.SoulboundIdentityContract[
+    await masa.contracts.instances.SoulboundIdentityContract[
       "tokenURI(uint256)"
     ](identityId)
   );

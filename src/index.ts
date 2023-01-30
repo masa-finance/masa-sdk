@@ -8,6 +8,6 @@ export * from "./session";
 export * from "./credit-score";
 export * from "./soul-linker";
 export * from "./soul-name";
-export * from "./2fa";
+export * from "./green";
 export * from "./account";
 export * from "./helpers";

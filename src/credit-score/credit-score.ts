@@ -11,12 +11,10 @@ export class MasaCreditScore {
   constructor(private masa: Masa) {
     this.links = new MasaSoulLinker(
       this.masa,
-      this.masa.contracts.identity.SoulboundCreditScoreContract
+      this.masa.contracts.instances.SoulboundCreditScoreContract
     );
   }
 
-  mint = (address: string, signature: string) =>
-    this.masa.client.creditScoreMint(address, signature);
   create = () => createCreditScore(this.masa);
   burn = (creditScoreId: BigNumber) =>
     burnCreditScore(this.masa, creditScoreId);

@@ -12,7 +12,7 @@ export class MasaIdentity {
   constructor(private masa: Masa) {
     this.links = new MasaSoulLinker(
       this.masa,
-      this.masa.contracts.identity.SoulboundIdentityContract
+      this.masa.contracts.instances.SoulboundIdentityContract
     );
   }
 

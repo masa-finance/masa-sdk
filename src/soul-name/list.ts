@@ -22,13 +22,13 @@ export const loadSoulNameByTokenId = async (
 ): Promise<SoulNameDetails | undefined> => {
   try {
     const [tokenDetails, owner, tokenUri] = await Promise.all([
-      masa.contracts.identity.SoulNameContract.getTokenData(
+      masa.contracts.instances.SoulNameContract.getTokenData(
         (
-          await masa.contracts.identity.SoulNameContract.tokenData(tokenId)
+          await masa.contracts.instances.SoulNameContract.tokenData(tokenId)
         ).name
       ),
-      masa.contracts.identity.SoulNameContract.ownerOf(tokenId),
-      masa.contracts.identity.SoulNameContract["tokenURI(uint256)"](tokenId),
+      masa.contracts.instances.SoulNameContract.ownerOf(tokenId),
+      masa.contracts.instances.SoulNameContract["tokenURI(uint256)"](tokenId),
     ]);
 
     const metadata = (await masa.arweave.loadTransactionData(
@@ -54,7 +54,7 @@ export const loadSoulNameByName = async (
   soulName: string
 ): Promise<SoulNameDetails | undefined> => {
   try {
-    const tokenId = await masa.contracts.identity.SoulNameContract.getTokenId(
+    const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
       soulName
     );
 
@@ -79,7 +79,7 @@ export const loadSoulNamesByIdentityId = async (
   masa: Masa,
   identityId: BigNumber
 ): Promise<SoulNameDetails[]> => {
-  const soulNames = await masa.contracts.identity.SoulNameContract[
+  const soulNames = await masa.contracts.instances.SoulNameContract[
     "getSoulNames(uint256)"
   ](identityId);
 
@@ -90,7 +90,7 @@ export const loadSoulNamesByAddress = async (
   masa: Masa,
   address: string
 ): Promise<SoulNameDetails[]> => {
-  const soulNames = await masa.contracts.identity.SoulNameContract[
+  const soulNames = await masa.contracts.instances.SoulNameContract[
     "getSoulNames(address)"
   ](address);
 

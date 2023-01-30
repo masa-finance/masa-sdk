@@ -1,6 +1,7 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { CreateSoulNameResult } from "../interface";
+import { Messages } from "../utils/messages";
 
 export const getRegistrationPrice = async (
   masa: Masa,
@@ -10,7 +11,7 @@ export const getRegistrationPrice = async (
 ) => {
   const { length } = masa.soulName.validate(soulName);
 
-  const { price, formattedPrice } = await masa.contracts.getPaymentInformation(
+  const { price, formattedPrice } = await masa.contracts.soulName.getPrice(
     masa.config.wallet,
     paymentMethod,
     length,
@@ -29,7 +30,7 @@ const purchaseSoulName = async (
   duration: number,
   paymentMethod: PaymentMethod
 ): Promise<{ tokenId: string; soulName: string } | undefined> => {
-  if (await masa.contracts.isAvailable(soulName)) {
+  if (await masa.contracts.soulName.isAvailable(soulName)) {
     const storeMetadataData = await masa.metadata.store(
       soulName,
       await masa.config.wallet.getAddress(),
@@ -40,7 +41,7 @@ const purchaseSoulName = async (
       const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
       console.log(`Soul Name Metadata URL: '${metadataUrl}'`);
 
-      const tx = await masa.contracts.purchaseName(
+      const tx = await masa.contracts.soulName.purchase(
         masa.config.wallet,
         paymentMethod,
         soulName,
@@ -51,7 +52,7 @@ const purchaseSoulName = async (
         storeMetadataData.signature
       );
 
-      console.log("Waiting for transaction to finalize");
+      console.log(Messages.WaitingToFinalize(tx.hash));
       const result = await tx.wait();
 
       const purchasedEvent = result.events?.find(

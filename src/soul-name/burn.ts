@@ -1,7 +1,8 @@
 import Masa from "../masa";
+import { Messages } from "../utils";
 
 export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
-  const nameData = await masa.contracts.identity.SoulNameContract.nameData(
+  const nameData = await masa.contracts.instances.SoulNameContract.nameData(
     soulName
   );
 
@@ -9,11 +10,11 @@ export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
     console.log(`Burning ${soulName}.soul with id ${nameData.tokenId}!`);
 
     try {
-      const tx = await masa.contracts.identity.SoulNameContract.connect(
+      const tx = await masa.contracts.instances.SoulNameContract.connect(
         masa.config.wallet
       ).burn(nameData.tokenId);
 
-      console.log("Waiting for the burn tx to finalize");
+      console.log(Messages.WaitingToFinalize(tx.hash));
       await tx.wait();
 
       console.log(`${soulName}.soul with id ${nameData.tokenId} burned!`);
