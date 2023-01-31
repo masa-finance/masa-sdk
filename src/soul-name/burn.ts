@@ -37,6 +37,6 @@ export const burnSoulName = async (masa: Masa, soulName: string) => {
 
     await burnSoulNameByName(masa, soulName);
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 };

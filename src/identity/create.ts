@@ -103,7 +103,7 @@ export const createIdentityWithSoulName = async (
 
     identityCreated = true;
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 
   return identityCreated;

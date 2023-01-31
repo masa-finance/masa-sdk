@@ -1,4 +1,4 @@
-import { createGreen } from "./create";
+import { createGreen, generateGreen } from "./create";
 import { burnGreen } from "./burn";
 import { listGreens, loadGreensByIdentityId } from "./list";
 import { BigNumber } from "ethers";
@@ -15,8 +15,7 @@ export class MasaGreen {
     );
   }
 
-  generate = (phoneNumber: string) =>
-    this.masa.client.green.generate(phoneNumber);
+  generate = (phoneNumber: string) => generateGreen(this.masa, phoneNumber);
   create = (phoneNumber: string, code: string) =>
     createGreen(this.masa, phoneNumber, code);
   burn = (greenId: number) => burnGreen(this.masa, greenId);

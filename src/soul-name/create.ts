@@ -117,8 +117,8 @@ export const createSoulName = async (
       result.soulName = soulName;
     }
   } else {
-    result.message = "Not logged in please login first";
-    console.log(result.message);
+    result.message = Messages.NotLoggedIn();
+    console.error(result.message);
   }
 
   return result;

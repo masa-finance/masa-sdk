@@ -33,7 +33,7 @@ export default class Masa {
     wallet,
     apiUrl = "https://dev.middleware.masa.finance",
     environment = "dev",
-    network = "goerli",
+    defaultNetwork = "goerli",
     arweave = {
       host: "arweave.net",
       port: 443,
@@ -51,7 +51,7 @@ export default class Masa {
     this.config = {
       apiUrl,
       environment,
-      network,
+      network: defaultNetwork,
       wallet,
     };
 

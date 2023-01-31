@@ -2,6 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import Masa from "../masa";
 import { IIdentity } from "../interface";
 import { patchMetadataUrl } from "../helpers";
+import { Messages } from "../utils";
 
 export const loadIdentityDetails = async (
   masa: Masa,
@@ -56,6 +57,6 @@ export const showIdentity = async (
 
     return identity;
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 };

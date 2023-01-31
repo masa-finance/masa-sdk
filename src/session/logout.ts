@@ -1,4 +1,5 @@
 import Masa from "../masa";
+import { Messages } from "../utils";
 
 export const logout = async (
   masa: Masa
@@ -21,6 +22,6 @@ export const logout = async (
       };
     }
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 };

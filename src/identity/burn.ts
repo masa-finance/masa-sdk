@@ -35,7 +35,7 @@ export const burnIdentity = async (masa: Masa): Promise<boolean> => {
 
     success = await burnIdentityById(masa, identityId);
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 
   return success;

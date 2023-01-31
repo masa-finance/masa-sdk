@@ -289,7 +289,8 @@ export class MasaClient {
 
     verify: async (
       phoneNumber: string,
-      code: string
+      code: string,
+      network: string
     ): Promise<
       | (BaseResult & {
           status: string;
@@ -311,6 +312,7 @@ export class MasaClient {
           {
             phoneNumber,
             code,
+            network,
           },
           {
             headers: {
@@ -332,11 +334,12 @@ export class MasaClient {
         result.status = "success";
         return { ...result, ...greenVerifyResponse.data };
       } else {
-        console.error("Generation of credit score failed!");
+        const message = `Generation of green failed! ${result.message}`;
+        console.error(message);
         return {
           success: false,
           status: "failed",
-          message: "Credit Score failed",
+          message,
         };
       }
     },

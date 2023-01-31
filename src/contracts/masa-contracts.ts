@@ -1,10 +1,19 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { IERC20, IERC20__factory } from "@masa-finance/masa-contracts-identity";
-import { BigNumberish, BytesLike, ethers } from "ethers";
+import {
+  BigNumberish,
+  BytesLike,
+  constants,
+  ContractReceipt,
+  ContractTransaction,
+  Signer,
+  utils,
+  Wallet,
+} from "ethers";
 import { addresses, loadIdentityContracts } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
-import { generateSignatureDomain } from "../utils";
+import { generateSignatureDomain, signTypedData } from "../utils";
 import { ERC20__factory } from "./stubs/ERC20__factory";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
@@ -30,10 +39,10 @@ export class MasaContracts {
      */
     checkOrGiveAllowance: async (
       paymentAddress: string,
-      signer: ethers.Signer,
+      signer: Signer,
       paymentMethod: PaymentMethod,
       price: BigNumber
-    ): Promise<ethers.ContractReceipt | undefined> => {
+    ): Promise<ContractReceipt | undefined> => {
       if (paymentMethod !== "eth") {
         const contract = IERC20__factory.connect(paymentAddress, signer);
 
@@ -45,7 +54,7 @@ export class MasaContracts {
             this.instances.SoulStoreContract.address
           )) < price
         ) {
-          const tx: ethers.ContractTransaction = await contract
+          const tx: ContractTransaction = await contract
             .connect(signer)
             .approve(
               // spender
@@ -65,23 +74,20 @@ export class MasaContracts {
      * @private
      */
     getPaymentAddress: (paymentMethod: PaymentMethod) => {
-      let paymentAddress = ethers.constants.AddressZero;
+      let paymentAddress = constants.AddressZero;
 
       switch (paymentMethod) {
         case "utility":
           paymentAddress =
-            addresses[this.masaConfig.network].MASA ||
-            ethers.constants.AddressZero;
+            addresses[this.masaConfig.network].MASA || constants.AddressZero;
           break;
         case "stable":
           paymentAddress =
-            addresses[this.masaConfig.network].USDC ||
-            ethers.constants.AddressZero;
+            addresses[this.masaConfig.network].USDC || constants.AddressZero;
           break;
         case "weth":
           paymentAddress =
-            addresses[this.masaConfig.network].WETH ||
-            ethers.constants.AddressZero;
+            addresses[this.masaConfig.network].WETH || constants.AddressZero;
           break;
       }
 
@@ -104,7 +110,7 @@ export class MasaContracts {
      * @param slippage
      */
     addLink: async (
-      signer: ethers.Signer,
+      signer: Signer,
       tokenAddress: string,
       paymentMethod: PaymentMethod,
       readerIdentityId: BigNumber,
@@ -208,7 +214,7 @@ export class MasaContracts {
      * @param debug
      */
     purchase: async (
-      signer: ethers.Signer,
+      signer: Signer,
       paymentMethod: PaymentMethod,
       name: string,
       nameLength: number,
@@ -217,7 +223,7 @@ export class MasaContracts {
       authorityAddress: string,
       signature: string,
       debug = false
-    ): Promise<ethers.ContractTransaction> => {
+    ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
         signer,
         paymentMethod,
@@ -286,7 +292,7 @@ export class MasaContracts {
      * @param slippage
      */
     getPrice: async (
-      signer: ethers.Signer,
+      signer: Signer,
       paymentMethod: PaymentMethod,
       nameLength: number,
       duration = 1,
@@ -311,12 +317,12 @@ export class MasaContracts {
       }
 
       let decimals = 18;
-      if (paymentAddress !== ethers.constants.AddressZero) {
+      if (paymentAddress !== constants.AddressZero) {
         const contract = ERC20__factory.connect(paymentAddress, signer);
         decimals = await contract.decimals();
       }
 
-      const formattedPrice = ethers.utils.formatUnits(price, decimals);
+      const formattedPrice = utils.formatUnits(price, decimals);
 
       return {
         price,
@@ -331,9 +337,7 @@ export class MasaContracts {
      * purchase only identity
      * @param signer
      */
-    purchase: async (
-      signer: ethers.Signer
-    ): Promise<ethers.ContractTransaction> => {
+    purchase: async (signer: Signer): Promise<ContractTransaction> => {
       return this.instances.SoulStoreContract.connect(
         signer
       ).purchaseIdentity();
@@ -352,7 +356,7 @@ export class MasaContracts {
      * @param debug
      */
     purchaseIdentityAndName: async (
-      signer: ethers.Signer,
+      signer: Signer,
       paymentMethod: PaymentMethod,
       name: string,
       nameLength: number,
@@ -361,7 +365,7 @@ export class MasaContracts {
       authorityAddress: string,
       signature: string,
       debug = false
-    ): Promise<ethers.ContractTransaction> => {
+    ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
         signer,
         paymentMethod,
@@ -421,6 +425,14 @@ export class MasaContracts {
   };
 
   creditScore = {
+    types: {
+      MintCreditScore: [
+        { name: "identityId", type: "uint256" },
+        { name: "authorityAddress", type: "address" },
+        { name: "signatureDate", type: "uint256" },
+      ],
+    },
+
     /**
      * purchase credit score
      * @param wallet
@@ -432,22 +444,14 @@ export class MasaContracts {
      * @param slippage
      */
     mint: async (
-      wallet: ethers.Wallet,
+      wallet: Wallet,
       paymentMethod: PaymentMethod,
       identityId: BigNumber,
       authorityAddress: string,
       signatureDate: number,
       signature: string,
       slippage: number | undefined = 250
-    ): Promise<ethers.ContractTransaction> => {
-      const types = {
-        MintCreditScore: [
-          { name: "identityId", type: "uint256" },
-          { name: "authorityAddress", type: "address" },
-          { name: "signatureDate", type: "uint256" },
-        ],
-      };
-
+    ): Promise<ContractTransaction> => {
       const value = {
         identityId,
         authorityAddress,
@@ -460,8 +464,19 @@ export class MasaContracts {
         this.instances.SoulboundCreditScoreContract.address
       );
 
-      const recoveredAddress = verifyTypedData(domain, types, value, signature);
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.creditScore.types,
+        value,
+        signature
+      );
       console.log({ recoveredAddress, authorityAddress });
+
+      if (recoveredAddress !== authorityAddress) {
+        const msg = "Signing credit score failed!";
+        console.error(msg);
+        throw new Error(msg);
+      }
 
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
 
@@ -491,40 +506,91 @@ export class MasaContracts {
         value: price,
       });
     },
+
+    sign: async (
+      wallet: Wallet,
+      identityId: BigNumber
+    ): Promise<
+      | {
+          signature: string;
+          signatureDate: number;
+          authorityAddress: string;
+        }
+      | undefined
+    > => {
+      const signatureDate = Math.floor(Date.now() / 1000);
+
+      const authorityAddress = await wallet.getAddress();
+      const value: {
+        identityId: BigNumber;
+        authorityAddress: string;
+        signatureDate: number;
+      } = {
+        identityId,
+        authorityAddress,
+        signatureDate,
+      };
+
+      const { signature, domain } = await signTypedData(
+        this.instances.SoulboundCreditScoreContract,
+        wallet,
+        "SoulboundCreditScore",
+        this.creditScore.types,
+        value
+      );
+
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.creditScore.types,
+        value,
+        signature
+      );
+      console.log({ recoveredAddress, authorityAddress });
+
+      if (recoveredAddress === authorityAddress) {
+        return { signature, signatureDate, authorityAddress };
+      } else {
+        console.error("Signing credit score failed!");
+      }
+    },
   };
 
   green = {
+    types: {
+      Mint2FA: [
+        { name: "to", type: "address" },
+        { name: "authorityAddress", type: "address" },
+        { name: "signatureDate", type: "uint256" },
+      ],
+    },
+
     /**
-     * Purcahse a masa green
+     * Purchase a masa green
      * @param wallet
      * @param paymentMethod
-     * @param identityId
+     * @param receiver
      * @param authorityAddress
      * @param signatureDate
      * @param signature
      * @param slippage
      */
     mint: async (
-      wallet: ethers.Wallet,
+      wallet: Wallet,
       paymentMethod: PaymentMethod,
-      identityId: BigNumber,
+      receiver: string,
       authorityAddress: string,
       signatureDate: number,
       signature: string,
       slippage: number | undefined = 250
-    ): Promise<ethers.ContractTransaction> => {
-      const types = {
-        Mint2FA: [
-          { name: "identityId", type: "uint256" },
-          { name: "authorityAddress", type: "address" },
-          { name: "signatureDate", type: "uint256" },
-        ],
-      };
-
-      const value = {
-        identityId,
-        authorityAddress,
-        signatureDate,
+    ): Promise<ContractTransaction> => {
+      const value: {
+        to: string;
+        authorityAddress: string;
+        signatureDate: number;
+      } = {
+        to: receiver,
+        authorityAddress: authorityAddress,
+        signatureDate: signatureDate,
       };
 
       const domain = await generateSignatureDomain(
@@ -533,8 +599,37 @@ export class MasaContracts {
         this.instances.Soulbound2FAContract.address
       );
 
-      const recoveredAddress = verifyTypedData(domain, types, value, signature);
+      console.log({ domain, value });
+
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.green.types,
+        value,
+        signature
+      );
       console.log({ recoveredAddress, authorityAddress });
+
+      /**
+       * {
+       *   domain: {
+       *     name: 'Soulbound2FA',
+       *     version: '1.0.0',
+       *     chainId: 80001,
+       *     verifyingContract: '0xb6f59e114f2bF57B1891f08fC23B3C696b7D3b16'
+       *   },
+       *   value: {
+       *     to: '0x14db63c867895b79BD88dD18747a97eB55714882',
+       *     authorityAddress: '0x3c8D9f130970358b7E8cbc1DbD0a1EbA6EBE368F',
+       *     signatureDate: 1675168113
+       *   }
+       * }
+       */
+
+      if (recoveredAddress !== authorityAddress) {
+        const msg = "Minting green failed!";
+        console.error(msg);
+        throw new Error(msg);
+      }
 
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
 
@@ -563,6 +658,60 @@ export class MasaContracts {
       ](...parameter, {
         value: price,
       });
+    },
+
+    /**
+     * Signs a masa green
+     * @param wallet
+     * @param receiver
+     */
+    sign: async (
+      wallet: Wallet,
+      receiver: string
+    ): Promise<
+      | {
+          signature: string;
+          signatureDate: number;
+          authorityAddress: string;
+        }
+      | undefined
+    > => {
+      const signatureDate = Math.floor(Date.now() / 1000);
+
+      const authorityAddress = await wallet.getAddress();
+      const value: {
+        to: string;
+        authorityAddress: string;
+        signatureDate: number;
+      } = {
+        to: receiver,
+        authorityAddress,
+        signatureDate,
+      };
+
+      const { signature, domain } = await signTypedData(
+        this.instances.Soulbound2FAContract,
+        wallet,
+        "Soulbound2FA",
+        this.green.types,
+        value
+      );
+
+      console.log({ domain, value });
+
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.green.types,
+        value,
+        signature
+      );
+      console.log({ recoveredAddress, authorityAddress });
+
+      if (recoveredAddress === authorityAddress) {
+        return { signature, signatureDate, authorityAddress };
+      } else {
+        console.error("Signing green failed!");
+      }
     },
   };
 }

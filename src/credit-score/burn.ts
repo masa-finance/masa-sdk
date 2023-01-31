@@ -1,5 +1,6 @@
 import Masa from "../masa";
 import { BigNumber } from "ethers";
+import { Messages } from "../utils";
 
 export const burnCreditScoreById = async (
   masa: Masa,
@@ -42,7 +43,7 @@ export const burnCreditScore = async (
       console.log(`Burning Credit Score with id ${creditScoreId}!`);
     }
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 
   return success;

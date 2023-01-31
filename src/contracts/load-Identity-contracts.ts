@@ -30,27 +30,28 @@ export const loadIdentityContracts = ({
     );
 
   const SoulboundIdentityContract = SoulboundIdentity__factory.connect(
-    addresses[network].SoulboundIdentityAddress,
+    addresses[network].SoulboundIdentityAddress || ethers.constants.AddressZero,
     p
   );
 
   const SoulboundCreditScoreContract = SoulboundCreditScore__factory.connect(
-    addresses[network].SoulboundCreditScoreAddress,
+    addresses[network].SoulboundCreditScoreAddress ||
+      ethers.constants.AddressZero,
     p
   );
 
   const SoulNameContract = SoulName__factory.connect(
-    addresses[network].SoulNameAddress,
+    addresses[network].SoulNameAddress || ethers.constants.AddressZero,
     p
   );
 
   const SoulLinkerContract = SoulLinker__factory.connect(
-    addresses[network].SoulLinkerAddress,
+    addresses[network].SoulLinkerAddress || ethers.constants.AddressZero,
     p
   );
 
   const SoulStoreContract = SoulStore__factory.connect(
-    addresses[network].SoulStoreAddress,
+    addresses[network].SoulStoreAddress || ethers.constants.AddressZero,
     p
   );
 

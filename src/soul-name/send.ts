@@ -51,6 +51,6 @@ export const sendSoulName = async (
 
     await sendSoulNameByName(masa, soulName, receiver);
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 };

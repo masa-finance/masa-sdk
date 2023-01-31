@@ -1,2 +1,8 @@
-export * as goerli from "./goerli";
-export * as mainnet from "./mainnet";
+// eth
+export * from "./eth";
+// celo
+export * from "./celo";
+// bsc
+export * from "./bsc";
+// polygon
+export * from "./polygon";

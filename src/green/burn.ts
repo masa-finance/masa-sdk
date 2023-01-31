@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { Messages } from "../utils/messages";
+import { Messages } from "../utils";
 
 export const burnGreenById = async (
   masa: Masa,
@@ -28,16 +28,14 @@ export const burnGreen = async (
   let success = false;
 
   if (await masa.session.checkLogin()) {
-    const { identityId } = await masa.identity.load();
-    if (!identityId) return success;
     console.log(`Burning Green with id '${greenId}'!`);
-
     success = await burnGreenById(masa, greenId);
+
     if (success) {
       console.log(`Burned Green with id '${greenId}'!`);
     }
   } else {
-    console.log("Not logged in please login first");
+    console.error(Messages.NotLoggedIn());
   }
 
   return success;
