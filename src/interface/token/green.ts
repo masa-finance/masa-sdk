@@ -1,9 +1,9 @@
 import { BaseResult } from "../masa";
 
 export interface IGreen {
-  name: "Masa Soulbound Green 2FA v1.0.0";
-  description: "A decentralized 2FA";
-  image: "https://metadata.masa.finance/v1.0/2fa/2fa.png";
+  name: "Masa Soulbound Green v1.0.0";
+  description: "Masa Green is a decentralized authentication solution";
+  image: "https://metadata.masa.finance/v1.0/green/green.png";
   properties: {
     tokenId: string;
     identityId?: string;

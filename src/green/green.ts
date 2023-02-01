@@ -11,7 +11,7 @@ export class MasaGreen {
   constructor(private masa: Masa) {
     this.links = new MasaSoulLinker(
       this.masa,
-      this.masa.contracts.instances.Soulbound2FAContract
+      this.masa.contracts.instances.SoulboundGreenContract
     );
   }
 

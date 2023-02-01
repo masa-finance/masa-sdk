@@ -557,7 +557,7 @@ export class MasaContracts {
 
   green = {
     types: {
-      Mint2FA: [
+      MintGreen: [
         { name: "to", type: "address" },
         { name: "authorityAddress", type: "address" },
         { name: "signatureDate", type: "uint256" },
@@ -595,8 +595,8 @@ export class MasaContracts {
 
       const domain = await generateSignatureDomain(
         wallet,
-        "Soulbound2FA",
-        this.instances.Soulbound2FAContract.address
+        "SoulboundGreen",
+        this.instances.SoulboundGreenContract.address
       );
 
       console.log({ domain, value });
@@ -609,22 +609,6 @@ export class MasaContracts {
       );
       console.log({ recoveredAddress, authorityAddress });
 
-      /**
-       * {
-       *   domain: {
-       *     name: 'Soulbound2FA',
-       *     version: '1.0.0',
-       *     chainId: 80001,
-       *     verifyingContract: '0xb6f59e114f2bF57B1891f08fC23B3C696b7D3b16'
-       *   },
-       *   value: {
-       *     to: '0x14db63c867895b79BD88dD18747a97eB55714882',
-       *     authorityAddress: '0x3c8D9f130970358b7E8cbc1DbD0a1EbA6EBE368F',
-       *     signatureDate: 1675168113
-       *   }
-       * }
-       */
-
       if (recoveredAddress !== authorityAddress) {
         const msg = "Minting green failed!";
         console.error(msg);
@@ -633,7 +617,7 @@ export class MasaContracts {
 
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
 
-      let price = await this.instances.Soulbound2FAContract.getMintPrice(
+      let price = await this.instances.SoulboundGreenContract.getMintPrice(
         paymentAddress
       );
 
@@ -653,7 +637,7 @@ export class MasaContracts {
 
       console.log({ parameter });
 
-      return await this.instances.Soulbound2FAContract.connect(wallet)[
+      return await this.instances.SoulboundGreenContract.connect(wallet)[
         "mint(address,address,address,uint256,bytes)"
       ](...parameter, {
         value: price,
@@ -690,9 +674,9 @@ export class MasaContracts {
       };
 
       const { signature, domain } = await signTypedData(
-        this.instances.Soulbound2FAContract,
+        this.instances.SoulboundGreenContract,
         wallet,
-        "Soulbound2FA",
+        "SoulboundGreen",
         this.green.types,
         value
       );

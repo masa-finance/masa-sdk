@@ -1,5 +1,5 @@
 import {
-  Soulbound2FA,
+  SoulboundGreen,
   SoulboundCreditScore,
   SoulboundIdentity,
   SoulLinker,
@@ -13,5 +13,5 @@ export interface IIdentityContracts {
   SoulNameContract: SoulName;
   SoulLinkerContract: SoulLinker;
   SoulStoreContract: SoulStore;
-  Soulbound2FAContract: Soulbound2FA;
+  SoulboundGreenContract: SoulboundGreen;
 }

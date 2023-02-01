@@ -8,7 +8,7 @@ export const loadGreenIds = async (masa: Masa, greenIds: BigNumber[]) => {
     greenIds.map(async (tokenId) => {
       const tokenUri = patchMetadataUrl(
         masa,
-        await masa.contracts.instances.Soulbound2FAContract.tokenURI(tokenId)
+        await masa.contracts.instances.SoulboundGreenContract.tokenURI(tokenId)
       );
 
       const metadata = <IGreen | undefined>(
@@ -37,7 +37,7 @@ export const loadGreensByIdentityId = async (
   const greenIds: BigNumber[] =
     await masa.contracts.instances.SoulLinkerContract[
       "getSBTConnections(uint256,address)"
-    ](identityId, masa.contracts.instances.Soulbound2FAContract.address);
+    ](identityId, masa.contracts.instances.SoulboundGreenContract.address);
 
   return await loadGreenIds(masa, greenIds);
 };
@@ -60,16 +60,16 @@ export const loadGreensByAddress = async (
   ) {
     greenIds = await masa.contracts.instances.SoulLinkerContract[
       "getSBTConnections(address,address)"
-    ](address, masa.contracts.instances.Soulbound2FAContract.address);
+    ](address, masa.contracts.instances.SoulboundGreenContract.address);
   } else {
     const balance: number = (
-      await masa.contracts.instances.Soulbound2FAContract.balanceOf(address)
+      await masa.contracts.instances.SoulboundGreenContract.balanceOf(address)
     ).toNumber();
 
     if (balance > 0) {
       for (let i = 0; i < balance; i++) {
         greenIds.push(
-          await masa.contracts.instances.Soulbound2FAContract.tokenOfOwnerByIndex(
+          await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
             address,
             i
           )

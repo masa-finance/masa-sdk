@@ -1,5 +1,5 @@
 import {
-  Soulbound2FA__factory,
+  SoulboundGreen__factory,
   SoulboundCreditScore__factory,
   SoulboundIdentity__factory,
   SoulLinker__factory,
@@ -55,9 +55,9 @@ export const loadIdentityContracts = ({
     p
   );
 
-  const Soulbound2FAContract = Soulbound2FA__factory.connect(
+  const SoulboundGreenContract = SoulboundGreen__factory.connect(
     // this might be empty
-    addresses[network].Soulbound2FAAddress || ethers.constants.AddressZero,
+    addresses[network].SoulboundGreenAddress || ethers.constants.AddressZero,
     p
   );
 
@@ -67,6 +67,6 @@ export const loadIdentityContracts = ({
     SoulNameContract,
     SoulLinkerContract,
     SoulStoreContract,
-    Soulbound2FAContract,
+    SoulboundGreenContract,
   };
 };

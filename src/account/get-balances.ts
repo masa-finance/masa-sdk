@@ -27,7 +27,7 @@ export const getBalances = async (masa: Masa, address?: string) => {
     identityBalance,
     soulNameBalance,
     soulboundCreditScoreBalance,
-    soulbound2FABalance,
+    soulboundGreenBalance,
   ] = await Promise.all([
     // ETH
     masa.config.wallet.provider.getBalance(addressToLoad),
@@ -45,10 +45,10 @@ export const getBalances = async (masa: Masa, address?: string) => {
     masa.contracts.instances.SoulboundCreditScoreContract.balanceOf(
       addressToLoad
     ),
-    // 2FA
-    masa.contracts.instances.Soulbound2FAContract.address !==
+    // Green
+    masa.contracts.instances.SoulboundGreenContract.address !==
     constants.AddressZero
-      ? masa.contracts.instances.Soulbound2FAContract.balanceOf(addressToLoad)
+      ? masa.contracts.instances.SoulboundGreenContract.balanceOf(addressToLoad)
       : BigNumber.from(0),
   ]);
 
@@ -60,7 +60,7 @@ export const getBalances = async (masa: Masa, address?: string) => {
     identityBalance,
     soulNameBalance,
     soulboundCreditScoreBalance,
-    soulbound2FABalance,
+    soulboundGreenBalance,
   };
 
   return balances;

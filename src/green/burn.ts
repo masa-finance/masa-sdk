@@ -6,7 +6,7 @@ export const burnGreenById = async (
   greenId: number
 ): Promise<boolean> => {
   try {
-    const tx = await masa.contracts.instances.Soulbound2FAContract.connect(
+    const tx = await masa.contracts.instances.SoulboundGreenContract.connect(
       masa.config.wallet
     ).burn(greenId);
 
