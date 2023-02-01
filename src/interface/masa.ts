@@ -21,6 +21,7 @@ export interface MasaArgs {
   apiUrl?: string;
   environment?: EnvironmentName;
   defaultNetwork?: NetworkName;
+  verbose?: boolean;
   arweave?: {
     host: string;
     port: number;
@@ -34,6 +35,7 @@ export interface MasaConfig {
   environment: string;
   network: string;
   wallet: ethers.Signer | ethers.Wallet;
+  verbose: boolean;
 }
 
 export interface BaseResult {

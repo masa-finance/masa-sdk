@@ -40,6 +40,7 @@ export default class Masa {
       protocol: "https",
       logging: false,
     },
+    verbose = false,
   }: MasaArgs) {
     this.client = new MasaClient({
       apiUrl,
@@ -53,6 +54,7 @@ export default class Masa {
       environment,
       network: defaultNetwork,
       wallet,
+      verbose,
     };
 
     this.contracts = new MasaContracts(this.config);

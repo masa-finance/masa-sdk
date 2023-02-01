@@ -499,7 +499,10 @@ export class MasaContracts {
         signature,
       ];
 
-      console.log({ parameter });
+      if (this.masaConfig.verbose) {
+        console.log({ parameter });
+      }
+
       return await this.instances.SoulboundCreditScoreContract.connect(wallet)[
         "mint(address,uint256,address,uint256,bytes)"
       ](...parameter, {
@@ -545,7 +548,10 @@ export class MasaContracts {
         value,
         signature
       );
-      console.log({ recoveredAddress, authorityAddress });
+
+      if (this.masaConfig.verbose) {
+        console.log({ recoveredAddress, authorityAddress });
+      }
 
       if (recoveredAddress === authorityAddress) {
         return { signature, signatureDate, authorityAddress };
@@ -599,7 +605,9 @@ export class MasaContracts {
         this.instances.SoulboundGreenContract.address
       );
 
-      console.log({ domain, value });
+      if (this.masaConfig.verbose) {
+        console.log({ domain, value });
+      }
 
       const recoveredAddress = verifyTypedData(
         domain,
@@ -607,7 +615,10 @@ export class MasaContracts {
         value,
         signature
       );
-      console.log({ recoveredAddress, authorityAddress });
+
+      if (this.masaConfig.verbose) {
+        console.log({ recoveredAddress, authorityAddress });
+      }
 
       if (recoveredAddress !== authorityAddress) {
         const msg = "Minting green failed!";
@@ -629,13 +640,15 @@ export class MasaContracts {
 
       const parameter: [string, string, string, number, string] = [
         paymentAddress,
-        wallet.address,
+        await wallet.getAddress(),
         authorityAddress,
         signatureDate,
         signature,
       ];
 
-      console.log({ parameter });
+      if (this.masaConfig.verbose) {
+        console.log({ parameter });
+      }
 
       return await this.instances.SoulboundGreenContract.connect(wallet)[
         "mint(address,address,address,uint256,bytes)"
@@ -681,7 +694,9 @@ export class MasaContracts {
         value
       );
 
-      console.log({ domain, value });
+      if (this.masaConfig.verbose) {
+        console.log({ domain, value });
+      }
 
       const recoveredAddress = verifyTypedData(
         domain,
@@ -689,7 +704,10 @@ export class MasaContracts {
         value,
         signature
       );
-      console.log({ recoveredAddress, authorityAddress });
+
+      if (this.masaConfig.verbose) {
+        console.log({ recoveredAddress, authorityAddress });
+      }
 
       if (recoveredAddress === authorityAddress) {
         return { signature, signatureDate, authorityAddress };
