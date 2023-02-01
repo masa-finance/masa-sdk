@@ -473,7 +473,7 @@ export class MasaContracts {
       console.log({ recoveredAddress, authorityAddress });
 
       if (recoveredAddress !== authorityAddress) {
-        const msg = "Signing credit score failed!";
+        const msg = "Verifying credit score failed!";
         console.error(msg);
         throw new Error(msg);
       }
@@ -621,7 +621,7 @@ export class MasaContracts {
       }
 
       if (recoveredAddress !== authorityAddress) {
-        const msg = "Minting green failed!";
+        const msg = "Verifying green failed!";
         console.error(msg);
         throw new Error(msg);
       }
