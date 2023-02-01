@@ -3,7 +3,7 @@ import SoulboundCreditScore from "@masa-finance/masa-contracts-identity/deployme
 import SoulName from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulName.json";
 import SoulStore from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulStore.json";
 import SoulLinker from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulLinker.json";
-import SoulboundGreen from "@masa-finance/masa-contracts-identity/deployments/goerli/Soulbound2FA.json";
+import SoulboundGreen from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundGreen.json";
 
 export const MASA = undefined;
 export const USDC = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
