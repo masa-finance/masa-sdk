@@ -32,11 +32,11 @@ export const getBalances = async (masa: Masa, address?: string) => {
     // ETH
     masa.config.wallet.provider.getBalance(addressToLoad),
     // MASA
-    loadBalance(addressToLoad, contractAddresses.MASA),
+    loadBalance(addressToLoad, contractAddresses?.MASA),
     // USDC
-    loadBalance(addressToLoad, contractAddresses.USDC),
+    loadBalance(addressToLoad, contractAddresses?.USDC),
     // WETH
-    loadBalance(addressToLoad, contractAddresses.WETH),
+    loadBalance(addressToLoad, contractAddresses?.WETH),
     // SBI
     masa.contracts.instances.SoulboundIdentityContract.balanceOf(addressToLoad),
     // MSN

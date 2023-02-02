@@ -79,15 +79,15 @@ export class MasaContracts {
       switch (paymentMethod) {
         case "utility":
           paymentAddress =
-            addresses[this.masaConfig.network].MASA || constants.AddressZero;
+            addresses[this.masaConfig.network]?.MASA || constants.AddressZero;
           break;
         case "stable":
           paymentAddress =
-            addresses[this.masaConfig.network].USDC || constants.AddressZero;
+            addresses[this.masaConfig.network]?.USDC || constants.AddressZero;
           break;
         case "weth":
           paymentAddress =
-            addresses[this.masaConfig.network].WETH || constants.AddressZero;
+            addresses[this.masaConfig.network]?.WETH || constants.AddressZero;
           break;
       }
 

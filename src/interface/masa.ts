@@ -33,7 +33,7 @@ export interface MasaArgs {
 export interface MasaConfig {
   apiUrl: string;
   environment: string;
-  network: string;
+  network: NetworkName;
   wallet: ethers.Signer | ethers.Wallet;
   verbose: boolean;
 }
