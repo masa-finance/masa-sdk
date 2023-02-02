@@ -53,29 +53,34 @@ export const loadGreensByAddress = async (
   }[]
 > => {
   let greenIds: BigNumber[] = [];
-  // do we have a soul linker here? use it!
-  if (
-    masa.contracts.instances.SoulLinkerContract.address !==
-    constants.AddressZero
-  ) {
-    greenIds = await masa.contracts.instances.SoulLinkerContract[
-      "getSBTConnections(address,address)"
-    ](address, masa.contracts.instances.SoulboundGreenContract.address);
-  } else {
-    const balance: number = (
-      await masa.contracts.instances.SoulboundGreenContract.balanceOf(address)
-    ).toNumber();
 
-    if (balance > 0) {
-      for (let i = 0; i < balance; i++) {
-        greenIds.push(
-          await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
-            address,
-            i
-          )
-        );
+  try {
+    // do we have a soul linker here? use it!
+    if (
+      masa.contracts.instances.SoulLinkerContract.address !==
+      constants.AddressZero
+    ) {
+      greenIds = await masa.contracts.instances.SoulLinkerContract[
+        "getSBTConnections(address,address)"
+      ](address, masa.contracts.instances.SoulboundGreenContract.address);
+    } else {
+      const balance: number = (
+        await masa.contracts.instances.SoulboundGreenContract.balanceOf(address)
+      ).toNumber();
+
+      if (balance > 0) {
+        for (let i = 0; i < balance; i++) {
+          greenIds.push(
+            await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
+              address,
+              i
+            )
+          );
+        }
       }
     }
+  } catch (error: any) {
+    console.error(`Loading green failed! ${error.message}`);
   }
 
   return await loadGreenIds(masa, greenIds);
