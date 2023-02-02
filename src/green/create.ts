@@ -34,7 +34,9 @@ export const verifyGreen = async (
     masa.config.network
   );
 
-  console.log({ greenVerifyResult });
+  if (masa.config.verbose) {
+    console.log({ greenVerifyResult });
+  }
 
   if (
     greenVerifyResult &&
