@@ -1,7 +1,7 @@
 {
   "name": "@masa-finance/masa-sdk",
   "version": "1.2.0",
-  "description": "Brand new masa SDK",
+  "description": "Brand new Masa SDK",
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
   "unpkg": "./dist/browser/masa-sdk.cjs2.min.js",
@@ -15,7 +15,6 @@
     "start": "yarn build:watch",
     "build": "yarn build:tsc && yarn build:dist",
     "build:tsc": "tsc",
-    "build:metadata": "./scripts/get-metadata.js > src/metadata.json",
     "build:dist": "cross-env NODE_ENV=production webpack",
     "build:watch": "tsc -w",
     "prettier": "prettier ./src ./test --write",
