@@ -236,6 +236,15 @@ describe("Soul Name", () => {
         assert(isValid === false, message);
         assert(length === 6);
       });
+
+      it("𝟙𝟛𝟛𝟟💀.soul should be valid!", () => {
+        const { isValid, message, length } = validateSoulName(
+          testMasa,
+          "𝟙𝟛𝟛𝟟💀"
+        );
+        assert(isValid === true, message);
+        assert(length === 5);
+      });
     });
 
     describe("calculateSoulNameLength", () => {
