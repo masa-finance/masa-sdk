@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
-import { Messages } from "../utils/messages";
+import { Messages } from "../utils";
 
 export const burnIdentityById = async (
   masa: Masa,
@@ -17,7 +17,7 @@ export const burnIdentityById = async (
     console.log(Messages.WaitingToFinalize(tx.hash));
     await tx.wait();
 
-    console.log(`Identity with id ${identityId} burned!`);
+    console.log(`Identity with token ID '${identityId}' burned!`);
     success = true;
   } catch (err: any) {
     console.error(`Burning of Identity Failed! ${err.message}`);

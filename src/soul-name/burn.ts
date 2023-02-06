@@ -2,27 +2,31 @@ import Masa from "../masa";
 import { Messages } from "../utils";
 
 export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
-  const nameData = await masa.contracts.instances.SoulNameContract.nameData(
-    soulName
-  );
+  const soulNameData = await masa.contracts.soulName.getSoulnameData(soulName);
 
-  if (nameData.exists) {
-    console.log(`Burning ${soulName}.soul with id ${nameData.tokenId}!`);
+  if (soulNameData.exists) {
+    console.log(
+      `Burning '${soulName}.soul' with token ID '${soulNameData.tokenId}'!`
+    );
 
     try {
       const tx = await masa.contracts.instances.SoulNameContract.connect(
         masa.config.wallet
-      ).burn(nameData.tokenId);
+      ).burn(soulNameData.tokenId);
 
       console.log(Messages.WaitingToFinalize(tx.hash));
       await tx.wait();
 
-      console.log(`${soulName}.soul with id ${nameData.tokenId} burned!`);
+      console.log(
+        `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' burned!`
+      );
     } catch (err: any) {
-      console.error(`Burning of Soul Name Failed! ${err.message}`);
+      console.error(
+        `Burning of Soulname '${soulName}.soul' Failed! ${err.message}`
+      );
     }
   } else {
-    console.error(`Soulname ${soulName}.soul does not exist!`);
+    console.error(`Soulname '${soulName}.soul' does not exist!`);
   }
 };
 

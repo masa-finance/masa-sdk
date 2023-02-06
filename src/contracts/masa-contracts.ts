@@ -330,6 +330,13 @@ export class MasaContracts {
         formattedPrice,
       };
     },
+    getSoulnameData: async (
+      soulName: string
+    ): Promise<{ exists: boolean; tokenId: BigNumber }> => {
+      return await this.instances.SoulNameContract.nameData(
+        soulName.toLowerCase()
+      );
+    },
   };
 
   identity = {

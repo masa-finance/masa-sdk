@@ -1,18 +1,16 @@
 import Masa from "../masa";
-import { Messages } from "../utils/messages";
+import { Messages } from "../utils";
 
 export const sendSoulNameByName = async (
   masa: Masa,
   soulName: string,
   receiver: string
 ) => {
-  const soulNameData = await masa.contracts.instances.SoulNameContract.nameData(
-    soulName
-  );
+  const soulNameData = await masa.contracts.soulName.getSoulnameData(soulName);
 
   if (soulNameData.exists) {
     console.log(
-      `Sending ${soulName}.soul with id ${soulNameData.tokenId} to ${receiver}!`
+      `Sending '${soulName}.soul' with token ID '${soulNameData.tokenId}' to '${receiver}'!`
     );
 
     try {
@@ -27,12 +25,14 @@ export const sendSoulNameByName = async (
       console.log(Messages.WaitingToFinalize(tx.hash));
       await tx.wait();
 
-      console.log(`${soulName}.soul with id ${soulNameData.tokenId} sent!`);
+      console.log(
+        `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' sent!`
+      );
     } catch (err: any) {
       console.error(`Sending of Soul Name Failed! ${err.message}`);
     }
   } else {
-    console.error(`Soulname ${soulName}.soul does not exist!`);
+    console.error(`Soulname '${soulName}.soul' does not exist!`);
   }
 };
 
