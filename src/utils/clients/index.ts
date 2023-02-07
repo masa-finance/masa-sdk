@@ -1,2 +1,2 @@
 export * from "./arweave";
-export * from "./middleware";
+export * from "./masa-client";

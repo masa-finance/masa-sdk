@@ -477,7 +477,10 @@ export class MasaContracts {
         value,
         signature
       );
-      console.log({ recoveredAddress, authorityAddress });
+
+      if (this.masaConfig.verbose) {
+        console.log({ recoveredAddress, authorityAddress });
+      }
 
       if (recoveredAddress !== authorityAddress) {
         const msg = "Verifying credit score failed!";

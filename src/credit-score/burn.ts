@@ -12,10 +12,8 @@ export const burnCreditScoreById = async (
         masa.config.wallet
       ).burn(creditScoreId);
 
-    console.log("Waiting for the burn tx to finalize");
+    console.log(Messages.WaitingToFinalize(tx.hash));
     await tx.wait();
-
-    console.log(`Credit Score with id '${creditScoreId}' burned!`);
 
     return true;
   } catch (err: any) {
@@ -29,22 +27,22 @@ export const burnCreditScore = async (
   masa: Masa,
   creditScoreId: BigNumber
 ): Promise<boolean> => {
-  let success = false;
+  let burned = false;
 
   if (await masa.session.checkLogin()) {
     const { identityId } = await masa.identity.load();
     if (!identityId) {
-      return success;
+      return burned;
     }
 
-    success = await burnCreditScoreById(masa, creditScoreId);
+    burned = await burnCreditScoreById(masa, creditScoreId);
 
-    if (success) {
-      console.log(`Burning Credit Score with id ${creditScoreId}!`);
+    if (burned) {
+      console.log(`Credit Score with ID '${creditScoreId}' burned!`);
     }
   } else {
     console.error(Messages.NotLoggedIn());
   }
 
-  return success;
+  return burned;
 };

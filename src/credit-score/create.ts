@@ -2,7 +2,7 @@ import Masa from "../masa";
 import { CreateCreditScoreResult } from "../interface";
 import { PaymentMethod } from "../contracts";
 import { ethers } from "ethers";
-import { Messages } from "../utils/messages";
+import { Messages } from "../utils";
 
 export const createCreditScore = async (
   masa: Masa,
@@ -56,6 +56,10 @@ export const createCreditScore = async (
         const creditScoreUpdateResponse = await masa.client.creditScore.update(
           transactionReceipt.transactionHash
         );
+
+        if (masa.config.verbose) {
+          console.log({ creditScoreUpdateResponse });
+        }
 
         return { ...result, ...creditScoreUpdateResponse };
       } catch (err: any) {

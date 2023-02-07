@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import {
   BaseResult,
   ICreditScore,
@@ -13,7 +13,7 @@ const headers = {
 };
 
 export class MasaClient {
-  private _middlewareClient;
+  private _middlewareClient: AxiosInstance;
   private _cookie?: string;
 
   get cookie() {
@@ -254,12 +254,26 @@ export class MasaClient {
       phoneNumber: string
     ): Promise<
       | (BaseResult & {
+          channel?: string;
           status: string;
+          errorCode?: number;
         })
       | undefined
     > => {
+      const result = {
+        success: false,
+        status: "failed",
+        message: "Generating green failed",
+      };
+
       const greenGenerateResponse = await this._middlewareClient
-        .post(
+        .post<
+          BaseResult & {
+            channel?: string;
+            status: string;
+            code?: number;
+          }
+        >(
           `/green/generate`,
           {
             phoneNumber,
@@ -271,17 +285,25 @@ export class MasaClient {
           }
         )
         .catch((err: any) => {
-          console.error("Generating Green failed!", err.message);
+          console.error("Generating green failed!", err.message);
         });
 
-      if (greenGenerateResponse) {
-        const {
-          data: { success, message, status },
-        } = greenGenerateResponse;
+      if (
+        greenGenerateResponse &&
+        greenGenerateResponse.status === 200 &&
+        greenGenerateResponse.data
+      ) {
+        result.success = true;
+        result.message = "";
+        result.status = "success";
+        return { ...result, ...greenGenerateResponse.data };
+      } else {
+        const message = `Generating green failed! ${result.message}`;
+        console.error(message);
 
         return {
-          success,
-          status,
+          success: false,
+          status: "failed",
           message,
         };
       }
@@ -293,21 +315,30 @@ export class MasaClient {
       network: string
     ): Promise<
       | (BaseResult & {
-          status: string;
+          status?: string;
           signature?: string;
           signatureDate?: number;
           authorityAddress?: string;
+          errorCode?: number;
         })
       | undefined
     > => {
       const result = {
         success: false,
         status: "failed",
-        message: "Green failed",
+        message: "Verifying green failed",
       };
 
       const greenVerifyResponse = await this._middlewareClient
-        .post(
+        .post<
+          BaseResult & {
+            status?: string;
+            signature?: string;
+            signatureDate?: number;
+            authorityAddress?: string;
+            errorCode?: number;
+          }
+        >(
           `/green/verify`,
           {
             phoneNumber,
@@ -321,7 +352,7 @@ export class MasaClient {
           }
         )
         .catch((err: any) => {
-          console.error("Generating Green failed!", err.message);
+          console.error("Verifying gree failed!", err.message);
         });
 
       if (
@@ -334,8 +365,9 @@ export class MasaClient {
         result.status = "success";
         return { ...result, ...greenVerifyResponse.data };
       } else {
-        const message = `Generation of green failed! ${result.message}`;
+        const message = `Verifying green failed! ${result.message}`;
         console.error(message);
+
         return {
           success: false,
           status: "failed",
