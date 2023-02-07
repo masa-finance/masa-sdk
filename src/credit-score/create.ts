@@ -62,10 +62,13 @@ export const createCreditScore = async (
         }
 
         return { ...result, ...creditScoreUpdateResponse };
-      } catch (err: any) {
+      } catch (error: unknown) {
         result.success = false;
-        result.message = `Unexpected error: ${err.message}`;
-        console.error(result.message);
+
+        if (error instanceof Error) {
+          result.message = `Unexpected error: ${error.message}`;
+          console.error(result.message);
+        }
       }
     }
   }

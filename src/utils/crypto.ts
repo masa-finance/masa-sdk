@@ -1,11 +1,11 @@
-import { BytesLike, Contract, ethers, TypedDataField } from "ethers";
+import { BigNumber, BytesLike, Contract, ethers, TypedDataField } from "ethers";
 
 const hashData = (data: BytesLike) => ethers.utils.keccak256(data);
 
 export const signMessage = async (
   msg: string,
   wallet: ethers.Signer | ethers.Wallet,
-  doHash = false
+  doHash: boolean = false
 ): Promise<string | undefined> => {
   let sig;
 
@@ -25,7 +25,7 @@ export const signTypedData = async (
   wallet: ethers.Wallet,
   name: string,
   types: Record<string, Array<TypedDataField>>,
-  value: Record<string, any>
+  value: Record<string, string | BigNumber | number>
 ) => {
   const domain = await generateSignatureDomain(wallet, name, contract.address);
   const signature = await wallet._signTypedData(domain, types, value);
@@ -53,7 +53,7 @@ export const generateSignatureDomain = async (
 export const recoverAddress = (
   msg: string,
   signature: string,
-  doHash = false
+  doHash: boolean = false
 ): string | undefined => {
   let recovered;
 

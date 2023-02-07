@@ -5,7 +5,7 @@ import { patchMetadataUrl } from "../helpers";
 
 export const loadGreenIds = async (masa: Masa, greenIds: BigNumber[]) => {
   return await Promise.all(
-    greenIds.map(async (tokenId) => {
+    greenIds.map(async (tokenId: BigNumber) => {
       const tokenUri = patchMetadataUrl(
         masa,
         await masa.contracts.instances.SoulboundGreenContract.tokenURI(tokenId)
@@ -79,8 +79,10 @@ export const loadGreensByAddress = async (
         }
       }
     }
-  } catch (error: any) {
-    console.error(`Loading green failed! ${error.message}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Loading green failed! ${error.message}`);
+    }
   }
 
   return await loadGreenIds(masa, greenIds);

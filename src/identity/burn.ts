@@ -19,8 +19,10 @@ export const burnIdentityById = async (
 
     console.log(`Identity with token ID '${identityId}' burned!`);
     success = true;
-  } catch (err: any) {
-    console.error(`Burning of Identity Failed! ${err.message}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Burning of Identity Failed! ${error.message}`);
+    }
   }
 
   return success;

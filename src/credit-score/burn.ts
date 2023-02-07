@@ -16,8 +16,10 @@ export const burnCreditScoreById = async (
     await tx.wait();
 
     return true;
-  } catch (err: any) {
-    console.error(`Burning of Credit Score Failed! '${err.message}'`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Burning of Credit Score Failed! '${error.message}'`);
+    }
   }
 
   return false;

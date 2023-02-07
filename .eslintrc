@@ -10,7 +10,18 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/ban-ts-comment": "warn"
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/typedef": [
+      "warn",
+      {
+        "parameter": true,
+        "arrowParameter": true
+        // variableDeclaration: true,
+        // memberVariableDeclaration: true,
+        // objectDestructuring: true,
+      }
+    ]
   }
 }

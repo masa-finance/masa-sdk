@@ -14,8 +14,10 @@ export const burnGreenById = async (
     await tx.wait();
 
     return true;
-  } catch (err: any) {
-    console.error(`Burning Green Failed! '${err.message}'`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Burning Green Failed! '${error.message}'`);
+    }
   }
 
   return false;

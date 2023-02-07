@@ -1,7 +1,7 @@
 import Masa from "../masa";
 import { BaseResult, CreateGreenResult } from "../interface";
 import { PaymentMethod } from "../contracts";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, ethers, Event } from "ethers";
 import { Messages } from "../utils";
 
 export const generateGreen = async (
@@ -106,7 +106,7 @@ export const mintGreen = async (
   const receipt = await tx.wait();
 
   if (receipt.events) {
-    const mintEvent = receipt.events.find((e) => e.event === "Mint");
+    const mintEvent = receipt.events.find((e: Event) => e.event === "Mint");
     if (mintEvent && mintEvent.args) {
       return {
         tokenId: mintEvent.args._tokenId,

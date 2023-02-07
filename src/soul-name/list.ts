@@ -41,11 +41,13 @@ export const loadSoulNameByTokenId = async (
       tokenDetails,
       metadata,
     };
-  } catch (err: any) {
-    console.error(
-      `Failed to load Soul Name with TokenID ${tokenId.toString()}`,
-      err.message
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        `Failed to load Soul Name with TokenID ${tokenId.toString()}`,
+        error.message
+      );
+    }
   }
 };
 
@@ -59,8 +61,10 @@ export const loadSoulNameByName = async (
     );
 
     return await loadSoulNameByTokenId(masa, tokenId);
-  } catch (err: any) {
-    console.error(`Failed to load Soul Name '${soulName}'`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Failed to load Soul Name '${soulName}'`, error.message);
+    }
   }
 };
 
@@ -68,11 +72,13 @@ export const loadSoulNamesByName = async (
   masa: Masa,
   soulNames: string[]
 ): Promise<SoulNameDetails[]> => {
-  const soulNameDetails: (SoulNameDetails | undefined)[] = await Promise.all(
-    soulNames.map((soulName) => loadSoulNameByName(masa, soulName))
-  );
-
-  return soulNameDetails.filter((sn) => !!sn) as SoulNameDetails[];
+  return (
+    await Promise.all(
+      soulNames.map((soulName: string) => loadSoulNameByName(masa, soulName))
+    )
+  ).filter(
+    (soulName: SoulNameDetails | undefined) => !!soulName
+  ) as SoulNameDetails[];
 };
 
 export const loadSoulNamesByIdentityId = async (
