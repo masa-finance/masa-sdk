@@ -6,7 +6,7 @@ import SoulLinker from "@masa-finance/masa-contracts-identity/deployments/goerli
 import SoulboundGreen from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundGreen.json";
 
 export const MASA = undefined;
-export const USDC = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+export const USDC = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
 export const WETH = undefined;
 
 export const SoulboundIdentityAddress = SoulboundIdentity.address;
