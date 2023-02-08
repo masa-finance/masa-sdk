@@ -29,7 +29,7 @@ export class MasaArweave extends Arweave {
 
   async loadTransactionData(
     txId: string,
-    string = true
+    isString: boolean = true
   ): Promise<object | Uint8Array | undefined> {
     let data;
 
@@ -39,7 +39,7 @@ export class MasaArweave extends Arweave {
       if (status && status === 200) {
         const dataResponse = await this.transactions.getData(
           txId,
-          string
+          isString
             ? {
                 decode: true,
                 string: true,
@@ -49,7 +49,7 @@ export class MasaArweave extends Arweave {
               }
         );
 
-        data = string
+        data = isString
           ? JSON.parse(dataResponse as string)
           : (dataResponse as Uint8Array);
       }
@@ -66,7 +66,7 @@ export class MasaArweave extends Arweave {
 
       const { data: dataResponse } = await axios.get(
         url,
-        string
+        isString
           ? {}
           : {
               responseType: "arraybuffer",

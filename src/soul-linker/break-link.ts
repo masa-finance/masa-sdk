@@ -1,7 +1,7 @@
 import Masa from "../masa";
 import { BaseResult } from "../interface";
 import { BigNumber, Contract } from "ethers";
-import { loadLinks } from "./list-links";
+import { Link, loadLinks } from "./list-links";
 import { Messages } from "../utils";
 
 export type BreakLinkResult = BaseResult;
@@ -33,7 +33,7 @@ export const breakLink = async (
   console.log({ links, readerIdentityId });
 
   const filteredLinks = links.filter(
-    (link) =>
+    (link: Link) =>
       link.readerIdentityId.toString() === readerIdentityId.toString() &&
       link.exists &&
       !link.isRevoked

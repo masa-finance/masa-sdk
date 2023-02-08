@@ -99,8 +99,10 @@ export const verifyByName = async (
             !!recoveredImageAddress &&
             minters.indexOf(recoveredImageAddress) > -1;
         }
-      } catch (err: any) {
-        console.error("Failed to load image data!", imageTxId, err.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Failed to load image data!", imageTxId, error.message);
+        }
       }
     }
 

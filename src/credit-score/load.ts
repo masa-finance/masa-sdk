@@ -48,15 +48,19 @@ export const loadCreditScoresByIdentityId = async (
       masa.contracts.instances.SoulboundCreditScoreContract.address
     );
 
-  const creditScores = await Promise.all(
-    creditScoreIds.map(async (creditScoreId) =>
-      loadCreditScoreByTokenId(masa, creditScoreId)
+  return (
+    await Promise.all(
+      creditScoreIds.map(async (creditScoreId: BigNumber) =>
+        loadCreditScoreByTokenId(masa, creditScoreId)
+      )
     )
+  ).filter(
+    (creditScore: {
+      tokenId: BigNumber;
+      tokenUri: string;
+      metadata?: ICreditScore;
+    }) => !!creditScore.metadata
   );
-
-  const creditScoresWithMetadata = creditScores.filter((m) => !!m.metadata);
-
-  return creditScoresWithMetadata;
 };
 
 export const listCreditScores = async (

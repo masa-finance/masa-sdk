@@ -20,10 +20,12 @@ export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
       console.log(
         `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' burned!`
       );
-    } catch (err: any) {
-      console.error(
-        `Burning of Soulname '${soulName}.soul' Failed! ${err.message}`
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(
+          `Burning of Soulname '${soulName}.soul' Failed! ${error.message}`
+        );
+      }
     }
   } else {
     console.error(`Soulname '${soulName}.soul' does not exist!`);

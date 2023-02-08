@@ -211,18 +211,16 @@ export class MasaContracts {
      * @param metadataURL
      * @param authorityAddress
      * @param signature
-     * @param debug
      */
     purchase: async (
       signer: Signer,
       paymentMethod: PaymentMethod,
       name: string,
       nameLength: number,
-      duration = 1,
+      duration: number = 1,
       metadataURL: string,
       authorityAddress: string,
-      signature: string,
-      debug = false
+      signature: string
     ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
         signer,
@@ -263,7 +261,7 @@ export class MasaContracts {
         value: paymentMethod === "eth" ? price : undefined,
       };
 
-      if (debug) {
+      if (this.masaConfig.verbose) {
         console.log("purchaseName", params, overrides);
       }
 
@@ -295,7 +293,7 @@ export class MasaContracts {
       signer: Signer,
       paymentMethod: PaymentMethod,
       nameLength: number,
-      duration = 1,
+      duration: number = 1,
       // slippage in bps where 10000 is 100%. 250 would be 2,5%
       slippage: number | undefined = 250
     ): Promise<{
@@ -360,18 +358,16 @@ export class MasaContracts {
      * @param metadataURL
      * @param authorityAddress
      * @param signature
-     * @param debug
      */
     purchaseIdentityAndName: async (
       signer: Signer,
       paymentMethod: PaymentMethod,
       name: string,
       nameLength: number,
-      duration = 1,
+      duration: number = 1,
       metadataURL: string,
       authorityAddress: string,
-      signature: string,
-      debug = false
+      signature: string
     ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
         signer,
@@ -410,7 +406,7 @@ export class MasaContracts {
         value: paymentMethod === "eth" ? price : undefined,
       };
 
-      if (debug) {
+      if (this.masaConfig.verbose) {
         console.log("purchaseIdentityAndName", params, overrides);
       }
 

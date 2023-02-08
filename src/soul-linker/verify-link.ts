@@ -1,7 +1,7 @@
 import Masa from "../masa";
 import { BaseResult } from "../interface";
 import { BigNumber, Contract } from "ethers";
-import { loadLinks } from "./list-links";
+import { Link, loadLinks } from "./list-links";
 
 export type VerifyLinkResult = BaseResult & { verified?: boolean };
 
@@ -76,7 +76,7 @@ export const verifyLink = async (
     }
 
     const links = (await loadLinks(masa, contract, tokenId)).filter(
-      (link) => link.exists
+      (link: Link) => link.exists
     );
 
     result.verified = false;
@@ -96,14 +96,13 @@ export const verifyLink = async (
           result.success = true;
           break;
         }
-      } catch (err: any) {
-        // ignore
-        switch (err.errorName) {
+      } catch (error: any) {
+        switch (error.errorName) {
           case "ValidPeriodExpired":
             result.message = "Link expired!";
             break;
           default:
-            console.error(err.errorName);
+            console.error(error.errorName);
         }
       }
     }

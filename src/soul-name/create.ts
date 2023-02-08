@@ -1,7 +1,8 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { CreateSoulNameResult } from "../interface";
-import { Messages } from "../utils/messages";
+import { Messages } from "../utils";
+import { Event } from "ethers";
 
 export const getRegistrationPrice = async (
   masa: Masa,
@@ -56,7 +57,7 @@ const purchaseSoulName = async (
       const result = await tx.wait();
 
       const purchasedEvent = result.events?.find(
-        (err: any) => err.event === "SoulNamePurchased"
+        (event: Event) => event.event === "SoulNamePurchased"
       );
 
       let tokenId;

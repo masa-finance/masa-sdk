@@ -28,8 +28,10 @@ export const sendSoulNameByName = async (
       console.log(
         `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' sent!`
       );
-    } catch (err: any) {
-      console.error(`Sending of Soul Name Failed! ${err.message}`);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Sending of Soul Name Failed! ${error.message}`);
+      }
     }
   } else {
     console.error(`Soulname '${soulName}.soul' does not exist!`);

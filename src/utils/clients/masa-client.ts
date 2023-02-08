@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import {
   BaseResult,
   ICreditScore,
@@ -62,11 +62,67 @@ export class MasaClient {
       address: string,
       signature: string,
       cookie?: string
-    ): Promise<any | undefined> => {
+    ): Promise<
+      | {
+          id: string;
+          availableRoles: string[];
+          productsOfInterest: string[];
+          activeRole: string;
+          firstName: string;
+          lastName: string;
+          email: string;
+          emailVerified: boolean;
+          lastLoginDate: string;
+          countryId: string;
+          country: {
+            bankApproved: boolean;
+            phoneCode: string;
+            iso2: string;
+            iso3: string;
+            abbreviation: string;
+            name: string;
+            version: number;
+          };
+          dateOfBirth: string;
+          phone: string;
+          pngmeId: string;
+          pngmePermsAllowed: boolean;
+          dataFarmingAllowed: boolean;
+        }
+      | undefined
+    > => {
       const cookieToUse = cookie || this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
-        .post(
+        .post<
+          | {
+              id: string;
+              availableRoles: string[];
+              productsOfInterest: string[];
+              activeRole: string;
+              firstName: string;
+              lastName: string;
+              email: string;
+              emailVerified: boolean;
+              lastLoginDate: string;
+              countryId: string;
+              country: {
+                bankApproved: boolean;
+                phoneCode: string;
+                iso2: string;
+                iso3: string;
+                abbreviation: string;
+                name: string;
+                version: number;
+              };
+              dateOfBirth: string;
+              phone: string;
+              pngmeId: string;
+              pngmePermsAllowed: boolean;
+              dataFarmingAllowed: boolean;
+            }
+          | undefined
+        >(
           `/session/check-signature`,
           {
             address,
@@ -78,8 +134,8 @@ export class MasaClient {
             },
           }
         )
-        .catch((err: any) => {
-          console.error("Check signature failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Check signature failed!", error.message);
         });
 
       if (checkSignatureResponse) {
@@ -108,8 +164,8 @@ export class MasaClient {
     > => {
       const getChallengeResponse = await this._middlewareClient
         .get(`/session/get-challenge`)
-        .catch((err: any) => {
-          console.error("Get Challenge failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Get Challenge failed!", error.message);
         });
 
       if (getChallengeResponse) {
@@ -143,8 +199,8 @@ export class MasaClient {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
         })
-        .catch((err: any) => {
-          console.error("Logout failed!,", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Logout failed!,", error.message);
         });
 
       if (logoutResponse) {
@@ -173,8 +229,8 @@ export class MasaClient {
         .get(uri, {
           headers,
         })
-        .catch((err) => {
-          console.error("Failed to load Metadata!", err.message, uri);
+        .catch((error: Error | AxiosError) => {
+          console.error("Failed to load Metadata!", error.message, uri);
         });
 
       if (metadataResponse) {
@@ -234,8 +290,8 @@ export class MasaClient {
             },
           }
         )
-        .catch((err: any) => {
-          console.error("Storing metadata failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Storing metadata failed!", error.message);
         });
 
       if (storeMetadataResponse) {
@@ -284,8 +340,8 @@ export class MasaClient {
             },
           }
         )
-        .catch((err: any) => {
-          console.error("Generating green failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Generating green failed!", error.message);
         });
 
       if (
@@ -351,8 +407,8 @@ export class MasaClient {
             },
           }
         )
-        .catch((err: any) => {
-          console.error("Verifying gree failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Verifying green failed!", error.message);
         });
 
       if (
@@ -404,8 +460,8 @@ export class MasaClient {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
         })
-        .catch((err: any) => {
-          console.error("Generation of credit score failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Generation of credit score failed!", error.message);
         });
 
       if (
@@ -449,7 +505,12 @@ export class MasaClient {
       };
 
       const updateCreditScoreResponse = await this._middlewareClient
-        .post(
+        .post<{
+          success: boolean;
+          status: string;
+          message: string;
+          signature?: string;
+        }>(
           `/credit-score/update`,
           {
             transactionHash,
@@ -460,8 +521,8 @@ export class MasaClient {
             },
           }
         )
-        .catch((err: any) => {
-          console.error("Generation of credit score failed!", err.message);
+        .catch((error: Error | AxiosError) => {
+          console.error("Generation of credit score failed!", error.message);
         });
 
       if (
