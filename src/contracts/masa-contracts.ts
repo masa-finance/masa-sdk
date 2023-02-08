@@ -93,6 +93,26 @@ export class MasaContracts {
 
       return paymentAddress;
     },
+
+    /**
+     *
+     * @param signer
+     * @param paymentAddress
+     * @param price
+     */
+    formatPrice: async (
+      signer: Signer,
+      paymentAddress: string,
+      price: BigNumber
+    ) => {
+      let decimals = 18;
+      if (paymentAddress !== constants.AddressZero) {
+        const contract = ERC20__factory.connect(paymentAddress, signer);
+        decimals = await contract.decimals();
+      }
+
+      return utils.formatUnits(price, decimals);
+    },
   };
 
   soulLinker = {
@@ -314,13 +334,11 @@ export class MasaContracts {
         }
       }
 
-      let decimals = 18;
-      if (paymentAddress !== constants.AddressZero) {
-        const contract = ERC20__factory.connect(paymentAddress, signer);
-        decimals = await contract.decimals();
-      }
-
-      const formattedPrice = utils.formatUnits(price, decimals);
+      const formattedPrice = await this.tools.formatPrice(
+        signer,
+        paymentAddress,
+        price
+      );
 
       return {
         price,
@@ -328,6 +346,11 @@ export class MasaContracts {
         formattedPrice,
       };
     },
+
+    /**
+     * Returns detailed information for a soul name
+     * @param soulName
+     */
     getSoulnameData: async (
       soulName: string
     ): Promise<{ exists: boolean; tokenId: BigNumber }> => {
@@ -516,6 +539,11 @@ export class MasaContracts {
       });
     },
 
+    /**
+     * Signs a credit score
+     * @param wallet
+     * @param identityId
+     */
     sign: async (
       wallet: Wallet,
       identityId: BigNumber
@@ -577,6 +605,46 @@ export class MasaContracts {
     },
 
     /**
+     * Gets the price for a masa green
+     * @param signer
+     * @param paymentMethod
+     * @param slippage
+     */
+    getPrice: async (
+      signer: Signer,
+      paymentMethod: PaymentMethod,
+      slippage: number | undefined = 250
+    ): Promise<{
+      price: BigNumber;
+      paymentAddress: string;
+      formattedPrice: string;
+    }> => {
+      const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
+
+      let price = await this.instances.SoulboundGreenContract.getMintPrice(
+        paymentAddress
+      );
+
+      if (slippage) {
+        if (paymentMethod === "eth") {
+          price = price.add(price.mul(slippage).div(10000));
+        }
+      }
+
+      const formattedPrice = await this.tools.formatPrice(
+        signer,
+        paymentAddress,
+        price
+      );
+
+      return {
+        price,
+        paymentAddress,
+        formattedPrice,
+      };
+    },
+
+    /**
      * Purchase a masa green
      * @param wallet
      * @param paymentMethod
@@ -632,17 +700,11 @@ export class MasaContracts {
         throw new Error(msg);
       }
 
-      const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
-
-      let price = await this.instances.SoulboundGreenContract.getMintPrice(
-        paymentAddress
+      const { paymentAddress, price } = await this.green.getPrice(
+        wallet,
+        paymentMethod,
+        slippage
       );
-
-      if (slippage) {
-        if (paymentMethod === "eth") {
-          price = price.add(price.mul(slippage).div(10000));
-        }
-      }
 
       const parameter: [string, string, string, number, string] = [
         paymentAddress,
