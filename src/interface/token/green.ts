@@ -13,4 +13,5 @@ export interface IGreen {
 
 export interface CreateGreenResult extends BaseResult {
   status?: string;
+  errorCode?: number;
 }

@@ -354,15 +354,11 @@ export class MasaClient {
         result.status = "success";
         return { ...result, ...greenGenerateResponse.data };
       } else {
-        const message = `Generating green failed! ${result.message}`;
-        console.error(message);
-
-        return {
-          success: false,
-          status: "failed",
-          message,
-        };
+        result.message = `Generating green failed! ${result.message}`;
+        console.error(result.message);
       }
+
+      return result;
     },
 
     verify: async (
@@ -421,15 +417,11 @@ export class MasaClient {
         result.status = "success";
         return { ...result, ...greenVerifyResponse.data };
       } else {
-        const message = `Verifying green failed! ${result.message}`;
-        console.error(message);
-
-        return {
-          success: false,
-          status: "failed",
-          message,
-        };
+        result.message = `Verifying green failed! ${result.message}`;
+        console.error(result.message);
       }
+
+      return result;
     },
   };
 
@@ -522,7 +514,7 @@ export class MasaClient {
           }
         )
         .catch((error: Error | AxiosError) => {
-          console.error("Generation of credit score failed!", error.message);
+          console.error("Updating credit score failed!", error.message);
         });
 
       if (
@@ -534,7 +526,7 @@ export class MasaClient {
         result.status = "success";
         return { ...result, ...updateCreditScoreResponse.data };
       } else {
-        console.error("Generation of credit score failed!");
+        console.error("Updating of credit score failed!");
       }
 
       return result;

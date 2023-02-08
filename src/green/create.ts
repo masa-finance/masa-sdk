@@ -14,7 +14,12 @@ export const generateGreen = async (
   | undefined
 > => {
   if (await masa.session.checkLogin()) {
-    return masa.client.green.generate(phoneNumber);
+    const greenGenerateResult = await masa.client.green.generate(phoneNumber);
+
+    if (masa.config.verbose) {
+      console.log({ greenGenerateResult });
+    }
+    return greenGenerateResult;
   } else {
     console.error(Messages.NotLoggedIn());
   }
@@ -25,9 +30,27 @@ export const verifyGreen = async (
   phoneNumber: string,
   code: string
 ): Promise<
-  | { signature: string; signatureDate: number; authorityAddress: string }
+  | (BaseResult & {
+      status?: string;
+      signature?: string;
+      signatureDate?: number;
+      authorityAddress?: string;
+      errorCode?: number;
+    })
   | undefined
 > => {
+  const result: BaseResult & {
+    status?: string;
+    signature?: string;
+    signatureDate?: number;
+    authorityAddress?: string;
+    errorCode?: number;
+  } = {
+    success: false,
+    message: "Unknown Verify Error",
+  };
+
+  // try to verify with the code
   const greenVerifyResult = await masa.client.green.verify(
     phoneNumber,
     code,
@@ -38,18 +61,28 @@ export const verifyGreen = async (
     console.log({ greenVerifyResult });
   }
 
-  if (
-    greenVerifyResult &&
-    greenVerifyResult.signature &&
-    greenVerifyResult.signatureDate &&
-    greenVerifyResult.authorityAddress
-  ) {
-    return {
-      signature: greenVerifyResult.signature,
-      signatureDate: greenVerifyResult.signatureDate,
-      authorityAddress: greenVerifyResult.authorityAddress,
-    };
+  // we got a verification result
+  if (greenVerifyResult) {
+    result.success = greenVerifyResult.success;
+    result.status = greenVerifyResult.status;
+    result.message = greenVerifyResult.message;
+
+    if (
+      greenVerifyResult.signature &&
+      greenVerifyResult.signatureDate &&
+      greenVerifyResult.authorityAddress
+    ) {
+      // unpack the relevant data we need to proceed
+      result.signature = greenVerifyResult.signature;
+      result.signatureDate = greenVerifyResult.signatureDate;
+      result.authorityAddress = greenVerifyResult.authorityAddress;
+    } else if (greenVerifyResult.errorCode) {
+      // error code, unpack the error code
+      result.errorCode = greenVerifyResult.errorCode;
+    }
   }
+
+  return result;
 };
 
 export const createGreen = async (
@@ -59,25 +92,44 @@ export const createGreen = async (
 ): Promise<CreateGreenResult> => {
   const result: CreateGreenResult = {
     success: false,
-    message: "Unknown Error",
+    message: "Unknown Create Error",
   };
 
   // verify
-  const greenVerifyResult = await verifyGreen(masa, phoneNumber, code);
+  const verifyGreenResult = await verifyGreen(masa, phoneNumber, code);
 
-  if (greenVerifyResult) {
-    // mint
-    const mintResult = await mintGreen(
-      masa,
-      greenVerifyResult.authorityAddress,
-      greenVerifyResult.signatureDate,
-      greenVerifyResult.signature
-    );
+  if (masa.config.verbose) {
+    console.log({ verifyGreenResult });
+  }
 
-    if (mintResult) {
-      result.success = true;
-      result.message = "";
-      result.tokenId = mintResult.tokenId;
+  if (verifyGreenResult) {
+    result.status = verifyGreenResult.status;
+    result.message = verifyGreenResult.message;
+
+    if (
+      verifyGreenResult.authorityAddress &&
+      verifyGreenResult.signatureDate &&
+      verifyGreenResult.signature
+    ) {
+      // mint
+      const mintGreenResult = await mintGreen(
+        masa,
+        verifyGreenResult.authorityAddress,
+        verifyGreenResult.signatureDate,
+        verifyGreenResult.signature
+      );
+
+      if (masa.config.verbose) {
+        console.log({ mintGreenResult });
+      }
+
+      if (mintGreenResult) {
+        result.success = true;
+        result.message = "";
+        result.tokenId = mintGreenResult.tokenId;
+      }
+    } else {
+      result.errorCode = verifyGreenResult.errorCode;
     }
   }
 
@@ -91,8 +143,6 @@ export const mintGreen = async (
   signature: string,
   paymentMethod: PaymentMethod = "eth"
 ): Promise<{ tokenId: BigNumber } | undefined> => {
-  console.log("Minting green");
-
   const tx = await masa.contracts.green.mint(
     masa.config.wallet as ethers.Wallet,
     paymentMethod,
@@ -103,6 +153,7 @@ export const mintGreen = async (
   );
 
   console.log(Messages.WaitingToFinalize(tx.hash));
+
   const receipt = await tx.wait();
 
   if (receipt.events) {

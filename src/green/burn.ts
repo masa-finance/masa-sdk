@@ -30,11 +30,11 @@ export const burnGreen = async (
   let success = false;
 
   if (await masa.session.checkLogin()) {
-    console.log(`Burning Green with id '${greenId}'!`);
+    console.log(`Burning Green with ID '${greenId}'!`);
     success = await burnGreenById(masa, greenId);
 
     if (success) {
-      console.log(`Burned Green with id '${greenId}'!`);
+      console.log(`Burned Green with ID '${greenId}'!`);
     }
   } else {
     console.error(Messages.NotLoggedIn());
