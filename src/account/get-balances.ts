@@ -1,22 +1,87 @@
 import { addresses } from "../contracts";
-import { IERC20__factory } from "@masa-finance/masa-contracts-identity";
+import {
+  IERC20__factory,
+  SoulboundCreditScore,
+  SoulboundGreen,
+  SoulboundIdentity,
+  SoulName,
+} from "@masa-finance/masa-contracts-identity";
 import Masa from "../masa";
-import { BigNumber, constants } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
-export const getBalances = async (masa: Masa, address?: string) => {
+export const getBalances = async (
+  masa: Masa,
+  address?: string
+): Promise<
+  | {
+      ethBalance: BigNumber;
+      masaBalance: BigNumber;
+      usdcBalance: BigNumber;
+      wethBalance: BigNumber;
+      identityBalance: BigNumber;
+      soulNameBalance: BigNumber;
+      soulboundCreditScoreBalance: BigNumber;
+      soulboundGreenBalance: BigNumber;
+    }
+  | undefined
+> => {
   if (!masa.config.wallet.provider) return;
 
   const contractAddresses = addresses[masa.config.network];
   const addressToLoad = address || (await masa.config.wallet.getAddress());
 
-  const loadBalance = async (userAddress: string, tokenAddress?: string) => {
-    const fallback = BigNumber.from(0);
-    if (!masa.config.wallet.provider || !tokenAddress) return fallback;
+  const loadERC20Balance = async (
+    userAddress: string,
+    tokenAddress?: string
+  ) => {
+    let result = BigNumber.from(0);
 
-    return IERC20__factory.connect(
-      tokenAddress,
-      masa.config.wallet.provider
-    ).balanceOf(userAddress);
+    if (
+      !masa.config.wallet.provider ||
+      !tokenAddress ||
+      tokenAddress === ethers.constants.AddressZero
+    ) {
+      return result;
+    }
+
+    try {
+      const contract = IERC20__factory.connect(
+        tokenAddress,
+        masa.config.wallet.provider
+      );
+
+      result = await contract.balanceOf(userAddress);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(
+          `Token: ${tokenAddress} Wallet Address: ${addressToLoad} ${error.message}`
+        );
+      }
+    }
+
+    return result;
+  };
+
+  const loadContractBalance = async (
+    contract:
+      | SoulboundIdentity
+      | SoulName
+      | SoulboundCreditScore
+      | SoulboundGreen,
+    addressToLoad: string
+  ) => {
+    let result = BigNumber.from(0);
+    if (contract.address === ethers.constants.AddressZero) return result;
+
+    try {
+      result = await contract.balanceOf(addressToLoad);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        `Contract: ${contract.name} Wallet Address: ${addressToLoad} ${error.message}`;
+      }
+    }
+
+    return result;
   };
 
   const [
@@ -32,24 +97,31 @@ export const getBalances = async (masa: Masa, address?: string) => {
     // ETH
     masa.config.wallet.provider.getBalance(addressToLoad),
     // MASA
-    loadBalance(addressToLoad, contractAddresses?.MASA),
+    loadERC20Balance(addressToLoad, contractAddresses?.MASA),
     // USDC
-    loadBalance(addressToLoad, contractAddresses?.USDC),
+    loadERC20Balance(addressToLoad, contractAddresses?.USDC),
     // WETH
-    loadBalance(addressToLoad, contractAddresses?.WETH),
+    loadERC20Balance(addressToLoad, contractAddresses?.WETH),
     // SBI
-    masa.contracts.instances.SoulboundIdentityContract.balanceOf(addressToLoad),
+    loadContractBalance(
+      masa.contracts.instances.SoulboundIdentityContract,
+      addressToLoad
+    ),
     // MSN
-    masa.contracts.instances.SoulNameContract.balanceOf(addressToLoad),
+    loadContractBalance(
+      masa.contracts.instances.SoulNameContract,
+      addressToLoad
+    ),
     // SCS
-    masa.contracts.instances.SoulboundCreditScoreContract.balanceOf(
+    loadContractBalance(
+      masa.contracts.instances.SoulboundCreditScoreContract,
       addressToLoad
     ),
     // Green
-    masa.contracts.instances.SoulboundGreenContract.address !==
-    constants.AddressZero
-      ? masa.contracts.instances.SoulboundGreenContract.balanceOf(addressToLoad)
-      : BigNumber.from(0),
+    loadContractBalance(
+      masa.contracts.instances.SoulboundGreenContract,
+      addressToLoad
+    ),
   ]);
 
   const balances = {
