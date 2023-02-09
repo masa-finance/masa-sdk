@@ -64,7 +64,7 @@ const purchaseSoulName = async (
       if (purchasedEvent && purchasedEvent.decode) {
         const decodedEvent = purchasedEvent.decode(purchasedEvent.data);
         tokenId = decodedEvent.tokenId.toNumber();
-        console.log(`Token with ID: ${tokenId} created.`);
+        console.log(`Token with ID: '${tokenId}' created.`);
         return {
           tokenId,
           soulName,
