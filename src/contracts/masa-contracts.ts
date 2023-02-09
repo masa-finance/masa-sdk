@@ -257,7 +257,7 @@ export class MasaContracts {
         price
       );
 
-      const params: [
+      const purchaseNameParameters: [
         string, // paymentMethod: PromiseOrValue<string>
         string, // to: PromiseOrValue<string>
         string, // name: PromiseOrValue<string>
@@ -277,24 +277,26 @@ export class MasaContracts {
         signature,
       ];
 
-      const overrides = {
+      const purchaseNameOverrides = {
         value: paymentMethod === "eth" ? price : undefined,
       };
 
       if (this.masaConfig.verbose) {
-        console.log("purchaseName", params, overrides);
+        console.log({ purchaseNameParameters, purchaseNameOverrides });
       }
 
       // connect
       const store = this.instances.SoulStoreContract.connect(signer);
+
       // estimate gas
       const gasLimit = await store.estimateGas.purchaseName(
-        ...params,
-        overrides
+        ...purchaseNameParameters,
+        purchaseNameOverrides
       );
+
       // execute
-      const tx = await store.purchaseName(...params, {
-        ...overrides,
+      const tx = await store.purchaseName(...purchaseNameParameters, {
+        ...purchaseNameOverrides,
         gasLimit,
       });
 
@@ -407,7 +409,7 @@ export class MasaContracts {
         price
       );
 
-      const params: [
+      const purchaseIdentityAndNameParameters: [
         string, // paymentMethod: PromiseOrValue<string>
         string, // name: PromiseOrValue<string>
         BigNumberish, // nameLength: PromiseOrValue<BigNumberish>
@@ -425,26 +427,32 @@ export class MasaContracts {
         signature,
       ];
 
-      const overrides = {
+      const purchaseIdentityAndNameOverrides = {
         value: paymentMethod === "eth" ? price : undefined,
       };
 
       if (this.masaConfig.verbose) {
-        console.log("purchaseIdentityAndName", params, overrides);
+        console.log({
+          purchaseIdentityAndNameParameters,
+          purchaseIdentityAndNameOverrides,
+        });
       }
 
       // connect
       const store = this.instances.SoulStoreContract.connect(signer);
       // estimate gas
       const gasLimit = await store.estimateGas.purchaseIdentityAndName(
-        ...params,
-        overrides
+        ...purchaseIdentityAndNameParameters,
+        purchaseIdentityAndNameOverrides
       );
       // execute tx
-      const tx = await store.purchaseIdentityAndName(...params, {
-        ...overrides,
-        gasLimit,
-      });
+      const tx = await store.purchaseIdentityAndName(
+        ...purchaseIdentityAndNameParameters,
+        {
+          ...purchaseIdentityAndNameOverrides,
+          gasLimit,
+        }
+      );
 
       return tx;
     },
@@ -520,7 +528,13 @@ export class MasaContracts {
         }
       }
 
-      const parameter: [string, BigNumber, string, number, string] = [
+      const creditScoreMintParameters: [
+        string,
+        BigNumber,
+        string,
+        number,
+        string
+      ] = [
         paymentAddress,
         identityId,
         authorityAddress,
@@ -528,15 +542,17 @@ export class MasaContracts {
         signature,
       ];
 
+      const creditScoreMintOverrides = {
+        value: price,
+      };
+
       if (this.masaConfig.verbose) {
-        console.log({ parameter });
+        console.log({ creditScoreMintParameters, creditScoreMintOverrides });
       }
 
       return await this.instances.SoulboundCreditScoreContract.connect(wallet)[
         "mint(address,uint256,address,uint256,bytes)"
-      ](...parameter, {
-        value: price,
-      });
+      ](...creditScoreMintParameters, creditScoreMintOverrides);
     },
 
     /**
@@ -706,7 +722,7 @@ export class MasaContracts {
         slippage
       );
 
-      const parameter: [string, string, string, number, string] = [
+      const greenMintParameters: [string, string, string, number, string] = [
         paymentAddress,
         await wallet.getAddress(),
         authorityAddress,
@@ -714,15 +730,17 @@ export class MasaContracts {
         signature,
       ];
 
+      const greenMintOverrides = {
+        value: price,
+      };
+
       if (this.masaConfig.verbose) {
-        console.log({ parameter });
+        console.log({ greenMintParameters, greenMintOverrides });
       }
 
       return await this.instances.SoulboundGreenContract.connect(wallet)[
         "mint(address,address,address,uint256,bytes)"
-      ](...parameter, {
-        value: price,
-      });
+      ](...greenMintParameters, greenMintOverrides);
     },
 
     /**
