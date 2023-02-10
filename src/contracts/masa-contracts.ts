@@ -716,11 +716,16 @@ export class MasaContracts {
         throw new Error(msg);
       }
 
-      const { paymentAddress, price } = await this.green.getPrice(
-        wallet,
-        paymentMethod,
-        slippage
-      );
+      const { paymentAddress, price, formattedPrice } =
+        await this.green.getPrice(wallet, paymentMethod, slippage);
+
+      if (this.masaConfig.verbose) {
+        console.log({
+          price: price.toString(),
+          paymentAddress,
+          formattedPrice,
+        });
+      }
 
       const greenMintParameters: [string, string, string, number, string] = [
         paymentAddress,
