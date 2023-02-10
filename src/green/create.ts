@@ -14,12 +14,27 @@ export const generateGreen = async (
   | undefined
 > => {
   if (await masa.session.checkLogin()) {
-    const greenGenerateResult = await masa.client.green.generate(phoneNumber);
+    const balance =
+      await masa.contracts.instances.SoulboundGreenContract.balanceOf(
+        await masa.config.wallet.getAddress()
+      );
 
-    if (masa.config.verbose) {
-      console.log({ greenGenerateResult });
+    if (balance.eq(0)) {
+      const greenGenerateResult = await masa.client.green.generate(phoneNumber);
+
+      if (masa.config.verbose) {
+        console.log({ greenGenerateResult });
+      }
+
+      return greenGenerateResult;
+    } else {
+      const message = "Masa Green already created!";
+      return {
+        success: false,
+        message,
+        status: "failed",
+      };
     }
-    return greenGenerateResult;
   } else {
     console.error(Messages.NotLoggedIn());
   }
