@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { CreateCreditScoreResult } from "../interface";
+import { GenerateCreditScoreResult } from "../interface";
 import { PaymentMethod } from "../contracts";
 import { ethers } from "ethers";
 import { Messages } from "../utils";
@@ -7,8 +7,8 @@ import { Messages } from "../utils";
 export const createCreditScore = async (
   masa: Masa,
   paymentMethod: PaymentMethod = "eth"
-): Promise<CreateCreditScoreResult | undefined> => {
-  const result: CreateCreditScoreResult = {
+): Promise<GenerateCreditScoreResult | undefined> => {
+  const result: GenerateCreditScoreResult = {
     success: false,
     message: "Unknown Error",
   };
@@ -32,7 +32,7 @@ export const createCreditScore = async (
       return result;
     }
 
-    const creditScoreResponse = await masa.client.creditScore.create();
+    const creditScoreResponse = await masa.client.creditScore.generate();
 
     if (
       creditScoreResponse?.signature &&

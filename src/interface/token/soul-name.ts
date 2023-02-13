@@ -1,4 +1,5 @@
 import { BaseResult } from "../masa";
+import Transaction from "arweave/node/lib/transaction";
 
 export interface Attribute {
   display_type?: string;
@@ -21,4 +22,25 @@ export interface ISoulName {
 
 export interface CreateSoulNameResult extends BaseResult {
   soulName?: string;
+}
+
+export interface SoulNameMetadataStoreResult {
+  // image info
+  imageTransaction: Transaction;
+  imageResponse: {
+    status: number;
+    statusText: string;
+    data: unknown;
+  };
+  // metadata info
+  metadataTransaction: Transaction;
+  metadataResponse: {
+    status: number;
+    statusText: string;
+    data: unknown;
+  };
+  // signature from the authority to be verified in the contract
+  signature: string;
+  // signer address
+  authorityAddress: string;
 }

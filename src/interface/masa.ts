@@ -1,6 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 
 export type EnvironmentName = "dev" | "test" | "beta" | "production";
+
 export type NetworkName =
   // eth
   | "goerli" // testnet
@@ -42,21 +43,4 @@ export interface BaseResult {
   success: boolean;
   message: string;
   tokenId?: string | BigNumber;
-}
-
-export interface ISession {
-  cookie: {
-    originalMaxAge: number;
-    expires: string;
-    secure: boolean;
-    httpOnly: boolean;
-    domain: string;
-    path: string;
-    sameSite: string;
-  };
-  challenge: string;
-  user: {
-    userId: string;
-    address: string;
-  };
 }

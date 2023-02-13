@@ -16,4 +16,13 @@ export interface ICreditScore {
   };
 }
 
-export type CreateCreditScoreResult = BaseResult;
+export interface GenerateCreditScoreResult extends BaseResult {
+  signature?: string;
+  signatureDate?: number;
+  authorityAddress?: string;
+}
+
+export interface UpdateCreditScoreResult extends BaseResult {
+  status?: string;
+  signature?: string;
+}

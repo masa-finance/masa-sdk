@@ -1,14 +1,18 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import {
-  BaseResult,
+  CheckSignatureResult,
+  GenerateCreditScoreResult,
   GenerateGreenResult,
+  GetChallengeResult,
   ICreditScore,
   IGreen,
   IIdentity,
   ISession,
+  LogoutResult,
+  SoulNameMetadataStoreResult,
+  UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
-import Transaction from "arweave/node/lib/transaction";
 
 const headers = {
   "Content-Type": "application/json",
@@ -64,67 +68,11 @@ export class MasaClient {
       address: string,
       signature: string,
       cookie?: string
-    ): Promise<
-      | {
-          id: string;
-          availableRoles: string[];
-          productsOfInterest: string[];
-          activeRole: string;
-          firstName: string;
-          lastName: string;
-          email: string;
-          emailVerified: boolean;
-          lastLoginDate: string;
-          countryId: string;
-          country: {
-            bankApproved: boolean;
-            phoneCode: string;
-            iso2: string;
-            iso3: string;
-            abbreviation: string;
-            name: string;
-            version: number;
-          };
-          dateOfBirth: string;
-          phone: string;
-          pngmeId: string;
-          pngmePermsAllowed: boolean;
-          dataFarmingAllowed: boolean;
-        }
-      | undefined
-    > => {
+    ): Promise<CheckSignatureResult | undefined> => {
       const cookieToUse = cookie || this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
-        .post<
-          | {
-              id: string;
-              availableRoles: string[];
-              productsOfInterest: string[];
-              activeRole: string;
-              firstName: string;
-              lastName: string;
-              email: string;
-              emailVerified: boolean;
-              lastLoginDate: string;
-              countryId: string;
-              country: {
-                bankApproved: boolean;
-                phoneCode: string;
-                iso2: string;
-                iso3: string;
-                abbreviation: string;
-                name: string;
-                version: number;
-              };
-              dateOfBirth: string;
-              phone: string;
-              pngmeId: string;
-              pngmePermsAllowed: boolean;
-              dataFarmingAllowed: boolean;
-            }
-          | undefined
-        >(
+        .post<CheckSignatureResult>(
           `/session/check-signature`,
           {
             address,
@@ -156,14 +104,7 @@ export class MasaClient {
     /**
      * Get challenge
      */
-    getChallenge: async (): Promise<
-      | {
-          challenge: string;
-          expires: string;
-          cookie?: string;
-        }
-      | undefined
-    > => {
+    getChallenge: async (): Promise<GetChallengeResult | undefined> => {
       const getChallengeResponse = await this._middlewareClient
         .get(`/session/get-challenge`)
         .catch((error: Error | AxiosError) => {
@@ -189,14 +130,9 @@ export class MasaClient {
       }
     },
 
-    logout: async (): Promise<
-      | {
-          status: string;
-        }
-      | undefined
-    > => {
+    logout: async (): Promise<LogoutResult | undefined> => {
       const logoutResponse = await this._middlewareClient
-        .post(`/session/logout`, undefined, {
+        .post<LogoutResult>(`/session/logout`, undefined, {
           headers: {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
@@ -253,33 +189,11 @@ export class MasaClient {
       soulName: string,
       receiver: string,
       duration: number
-    ): Promise<
-      | {
-          // image info
-          imageTransaction: Transaction;
-          imageResponse: {
-            status: number;
-            statusText: string;
-            data: unknown;
-          };
-          // metadata info
-          metadataTransaction: Transaction;
-          metadataResponse: {
-            status: number;
-            statusText: string;
-            data: unknown;
-          };
-          // signature from the authority to be verified in the contract
-          signature: string;
-          // signer address
-          authorityAddress: string;
-        }
-      | undefined
-    > => {
+    ): Promise<SoulNameMetadataStoreResult | undefined> => {
       console.log(`Writing metadata for '${soulName}.soul'`);
 
       const storeMetadataResponse = await this._middlewareClient
-        .post(
+        .post<SoulNameMetadataStoreResult>(
           `/storage/store`,
           {
             soulName: `${soulName}.soul`,
@@ -362,15 +276,7 @@ export class MasaClient {
       };
 
       const greenVerifyResponse = await this._middlewareClient
-        .post<
-          BaseResult & {
-            status?: string;
-            signature?: string;
-            signatureDate?: number;
-            authorityAddress?: string;
-            errorCode?: number;
-          }
-        >(
+        .post<VerifyGreenResult>(
           `/green/verify`,
           {
             phoneNumber,
@@ -409,17 +315,7 @@ export class MasaClient {
     /**
      * Generates a new credit score
      */
-    create: async (): Promise<
-      | {
-          success: boolean;
-          status: string;
-          message: string;
-          signature?: string;
-          signatureDate?: number;
-          authorityAddress?: string;
-        }
-      | undefined
-    > => {
+    generate: async (): Promise<GenerateCreditScoreResult | undefined> => {
       const result = {
         success: false,
         status: "failed",
@@ -427,7 +323,7 @@ export class MasaClient {
       };
 
       const generateCreditScoreResponse = await this._middlewareClient
-        .get(`/credit-score/generate`, {
+        .get<GenerateCreditScoreResult>(`/credit-score/generate`, {
           headers: {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
@@ -449,7 +345,6 @@ export class MasaClient {
         console.error("Generation of credit score failed!");
         return {
           success: false,
-          status: "failed",
           message: "Credit Score failed",
         };
       }
@@ -461,15 +356,7 @@ export class MasaClient {
      */
     update: async (
       transactionHash: string
-    ): Promise<
-      | {
-          success: boolean;
-          status: string;
-          message: string;
-          signature?: string;
-        }
-      | undefined
-    > => {
+    ): Promise<UpdateCreditScoreResult | undefined> => {
       const result = {
         success: false,
         status: "failed",
@@ -477,12 +364,7 @@ export class MasaClient {
       };
 
       const updateCreditScoreResponse = await this._middlewareClient
-        .post<{
-          success: boolean;
-          status: string;
-          message: string;
-          signature?: string;
-        }>(
+        .post<UpdateCreditScoreResult>(
           `/credit-score/update`,
           {
             transactionHash,
