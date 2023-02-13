@@ -634,12 +634,19 @@ export class MasaContracts {
       price: BigNumber;
       paymentAddress: string;
       formattedPrice: string;
+      mintTransactionEstimatedGas: BigNumber;
+      mintTransactionFee: BigNumber;
     }> => {
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
 
       let price = await this.instances.SoulboundGreenContract.getMintPrice(
         paymentAddress
       );
+
+      const gasPrice = await signer.getGasPrice();
+      // hardcoded estimation for now
+      const mintTransactionEstimatedGas = BigNumber.from(250_000);
+      const mintTransactionFee = gasPrice.mul(mintTransactionEstimatedGas);
 
       if (slippage) {
         if (paymentMethod === "eth") {
@@ -657,6 +664,8 @@ export class MasaContracts {
         price,
         paymentAddress,
         formattedPrice,
+        mintTransactionEstimatedGas,
+        mintTransactionFee,
       };
     },
 
@@ -716,12 +725,13 @@ export class MasaContracts {
         throw new Error(msg);
       }
 
-      const { paymentAddress, price, formattedPrice } =
+      const { paymentAddress, price, formattedPrice, mintTransactionFee } =
         await this.green.getPrice(wallet, paymentMethod, slippage);
 
       if (this.masaConfig.verbose) {
         console.log({
           price: price.toString(),
+          mintTransactionFee: mintTransactionFee.toString(),
           paymentAddress,
           formattedPrice,
         });
