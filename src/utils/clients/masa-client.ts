@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import {
-  CheckSignatureResult,
   GenerateCreditScoreResult,
   GenerateGreenResult,
   GetChallengeResult,
@@ -11,6 +10,7 @@ import {
   LogoutResult,
   SoulNameMetadataStoreResult,
   UpdateCreditScoreResult,
+  User,
   VerifyGreenResult,
 } from "../../interface";
 
@@ -68,11 +68,11 @@ export class MasaClient {
       address: string,
       signature: string,
       cookie?: string
-    ): Promise<CheckSignatureResult | undefined> => {
+    ): Promise<User | undefined> => {
       const cookieToUse = cookie || this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
-        .post<CheckSignatureResult>(
+        .post<User>(
           `/session/check-signature`,
           {
             address,
