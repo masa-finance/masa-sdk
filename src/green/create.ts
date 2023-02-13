@@ -1,5 +1,9 @@
 import Masa from "../masa";
-import { BaseResult, CreateGreenResult } from "../interface";
+import {
+  BaseResult,
+  GenerateGreenResult,
+  VerifyGreenResult,
+} from "../interface";
 import { PaymentMethod } from "../contracts";
 import { BigNumber, ethers, Event } from "ethers";
 import { Messages } from "../utils";
@@ -7,12 +11,7 @@ import { Messages } from "../utils";
 export const generateGreen = async (
   masa: Masa,
   phoneNumber: string
-): Promise<
-  | (BaseResult & {
-      status: string;
-    })
-  | undefined
-> => {
+): Promise<GenerateGreenResult | undefined> => {
   if (await masa.session.checkLogin()) {
     const balance =
       await masa.contracts.instances.SoulboundGreenContract.balanceOf(
@@ -104,8 +103,8 @@ export const createGreen = async (
   masa: Masa,
   phoneNumber: string,
   code: string
-): Promise<CreateGreenResult> => {
-  const result: CreateGreenResult = {
+): Promise<VerifyGreenResult> => {
+  const result: VerifyGreenResult = {
     success: false,
     message: "Unknown Create Error",
   };

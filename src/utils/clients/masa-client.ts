@@ -1,10 +1,12 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import {
   BaseResult,
+  GenerateGreenResult,
   ICreditScore,
   IGreen,
   IIdentity,
   ISession,
+  VerifyGreenResult,
 } from "../../interface";
 import Transaction from "arweave/node/lib/transaction";
 
@@ -258,14 +260,14 @@ export class MasaClient {
           imageResponse: {
             status: number;
             statusText: string;
-            data: any;
+            data: unknown;
           };
           // metadata info
           metadataTransaction: Transaction;
           metadataResponse: {
             status: number;
             statusText: string;
-            data: any;
+            data: unknown;
           };
           // signature from the authority to be verified in the contract
           signature: string;
@@ -308,14 +310,7 @@ export class MasaClient {
      */
     generate: async (
       phoneNumber: string
-    ): Promise<
-      | (BaseResult & {
-          channel?: string;
-          status: string;
-          errorCode?: number;
-        })
-      | undefined
-    > => {
+    ): Promise<GenerateGreenResult | undefined> => {
       const result = {
         success: false,
         status: "failed",
@@ -323,13 +318,7 @@ export class MasaClient {
       };
 
       const greenGenerateResponse = await this._middlewareClient
-        .post<
-          BaseResult & {
-            channel?: string;
-            status: string;
-            code?: number;
-          }
-        >(
+        .post<GenerateGreenResult>(
           `/green/generate`,
           {
             phoneNumber,
@@ -365,16 +354,7 @@ export class MasaClient {
       phoneNumber: string,
       code: string,
       network: string
-    ): Promise<
-      | (BaseResult & {
-          status?: string;
-          signature?: string;
-          signatureDate?: number;
-          authorityAddress?: string;
-          errorCode?: number;
-        })
-      | undefined
-    > => {
+    ): Promise<VerifyGreenResult | undefined> => {
       const result = {
         success: false,
         status: "failed",

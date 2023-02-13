@@ -11,7 +11,18 @@ export interface IGreen {
   };
 }
 
-export interface CreateGreenResult extends BaseResult {
+interface GreenBaseResult extends BaseResult {
   status?: string;
   errorCode?: number;
+}
+
+export interface GenerateGreenResult extends GreenBaseResult {
+  channel?: string;
+  data?: unknown[];
+}
+
+export interface VerifyGreenResult extends GreenBaseResult {
+  signature?: string;
+  signatureDate?: number;
+  authorityAddress?: string;
 }
