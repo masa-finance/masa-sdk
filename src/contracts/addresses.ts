@@ -1,4 +1,13 @@
-import { alfajores, bsctest, goerli, mainnet, mumbai } from "./networks";
+import {
+  alfajores,
+  bsc,
+  bsctest,
+  celo,
+  goerli,
+  mainnet,
+  mumbai,
+  polygon,
+} from "./networks";
 import { NetworkName } from "../interface";
 
 export interface Addresses {
@@ -18,9 +27,12 @@ export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   goerli,
   mainnet,
   // bsc
+  bsc,
   bsctest,
   // celo
+  celo,
   alfajores,
   // polygon
   mumbai,
+  polygon,
 };

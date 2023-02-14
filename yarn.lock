@@ -423,12 +423,12 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@masa-finance/masa-contracts-identity@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-1.1.5.tgz#457902e2901336a28aa1cfd7405ebd41908a3b25"
-  integrity sha512-3zpeQaB2M2dyk1rWbJCpJ0ClXIpoi0Gfu+zjmn8J3qdV/2x9A7vAfclQw6G2xY1ILTfwMTkV4J/6XBHul4sR2Q==
+"@masa-finance/masa-contracts-identity@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-1.2.0.tgz#23117f387db0a27f8cb6da6aa9fcec5c6d67ba9f"
+  integrity sha512-zAWBcDHtdRmEb8xWUrqiLtRcAo076U97vongl/FPCUcrMx2k8QxfNkajUVUQR9GPav/ianMIeNykUs8Lk9roEQ==
   dependencies:
-    ethers "^5.6.9"
+    ethers "~5.7.2"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -1304,7 +1304,7 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-ethers@^5.6.9, ethers@~5.7.2:
+ethers@~5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
