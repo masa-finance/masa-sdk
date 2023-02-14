@@ -636,6 +636,7 @@ export class MasaContracts {
       formattedPrice: string;
       mintTransactionEstimatedGas: BigNumber;
       mintTransactionFee: BigNumber;
+      formattedMintTransactionFee: string;
     }> => {
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
 
@@ -643,21 +644,27 @@ export class MasaContracts {
         paymentAddress
       );
 
-      const gasPrice = await signer.getGasPrice();
-      // hardcoded estimation for now
-      const mintTransactionEstimatedGas = BigNumber.from(250_000);
-      const mintTransactionFee = gasPrice.mul(mintTransactionEstimatedGas);
-
       if (slippage) {
         if (paymentMethod === "eth") {
           price = price.add(price.mul(slippage).div(10000));
         }
       }
 
-      const formattedPrice = await this.tools.formatPrice(
+      const formattedPrice: string = await this.tools.formatPrice(
         signer,
         paymentAddress,
         price
+      );
+
+      const gasPrice = await signer.getGasPrice();
+      // hardcoded estimation for now
+      const mintTransactionEstimatedGas = BigNumber.from(250_000);
+      const mintTransactionFee = gasPrice.mul(mintTransactionEstimatedGas);
+
+      const formattedMintTransactionFee: string = await this.tools.formatPrice(
+        signer,
+        paymentAddress,
+        mintTransactionFee
       );
 
       return {
@@ -666,6 +673,7 @@ export class MasaContracts {
         formattedPrice,
         mintTransactionEstimatedGas,
         mintTransactionFee,
+        formattedMintTransactionFee,
       };
     },
 
