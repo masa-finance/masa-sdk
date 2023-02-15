@@ -6,7 +6,6 @@ import {
   constants,
   ContractReceipt,
   ContractTransaction,
-  Signer,
   utils,
   Wallet,
 } from "ethers";
@@ -32,30 +31,31 @@ export class MasaContracts {
     /**
      * Checks or gives allowance on ERC20 tokens
      * @param paymentAddress
-     * @param signer
      * @param paymentMethod
      * @param price
      * @private
      */
     checkOrGiveAllowance: async (
       paymentAddress: string,
-      signer: Signer,
       paymentMethod: PaymentMethod,
       price: BigNumber
     ): Promise<ContractReceipt | undefined> => {
       if (paymentMethod !== "eth") {
-        const contract = IERC20__factory.connect(paymentAddress, signer);
+        const contract = IERC20__factory.connect(
+          paymentAddress,
+          this.masaConfig.wallet
+        );
 
         if (
           (await contract.allowance(
             // owner
-            await signer.getAddress(),
+            await this.masaConfig.wallet.getAddress(),
             // spender
             this.instances.SoulStoreContract.address
           )) < price
         ) {
           const tx: ContractTransaction = await contract
-            .connect(signer)
+            .connect(this.masaConfig.wallet)
             .approve(
               // spender
               this.instances.SoulStoreContract.address,
@@ -96,18 +96,16 @@ export class MasaContracts {
 
     /**
      *
-     * @param signer
      * @param paymentAddress
      * @param price
      */
-    formatPrice: async (
-      signer: Signer,
-      paymentAddress: string,
-      price: BigNumber
-    ) => {
+    formatPrice: async (paymentAddress: string, price: BigNumber) => {
       let decimals = 18;
       if (paymentAddress !== constants.AddressZero) {
-        const contract = ERC20__factory.connect(paymentAddress, signer);
+        const contract = ERC20__factory.connect(
+          paymentAddress,
+          this.masaConfig.wallet
+        );
         decimals = await contract.decimals();
       }
 
@@ -118,7 +116,6 @@ export class MasaContracts {
   soulLinker = {
     /**
      * Adds a link to the soullinker
-     * @param signer
      * @param tokenAddress
      * @param paymentMethod
      * @param readerIdentityId
@@ -130,7 +127,6 @@ export class MasaContracts {
      * @param slippage
      */
     addLink: async (
-      signer: Signer,
       tokenAddress: string,
       paymentMethod: PaymentMethod,
       readerIdentityId: BigNumber,
@@ -158,11 +154,11 @@ export class MasaContracts {
       if (paymentMethod !== "eth") {
         const paymentToken: IERC20 = IERC20__factory.connect(
           paymentMethodUsed,
-          signer
+          this.masaConfig.wallet
         );
 
         const allowance = await paymentToken.allowance(
-          await signer.getAddress(),
+          await this.masaConfig.wallet.getAddress(),
           this.instances.SoulLinkerContract.address
         );
         if (allowance < price) {
@@ -175,7 +171,7 @@ export class MasaContracts {
       }
 
       const response = await this.instances.SoulLinkerContract.connect(
-        signer
+        this.masaConfig.wallet
       ).addLink(
         paymentMethodUsed,
         readerIdentityId,
@@ -223,7 +219,6 @@ export class MasaContracts {
 
     /**
      * purchase only name
-     * @param signer
      * @param paymentMethod
      * @param name
      * @param nameLength
@@ -233,7 +228,6 @@ export class MasaContracts {
      * @param signature
      */
     purchase: async (
-      signer: Signer,
       paymentMethod: PaymentMethod,
       name: string,
       nameLength: number,
@@ -243,7 +237,6 @@ export class MasaContracts {
       signature: string
     ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
-        signer,
         paymentMethod,
         nameLength,
         duration
@@ -251,7 +244,6 @@ export class MasaContracts {
 
       await this.tools.checkOrGiveAllowance(
         paymentAddress,
-        signer,
 
         paymentMethod,
         price
@@ -268,7 +260,7 @@ export class MasaContracts {
         BytesLike // signature: PromiseOrValue<BytesLike>
       ] = [
         paymentAddress,
-        await signer.getAddress(),
+        await this.masaConfig.wallet.getAddress(),
         name,
         nameLength,
         duration,
@@ -286,7 +278,9 @@ export class MasaContracts {
       }
 
       // connect
-      const store = this.instances.SoulStoreContract.connect(signer);
+      const store = this.instances.SoulStoreContract.connect(
+        this.masaConfig.wallet
+      );
 
       // estimate gas
       const gasLimit = await store.estimateGas.purchaseName(
@@ -295,24 +289,20 @@ export class MasaContracts {
       );
 
       // execute
-      const tx = await store.purchaseName(...purchaseNameParameters, {
+      return await store.purchaseName(...purchaseNameParameters, {
         ...purchaseNameOverrides,
         gasLimit,
       });
-
-      return tx;
     },
 
     /**
      * Get price for minting a soul name
-     * @param signer
      * @param paymentMethod
      * @param nameLength
      * @param duration
      * @param slippage
      */
     getPrice: async (
-      signer: Signer,
       paymentMethod: PaymentMethod,
       nameLength: number,
       duration: number = 1,
@@ -337,7 +327,6 @@ export class MasaContracts {
       }
 
       const formattedPrice = await this.tools.formatPrice(
-        signer,
         paymentAddress,
         price
       );
@@ -365,17 +354,15 @@ export class MasaContracts {
   identity = {
     /**
      * purchase only identity
-     * @param signer
      */
-    purchase: async (signer: Signer): Promise<ContractTransaction> => {
+    purchase: async (): Promise<ContractTransaction> => {
       return this.instances.SoulStoreContract.connect(
-        signer
+        this.masaConfig.wallet
       ).purchaseIdentity();
     },
 
     /**
      * purchase identity with name
-     * @param signer
      * @param paymentMethod
      * @param name
      * @param nameLength
@@ -385,7 +372,6 @@ export class MasaContracts {
      * @param signature
      */
     purchaseIdentityAndName: async (
-      signer: Signer,
       paymentMethod: PaymentMethod,
       name: string,
       nameLength: number,
@@ -395,7 +381,6 @@ export class MasaContracts {
       signature: string
     ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
-        signer,
         paymentMethod,
         nameLength,
         duration
@@ -403,7 +388,6 @@ export class MasaContracts {
 
       await this.tools.checkOrGiveAllowance(
         paymentAddress,
-        signer,
 
         paymentMethod,
         price
@@ -439,22 +423,22 @@ export class MasaContracts {
       }
 
       // connect
-      const store = this.instances.SoulStoreContract.connect(signer);
+      const store = this.instances.SoulStoreContract.connect(
+        this.masaConfig.wallet
+      );
       // estimate gas
       const gasLimit = await store.estimateGas.purchaseIdentityAndName(
         ...purchaseIdentityAndNameParameters,
         purchaseIdentityAndNameOverrides
       );
       // execute tx
-      const tx = await store.purchaseIdentityAndName(
+      return await store.purchaseIdentityAndName(
         ...purchaseIdentityAndNameParameters,
         {
           ...purchaseIdentityAndNameOverrides,
           gasLimit,
         }
       );
-
-      return tx;
     },
   };
 
@@ -622,12 +606,10 @@ export class MasaContracts {
 
     /**
      * Gets the price for a masa green
-     * @param signer
      * @param paymentMethod
      * @param slippage
      */
     getPrice: async (
-      signer: Signer,
       paymentMethod: PaymentMethod,
       slippage: number | undefined = 250
     ): Promise<{
@@ -651,18 +633,16 @@ export class MasaContracts {
       }
 
       const formattedPrice: string = await this.tools.formatPrice(
-        signer,
         paymentAddress,
         price
       );
 
-      const gasPrice = await signer.getGasPrice();
+      const gasPrice = await this.masaConfig.wallet.getGasPrice();
       // hardcoded estimation for now
       const mintTransactionEstimatedGas = BigNumber.from(250_000);
       const mintTransactionFee = gasPrice.mul(mintTransactionEstimatedGas);
 
       const formattedMintTransactionFee: string = await this.tools.formatPrice(
-        signer,
         paymentAddress,
         mintTransactionFee
       );
@@ -734,7 +714,7 @@ export class MasaContracts {
       }
 
       const { paymentAddress, price, formattedPrice, mintTransactionFee } =
-        await this.green.getPrice(wallet, paymentMethod, slippage);
+        await this.green.getPrice(paymentMethod, slippage);
 
       if (this.masaConfig.verbose) {
         console.log({
@@ -768,11 +748,9 @@ export class MasaContracts {
 
     /**
      * Signs a masa green
-     * @param wallet
      * @param receiver
      */
     sign: async (
-      wallet: Wallet,
       receiver: string
     ): Promise<
       | {
@@ -784,7 +762,7 @@ export class MasaContracts {
     > => {
       const signatureDate = Math.floor(Date.now() / 1000);
 
-      const authorityAddress = await wallet.getAddress();
+      const authorityAddress = await this.masaConfig.wallet.getAddress();
       const value: {
         to: string;
         authorityAddress: string;
@@ -797,7 +775,7 @@ export class MasaContracts {
 
       const { signature, domain } = await signTypedData(
         this.instances.SoulboundGreenContract,
-        wallet,
+        this.masaConfig.wallet as Wallet,
         "SoulboundGreen",
         this.green.types,
         value

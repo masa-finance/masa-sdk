@@ -1,9 +1,9 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
-import { Messages } from "../utils/messages";
+import { Messages } from "../utils";
 
 export const purchaseIdentity = async (masa: Masa) => {
-  const tx = await masa.contracts.identity.purchase(masa.config.wallet);
+  const tx = await masa.contracts.identity.purchase();
   console.log(Messages.WaitingToFinalize(tx.hash));
 
   const result = await tx.wait();
@@ -29,7 +29,6 @@ export const purchaseIdentityWithSoulName = async (
       console.log(`Identity Metadata URL: '${metadataUrl}'`);
 
       const tx = await masa.contracts.identity.purchaseIdentityAndName(
-        masa.config.wallet,
         paymentMethod,
         soulName,
         soulNameLength,

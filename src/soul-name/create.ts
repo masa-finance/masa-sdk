@@ -13,7 +13,6 @@ export const getRegistrationPrice = async (
   const { length } = masa.soulName.validate(soulName);
 
   const { price, formattedPrice } = await masa.contracts.soulName.getPrice(
-    masa.config.wallet,
     paymentMethod,
     length,
     duration
@@ -43,7 +42,6 @@ const purchaseSoulName = async (
       console.log(`Soul Name Metadata URL: '${metadataUrl}'`);
 
       const tx = await masa.contracts.soulName.purchase(
-        masa.config.wallet,
         paymentMethod,
         soulName,
         soulNameLength,

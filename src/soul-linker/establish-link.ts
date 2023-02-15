@@ -1,6 +1,6 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
-import { BigNumber, Contract, Signer } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { parsePassport } from "./passport";
 import { Messages } from "../utils";
@@ -73,7 +73,6 @@ export const establishLink = async (
   console.log(`to Identity ${identityId.toString()} (${address})\n`);
 
   await masa.contracts.soulLinker.addLink(
-    masa.config.wallet as Signer,
     contract.address,
     paymentMethod,
     readerIdentityId,
