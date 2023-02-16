@@ -36,6 +36,7 @@
   "license": "MIT",
   "dependencies": {
     "@masa-finance/masa-contracts-identity": "^1.2.1",
+    "@masa-finance/masa-token": "^1.0.0",
     "arweave": "~1.12.6",
     "axios": "^1.3.2",
     "ethers": "~5.7.2",
