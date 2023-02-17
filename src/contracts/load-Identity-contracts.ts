@@ -17,7 +17,7 @@ export interface LoadContractArgs {
 
 export const loadIdentityContracts = ({
   provider,
-  network = "goerli",
+  network = "ethereum",
 }: LoadContractArgs): IIdentityContracts => {
   if (!addresses[network]) {
     throw new Error(`Network ${network} not supported!`);

@@ -60,7 +60,7 @@ export const environments: Environment[] = [
     name: "production",
     environment: "production",
     apiUrl: "https://middleware.masa.finance/",
-    defaultNetwork: "mainnet",
+    defaultNetwork: "ethereum",
     arweave: {
       host: "arweave.net",
       port: 443,

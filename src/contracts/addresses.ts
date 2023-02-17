@@ -3,6 +3,7 @@ import {
   bsc,
   bsctest,
   celo,
+  ethereum,
   goerli,
   mainnet,
   mumbai,
@@ -24,7 +25,9 @@ export interface Addresses {
 
 export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // eth
+  ethereum,
   goerli,
+  // deprecated
   mainnet,
   // bsc
   bsc,

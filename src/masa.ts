@@ -32,8 +32,8 @@ export default class Masa {
     cookie,
     wallet,
     apiUrl = "https://dev.middleware.masa.finance",
-    environment = "dev",
-    defaultNetwork = "goerli",
+    environment = "production",
+    defaultNetwork = "ethereum",
     arweave = {
       host: "arweave.net",
       port: 443,

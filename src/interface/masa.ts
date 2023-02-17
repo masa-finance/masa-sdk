@@ -5,7 +5,8 @@ export type EnvironmentName = "dev" | "test" | "beta" | "production";
 export type NetworkName =
   // eth
   | "goerli" // testnet
-  | "mainnet" // mainnet
+  | "ethereum" // mainnet
+  | "mainnet" // mainnet deprecated
   // celo
   | "alfajores" // testnet
   | "celo" // mainnet
