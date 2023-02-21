@@ -5,7 +5,7 @@ import {
   VerifyGreenResult,
 } from "../interface";
 import { PaymentMethod } from "../contracts";
-import { BigNumber, ethers, Event } from "ethers";
+import { BigNumber, Event } from "ethers";
 import { Messages } from "../utils";
 
 export const generateGreen = async (
@@ -158,7 +158,6 @@ export const mintGreen = async (
   paymentMethod: PaymentMethod = "eth"
 ): Promise<{ tokenId: BigNumber } | undefined> => {
   const tx = await masa.contracts.green.mint(
-    masa.config.wallet as ethers.Wallet,
     paymentMethod,
     await masa.config.wallet.getAddress(),
     authorityAddress,

@@ -426,11 +426,13 @@ export class MasaContracts {
       const store = this.instances.SoulStoreContract.connect(
         this.masaConfig.wallet
       );
+
       // estimate gas
       const gasLimit = await store.estimateGas.purchaseIdentityAndName(
         ...purchaseIdentityAndNameParameters,
         purchaseIdentityAndNameOverrides
       );
+
       // execute tx
       return await store.purchaseIdentityAndName(
         ...purchaseIdentityAndNameParameters,
@@ -453,7 +455,6 @@ export class MasaContracts {
 
     /**
      * purchase credit score
-     * @param wallet
      * @param paymentMethod
      * @param identityId
      * @param authorityAddress
@@ -462,7 +463,6 @@ export class MasaContracts {
      * @param slippage
      */
     mint: async (
-      wallet: Wallet,
       paymentMethod: PaymentMethod,
       identityId: BigNumber,
       authorityAddress: string,
@@ -477,7 +477,7 @@ export class MasaContracts {
       };
 
       const domain = await generateSignatureDomain(
-        wallet,
+        this.masaConfig.wallet as Wallet,
         "SoulboundCreditScore",
         this.instances.SoulboundCreditScoreContract.address
       );
@@ -534,18 +534,29 @@ export class MasaContracts {
         console.log({ creditScoreMintParameters, creditScoreMintOverrides });
       }
 
-      return await this.instances.SoulboundCreditScoreContract.connect(wallet)[
+      // connect
+      const creditScoreContract =
+        await this.instances.SoulboundCreditScoreContract.connect(
+          this.masaConfig.wallet
+        );
+
+      // estimate
+      const gasLimit = await creditScoreContract.estimateGas[
         "mint(address,uint256,address,uint256,bytes)"
       ](...creditScoreMintParameters, creditScoreMintOverrides);
+
+      // execute
+      return creditScoreContract["mint(address,uint256,address,uint256,bytes)"](
+        ...creditScoreMintParameters,
+        { ...creditScoreMintOverrides, gasLimit }
+      );
     },
 
     /**
      * Signs a credit score
-     * @param wallet
      * @param identityId
      */
     sign: async (
-      wallet: Wallet,
       identityId: BigNumber
     ): Promise<
       | {
@@ -557,7 +568,7 @@ export class MasaContracts {
     > => {
       const signatureDate = Math.floor(Date.now() / 1000);
 
-      const authorityAddress = await wallet.getAddress();
+      const authorityAddress = await this.masaConfig.wallet.getAddress();
       const value: {
         identityId: BigNumber;
         authorityAddress: string;
@@ -570,7 +581,7 @@ export class MasaContracts {
 
       const { signature, domain } = await signTypedData(
         this.instances.SoulboundCreditScoreContract,
-        wallet,
+        this.masaConfig.wallet as Wallet,
         "SoulboundCreditScore",
         this.creditScore.types,
         value
@@ -659,7 +670,6 @@ export class MasaContracts {
 
     /**
      * Purchase a masa green
-     * @param wallet
      * @param paymentMethod
      * @param receiver
      * @param authorityAddress
@@ -668,7 +678,6 @@ export class MasaContracts {
      * @param slippage
      */
     mint: async (
-      wallet: Wallet,
       paymentMethod: PaymentMethod,
       receiver: string,
       authorityAddress: string,
@@ -687,7 +696,7 @@ export class MasaContracts {
       };
 
       const domain = await generateSignatureDomain(
-        wallet,
+        this.masaConfig.wallet as Wallet,
         "SoulboundGreen",
         this.instances.SoulboundGreenContract.address
       );
@@ -727,7 +736,7 @@ export class MasaContracts {
 
       const greenMintParameters: [string, string, string, number, string] = [
         paymentAddress,
-        await wallet.getAddress(),
+        await this.masaConfig.wallet.getAddress(),
         authorityAddress,
         signatureDate,
         signature,
@@ -741,9 +750,21 @@ export class MasaContracts {
         console.log({ greenMintParameters, greenMintOverrides });
       }
 
-      return await this.instances.SoulboundGreenContract.connect(wallet)[
+      // connect
+      const contract = await this.instances.SoulboundGreenContract.connect(
+        this.masaConfig.wallet
+      );
+
+      // estimate gas
+      const gasLimit = contract.estimateGas[
         "mint(address,address,address,uint256,bytes)"
       ](...greenMintParameters, greenMintOverrides);
+
+      // execute
+      return contract["mint(address,address,address,uint256,bytes)"](
+        ...greenMintParameters,
+        { ...greenMintOverrides, gasLimit }
+      );
     },
 
     /**

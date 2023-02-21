@@ -1,7 +1,6 @@
 import Masa from "../masa";
 import { GenerateCreditScoreResult } from "../interface";
 import { PaymentMethod } from "../contracts";
-import { ethers } from "ethers";
 import { Messages } from "../utils";
 
 export const createCreditScore = async (
@@ -41,7 +40,6 @@ export const createCreditScore = async (
     ) {
       try {
         const tx = await masa.contracts.creditScore.mint(
-          masa.config.wallet as ethers.Wallet,
           paymentMethod,
           identityId,
           creditScoreResponse.authorityAddress,
