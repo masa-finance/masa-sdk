@@ -15,7 +15,9 @@ export type NetworkName =
   | "polygon" // mainnet
   // BSC
   | "bsctest" // testnet
-  | "bsc"; // mainnet
+  | "bsc" // mainnet
+  // fallback for unknown networks
+  | "unknown";
 
 export interface MasaArgs {
   cookie?: string;
