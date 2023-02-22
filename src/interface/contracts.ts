@@ -1,6 +1,6 @@
 import {
-  SoulboundGreen,
   SoulboundCreditScore,
+  SoulboundGreen,
   SoulboundIdentity,
   SoulLinker,
   SoulName,

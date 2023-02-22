@@ -1,28 +1,36 @@
-import { BigNumber, BytesLike, Contract, ethers, TypedDataField } from "ethers";
+import {
+  BigNumber,
+  BytesLike,
+  Contract,
+  Signer,
+  TypedDataField,
+  utils,
+  Wallet,
+} from "ethers";
 
-const hashData = (data: BytesLike) => ethers.utils.keccak256(data);
+const hashData = (data: BytesLike) => utils.keccak256(data);
 
 export const signMessage = async (
   msg: string,
-  wallet: ethers.Signer | ethers.Wallet,
+  wallet: Signer | Wallet,
   doHash: boolean = false
 ): Promise<string | undefined> => {
-  let sig;
+  let signature;
 
   try {
-    const d = ethers.utils.toUtf8Bytes(msg);
-    const hash = doHash ? hashData(d) : d;
-    sig = await wallet.signMessage(ethers.utils.arrayify(hash));
-  } catch (err) {
-    console.error("Sign message failed!", err);
+    const data = utils.toUtf8Bytes(msg);
+    const hash = doHash ? hashData(data) : data;
+    signature = await wallet.signMessage(utils.arrayify(hash));
+  } catch (error) {
+    console.error("Sign message failed!", error);
   }
 
-  return sig;
+  return signature;
 };
 
 export const signTypedData = async (
   contract: Contract,
-  wallet: ethers.Wallet,
+  wallet: Wallet,
   name: string,
   types: Record<string, Array<TypedDataField>>,
   value: Record<string, string | BigNumber | number>
@@ -34,7 +42,7 @@ export const signTypedData = async (
 };
 
 export const generateSignatureDomain = async (
-  wallet: ethers.Wallet,
+  wallet: Wallet,
   name: string,
   verifyingContract: string
 ) => {
@@ -58,12 +66,10 @@ export const recoverAddress = (
   let recovered;
 
   try {
-    const d = ethers.utils.toUtf8Bytes(msg);
-    const hash = doHash ? hashData(d) : d;
-    recovered = ethers.utils.recoverAddress(
-      ethers.utils.arrayify(
-        ethers.utils.hashMessage(ethers.utils.arrayify(hash))
-      ),
+    const data = utils.toUtf8Bytes(msg);
+    const hash = doHash ? hashData(data) : data;
+    recovered = utils.recoverAddress(
+      utils.arrayify(utils.hashMessage(utils.arrayify(hash))),
       signature
     );
   } catch (err) {

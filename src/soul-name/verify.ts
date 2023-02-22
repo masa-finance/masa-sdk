@@ -1,5 +1,5 @@
 import Masa from "../masa";
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import { loadSoulNameByName } from "./list";
 import { recoverAddress } from "../utils";
 
@@ -82,7 +82,7 @@ export const verifyByName = async (
           false
         )) as Uint8Array;
 
-        const imageHash = ethers.utils.keccak256(imageData);
+        const imageHash = utils.keccak256(imageData);
 
         // check if image data hash matches the hash from the metadata
         result.imageHashMatch =

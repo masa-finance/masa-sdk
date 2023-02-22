@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, Wallet } from "ethers";
 import Masa from "../masa";
 import { signTypedData } from "../utils";
 import { verifyTypedData } from "ethers/lib/utils";
@@ -37,7 +37,7 @@ export const signSoulLinkerLink = async (
 
   const { signature, domain } = await signTypedData(
     masa.contracts.instances.SoulLinkerContract,
-    masa.config.wallet as ethers.Wallet,
+    masa.config.wallet as Wallet,
     "SoulLinker",
     types,
     value

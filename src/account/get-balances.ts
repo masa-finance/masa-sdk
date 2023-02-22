@@ -7,7 +7,7 @@ import {
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
 import Masa from "../masa";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, constants } from "ethers";
 
 export const getBalances = async (
   masa: Masa,
@@ -39,7 +39,7 @@ export const getBalances = async (
     if (
       !masa.config.wallet.provider ||
       !tokenAddress ||
-      tokenAddress === ethers.constants.AddressZero
+      tokenAddress === constants.AddressZero
     ) {
       return result;
     }
@@ -71,7 +71,7 @@ export const getBalances = async (
     addressToLoad: string
   ) => {
     let result = BigNumber.from(0);
-    if (contract.address === ethers.constants.AddressZero) return result;
+    if (contract.address === constants.AddressZero) return result;
 
     try {
       result = await contract.balanceOf(addressToLoad);

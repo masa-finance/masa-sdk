@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, Signer, Wallet } from "ethers";
 
 export type EnvironmentName = "dev" | "test" | "beta" | "production";
 
@@ -21,7 +21,7 @@ export type NetworkName =
 
 export interface MasaArgs {
   cookie?: string;
-  wallet: ethers.Signer | ethers.Wallet;
+  wallet: Signer | Wallet;
   apiUrl?: string;
   environment?: EnvironmentName;
   defaultNetwork?: NetworkName;
@@ -38,7 +38,7 @@ export interface MasaConfig {
   apiUrl: string;
   environment: string;
   network: NetworkName;
-  wallet: ethers.Signer | ethers.Wallet;
+  wallet: Signer | Wallet;
   verbose: boolean;
 }
 

@@ -1,10 +1,10 @@
 import { MasaArgs } from "../interface";
-import { ethers } from "ethers";
+import { Signer, Wallet } from "ethers";
 
 // special type for env config that makes wallet optional
 export type Environment = {
   name: "local" | "dev" | "test" | "stage" | "production";
-  wallet?: ethers.Signer | ethers.Wallet;
+  wallet?: Signer | Wallet;
 } & MasaArgs;
 
 export const environments: Environment[] = [
