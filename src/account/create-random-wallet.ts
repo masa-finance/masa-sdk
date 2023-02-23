@@ -1,11 +1,13 @@
-import { providers, Wallet } from "ethers";
+import { Wallet } from "ethers";
+import { Provider } from "@ethersproject/providers";
 
-export const createRandomWallet = (): Wallet => {
+export const createRandomWallet = (provider?: Provider): Wallet => {
   console.info("Creating random wallet!");
   const wallet = Wallet.createRandom();
 
-  wallet.connect(
-    new providers.JsonRpcProvider("https://rpc.ankr.com/eth_goerli")
-  );
+  if (provider) {
+    wallet.connect(provider);
+  }
+
   return wallet;
 };
