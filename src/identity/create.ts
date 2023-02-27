@@ -73,8 +73,11 @@ export const createIdentityWithSoulName = async (
   let identityCreated = false;
 
   if (await masa.session.checkLogin()) {
-    if (soulName.endsWith(".soul")) {
-      soulName = soulName.replace(".soul", "");
+    const extension =
+      await masa.contracts.instances.SoulNameContract.extension();
+
+    if (soulName.endsWith(extension)) {
+      soulName = soulName.replace(extension, "");
     }
 
     const { isValid, length } = masa.soulName.validate(soulName);

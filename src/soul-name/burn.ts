@@ -34,8 +34,11 @@ export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
 
 export const burnSoulName = async (masa: Masa, soulName: string) => {
   if (await masa.session.checkLogin()) {
-    if (soulName.endsWith(".soul")) {
-      soulName = soulName.replace(".soul", "");
+    const extension =
+      await masa.contracts.instances.SoulNameContract.extension();
+
+    if (soulName.endsWith(extension)) {
+      soulName = soulName.replace(extension, "");
     }
 
     const { identityId } = await masa.identity.load();

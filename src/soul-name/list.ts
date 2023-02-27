@@ -7,6 +7,7 @@ export interface SoulNameDetails {
   tokenUri: string;
   tokenDetails: {
     sbtName: string;
+    extension: string;
     linked: boolean;
     identityId: BigNumber;
     tokenId: BigNumber;
@@ -21,7 +22,7 @@ export const loadSoulNameByTokenId = async (
   tokenId: string | BigNumber
 ): Promise<SoulNameDetails | undefined> => {
   try {
-    const [tokenDetails, owner, tokenUri] = await Promise.all([
+    const [tokenDetails, owner, tokenUri, extension] = await Promise.all([
       masa.contracts.instances.SoulNameContract.getTokenData(
         (
           await masa.contracts.instances.SoulNameContract.tokenData(tokenId)
@@ -29,6 +30,7 @@ export const loadSoulNameByTokenId = async (
       ),
       masa.contracts.instances.SoulNameContract.ownerOf(tokenId),
       masa.contracts.instances.SoulNameContract["tokenURI(uint256)"](tokenId),
+      masa.contracts.instances.SoulNameContract.extension(),
     ]);
 
     const metadata = (await masa.arweave.loadTransactionData(
@@ -38,7 +40,7 @@ export const loadSoulNameByTokenId = async (
     return {
       owner,
       tokenUri,
-      tokenDetails,
+      tokenDetails: { ...tokenDetails, extension },
       metadata,
     };
   } catch (error: unknown) {
@@ -110,8 +112,9 @@ export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
     console.log(`Token: ${index + 1}`);
   }
 
-  console.log(`Name: ${soulName.tokenDetails.sbtName}`);
   console.log(`Token ID: ${soulName.tokenDetails.tokenId.toNumber()}`);
+  console.log(`Name: ${soulName.tokenDetails.sbtName}`);
+  console.log(`Extension: ${soulName.tokenDetails.extension}`);
   console.log(`Owner Address: ${soulName.owner}`);
   console.log(
     `Owner Identity ID: ${soulName.tokenDetails.identityId.toNumber()}`
