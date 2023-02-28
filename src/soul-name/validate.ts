@@ -5,6 +5,13 @@ export const calculateSoulNameLength = (soulName: string) => {
   return new GraphemeSplitter().countGraphemes(soulName);
 };
 
+export const getSoulNameMetadataPrefix = (masa: Masa): string => {
+  // special handling for celo networks
+  return masa.config.network === "celo" || masa.config.network === "alfajores"
+    ? "https://arweave.net/"
+    : "ar://";
+};
+
 export const validateSoulName = (
   masa: Masa,
   soulName: string

@@ -21,25 +21,27 @@ export const purchaseIdentityWithSoulName = async (
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
 
-    const storeMetadataData = await masa.client.soulName.store(
+    const storedSoulNameMetadata = await masa.client.soulName.store(
       `${soulName}${extension}`,
       await masa.config.wallet.getAddress(),
       duration,
       masa.config.network
     );
 
-    if (storeMetadataData) {
-      const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
-      console.log(`Identity Metadata URL: '${metadataUrl}'`);
+    if (storedSoulNameMetadata) {
+      const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
+        storedSoulNameMetadata.metadataTransaction.id
+      }`;
+      console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
       const tx = await masa.contracts.identity.purchaseIdentityAndName(
         paymentMethod,
         soulName,
         soulNameLength,
         duration,
-        metadataUrl,
-        storeMetadataData.authorityAddress,
-        storeMetadataData.signature
+        soulNameMetadataUrl,
+        storedSoulNameMetadata.authorityAddress,
+        storedSoulNameMetadata.signature
       );
 
       console.log(Messages.WaitingToFinalize(tx.hash));

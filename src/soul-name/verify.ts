@@ -1,6 +1,5 @@
 import Masa from "../masa";
 import { utils } from "ethers";
-import { loadSoulNameByName } from "./list";
 import { recoverAddress } from "../utils";
 
 const minters = [
@@ -36,20 +35,23 @@ export const verifyByName = async (
     metadataOwnerIsMasaAccount: false,
   };
 
-  const soulNameInstance = await loadSoulNameByName(masa, soulName);
+  const soulNameInstance = await masa.soulName.loadSoulNameByName(soulName);
 
   if (soulNameInstance) {
-    // check if name matches onchain and in the metadata
+    // check if name matches on-chain and in the metadata
     result.nameMatch =
       soulNameInstance.tokenDetails.sbtName === soulNameInstance.metadata?.name;
 
     // check if metadata was deployed to arweave by masa
-    const metadataTxId = soulNameInstance.tokenUri.replace("ar://", "");
+    const soulNameMetadataTxId = soulNameInstance.tokenUri.replace(
+      masa.soulName.getSoulNameMetadataPrefix(),
+      ""
+    );
 
-    if (metadataTxId) {
+    if (soulNameMetadataTxId) {
       try {
         const metadataTxData = await masa.arweave.transactions.get(
-          metadataTxId
+          soulNameMetadataTxId
         );
         const metadataOwner = await masa.arweave.wallets.ownerToAddress(
           metadataTxData.owner
@@ -57,11 +59,17 @@ export const verifyByName = async (
         result.metadataOwnerIsMasaAccount =
           !!metadataOwner && arAccounts.indexOf(metadataOwner) > -1;
       } catch {
-        console.error("Failed to load metadata transaction!", metadataTxId);
+        console.error(
+          "Failed to load metadata transaction!",
+          soulNameMetadataTxId
+        );
       }
     }
 
-    const imageTxId = soulNameInstance.metadata?.image?.replace("ar://", "");
+    const imageTxId = soulNameInstance.metadata?.image?.replace(
+      masa.soulName.getSoulNameMetadataPrefix(),
+      ""
+    );
 
     if (imageTxId) {
       try {

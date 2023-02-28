@@ -42,15 +42,17 @@ const purchaseSoulName = async (
     );
 
     if (storeMetadataData) {
-      const metadataUrl = `ar://${storeMetadataData.metadataTransaction.id}`;
-      console.log(`Soul Name Metadata URL: '${metadataUrl}'`);
+      const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
+        storeMetadataData.metadataTransaction.id
+      }`;
+      console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
       const tx = await masa.contracts.soulName.purchase(
         paymentMethod,
         soulName,
         soulNameLength,
         duration,
-        metadataUrl,
+        soulNameMetadataUrl,
         storeMetadataData.authorityAddress,
         storeMetadataData.signature
       );

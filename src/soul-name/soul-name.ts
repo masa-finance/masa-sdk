@@ -10,7 +10,7 @@ import {
 } from "./list";
 import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
-import { validateSoulName } from "./validate";
+import { getSoulNameMetadataPrefix, validateSoulName } from "./validate";
 import { MasaBase } from "../helpers/masa-base";
 import Masa from "../masa";
 
@@ -38,4 +38,5 @@ export class MasaSoulName extends MasaBase {
     sendSoulName(this.masa, soulName, receiver);
   verify = (soulName: string) => verifyByName(this.masa, soulName);
   validate = (soulName: string) => validateSoulName(this.masa, soulName);
+  getSoulNameMetadataPrefix = () => getSoulNameMetadataPrefix(this.masa);
 }
