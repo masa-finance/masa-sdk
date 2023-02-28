@@ -7,14 +7,17 @@ import { verifyLink } from "./verify-link";
 import { listLinks } from "./list-links";
 import { breakLink } from "./break-link";
 import { queryLinkFromPassport } from "./query-link";
+import { MasaBase } from "../helpers/masa-base";
 
 export * from "./create-link";
 export * from "./establish-link";
 export * from "./verify-link";
 export * from "./list-links";
 
-export class MasaSoulLinker {
-  constructor(private masa: Masa, private contract: Contract) {}
+export class MasaSoulLinker extends MasaBase {
+  constructor(masa: Masa, private contract: Contract) {
+    super(masa);
+  }
 
   create = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
     createLink(this.masa, this.contract, tokenId, readerIdentityId);

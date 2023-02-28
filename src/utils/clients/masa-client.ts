@@ -8,6 +8,7 @@ import {
   IIdentity,
   ISession,
   LogoutResult,
+  NetworkName,
   SoulNameMetadataStoreResult,
   UpdateCreditScoreResult,
   User,
@@ -184,11 +185,13 @@ export class MasaClient {
      * @param soulName
      * @param receiver
      * @param duration
+     * @param network
      */
     store: async (
       soulName: string,
       receiver: string,
-      duration: number
+      duration: number,
+      network: NetworkName
     ): Promise<SoulNameMetadataStoreResult | undefined> => {
       console.log(`Writing metadata for '${soulName}.soul'`);
 
@@ -199,6 +202,7 @@ export class MasaClient {
             soulName: `${soulName}.soul`,
             receiver,
             duration,
+            network,
           },
           {
             headers: {

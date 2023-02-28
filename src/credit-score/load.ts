@@ -20,7 +20,7 @@ export const loadCreditScoreByTokenId = async (
 
   console.log(`Credit Score Metadata URL: '${tokenUri}'`);
   const metadata: ICreditScore | undefined = <ICreditScore | undefined>(
-    await masa.metadata.retrieve(tokenUri)
+    await masa.client.metadata.get(tokenUri)
   );
 
   return {

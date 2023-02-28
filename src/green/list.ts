@@ -12,7 +12,7 @@ export const loadGreenIds = async (masa: Masa, greenIds: BigNumber[]) => {
       );
 
       const metadata = <IGreen | undefined>(
-        await masa.metadata.retrieve(tokenUri)
+        await masa.client.metadata.get(tokenUri)
       );
 
       return {

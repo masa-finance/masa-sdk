@@ -66,13 +66,6 @@ export default class Masa {
     this.green = new MasaGreen(this);
   }
 
-  metadata = {
-    store: (soulName: string, receiver: string, duration: number) =>
-      this.client.soulName.store(soulName, receiver, duration),
-    retrieve: (url: string, additionalHeaders?: Record<string, string>) =>
-      this.client.metadata.get(url, additionalHeaders),
-  };
-
   utils = {
     version,
   };

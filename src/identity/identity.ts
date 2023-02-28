@@ -5,11 +5,14 @@ import { burnIdentity } from "./burn";
 import { showIdentity } from "./show";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
+import { MasaBase } from "../helpers/masa-base";
 
-export class MasaIdentity {
+export class MasaIdentity extends MasaBase {
   public readonly links: MasaSoulLinker;
 
-  constructor(private masa: Masa) {
+  constructor(masa: Masa) {
+    super(masa);
+
     this.links = new MasaSoulLinker(
       this.masa,
       this.masa.contracts.instances.SoulboundIdentityContract

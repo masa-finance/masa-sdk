@@ -31,10 +31,11 @@ const purchaseSoulName = async (
   paymentMethod: PaymentMethod
 ): Promise<{ tokenId: string; soulName: string } | undefined> => {
   if (await masa.contracts.soulName.isAvailable(soulName)) {
-    const storeMetadataData = await masa.metadata.store(
+    const storeMetadataData = await masa.client.soulName.store(
       soulName,
       await masa.config.wallet.getAddress(),
-      duration
+      duration,
+      masa.config.network
     );
 
     if (storeMetadataData) {

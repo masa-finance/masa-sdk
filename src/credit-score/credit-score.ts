@@ -4,13 +4,16 @@ import { listCreditScores, loadCreditScoreByTokenId } from "./load";
 import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
+import { MasaBase } from "../helpers/masa-base";
 
-export class MasaCreditScore {
+export class MasaCreditScore extends MasaBase {
   public readonly links: MasaSoulLinker;
 
-  constructor(private masa: Masa) {
+  constructor(masa: Masa) {
+    super(masa);
+
     this.links = new MasaSoulLinker(
-      this.masa,
+      masa,
       this.masa.contracts.instances.SoulboundCreditScoreContract
     );
   }

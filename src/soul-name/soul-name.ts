@@ -11,10 +11,13 @@ import {
 import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
 import { validateSoulName } from "./validate";
+import { MasaBase } from "../helpers/masa-base";
 import Masa from "../masa";
 
-export class MasaSoulName {
-  constructor(private masa: Masa) {}
+export class MasaSoulName extends MasaBase {
+  constructor(masa: Masa) {
+    super(masa);
+  }
 
   getRegistrationPrice = (
     soulName: string,

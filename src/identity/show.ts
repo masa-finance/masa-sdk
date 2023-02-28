@@ -20,7 +20,7 @@ export const loadIdentityDetails = async (
   );
 
   const metadata: IIdentity | undefined = <IIdentity | undefined>(
-    await masa.metadata.retrieve(tokenUri)
+    await masa.client.metadata.get(tokenUri)
   );
 
   return {
