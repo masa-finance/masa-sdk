@@ -193,13 +193,13 @@ export class MasaClient {
       duration: number,
       network: NetworkName
     ): Promise<SoulNameMetadataStoreResult | undefined> => {
-      console.log(`Writing metadata for '${soulName}.soul'`);
+      console.log(`Writing metadata for '${soulName}'`);
 
       const storeMetadataResponse = await this._middlewareClient
         .post<SoulNameMetadataStoreResult>(
           `/storage/store`,
           {
-            soulName: `${soulName}.soul`,
+            soulName,
             receiver,
             duration,
             network,

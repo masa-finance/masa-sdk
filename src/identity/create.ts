@@ -18,8 +18,11 @@ export const purchaseIdentityWithSoulName = async (
   paymentMethod: PaymentMethod
 ) => {
   if (await masa.contracts.soulName.isAvailable(soulName)) {
+    const extension =
+      await masa.contracts.instances.SoulNameContract.extension();
+
     const storeMetadataData = await masa.client.soulName.store(
-      soulName,
+      `${soulName}${extension}`,
       await masa.config.wallet.getAddress(),
       duration,
       masa.config.network
