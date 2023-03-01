@@ -35,21 +35,21 @@ export const login = async (
       console.log(`Signature: '${signature}'`);
 
       if (signature) {
-        const checkSignatureData = await masa.client.session.checkSignature(
+        const checkSignatureResponse = await masa.client.session.checkSignature(
           address,
           signature,
           challengeData.cookie
         );
 
-        if (checkSignatureData) {
+        if (checkSignatureResponse) {
           console.log("\nLogged in as:");
           console.log(`Address: '${address}'`);
-          console.log(`User ID: '${checkSignatureData.id}'`);
+          console.log(`User ID: '${checkSignatureResponse.userId}'`);
           console.log(`Session ID: '${unpackSessionId(challengeData.cookie)}'`);
 
           return {
             address,
-            userId: checkSignatureData.id,
+            userId: checkSignatureResponse.userId,
             cookie: challengeData.cookie,
           };
         }

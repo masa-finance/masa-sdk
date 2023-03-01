@@ -42,6 +42,11 @@ export interface User {
   dataFarmingAllowed?: boolean;
 }
 
+export interface SessionUser {
+  userId: string;
+  address: string;
+}
+
 export interface GetChallengeResult {
   challenge: string;
   expires: string;

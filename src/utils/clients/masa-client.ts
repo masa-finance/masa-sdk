@@ -9,9 +9,9 @@ import {
   ISession,
   LogoutResult,
   NetworkName,
+  SessionUser,
   SoulNameMetadataStoreResult,
   UpdateCreditScoreResult,
-  User,
   VerifyGreenResult,
 } from "../../interface";
 
@@ -69,11 +69,11 @@ export class MasaClient {
       address: string,
       signature: string,
       cookie?: string
-    ): Promise<User | undefined> => {
+    ): Promise<SessionUser | undefined> => {
       const cookieToUse = cookie || this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
-        .post<User>(
+        .post<SessionUser>(
           `/session/check-signature`,
           {
             address,
