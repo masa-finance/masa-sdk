@@ -2,23 +2,23 @@ import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { BigNumber, Contract } from "ethers";
 import { BaseResult, IPassport } from "../interface";
-import { parsePassport } from "./passport";
+import { parsePassport } from "./parse-passport";
 import { Messages } from "../utils";
 
 export type EstablishLinkResult = BaseResult;
 
 export const establishLinkFromPassport = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   contract: Contract,
-  passport: string,
-  paymentMethod: PaymentMethod
+  passport: string
 ) => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
   return establishLink(
     masa,
-    contract,
     paymentMethod,
+    contract,
     BigNumber.from(unpackedPassport.tokenId),
     BigNumber.from(unpackedPassport.readerIdentityId),
     unpackedPassport.signature,
@@ -29,8 +29,8 @@ export const establishLinkFromPassport = async (
 
 export const establishLink = async (
   masa: Masa,
-  contract: Contract,
   paymentMethod: PaymentMethod,
+  contract: Contract,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
   signature: string,

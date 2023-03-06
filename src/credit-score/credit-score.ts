@@ -5,6 +5,7 @@ import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
+import { PaymentMethod } from "../contracts";
 
 export class MasaCreditScore extends MasaBase {
   public readonly links: MasaSoulLinker;
@@ -18,7 +19,8 @@ export class MasaCreditScore extends MasaBase {
     );
   }
 
-  create = () => createCreditScore(this.masa);
+  create = (paymentMethod: PaymentMethod = "eth") =>
+    createCreditScore(this.masa, paymentMethod);
   burn = (creditScoreId: BigNumber) =>
     burnCreditScore(this.masa, creditScoreId);
   list = (address?: string) => listCreditScores(this.masa, address);

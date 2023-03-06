@@ -20,10 +20,10 @@ export class MasaSoulName extends MasaBase {
   }
 
   getRegistrationPrice = (
+    paymentMethod: PaymentMethod = "eth",
     soulName: string,
-    duration: number,
-    paymentMethod: PaymentMethod
-  ) => getRegistrationPrice(this.masa, soulName, duration, paymentMethod);
+    duration: number
+  ) => getRegistrationPrice(this.masa, paymentMethod, soulName, duration);
   list = (address?: string) => listSoulNames(this.masa, address);
   loadSoulNamesByIdentityId = (identityId: BigNumber) =>
     loadSoulNamesByIdentityId(this.masa, identityId);
@@ -31,8 +31,12 @@ export class MasaSoulName extends MasaBase {
     loadSoulNameByName(this.masa, soulName);
   loadSoulNameByTokenId = (tokenId: string | BigNumber) =>
     loadSoulNameByTokenId(this.masa, tokenId);
-  create = (soulName: string, duration: number, paymentMethod: PaymentMethod) =>
-    createSoulName(this.masa, soulName, duration, paymentMethod);
+  create = (
+    paymentMethod: PaymentMethod = "eth",
+    soulName: string,
+    duration: number,
+    receiver?: string
+  ) => createSoulName(this.masa, paymentMethod, soulName, duration, receiver);
   burn = (soulName: string) => burnSoulName(this.masa, soulName);
   send = (soulName: string, receiver: string) =>
     sendSoulName(this.masa, soulName, receiver);

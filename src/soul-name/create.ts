@@ -6,9 +6,9 @@ import { Event } from "ethers";
 
 export const getRegistrationPrice = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   soulName: string,
-  duration: number,
-  paymentMethod: PaymentMethod
+  duration: number
 ) => {
   const { length } = masa.soulName.validate(soulName);
 
@@ -25,18 +25,21 @@ export const getRegistrationPrice = async (
 
 const purchaseSoulName = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   soulName: string,
   soulNameLength: number,
   duration: number,
-  paymentMethod: PaymentMethod
+  receiver?: string
 ): Promise<{ tokenId: string; soulName: string } | undefined> => {
   if (await masa.contracts.soulName.isAvailable(soulName)) {
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
 
+    receiver = receiver || (await masa.config.wallet.getAddress());
+
     const storeMetadataData = await masa.client.soulName.store(
       `${soulName}${extension}`,
-      await masa.config.wallet.getAddress(),
+      receiver,
       duration,
       masa.config.network
     );
@@ -54,7 +57,8 @@ const purchaseSoulName = async (
         duration,
         soulNameMetadataUrl,
         storeMetadataData.authorityAddress,
-        storeMetadataData.signature
+        storeMetadataData.signature,
+        receiver
       );
 
       console.log(Messages.WaitingToFinalize(tx.hash));
@@ -82,9 +86,10 @@ const purchaseSoulName = async (
 
 export const createSoulName = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   soulName: string,
   duration: number,
-  paymentMethod: PaymentMethod
+  receiver?: string
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -112,10 +117,11 @@ export const createSoulName = async (
 
     const soulNameInstance = await purchaseSoulName(
       masa,
+      paymentMethod,
       soulName,
       length,
       duration,
-      paymentMethod
+      receiver
     );
 
     if (soulNameInstance) {

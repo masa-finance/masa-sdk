@@ -72,9 +72,9 @@ export const createIdentity = async (masa: Masa): Promise<boolean> => {
 
 export const createIdentityWithSoulName = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   soulName: string,
-  duration: number,
-  paymentMethod: PaymentMethod
+  duration: number
 ): Promise<boolean> => {
   let identityCreated = false;
 

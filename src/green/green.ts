@@ -5,6 +5,7 @@ import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
+import { PaymentMethod } from "../contracts";
 
 export class MasaGreen extends MasaBase {
   public readonly links: MasaSoulLinker;
@@ -34,20 +35,36 @@ export class MasaGreen extends MasaBase {
 
   /**
    * Mints a green based on the previously made verification result
+   * @param paymentMethod
    * @param authorityAddress
    * @param signatureDate
    * @param signature
    */
-  mint = (authorityAddress: string, signatureDate: number, signature: string) =>
-    mintGreen(this.masa, authorityAddress, signatureDate, signature);
+  mint = (
+    paymentMethod: PaymentMethod = "eth",
+    authorityAddress: string,
+    signatureDate: number,
+    signature: string
+  ) =>
+    mintGreen(
+      this.masa,
+      paymentMethod,
+      authorityAddress,
+      signatureDate,
+      signature
+    );
 
   /**
    * Does the verification and mint step in one go
+   * @param paymentMethod
    * @param phoneNumber
    * @param code
    */
-  create = (phoneNumber: string, code: string) =>
-    createGreen(this.masa, phoneNumber, code);
+  create = (
+    paymentMethod: PaymentMethod = "eth",
+    phoneNumber: string,
+    code: string
+  ) => createGreen(this.masa, paymentMethod, phoneNumber, code);
 
   /**
    * Burns a green

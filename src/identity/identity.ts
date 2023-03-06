@@ -21,10 +21,10 @@ export class MasaIdentity extends MasaBase {
 
   create = () => createIdentity(this.masa);
   createWithSoulName = (
+    paymentMethod: PaymentMethod,
     soulName: string,
-    duration: number,
-    paymentMethod: PaymentMethod
-  ) => createIdentityWithSoulName(this.masa, soulName, duration, paymentMethod);
+    duration: number
+  ) => createIdentityWithSoulName(this.masa, paymentMethod, soulName, duration);
   load = (address?: string) => loadIdentityByAddress(this.masa, address);
   burn = () => burnIdentity(this.masa);
   show = (address?: string) => showIdentity(this.masa, address);

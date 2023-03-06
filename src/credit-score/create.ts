@@ -5,7 +5,7 @@ import { Messages } from "../utils";
 
 export const createCreditScore = async (
   masa: Masa,
-  paymentMethod: PaymentMethod = "eth"
+  paymentMethod: PaymentMethod
 ): Promise<GenerateCreditScoreResult | undefined> => {
   const result: GenerateCreditScoreResult = {
     success: false,

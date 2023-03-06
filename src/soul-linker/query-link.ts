@@ -2,7 +2,7 @@ import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { BigNumber, Contract } from "ethers";
 import { BaseResult, IPassport } from "../interface";
-import { parsePassport } from "./passport";
+import { parsePassport } from "./parse-passport";
 import { patchMetadataUrl } from "../helpers";
 import { Messages } from "../utils";
 
@@ -10,9 +10,9 @@ export type QueryLinkResult = BaseResult;
 
 export const queryLinkFromPassport = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   contract: Contract,
-  passport: string,
-  paymentMethod: PaymentMethod
+  passport: string
 ) => {
   const unpackedPassport: IPassport = parsePassport(passport);
 

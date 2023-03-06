@@ -226,6 +226,7 @@ export class MasaContracts {
      * @param metadataURL
      * @param authorityAddress
      * @param signature
+     * @param receiver
      */
     purchase: async (
       paymentMethod: PaymentMethod,
@@ -234,7 +235,8 @@ export class MasaContracts {
       duration: number = 1,
       metadataURL: string,
       authorityAddress: string,
-      signature: string
+      signature: string,
+      receiver?: string
     ): Promise<ContractTransaction> => {
       const { price, paymentAddress } = await this.soulName.getPrice(
         paymentMethod,
@@ -260,7 +262,7 @@ export class MasaContracts {
         BytesLike // signature: PromiseOrValue<BytesLike>
       ] = [
         paymentAddress,
-        await this.masaConfig.wallet.getAddress(),
+        receiver || (await this.masaConfig.wallet.getAddress()),
         name,
         nameLength,
         duration,

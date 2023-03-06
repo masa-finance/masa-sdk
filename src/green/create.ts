@@ -101,6 +101,7 @@ export const verifyGreen = async (
 
 export const createGreen = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   phoneNumber: string,
   code: string
 ): Promise<VerifyGreenResult> => {
@@ -128,6 +129,7 @@ export const createGreen = async (
       // mint
       const mintGreenResult = await mintGreen(
         masa,
+        paymentMethod,
         verifyGreenResult.authorityAddress,
         verifyGreenResult.signatureDate,
         verifyGreenResult.signature
@@ -152,10 +154,10 @@ export const createGreen = async (
 
 export const mintGreen = async (
   masa: Masa,
+  paymentMethod: PaymentMethod,
   authorityAddress: string,
   signatureDate: number,
-  signature: string,
-  paymentMethod: PaymentMethod = "eth"
+  signature: string
 ): Promise<{ tokenId: BigNumber } | undefined> => {
   const tx = await masa.contracts.green.mint(
     paymentMethod,
