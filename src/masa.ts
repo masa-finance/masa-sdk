@@ -31,7 +31,7 @@ export default class Masa {
   public constructor({
     cookie,
     wallet,
-    apiUrl = "https://dev.middleware.masa.finance",
+    apiUrl = "https://middleware.masa.finance",
     environment = "production",
     defaultNetwork = "ethereum",
     arweave = {
