@@ -1,8 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { IERC20, IERC20__factory } from "@masa-finance/masa-contracts-identity";
 import {
-  BigNumberish,
-  BytesLike,
   constants,
   ContractReceipt,
   ContractTransaction,
@@ -111,9 +109,62 @@ export class MasaContracts {
 
       return utils.formatUnits(price, decimals);
     },
+
+    /**
+     * adds a percentage to the price as slippage
+     * @param price
+     * @param slippage
+     */
+    addSlippage: (price: BigNumber, slippage: number) => {
+      price = price.add(price.mul(slippage).div(10000));
+      return price;
+    },
   };
 
   soulLinker = {
+    types: {
+      Link: [
+        { name: "readerIdentityId", type: "uint256" },
+        { name: "ownerIdentityId", type: "uint256" },
+        { name: "token", type: "address" },
+        { name: "tokenId", type: "uint256" },
+        { name: "signatureDate", type: "uint256" },
+        { name: "expirationDate", type: "uint256" },
+      ],
+    },
+
+    /**
+     * Gets price for establishing a link
+     * @param tokenAddress
+     * @param paymentMethod
+     * @param slippage
+     */
+    getPrice: async (
+      tokenAddress: string,
+      paymentMethod: PaymentMethod,
+      slippage: number | undefined = 250
+    ) => {
+      const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
+      let price = await this.instances.SoulLinkerContract.getPriceForAddLink(
+        paymentAddress,
+        tokenAddress
+      );
+
+      if (slippage) {
+        if (paymentMethod === "eth") {
+          price = this.tools.addSlippage(price, slippage);
+        }
+      }
+
+      if (this.masaConfig.verbose) {
+        console.info({ paymentAddress, price });
+      }
+
+      return {
+        price,
+        paymentAddress,
+      };
+    },
     /**
      * Adds a link to the soullinker
      * @param tokenAddress
@@ -137,23 +188,15 @@ export class MasaContracts {
       signature: string,
       slippage: number | undefined = 250
     ): Promise<boolean> => {
-      const paymentMethodUsed = this.tools.getPaymentAddress(paymentMethod);
-      let price = await this.instances.SoulLinkerContract.getPriceForAddLink(
-        paymentMethodUsed,
-        tokenAddress
+      const { price, paymentAddress } = await this.soulLinker.getPrice(
+        tokenAddress,
+        paymentMethod,
+        slippage
       );
-
-      if (slippage) {
-        if (paymentMethod === "eth") {
-          price = price.add(price.mul(slippage).div(10000));
-        }
-      }
-
-      console.log({ paymentMethodUsed, price });
 
       if (paymentMethod !== "eth") {
         const paymentToken: IERC20 = IERC20__factory.connect(
-          paymentMethodUsed,
+          paymentAddress,
           this.masaConfig.wallet
         );
 
@@ -170,39 +213,99 @@ export class MasaContracts {
         }
       }
 
-      const response = await this.instances.SoulLinkerContract.connect(
-        this.masaConfig.wallet
-      ).addLink(
-        paymentMethodUsed,
-        readerIdentityId,
-        ownerIdentityId,
-        tokenAddress,
-        tokenId,
-        signatureDate,
-        expirationDate,
-        signature,
-        paymentMethod === "eth" ? { value: price } : undefined
-      );
+      const addLinkTransactionResponse =
+        await this.instances.SoulLinkerContract.connect(
+          this.masaConfig.wallet
+        ).addLink(
+          paymentAddress,
+          readerIdentityId,
+          ownerIdentityId,
+          tokenAddress,
+          tokenId,
+          signatureDate,
+          expirationDate,
+          signature,
+          paymentMethod === "eth" ? { value: price } : undefined
+        );
 
-      const tx = await response.wait();
-      console.log(tx.transactionHash);
+      const addLinkTransactionReceipt = await addLinkTransactionResponse.wait();
+      console.log(addLinkTransactionReceipt.transactionHash);
 
       return true;
+    },
+
+    /**
+     * Signs a soul linker link
+     * @param readerIdentityId
+     * @param ownerIdentityId
+     * @param tokenAddress
+     * @param tokenId
+     * @param signatureDate
+     * @param expirationOffset
+     */
+    signLink: async (
+      readerIdentityId: BigNumber,
+      ownerIdentityId: BigNumber,
+      tokenAddress: string,
+      tokenId: BigNumber,
+      // now
+      signatureDate: number = Math.floor(Date.now() / 1000),
+      // default to 15 minutes
+      expirationOffset: number = 60 * 15
+    ) => {
+      const expirationDate = signatureDate + expirationOffset;
+
+      const value: {
+        readerIdentityId: BigNumber;
+        ownerIdentityId: BigNumber;
+        token: string;
+        tokenId: BigNumber;
+        signatureDate: number;
+        expirationDate: number;
+      } = {
+        readerIdentityId: readerIdentityId,
+        ownerIdentityId: ownerIdentityId,
+        token: tokenAddress,
+        tokenId: tokenId,
+        signatureDate: signatureDate,
+        expirationDate: expirationDate,
+      };
+
+      const { signature, domain } = await signTypedData(
+        this.instances.SoulLinkerContract,
+        this.masaConfig.wallet as Wallet,
+        "SoulLinker",
+        this.soulLinker.types,
+        value
+      );
+
+      const recover = verifyTypedData(
+        domain,
+        this.soulLinker.types,
+        value,
+        signature
+      );
+
+      if (this.masaConfig.verbose) {
+        console.log(
+          { recover },
+          { address: await this.masaConfig.wallet.getAddress() }
+        );
+      }
+
+      return { signature, signatureDate, expirationDate };
     },
   };
 
   soulName = {
-    /**
-     * Returns the soulnames of given address
-     * @param address
-     */
-    getSoulNames: async (address: string): Promise<string[]> => {
-      const soulNames = await this.instances.SoulboundIdentityContract[
-        "getSoulNames(address)"
-      ](address);
-
-      console.log("Soul names", soulNames);
-      return soulNames;
+    types: {
+      MintSoulName: [
+        { name: "to", type: "address" },
+        { name: "name", type: "string" },
+        { name: "nameLength", type: "uint256" },
+        { name: "yearsPeriod", type: "uint256" },
+        { name: "tokenURI", type: "string" },
+      ],
     },
 
     /**
@@ -238,6 +341,51 @@ export class MasaContracts {
       signature: string,
       receiver?: string
     ): Promise<ContractTransaction> => {
+      const to = receiver || (await this.masaConfig.wallet.getAddress());
+
+      const domain = await generateSignatureDomain(
+        this.masaConfig.wallet as Wallet,
+        "SoulStore",
+        this.instances.SoulStoreContract.address
+      );
+
+      const value: {
+        to: string;
+        name: string;
+        nameLength: number;
+        yearsPeriod: number;
+        tokenURI: string;
+      } = {
+        to,
+        name,
+        nameLength,
+        yearsPeriod: duration,
+        tokenURI: metadataURL,
+      };
+
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.soulName.types,
+        value,
+        signature
+      );
+
+      if (this.masaConfig.verbose) {
+        console.info({
+          recoveredAddress,
+          authorityAddress,
+          isAuthority: await this.instances.SoulStoreContract.authorities(
+            recoveredAddress
+          ),
+        });
+      }
+
+      if (recoveredAddress !== authorityAddress) {
+        const msg = "Verifying soul name failed!";
+        console.error(msg);
+        throw new Error(msg);
+      }
+
       const { price, paymentAddress } = await this.soulName.getPrice(
         paymentMethod,
         nameLength,
@@ -246,7 +394,6 @@ export class MasaContracts {
 
       await this.tools.checkOrGiveAllowance(
         paymentAddress,
-
         paymentMethod,
         price
       );
@@ -255,14 +402,14 @@ export class MasaContracts {
         string, // paymentMethod: PromiseOrValue<string>
         string, // to: PromiseOrValue<string>
         string, // name: PromiseOrValue<string>
-        BigNumberish, // nameLength: PromiseOrValue<BigNumberish>
-        BigNumberish, // yearsPeriod: PromiseOrValue<BigNumberish>
+        number, // nameLength: PromiseOrValue<BigNumberish>
+        number, // yearsPeriod: PromiseOrValue<BigNumberish>
         string, // tokenURI: PromiseOrValue<string>
         string, // authorityAddress: PromiseOrValue<string>
-        BytesLike // signature: PromiseOrValue<BytesLike>
+        string // signature: PromiseOrValue<BytesLike>
       ] = [
         paymentAddress,
-        receiver || (await this.masaConfig.wallet.getAddress()),
+        to,
         name,
         nameLength,
         duration,
@@ -280,18 +427,18 @@ export class MasaContracts {
       }
 
       // connect
-      const store = this.instances.SoulStoreContract.connect(
+      const soulStore = this.instances.SoulStoreContract.connect(
         this.masaConfig.wallet
       );
 
       // estimate gas
-      const gasLimit = await store.estimateGas.purchaseName(
+      const gasLimit = await soulStore.estimateGas.purchaseName(
         ...purchaseNameParameters,
         purchaseNameOverrides
       );
 
       // execute
-      return await store.purchaseName(...purchaseNameParameters, {
+      return await soulStore.purchaseName(...purchaseNameParameters, {
         ...purchaseNameOverrides,
         gasLimit,
       });
@@ -316,6 +463,7 @@ export class MasaContracts {
       formattedPrice: string;
     }> => {
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
+
       let price = await this.instances.SoulStoreContract.getPriceForMintingName(
         paymentAddress,
         nameLength,
@@ -324,7 +472,7 @@ export class MasaContracts {
 
       if (slippage) {
         if (paymentMethod === "eth") {
-          price = price.add(price.mul(slippage).div(10000));
+          price = this.tools.addSlippage(price, slippage);
         }
       }
 
@@ -350,6 +498,68 @@ export class MasaContracts {
       return await this.instances.SoulNameContract.nameData(
         soulName.toLowerCase()
       );
+    },
+
+    /**
+     * signs a soul name
+     * @param soulName
+     * @param soulNameLength
+     * @param duration
+     * @param metadataUrl
+     * @param receiver
+     */
+    sign: async (
+      soulName: string,
+      soulNameLength: number,
+      duration: number,
+      metadataUrl: string,
+      receiver: string
+    ): Promise<
+      | {
+          signature: string;
+          authorityAddress: string;
+        }
+      | undefined
+    > => {
+      const value: {
+        to: string;
+        name: string;
+        nameLength: number;
+        yearsPeriod: number;
+        tokenURI: string;
+      } = {
+        to: receiver,
+        name: soulName,
+        nameLength: soulNameLength,
+        yearsPeriod: duration,
+        tokenURI: metadataUrl,
+      };
+
+      const { signature, domain } = await signTypedData(
+        this.instances.SoulStoreContract,
+        this.masaConfig.wallet as Wallet,
+        "SoulStore",
+        this.soulName.types,
+        value
+      );
+
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.soulName.types,
+        value,
+        signature
+      );
+
+      const authorityAddress = await this.masaConfig.wallet.getAddress();
+      if (this.masaConfig.verbose) {
+        console.log({ recoveredAddress, authorityAddress });
+      }
+
+      if (recoveredAddress === authorityAddress) {
+        return { signature, authorityAddress };
+      } else {
+        console.error("Signing soul name failed!");
+      }
     },
   };
 
@@ -382,6 +592,49 @@ export class MasaContracts {
       authorityAddress: string,
       signature: string
     ): Promise<ContractTransaction> => {
+      const domain = await generateSignatureDomain(
+        this.masaConfig.wallet as Wallet,
+        "SoulStore",
+        this.instances.SoulStoreContract.address
+      );
+
+      const value: {
+        to: string;
+        name: string;
+        nameLength: number;
+        yearsPeriod: number;
+        tokenURI: string;
+      } = {
+        to: await this.masaConfig.wallet.getAddress(),
+        name,
+        nameLength,
+        yearsPeriod: duration,
+        tokenURI: metadataURL,
+      };
+
+      const recoveredAddress = verifyTypedData(
+        domain,
+        this.soulName.types,
+        value,
+        signature
+      );
+
+      if (this.masaConfig.verbose) {
+        console.info({
+          recoveredAddress,
+          authorityAddress,
+          isAuthority: await this.instances.SoulStoreContract.authorities(
+            recoveredAddress
+          ),
+        });
+      }
+
+      if (recoveredAddress !== authorityAddress) {
+        const msg = "Verifying soul name failed!";
+        console.error(msg);
+        throw new Error(msg);
+      }
+
       const { price, paymentAddress } = await this.soulName.getPrice(
         paymentMethod,
         nameLength,
@@ -390,7 +643,6 @@ export class MasaContracts {
 
       await this.tools.checkOrGiveAllowance(
         paymentAddress,
-
         paymentMethod,
         price
       );
@@ -398,11 +650,11 @@ export class MasaContracts {
       const purchaseIdentityAndNameParameters: [
         string, // paymentMethod: PromiseOrValue<string>
         string, // name: PromiseOrValue<string>
-        BigNumberish, // nameLength: PromiseOrValue<BigNumberish>
-        BigNumberish, // yearsPeriod: PromiseOrValue<BigNumberish>
+        number, // nameLength: PromiseOrValue<BigNumberish>
+        number, // yearsPeriod: PromiseOrValue<BigNumberish>
         string, // tokenURI: PromiseOrValue<string>
         string, // authorityAddress: PromiseOrValue<string>
-        BytesLike //signature: PromiseOrValue<BytesLike>
+        string //signature: PromiseOrValue<BytesLike>
       ] = [
         paymentAddress,
         name,
@@ -425,18 +677,18 @@ export class MasaContracts {
       }
 
       // connect
-      const store = this.instances.SoulStoreContract.connect(
+      const soulStore = this.instances.SoulStoreContract.connect(
         this.masaConfig.wallet
       );
 
       // estimate gas
-      const gasLimit = await store.estimateGas.purchaseIdentityAndName(
+      const gasLimit = await soulStore.estimateGas.purchaseIdentityAndName(
         ...purchaseIdentityAndNameParameters,
         purchaseIdentityAndNameOverrides
       );
 
       // execute tx
-      return await store.purchaseIdentityAndName(
+      return await soulStore.purchaseIdentityAndName(
         ...purchaseIdentityAndNameParameters,
         {
           ...purchaseIdentityAndNameOverrides,
@@ -456,6 +708,45 @@ export class MasaContracts {
     },
 
     /**
+     * gets the price for a credit score
+     * @param paymentMethod
+     * @param slippage
+     */
+    getPrice: async (
+      paymentMethod: PaymentMethod,
+      // slippage in bps where 10000 is 100%. 250 would be 2,5%
+      slippage: number | undefined = 250
+    ): Promise<{
+      price: BigNumber;
+      paymentAddress: string;
+      formattedPrice: string;
+    }> => {
+      const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
+
+      let price =
+        await this.instances.SoulboundCreditScoreContract.getMintPrice(
+          paymentAddress
+        );
+
+      if (slippage) {
+        if (paymentMethod === "eth") {
+          price = this.tools.addSlippage(price, slippage);
+        }
+      }
+
+      const formattedPrice = await this.tools.formatPrice(
+        paymentAddress,
+        price
+      );
+
+      return {
+        price,
+        paymentAddress,
+        formattedPrice,
+      };
+    },
+
+    /**
      * purchase credit score
      * @param paymentMethod
      * @param identityId
@@ -472,7 +763,11 @@ export class MasaContracts {
       signature: string,
       slippage: number | undefined = 250
     ): Promise<ContractTransaction> => {
-      const value = {
+      const value: {
+        identityId: BigNumber;
+        authorityAddress: string;
+        signatureDate: number;
+      } = {
         identityId,
         authorityAddress,
         signatureDate,
@@ -501,18 +796,10 @@ export class MasaContracts {
         throw new Error(msg);
       }
 
-      const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
-
-      let price =
-        await this.instances.SoulboundCreditScoreContract.getMintPrice(
-          paymentAddress
-        );
-
-      if (slippage) {
-        if (paymentMethod === "eth") {
-          price = price.add(price.mul(slippage).div(10000));
-        }
-      }
+      const { price, paymentAddress } = await this.creditScore.getPrice(
+        paymentMethod,
+        slippage
+      );
 
       const creditScoreMintParameters: [
         string,
@@ -641,7 +928,7 @@ export class MasaContracts {
 
       if (slippage) {
         if (paymentMethod === "eth") {
-          price = price.add(price.mul(slippage).div(10000));
+          price = this.tools.addSlippage(price, slippage);
         }
       }
 
@@ -651,6 +938,7 @@ export class MasaContracts {
       );
 
       const gasPrice = await this.masaConfig.wallet.getGasPrice();
+
       // hardcoded estimation for now
       const mintTransactionEstimatedGas = BigNumber.from(250_000);
       const mintTransactionFee = gasPrice.mul(mintTransactionEstimatedGas);

@@ -1,5 +1,4 @@
 import Masa from "../masa";
-import { signSoulLinkerLink } from "../helpers";
 import { BigNumber, Contract } from "ethers";
 import { BaseResult, IPassport } from "../interface";
 import { loadAddressFromIdentityId } from "../identity";
@@ -47,16 +46,16 @@ export const createLink = async (
 
   const now = Date.now();
   const currentDate = new Date(now);
-  const { signature, signatureDate, expirationDate } = await signSoulLinkerLink(
-    masa,
-    readerIdentityId,
-    identityId,
-    contract.address,
-    tokenId,
-    Math.floor(now / 1000),
-    // 1 day
-    24 * 60 * 60
-  );
+  const { signature, signatureDate, expirationDate } =
+    await masa.contracts.soulLinker.signLink(
+      readerIdentityId,
+      identityId,
+      contract.address,
+      tokenId,
+      Math.floor(now / 1000),
+      // 1 day
+      24 * 60 * 60
+    );
 
   console.log(`Signature Date: ${currentDate.toUTCString()}`);
   console.log(
