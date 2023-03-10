@@ -129,6 +129,9 @@ export const createSoulName = async (
       result.message = "Soulname created!";
       result.tokenId = soulNameInstance.tokenId;
       result.soulName = soulName;
+    } else {
+      result.message = "Creating soulname failed!";
+      console.error(result.message);
     }
   } else {
     result.message = Messages.NotLoggedIn();

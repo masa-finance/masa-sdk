@@ -1,6 +1,8 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { Messages } from "../utils";
+import { Event } from "ethers";
+import { CreateSoulNameResult } from "../interface";
 
 export const purchaseIdentity = async (masa: Masa) => {
   const tx = await masa.contracts.identity.purchase();
@@ -16,7 +18,7 @@ export const purchaseIdentityWithSoulName = async (
   soulNameLength: number,
   duration: number,
   paymentMethod: PaymentMethod
-) => {
+): Promise<{ tokenId: string; soulName: string } | undefined> => {
   if (await masa.contracts.soulName.isAvailable(soulName)) {
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
@@ -47,7 +49,20 @@ export const purchaseIdentityWithSoulName = async (
       console.log(Messages.WaitingToFinalize(tx.hash));
       const result = await tx.wait();
 
-      console.log(result);
+      const purchasedEvent = result.events?.find(
+        (event: Event) => event.event === "SoulboundIdentityAndNamePurchased"
+      );
+
+      let tokenId;
+      if (purchasedEvent && purchasedEvent.decode) {
+        const decodedEvent = purchasedEvent.decode(purchasedEvent.data);
+        tokenId = decodedEvent.tokenId.toNumber();
+        console.log(`Token with ID: '${tokenId}' created.`);
+        return {
+          tokenId,
+          soulName,
+        };
+      }
     }
   } else {
     console.error(`Soulname ${soulName}.soul already taken.`);
@@ -75,8 +90,11 @@ export const createIdentityWithSoulName = async (
   paymentMethod: PaymentMethod,
   soulName: string,
   duration: number
-): Promise<boolean> => {
-  let identityCreated = false;
+): Promise<CreateSoulNameResult | undefined> => {
+  const result: CreateSoulNameResult = {
+    success: false,
+    message: "Unknown Error",
+  };
 
   if (await masa.session.checkLogin()) {
     const extension =
@@ -89,19 +107,21 @@ export const createIdentityWithSoulName = async (
     const { isValid, length } = masa.soulName.validate(soulName);
 
     if (!isValid) {
-      console.error("Soulname not valid!");
-      return identityCreated;
+      result.message = "Soulname not valid!";
+      console.error(result.message);
+      return result;
     }
 
     const address = await masa.config.wallet.getAddress();
     const { identityId } = await masa.identity.load(address);
 
     if (identityId) {
-      console.error(`Identity already created! '${identityId}'`);
-      return identityCreated;
+      result.message = `Identity already created! '${identityId}'`;
+      console.error(result.message);
+      return result;
     }
 
-    await purchaseIdentityWithSoulName(
+    const soulNameInstance = await purchaseIdentityWithSoulName(
       masa,
       soulName,
       length,
@@ -109,10 +129,18 @@ export const createIdentityWithSoulName = async (
       paymentMethod
     );
 
-    identityCreated = true;
+    if (soulNameInstance) {
+      result.success = true;
+      result.message = "Identity and soulname created!";
+      result.tokenId = soulNameInstance.tokenId;
+      result.soulName = soulName;
+    } else {
+      result.message = "Creating identity and soulname failed!";
+      console.error(result.message);
+    }
   } else {
     console.error(Messages.NotLoggedIn());
   }
 
-  return identityCreated;
+  return result;
 };
