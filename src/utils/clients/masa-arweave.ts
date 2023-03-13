@@ -2,29 +2,11 @@ import Arweave from "arweave";
 import { ApiConfig } from "arweave/node/lib/api";
 import { Config } from "arweave/node/common";
 import axios from "axios";
-
-export const arweave = ({
-  host,
-  port,
-  protocol,
-  logging = false,
-}: {
-  host: string;
-  port: number;
-  protocol: string;
-  logging?: boolean;
-}) => {
-  return new MasaArweave({
-    host,
-    port,
-    protocol,
-    logging,
-  });
-};
+import { MasaConfig } from "../../interface";
 
 export class MasaArweave extends Arweave {
-  constructor(config: ApiConfig) {
-    super(config);
+  constructor(config: ApiConfig, private masaConfig: MasaConfig) {
+    super({ ...config, logging: masaConfig.verbose });
   }
 
   async loadTransactionData(
@@ -53,16 +35,21 @@ export class MasaArweave extends Arweave {
           ? JSON.parse(dataResponse as string)
           : (dataResponse as Uint8Array);
       }
-    } catch {
-      console.error("Arweave getData failed!");
+    } catch (error) {
+      if (error instanceof Error && this.masaConfig.verbose) {
+        console.error("Arweave getData failed!");
+      }
     }
 
     if (!data) {
       const config: Config = this.getConfig();
       const url = `${config.api.protocol}://${config.api.host}:${config.api.port}/${txId}`;
-      console.error(
-        `Failed to load arweave tx id: ${txId} getting ${url} instead`
-      );
+
+      if (this.masaConfig.verbose) {
+        console.error(
+          `Failed to load arweave tx id: ${txId} getting ${url} instead`
+        );
+      }
 
       const { data: dataResponse } = await axios.get(
         url,

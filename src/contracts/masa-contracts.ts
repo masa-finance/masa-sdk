@@ -1,9 +1,16 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { IERC20, IERC20__factory } from "@masa-finance/masa-contracts-identity";
+import {
+  IERC20,
+  IERC20__factory,
+  MasaSBTSelfSovereign,
+  MasaSBTSelfSovereign__factory,
+} from "@masa-finance/masa-contracts-identity";
 import {
   constants,
   ContractReceipt,
   ContractTransaction,
+  TypedDataDomain,
+  TypedDataField,
   utils,
   Wallet,
 } from "ethers";
@@ -119,6 +126,124 @@ export class MasaContracts {
       price = price.add(price.mul(slippage).div(10000));
       return price;
     },
+
+    /**
+     * verify a signature created during one of the SBT signing flows
+     * @param errorMessage
+     * @param domain
+     * @param types
+     * @param value
+     * @param signature
+     * @param authorityAddress
+     */
+    verify: async (
+      errorMessage: string,
+      domain: TypedDataDomain,
+      types: Record<string, Array<TypedDataField>>,
+      value: Record<string, string | BigNumber | number>,
+      signature: string,
+      authorityAddress: string
+    ) => {
+      if (this.masaConfig.verbose) {
+        console.log({ domain, types: JSON.stringify(types, null, 2), value });
+      }
+
+      const recoveredAddress = verifyTypedData(domain, types, value, signature);
+
+      if (this.masaConfig.verbose) {
+        console.info({
+          recoveredAddress,
+          authorityAddress,
+          isAuthority: await this.instances.SoulStoreContract.authorities(
+            recoveredAddress
+          ),
+        });
+      }
+
+      if (recoveredAddress !== authorityAddress) {
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+    },
+  };
+
+  factory = async (address: string) => {
+    let selfSovereignSBT: MasaSBTSelfSovereign | undefined;
+
+    if (utils.isAddress(address)) {
+      // fetch code to see if the contract exists
+      const code: string | undefined =
+        await this.masaConfig.wallet.provider?.getCode(address);
+      const exists: boolean = code !== "0x";
+
+      selfSovereignSBT = exists
+        ? MasaSBTSelfSovereign__factory.connect(address, this.masaConfig.wallet)
+        : undefined;
+
+      if (!selfSovereignSBT) {
+        console.error(
+          `Smart contract '${address}' does not exist on network '${this.masaConfig.network}'!`
+        );
+      } else {
+        if (this.masaConfig.verbose) {
+          console.info(await selfSovereignSBT.name());
+        }
+      }
+    } else {
+      console.error(`Address '${address}' is not valid!`);
+    }
+
+    return {
+      /**
+       * instance of the SBT that this factory instance uses
+       */
+      selfSovereignSBT,
+
+      /**
+       * Signs an SBT based on its address
+       * @param name
+       * @param types
+       * @param value
+       */
+      sign: async (
+        name: string,
+        types: Record<string, Array<TypedDataField>>,
+        value: Record<string, string | BigNumber | number>
+      ): Promise<
+        | {
+            signature: string;
+            authorityAddress: string;
+          }
+        | undefined
+      > => {
+        if (!selfSovereignSBT) return;
+
+        const authorityAddress = await this.masaConfig.wallet.getAddress();
+
+        const { signature, domain } = await signTypedData(
+          selfSovereignSBT,
+          this.masaConfig.wallet as Wallet,
+          name,
+          types,
+          value
+        );
+
+        if (this.masaConfig.verbose) {
+          console.log({ domain, value });
+        }
+
+        await this.tools.verify(
+          "Signing SBT failed!",
+          domain,
+          types,
+          value,
+          signature,
+          authorityAddress
+        );
+
+        return { signature, authorityAddress };
+      },
+    };
   };
 
   soulLinker = {
@@ -143,7 +268,7 @@ export class MasaContracts {
       tokenAddress: string,
       paymentMethod: PaymentMethod,
       slippage: number | undefined = 250
-    ) => {
+    ): Promise<{ price: BigNumber; paymentAddress: string }> => {
       const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
       let price = await this.instances.SoulLinkerContract.getPriceForAddLink(
         paymentAddress,
@@ -279,19 +404,14 @@ export class MasaContracts {
         value
       );
 
-      const recover = verifyTypedData(
+      await this.tools.verify(
+        "Signing SBT failed!",
         domain,
         this.soulLinker.types,
         value,
-        signature
+        signature,
+        await this.masaConfig.wallet.getAddress()
       );
-
-      if (this.masaConfig.verbose) {
-        console.log(
-          { recover },
-          { address: await this.masaConfig.wallet.getAddress() }
-        );
-      }
 
       return { signature, signatureDate, expirationDate };
     },
@@ -343,7 +463,7 @@ export class MasaContracts {
     ): Promise<ContractTransaction> => {
       const to = receiver || (await this.masaConfig.wallet.getAddress());
 
-      const domain = await generateSignatureDomain(
+      const domain: TypedDataDomain = await generateSignatureDomain(
         this.masaConfig.wallet as Wallet,
         "SoulStore",
         this.instances.SoulStoreContract.address
@@ -363,28 +483,14 @@ export class MasaContracts {
         tokenURI: metadataURL,
       };
 
-      const recoveredAddress = verifyTypedData(
+      await this.tools.verify(
+        "Verifying soul name failed!",
         domain,
         this.soulName.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
-
-      if (this.masaConfig.verbose) {
-        console.info({
-          recoveredAddress,
-          authorityAddress,
-          isAuthority: await this.instances.SoulStoreContract.authorities(
-            recoveredAddress
-          ),
-        });
-      }
-
-      if (recoveredAddress !== authorityAddress) {
-        const msg = "Verifying soul name failed!";
-        console.error(msg);
-        throw new Error(msg);
-      }
 
       const { price, paymentAddress } = await this.soulName.getPrice(
         paymentMethod,
@@ -543,23 +649,18 @@ export class MasaContracts {
         value
       );
 
-      const recoveredAddress = verifyTypedData(
+      const authorityAddress = await this.masaConfig.wallet.getAddress();
+
+      await this.tools.verify(
+        "Signing soul name failed!",
         domain,
         this.soulName.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
 
-      const authorityAddress = await this.masaConfig.wallet.getAddress();
-      if (this.masaConfig.verbose) {
-        console.log({ recoveredAddress, authorityAddress });
-      }
-
-      if (recoveredAddress === authorityAddress) {
-        return { signature, authorityAddress };
-      } else {
-        console.error("Signing soul name failed!");
-      }
+      return { signature, authorityAddress };
     },
   };
 
@@ -592,7 +693,7 @@ export class MasaContracts {
       authorityAddress: string,
       signature: string
     ): Promise<ContractTransaction> => {
-      const domain = await generateSignatureDomain(
+      const domain: TypedDataDomain = await generateSignatureDomain(
         this.masaConfig.wallet as Wallet,
         "SoulStore",
         this.instances.SoulStoreContract.address
@@ -612,28 +713,14 @@ export class MasaContracts {
         tokenURI: metadataURL,
       };
 
-      const recoveredAddress = verifyTypedData(
+      await this.tools.verify(
+        "Verifying soul name failed!",
         domain,
         this.soulName.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
-
-      if (this.masaConfig.verbose) {
-        console.info({
-          recoveredAddress,
-          authorityAddress,
-          isAuthority: await this.instances.SoulStoreContract.authorities(
-            recoveredAddress
-          ),
-        });
-      }
-
-      if (recoveredAddress !== authorityAddress) {
-        const msg = "Verifying soul name failed!";
-        console.error(msg);
-        throw new Error(msg);
-      }
 
       const { price, paymentAddress } = await this.soulName.getPrice(
         paymentMethod,
@@ -773,28 +860,20 @@ export class MasaContracts {
         signatureDate,
       };
 
-      const domain = await generateSignatureDomain(
+      const domain: TypedDataDomain = await generateSignatureDomain(
         this.masaConfig.wallet as Wallet,
         "SoulboundCreditScore",
         this.instances.SoulboundCreditScoreContract.address
       );
 
-      const recoveredAddress = verifyTypedData(
+      await this.tools.verify(
+        "Verifying credit score failed!",
         domain,
         this.creditScore.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
-
-      if (this.masaConfig.verbose) {
-        console.log({ recoveredAddress, authorityAddress });
-      }
-
-      if (recoveredAddress !== authorityAddress) {
-        const msg = "Verifying credit score failed!";
-        console.error(msg);
-        throw new Error(msg);
-      }
 
       const { price, paymentAddress } = await this.creditScore.getPrice(
         paymentMethod,
@@ -876,22 +955,16 @@ export class MasaContracts {
         value
       );
 
-      const recoveredAddress = verifyTypedData(
+      await this.tools.verify(
+        "Signing credit score failed!",
         domain,
         this.creditScore.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
 
-      if (this.masaConfig.verbose) {
-        console.log({ recoveredAddress, authorityAddress });
-      }
-
-      if (recoveredAddress === authorityAddress) {
-        return { signature, signatureDate, authorityAddress };
-      } else {
-        console.error("Signing credit score failed!");
-      }
+      return { signature, signatureDate, authorityAddress };
     },
   };
 
@@ -985,32 +1058,20 @@ export class MasaContracts {
         signatureDate: signatureDate,
       };
 
-      const domain = await generateSignatureDomain(
+      const domain: TypedDataDomain = await generateSignatureDomain(
         this.masaConfig.wallet as Wallet,
         "SoulboundGreen",
         this.instances.SoulboundGreenContract.address
       );
 
-      if (this.masaConfig.verbose) {
-        console.log({ domain, value });
-      }
-
-      const recoveredAddress = verifyTypedData(
+      await this.tools.verify(
+        "Verifying green failed!",
         domain,
         this.green.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
-
-      if (this.masaConfig.verbose) {
-        console.log({ recoveredAddress, authorityAddress });
-      }
-
-      if (recoveredAddress !== authorityAddress) {
-        const msg = "Verifying green failed!";
-        console.error(msg);
-        throw new Error(msg);
-      }
 
       const { paymentAddress, price, formattedPrice, mintTransactionFee } =
         await this.green.getPrice(paymentMethod, slippage);
@@ -1092,26 +1153,16 @@ export class MasaContracts {
         value
       );
 
-      if (this.masaConfig.verbose) {
-        console.log({ domain, value });
-      }
-
-      const recoveredAddress = verifyTypedData(
+      await this.tools.verify(
+        "Signing green failed!",
         domain,
         this.green.types,
         value,
-        signature
+        signature,
+        authorityAddress
       );
 
-      if (this.masaConfig.verbose) {
-        console.log({ recoveredAddress, authorityAddress });
-      }
-
-      if (recoveredAddress === authorityAddress) {
-        return { signature, signatureDate, authorityAddress };
-      } else {
-        console.error("Signing green failed!");
-      }
+      return { signature, signatureDate, authorityAddress };
     },
   };
 }

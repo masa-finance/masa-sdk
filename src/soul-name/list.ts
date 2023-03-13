@@ -70,7 +70,30 @@ export const loadSoulNameByName = async (
   }
 };
 
-export const loadSoulNamesByName = async (
+export const resolve = async (
+  masa: Masa,
+  soulName: string
+): Promise<string | undefined> => {
+  let owner;
+
+  try {
+    const extension =
+      await masa.contracts.instances.SoulNameContract.extension();
+    const cleansedSoulname = soulName.replace(extension, "");
+    const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
+      cleansedSoulname
+    );
+    owner = masa.contracts.instances.SoulNameContract.ownerOf(tokenId);
+  } catch (error) {
+    if (error instanceof Error && masa.config.verbose) {
+      console.error(error.message);
+    }
+  }
+
+  return owner;
+};
+
+export const loadSoulNamesByNames = async (
   masa: Masa,
   soulNames: string[]
 ): Promise<SoulNameDetails[]> => {
@@ -91,20 +114,35 @@ export const loadSoulNamesByIdentityId = async (
     "getSoulNames(uint256)"
   ](identityId);
 
-  return loadSoulNamesByName(masa, soulNames);
+  return loadSoulNamesByNames(masa, soulNames);
 };
 
 export const loadSoulNamesByAddress = async (
   masa: Masa,
   address: string
-): Promise<SoulNameDetails[]> => {
-  const soulNames = await masa.contracts.instances.SoulNameContract[
-    "getSoulNames(address)"
-  ](address);
+): Promise<string[]> => {
+  let soulNames: string[] = [];
 
-  return loadSoulNamesByName(masa, soulNames);
+  try {
+    soulNames = await masa.contracts.instances.SoulNameContract[
+      "getSoulNames(address)"
+    ](address);
+  } catch {
+    // ignore
+  }
+
+  return soulNames;
 };
 
+export const loadSoulNameDetailsByAddress = async (
+  masa: Masa,
+  address: string
+) => {
+  return await loadSoulNamesByNames(
+    masa,
+    await loadSoulNamesByAddress(masa, address)
+  );
+};
 export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
   console.log("\n");
 
@@ -138,7 +176,7 @@ export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
 export const listSoulNames = async (masa: Masa, address?: string) => {
   address = address || (await masa.config.wallet.getAddress());
 
-  const soulNames = await loadSoulNamesByAddress(masa, address);
+  const soulNames = await loadSoulNameDetailsByAddress(masa, address);
 
   if (soulNames.length > 0) {
     let index = 0;

@@ -1,8 +1,9 @@
 import {
+  BaseContract,
   BigNumber,
   BytesLike,
-  Contract,
   Signer,
+  TypedDataDomain,
   TypedDataField,
   utils,
   Wallet,
@@ -29,12 +30,12 @@ export const signMessage = async (
 };
 
 export const signTypedData = async (
-  contract: Contract,
+  contract: BaseContract,
   wallet: Wallet,
   name: string,
   types: Record<string, Array<TypedDataField>>,
   value: Record<string, string | BigNumber | number>
-) => {
+): Promise<{ signature: string; domain: TypedDataDomain }> => {
   const domain = await generateSignatureDomain(wallet, name, contract.address);
   const signature = await wallet._signTypedData(domain, types, value);
 
@@ -45,10 +46,10 @@ export const generateSignatureDomain = async (
   wallet: Wallet,
   name: string,
   verifyingContract: string
-) => {
+): Promise<TypedDataDomain> => {
   const chainId = (await wallet.provider.getNetwork()).chainId;
 
-  const domain = {
+  const domain: TypedDataDomain = {
     name,
     version: "1.0.0",
     chainId,

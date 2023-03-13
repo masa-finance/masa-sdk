@@ -1,5 +1,4 @@
 import {
-  arweave as arweaveInit,
   MasaAccount,
   MasaArgs,
   MasaArweave,
@@ -38,17 +37,10 @@ export default class Masa {
       host: "arweave.net",
       port: 443,
       protocol: "https",
-      logging: false,
     },
     verbose = false,
   }: MasaArgs) {
-    this.client = new MasaClient({
-      apiUrl,
-      cookie,
-    });
-
-    this.arweave = arweaveInit(arweave);
-
+    // build config
     this.config = {
       apiUrl,
       environment,
@@ -57,12 +49,27 @@ export default class Masa {
       verbose,
     };
 
+    // masa client
+    this.client = new MasaClient({
+      apiUrl,
+      cookie,
+    });
+
+    // arweave client
+    this.arweave = new MasaArweave(arweave, this.config);
+
+    // masa contracts wrapper
     this.contracts = new MasaContracts(this.config);
+    // account + session
     this.account = new MasaAccount(this);
     this.session = new MasaSession(this);
+    // identity
     this.identity = new MasaIdentity(this);
+    // soul name
     this.soulName = new MasaSoulName(this);
+    // credit score
     this.creditScore = new MasaCreditScore(this);
+    // green
     this.green = new MasaGreen(this);
   }
 

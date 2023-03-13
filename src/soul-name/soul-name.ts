@@ -7,6 +7,7 @@ import {
   loadSoulNameByName,
   loadSoulNameByTokenId,
   loadSoulNamesByIdentityId,
+  resolve,
 } from "./list";
 import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
@@ -25,6 +26,7 @@ export class MasaSoulName extends MasaBase {
     duration: number
   ) => getRegistrationPrice(this.masa, paymentMethod, soulName, duration);
   list = (address?: string) => listSoulNames(this.masa, address);
+  resolve = (soulName: string) => resolve(this.masa, soulName);
   loadSoulNamesByIdentityId = (identityId: BigNumber) =>
     loadSoulNamesByIdentityId(this.masa, identityId);
   loadSoulNameByName = (soulName: string) =>
