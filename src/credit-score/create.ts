@@ -69,6 +69,9 @@ export const createCreditScore = async (
         }
       }
     }
+  } else {
+    result.message = Messages.NotLoggedIn();
+    console.error(result.message);
   }
 
   return result;
