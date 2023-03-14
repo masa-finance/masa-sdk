@@ -150,25 +150,37 @@ export class MasaContracts {
 
       const recoveredAddress = verifyTypedData(domain, types, value, signature);
 
+      let isAuthority = false;
+
+      try {
+        isAuthority = await this.instances.SoulStoreContract.authorities(
+          recoveredAddress
+        );
+      } catch (error) {
+        if (error instanceof Error)
+          console.error(`Retrieving authorities failed! ${error.message}.`);
+      }
+
       if (this.masaConfig.verbose) {
         console.info({
           recoveredAddress,
           authorityAddress,
-          isAuthority: await this.instances.SoulStoreContract.authorities(
-            recoveredAddress
-          ),
+          isAuthority,
         });
       }
 
+      if (!isAuthority) {
+        throw new Error(`${errorMessage}: Authority not allowed!`);
+      }
+
       if (recoveredAddress !== authorityAddress) {
-        console.error(errorMessage);
-        throw new Error(errorMessage);
+        throw new Error(`${errorMessage}: Signature Verification failed!`);
       }
     },
   };
 
-  factory = async (address: string) => {
-    let selfSovereignSBT: MasaSBTSelfSovereign | undefined;
+  factory = async <T extends MasaSBTSelfSovereign>(address: string) => {
+    let selfSovereignSBT: T | undefined;
 
     if (utils.isAddress(address)) {
       // fetch code to see if the contract exists
@@ -177,7 +189,10 @@ export class MasaContracts {
       const exists: boolean = code !== "0x";
 
       selfSovereignSBT = exists
-        ? MasaSBTSelfSovereign__factory.connect(address, this.masaConfig.wallet)
+        ? (MasaSBTSelfSovereign__factory.connect(
+            address,
+            this.masaConfig.wallet
+          ) as T)
         : undefined;
 
       if (!selfSovereignSBT) {
@@ -242,6 +257,80 @@ export class MasaContracts {
         );
 
         return { signature, authorityAddress };
+      },
+
+      getPrice: async (
+        paymentMethod: PaymentMethod,
+        slippage: number = 250
+      ) => {
+        if (!selfSovereignSBT) return;
+
+        const paymentAddress = this.tools.getPaymentAddress(paymentMethod);
+
+        let price = await selfSovereignSBT.getMintPrice(paymentAddress);
+
+        if (slippage) {
+          if (paymentMethod === "eth") {
+            price = this.tools.addSlippage(price, slippage);
+          }
+        }
+
+        const formattedPrice: string = await this.tools.formatPrice(
+          paymentAddress,
+          price
+        );
+
+        return {
+          price,
+          paymentAddress,
+          formattedPrice,
+        };
+      },
+
+      prepareMint: async (
+        paymentMethod: PaymentMethod,
+        name: string,
+        types: Record<string, Array<TypedDataField>>,
+        value: Record<string, string | BigNumber | number>,
+        signature: string,
+        authorityAddress: string,
+        slippage: number = 250
+      ) => {
+        if (!selfSovereignSBT) return;
+
+        const domain: TypedDataDomain = await generateSignatureDomain(
+          this.masaConfig.wallet as Wallet,
+          name,
+          selfSovereignSBT.address
+        );
+
+        await this.tools.verify(
+          "Verifying SBT failed!",
+          domain,
+          types,
+          value,
+          signature,
+          authorityAddress
+        );
+
+        const priceObject = await (
+          await this.factory(address)
+        ).getPrice(paymentMethod, slippage);
+
+        if (!priceObject) return;
+
+        if (this.masaConfig.verbose) {
+          console.log({
+            price: priceObject.price.toString(),
+            paymentAddress: priceObject.paymentAddress,
+            formattedPrice: priceObject.formattedPrice,
+          });
+        }
+
+        return {
+          price: priceObject.price,
+          paymentAddress: priceObject.paymentAddress,
+        };
       },
     };
   };
