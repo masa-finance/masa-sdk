@@ -4,11 +4,14 @@ import {
   IERC20__factory,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
+  SoulLinker,
+  SoulStore,
 } from "@masa-finance/masa-contracts-identity";
 import {
   constants,
   ContractReceipt,
   ContractTransaction,
+  Signer,
   TypedDataDomain,
   TypedDataField,
   utils,
@@ -19,6 +22,7 @@ import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain, signTypedData } from "../utils";
 import { ERC20__factory } from "./stubs/ERC20__factory";
+import { Provider } from "@ethersproject/providers";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
 
@@ -131,6 +135,7 @@ export class MasaContracts {
      * verify a signature created during one of the SBT signing flows
      * @param errorMessage
      * @param domain
+     * @param contract
      * @param types
      * @param value
      * @param signature
@@ -138,6 +143,7 @@ export class MasaContracts {
      */
     verify: async (
       errorMessage: string,
+      contract: MasaSBTSelfSovereign | SoulStore | SoulLinker,
       domain: TypedDataDomain,
       types: Record<string, Array<TypedDataField>>,
       value: Record<string, string | BigNumber | number>,
@@ -154,29 +160,42 @@ export class MasaContracts {
         });
       }
 
+      const hasAuthorities = (
+        contract: MasaSBTSelfSovereign | SoulStore | SoulLinker
+      ): contract is MasaSBTSelfSovereign => {
+        return (contract as MasaSBTSelfSovereign).authorities !== undefined;
+      };
+
       const recoveredAddress = verifyTypedData(domain, types, value, signature);
-
-      let isAuthority = false;
-
-      try {
-        isAuthority = await this.instances.SoulStoreContract.authorities(
-          recoveredAddress
-        );
-      } catch (error) {
-        if (error instanceof Error)
-          console.error(`Retrieving authorities failed! ${error.message}.`);
-      }
 
       if (this.masaConfig.verbose) {
         console.info({
           recoveredAddress,
           authorityAddress,
-          isAuthority,
         });
       }
 
-      if (!isAuthority) {
-        throw new Error(`${errorMessage}: Authority not allowed!`);
+      if (hasAuthorities(contract)) {
+        let recoveredAddressIsAuthority = false;
+
+        try {
+          recoveredAddressIsAuthority = await contract.authorities(
+            recoveredAddress
+          );
+        } catch (error) {
+          if (error instanceof Error)
+            console.error(`Retrieving authorities failed! ${error.message}.`);
+        }
+
+        if (this.masaConfig.verbose) {
+          console.info({
+            recoveredAddressIsAuthority,
+          });
+        }
+
+        if (!recoveredAddressIsAuthority) {
+          throw new Error(`${errorMessage}: Authority not allowed!`);
+        }
       }
 
       if (recoveredAddress !== authorityAddress) {
@@ -185,20 +204,25 @@ export class MasaContracts {
     },
   };
 
-  factory = async <T extends MasaSBTSelfSovereign>(address: string) => {
+  factory = async <T extends MasaSBTSelfSovereign>(
+    address: string,
+    factory: {
+      connect: (
+        address: string,
+        signerOrProvider: Signer | Provider
+      ) => MasaSBTSelfSovereign;
+    } = MasaSBTSelfSovereign__factory
+  ) => {
     let selfSovereignSBT: T | undefined;
 
     if (utils.isAddress(address)) {
       // fetch code to see if the contract exists
       const code: string | undefined =
         await this.masaConfig.wallet.provider?.getCode(address);
-      const exists: boolean = code !== "0x";
+      const contractExists: boolean = code !== "0x";
 
-      selfSovereignSBT = exists
-        ? (MasaSBTSelfSovereign__factory.connect(
-            address,
-            this.masaConfig.wallet
-          ) as T)
+      selfSovereignSBT = contractExists
+        ? (factory.connect(address, this.masaConfig.wallet) as T)
         : undefined;
 
       if (!selfSovereignSBT) {
@@ -251,6 +275,7 @@ export class MasaContracts {
 
         await this.tools.verify(
           "Signing SBT failed!",
+          selfSovereignSBT,
           domain,
           types,
           value,
@@ -308,6 +333,7 @@ export class MasaContracts {
 
         await this.tools.verify(
           "Verifying SBT failed!",
+          selfSovereignSBT,
           domain,
           types,
           value,
@@ -496,6 +522,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Signing SBT failed!",
+        this.instances.SoulLinkerContract,
         domain,
         this.soulLinker.types,
         value,
@@ -575,6 +602,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Verifying soul name failed!",
+        this.instances.SoulStoreContract,
         domain,
         this.soulName.types,
         value,
@@ -743,6 +771,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Signing soul name failed!",
+        this.instances.SoulStoreContract,
         domain,
         this.soulName.types,
         value,
@@ -805,6 +834,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Verifying soul name failed!",
+        this.instances.SoulStoreContract,
         domain,
         this.soulName.types,
         value,
@@ -958,6 +988,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Verifying credit score failed!",
+        this.instances.SoulboundCreditScoreContract,
         domain,
         this.creditScore.types,
         value,
@@ -1047,6 +1078,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Signing credit score failed!",
+        this.instances.SoulboundCreditScoreContract,
         domain,
         this.creditScore.types,
         value,
@@ -1156,6 +1188,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Verifying green failed!",
+        this.instances.SoulboundGreenContract,
         domain,
         this.green.types,
         value,
@@ -1245,6 +1278,7 @@ export class MasaContracts {
 
       await this.tools.verify(
         "Signing green failed!",
+        this.instances.SoulboundGreenContract,
         domain,
         this.green.types,
         value,
