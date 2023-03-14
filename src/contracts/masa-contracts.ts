@@ -22,9 +22,15 @@ import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain, signTypedData } from "../utils";
 import { ERC20__factory } from "./stubs/ERC20__factory";
-import { Provider } from "@ethersproject/providers";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
+
+class ContractFactory {
+  static connect: <Contract>(
+    address: string,
+    signerOrProvider: Signer | Wallet
+  ) => Contract;
+}
 
 export class MasaContracts {
   public instances: IIdentityContracts;
@@ -208,16 +214,11 @@ export class MasaContracts {
     },
   };
 
-  factory = async <T extends MasaSBTSelfSovereign>(
+  factory = async <Contract extends MasaSBTSelfSovereign>(
     address: string,
-    factory: {
-      connect: (
-        address: string,
-        signerOrProvider: Signer | Provider
-      ) => MasaSBTSelfSovereign;
-    } = MasaSBTSelfSovereign__factory
+    factory: ContractFactory = MasaSBTSelfSovereign__factory
   ) => {
-    let selfSovereignSBT: T | undefined;
+    let selfSovereignSBT: Contract | undefined;
 
     if (utils.isAddress(address)) {
       // fetch code to see if the contract exists
@@ -226,7 +227,10 @@ export class MasaContracts {
       const contractExists: boolean = code !== "0x";
 
       selfSovereignSBT = contractExists
-        ? (factory.connect(address, this.masaConfig.wallet) as T)
+        ? (factory as typeof ContractFactory).connect<Contract>(
+            address,
+            this.masaConfig.wallet
+          )
         : undefined;
 
       if (!selfSovereignSBT) {
