@@ -166,6 +166,7 @@ export class MasaContracts {
         return (contract as MasaSBTSelfSovereign).authorities !== undefined;
       };
 
+      // first line of defense, check that the address properly recovers
       const recoveredAddress = verifyTypedData(domain, types, value, signature);
 
       if (this.masaConfig.verbose) {
@@ -175,6 +176,12 @@ export class MasaContracts {
         });
       }
 
+      // if this fails we throw
+      if (recoveredAddress !== authorityAddress) {
+        throw new Error(`${errorMessage}: Signature Verification failed!`);
+      }
+
+      // second line of defense, if the contract supports authorities
       if (hasAuthorities(contract)) {
         let recoveredAddressIsAuthority = false;
 
@@ -193,13 +200,10 @@ export class MasaContracts {
           });
         }
 
+        // we check that the recovered address is within the authorities
         if (!recoveredAddressIsAuthority) {
           throw new Error(`${errorMessage}: Authority not allowed!`);
         }
-      }
-
-      if (recoveredAddress !== authorityAddress) {
-        throw new Error(`${errorMessage}: Signature Verification failed!`);
       }
     },
   };
