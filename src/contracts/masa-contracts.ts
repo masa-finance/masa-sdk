@@ -145,7 +145,13 @@ export class MasaContracts {
       authorityAddress: string
     ) => {
       if (this.masaConfig.verbose) {
-        console.log({ domain, types: JSON.stringify(types, null, 2), value });
+        console.log({
+          domain,
+          types: JSON.stringify(types),
+          value,
+          signature,
+          authorityAddress,
+        });
       }
 
       const recoveredAddress = verifyTypedData(domain, types, value, signature);
@@ -242,10 +248,6 @@ export class MasaContracts {
           types,
           value
         );
-
-        if (this.masaConfig.verbose) {
-          console.log({ domain, value });
-        }
 
         await this.tools.verify(
           "Signing SBT failed!",
