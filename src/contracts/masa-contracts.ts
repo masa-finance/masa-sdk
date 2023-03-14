@@ -263,7 +263,7 @@ export class MasaContracts {
 
       getPrice: async (
         paymentMethod: PaymentMethod,
-        slippage: number = 250
+        slippage: number | undefined = 250
       ) => {
         if (!selfSovereignSBT) return;
 
@@ -296,7 +296,7 @@ export class MasaContracts {
         value: Record<string, string | BigNumber | number>,
         signature: string,
         authorityAddress: string,
-        slippage: number = 250
+        slippage: number | undefined = 250
       ) => {
         if (!selfSovereignSBT) return;
 
@@ -315,9 +315,8 @@ export class MasaContracts {
           authorityAddress
         );
 
-        const priceObject = await (
-          await this.factory(address)
-        ).getPrice(paymentMethod, slippage);
+        const { getPrice } = await this.factory(address);
+        const priceObject = await getPrice(paymentMethod, slippage);
 
         if (!priceObject) return;
 
