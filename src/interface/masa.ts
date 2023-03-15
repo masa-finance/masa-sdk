@@ -17,6 +17,8 @@ export type NetworkName =
   // BSC
   | "bsctest" // testnet
   | "bsc" // mainnet
+  // base
+  | "basegoerli"
   // fallback for unknown networks
   | "unknown";
 
