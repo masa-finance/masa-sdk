@@ -70,7 +70,7 @@ export class MasaGreen extends MasaBase {
    * Burns a green
    * @param greenId
    */
-  burn = (greenId: number) => burnGreen(this.masa, greenId);
+  burn = (greenId: BigNumber) => burnGreen(this.masa, greenId);
 
   /**
    * Lits all greens on the current network

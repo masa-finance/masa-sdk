@@ -8,6 +8,7 @@ import {
   MasaCreditScore,
   MasaGreen,
   MasaIdentity,
+  MasaSBT,
   MasaSession,
   MasaSoulName,
   version,
@@ -26,6 +27,7 @@ export default class Masa {
   public readonly soulName: MasaSoulName;
   public readonly creditScore: MasaCreditScore;
   public readonly green: MasaGreen;
+  public readonly sbt: MasaSBT;
 
   public constructor({
     cookie,
@@ -71,6 +73,8 @@ export default class Masa {
     this.creditScore = new MasaCreditScore(this);
     // green
     this.green = new MasaGreen(this);
+    // generic sbt handler
+    this.sbt = new MasaSBT(this);
   }
 
   utils = {

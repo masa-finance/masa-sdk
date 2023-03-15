@@ -11,26 +11,23 @@ import {
   constants,
   ContractReceipt,
   ContractTransaction,
-  Signer,
   TypedDataDomain,
   TypedDataField,
   utils,
   Wallet,
 } from "ethers";
-import { addresses, loadIdentityContracts } from "./index";
+import {
+  addresses,
+  ContractFactory,
+  loadIdentityContracts,
+  loadSBTContract,
+} from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain, signTypedData } from "../utils";
 import { ERC20__factory } from "./stubs/ERC20__factory";
 
 export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
-
-class ContractFactory {
-  static connect: <Contract>(
-    address: string,
-    signerOrProvider: Signer | Wallet
-  ) => Contract;
-}
 
 export class MasaContracts {
   public instances: IIdentityContracts;
@@ -214,37 +211,15 @@ export class MasaContracts {
     },
   };
 
-  factory = async <Contract extends MasaSBTSelfSovereign>(
+  sbt = async <Contract extends MasaSBTSelfSovereign>(
     address: string,
     factory: ContractFactory = MasaSBTSelfSovereign__factory
   ) => {
-    let selfSovereignSBT: Contract | undefined;
-
-    if (utils.isAddress(address)) {
-      // fetch code to see if the contract exists
-      const code: string | undefined =
-        await this.masaConfig.wallet.provider?.getCode(address);
-      const contractExists: boolean = code !== "0x";
-
-      selfSovereignSBT = contractExists
-        ? (factory as typeof ContractFactory).connect<Contract>(
-            address,
-            this.masaConfig.wallet
-          )
-        : undefined;
-
-      if (!selfSovereignSBT) {
-        console.error(
-          `Smart contract '${address}' does not exist on network '${this.masaConfig.network}'!`
-        );
-      } else {
-        if (this.masaConfig.verbose) {
-          console.info(await selfSovereignSBT.name());
-        }
-      }
-    } else {
-      console.error(`Address '${address}' is not valid!`);
-    }
+    const selfSovereignSBT: Contract | undefined = await loadSBTContract(
+      this.masaConfig,
+      address,
+      factory
+    );
 
     return {
       /**
@@ -349,7 +324,7 @@ export class MasaContracts {
           authorityAddress
         );
 
-        const { getPrice } = await this.factory(address);
+        const { getPrice } = await this.sbt<Contract>(address, factory);
         const priceObject = await getPrice(paymentMethod, slippage);
 
         if (!priceObject) return;

@@ -1,41 +1,41 @@
 import Masa from "../masa";
 import { Messages } from "../utils";
+import { MasaSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 
-export const burnGreenById = async (
+export const burnSBTById = async (
   masa: Masa,
-  greenId: BigNumber
+  contract: MasaSBTSelfSovereign,
+  SBTId: BigNumber
 ): Promise<boolean> => {
   try {
-    const tx = await masa.contracts.instances.SoulboundGreenContract.connect(
-      masa.config.wallet
-    ).burn(greenId);
-
+    const tx = await contract.connect(masa.config.wallet).burn(SBTId);
     console.log(Messages.WaitingToFinalize(tx.hash));
     await tx.wait();
 
     return true;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Burning Green Failed! '${error.message}'`);
+      console.error(`Burning SBT Failed! '${error.message}'`);
     }
   }
 
   return false;
 };
 
-export const burnGreen = async (
+export const burnSBT = async (
   masa: Masa,
-  greenId: BigNumber
+  contract: MasaSBTSelfSovereign,
+  SBTId: BigNumber
 ): Promise<boolean> => {
   let success = false;
 
   if (await masa.session.checkLogin()) {
-    console.log(`Burning Green with ID '${greenId}'!`);
-    success = await burnGreenById(masa, greenId);
+    console.log(`Burning SBT with ID '${SBTId}'!`);
+    success = await burnSBTById(masa, contract, SBTId);
 
     if (success) {
-      console.log(`Burned Green with ID '${greenId}'!`);
+      console.log(`Burned SBT with ID '${SBTId}'!`);
     }
   } else {
     console.error(Messages.NotLoggedIn());

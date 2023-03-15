@@ -10,4 +10,5 @@ export * from "./soul-linker";
 export * from "./soul-name";
 export * from "./green";
 export * from "./account";
+export * from "./sbt";
 export * from "./helpers";
