@@ -1,5 +1,4 @@
 import { MasaBase } from "../helpers/masa-base";
-import Masa from "../masa";
 import { loadSBTContract } from "../contracts";
 import {
   MasaSBTSelfSovereign,
@@ -11,10 +10,6 @@ import { BigNumber } from "ethers";
 import { MasaSoulLinker } from "../soul-linker";
 
 export class MasaSBT extends MasaBase {
-  constructor(masa: Masa) {
-    super(masa);
-  }
-
   connect = async (address: string) => {
     const selfSovereignSBT: MasaSBTSelfSovereign | undefined =
       await loadSBTContract(

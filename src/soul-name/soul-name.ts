@@ -13,13 +13,8 @@ import { sendSoulName } from "./send";
 import { verifyByName } from "./verify";
 import { getSoulNameMetadataPrefix, validateSoulName } from "./validate";
 import { MasaBase } from "../helpers/masa-base";
-import Masa from "../masa";
 
 export class MasaSoulName extends MasaBase {
-  constructor(masa: Masa) {
-    super(masa);
-  }
-
   getRegistrationPrice = (
     paymentMethod: PaymentMethod = "eth",
     soulName: string,
