@@ -1,5 +1,6 @@
 import {
   alfajores,
+  basegoerli,
   bsc,
   bsctest,
   celo,
@@ -38,4 +39,6 @@ export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // polygon
   mumbai,
   polygon,
+  // base
+  basegoerli,
 };

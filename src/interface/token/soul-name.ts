@@ -10,6 +10,7 @@ export interface Attribute {
 export interface ISoulName {
   description: "This is a soul name!";
   external_url:
+    | "https://app.getbasecamp.xyz"
     | "https://app.prosperity.global"
     | "https://testnet.app.masa.finance"
     | "https://app.masa.finance";

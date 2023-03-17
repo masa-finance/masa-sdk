@@ -205,7 +205,9 @@ export class MasaContracts {
 
         // we check that the recovered address is within the authorities
         if (!recoveredAddressIsAuthority) {
-          throw new Error(`${errorMessage}: Authority not allowed!`);
+          throw new Error(
+            `${errorMessage}: Authority '${recoveredAddress}' not allowed!`
+          );
         }
       }
     },

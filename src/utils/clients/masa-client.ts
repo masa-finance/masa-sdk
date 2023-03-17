@@ -197,7 +197,7 @@ export class MasaClient {
 
       const storeMetadataResponse = await this._middlewareClient
         .post<SoulNameMetadataStoreResult>(
-          `/storage/store`,
+          "/storage/store",
           {
             soulName,
             receiver,

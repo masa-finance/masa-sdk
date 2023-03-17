@@ -6,3 +6,5 @@ export * from "./celo";
 export * from "./bsc";
 // polygon
 export * from "./polygon";
+// base
+export * from "./base";
