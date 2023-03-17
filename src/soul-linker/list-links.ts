@@ -81,9 +81,9 @@ export const listLinks = async (
 
   result.links = await loadLinks(masa, contract, tokenId);
 
-  let x = 1;
+  let index = 1;
   for (const linkDetail of result.links) {
-    console.log(`\nLink #${x}`);
+    console.log(`\nLink #${index}`);
     console.log(
       "Owner Identity",
       linkDetail.ownerIdentityId.toString(),
@@ -117,7 +117,7 @@ export const listLinks = async (
     );
     console.log(`Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
     console.log(`Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);
-    x++;
+    index++;
   }
 
   if (result.links.length === 0) {

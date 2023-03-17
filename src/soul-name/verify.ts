@@ -116,14 +116,14 @@ export const verifyByName = async (
 
     // check that metadata signature matches one of the masa addresses
     if (soulNameInstance.metadata?.signature) {
-      const m = { ...soulNameInstance.metadata };
+      const metadata = { ...soulNameInstance.metadata };
 
       // we need to remove the signature before we can verify because the signature
       // was created without
-      m.signature = "";
+      metadata.signature = "";
 
       const recoveredMetadataAddress = recoverAddress(
-        JSON.stringify(m, null, 2),
+        JSON.stringify(metadata, null, 2),
         soulNameInstance.metadata.signature
       );
 

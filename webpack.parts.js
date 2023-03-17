@@ -29,7 +29,7 @@ const outputs = (base, env, mapping, overrides) => {
 
     const compiled = {
       output: {
-        filename: filename,
+        filename,
         library: target === "window" ? windowLibrary : library,
         libraryTarget: target,
         path: paths.bundle,

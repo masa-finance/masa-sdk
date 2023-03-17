@@ -487,12 +487,12 @@ export class MasaContracts {
         signatureDate: number;
         expirationDate: number;
       } = {
-        readerIdentityId: readerIdentityId,
-        ownerIdentityId: ownerIdentityId,
+        readerIdentityId,
+        ownerIdentityId,
         token: tokenAddress,
-        tokenId: tokenId,
-        signatureDate: signatureDate,
-        expirationDate: expirationDate,
+        tokenId,
+        signatureDate,
+        expirationDate,
       };
 
       const { signature, domain } = await signTypedData(
@@ -1159,8 +1159,8 @@ export class MasaContracts {
         signatureDate: number;
       } = {
         to: receiver,
-        authorityAddress: authorityAddress,
-        signatureDate: signatureDate,
+        authorityAddress,
+        signatureDate,
       };
 
       const domain: TypedDataDomain = await generateSignatureDomain(
