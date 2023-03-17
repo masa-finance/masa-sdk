@@ -16,7 +16,7 @@ export const queryLinkFromPassport = async (
 ) => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
-  return queryLink(
+  return await queryLink(
     masa,
     contract,
     paymentMethod,

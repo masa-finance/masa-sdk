@@ -50,8 +50,9 @@ export const loadCreditScoresByIdentityId = async (
 
   return (
     await Promise.all(
-      creditScoreIds.map(async (creditScoreId: BigNumber) =>
-        loadCreditScoreByTokenId(masa, creditScoreId)
+      creditScoreIds.map(
+        async (creditScoreId: BigNumber) =>
+          await loadCreditScoreByTokenId(masa, creditScoreId)
       )
     )
   ).filter(

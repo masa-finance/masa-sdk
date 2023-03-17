@@ -771,7 +771,7 @@ export class MasaContracts {
      * purchase only identity
      */
     purchase: async (): Promise<ContractTransaction> => {
-      return this.instances.SoulStoreContract.connect(
+      return await this.instances.SoulStoreContract.connect(
         this.masaConfig.wallet
       ).purchaseIdentity();
     },
