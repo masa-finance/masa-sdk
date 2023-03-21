@@ -14,7 +14,8 @@ export const getSoulNameMetadataPrefix = (masa: Masa): string => {
 
 export const validateSoulName = (
   masa: Masa,
-  soulName: string
+  soulName: string,
+  verbose?: boolean
 ): { isValid: boolean; length: number; message?: string } => {
   const result: { isValid: boolean; length: number; message?: string } = {
     isValid: false,
@@ -36,17 +37,22 @@ export const validateSoulName = (
   // http://www.unicode.org/L2/L2017/17086-vs16-keycaps-emoji.pdf
   const emojiKeyCaps: RegExp = /\u{20E3}/u;
 
+  const validatorSource = `^[${[
+    alphaNumeric,
+    punctuation,
+    pictographic,
+    emojiVariants,
+    emojiKeyCaps,
+  ]
+    .map((regExp: RegExp) => regExp.source)
+    .join("")}]+$`;
+
+  if (verbose) {
+    console.info(validatorSource);
+  }
+
   // combine validator
-  const validator = new RegExp(
-    `^[${[
-      alphaNumeric,
-      punctuation,
-      pictographic,
-      emojiVariants,
-      emojiKeyCaps,
-    ].map((regEx: RegExp) => regEx.source)}]+$`,
-    "u"
-  );
+  const validator = new RegExp(validatorSource, "u");
   const isValid = validator.test(soulName);
   const hasWhitespace = soulName.includes(" ");
 
