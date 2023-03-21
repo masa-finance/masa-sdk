@@ -23,17 +23,20 @@ export const validateSoulName = (
 
   // alpha handling
   // eslint-disable-next-line no-useless-escape
-  const alpha: RegExp = /a-zA-Z0-9.\-/;
-  // emoji handling
-  const emoji: RegExp = /\p{Emoji_Presentation}/u;
-  // \u{2764} is special handling for red heart
-  const heart: RegExp = /\u{2764}/u;
-  // \u{FE00}-\u{FE0F} is the emoji connector
-  const emojiConnector: RegExp = /\u{FE00}-\u{FE0F}/u;
+  const alphaNumeric: RegExp = /a-zA-Z0-9.\-/;
+  // pictographic handling
+  // https://en.wikipedia.org/wiki/Symbols_and_Pictographs_Extended-A
+  const pictographic: RegExp = /\p{Extended_Pictographic}/u;
+  // \u{FE00}-\u{FE0F} is the emoji variant selector
+  // http://unicode.org/charts//PDF/Unicode-3.2/U32-FE00.pdf
+  const emojiVariants: RegExp = /\u{FE00}-\u{FE0F}/u;
+  // emoji keycaps handling
+  // http://www.unicode.org/L2/L2017/17086-vs16-keycaps-emoji.pdf
+  const emojiKeyCaps: RegExp = /\u{20E3}/u;
 
   // combine validator
   const validator = new RegExp(
-    `^[${[alpha, emoji, heart, emojiConnector].map(
+    `^[${[alphaNumeric, pictographic, emojiVariants, emojiKeyCaps].map(
       (regEx: RegExp) => regEx.source
     )}]+$`,
     "u"
