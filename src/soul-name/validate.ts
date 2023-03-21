@@ -21,9 +21,24 @@ export const validateSoulName = (
     length: calculateSoulNameLength(soulName),
   };
 
+  // alpha handling
+  // eslint-disable-next-line no-useless-escape
+  const alpha: RegExp = /a-zA-Z0-9.\-/;
+  // emoji handling
+  const emoji: RegExp = /\p{Emoji_Presentation}/u;
   // \u{2764} is special handling for red heart
-  const isEmoji = /[\p{Emoji_Presentation}\u{2764}]/gmu.test(soulName);
-  const isAlpha = /^[a-zA-Z0-9.-]+$/gmu.test(soulName);
+  const heart: RegExp = /\u{2764}/u;
+  // \u{FE00}-\u{FE0F} is the emoji connector
+  const emojiConnector: RegExp = /\u{FE00}-\u{FE0F}/u;
+
+  // combine validator
+  const validator = new RegExp(
+    `^[${[alpha, emoji, heart, emojiConnector].map(
+      (regEx: RegExp) => regEx.source
+    )}]+$`,
+    "u"
+  );
+  const isValid = validator.test(soulName);
   const hasWhitespace = soulName.includes(" ");
 
   if (result.length < 1) {
@@ -36,7 +51,7 @@ export const validateSoulName = (
     return result;
   }
 
-  if (!isAlpha && !isEmoji) {
+  if (!isValid) {
     result.message =
       "Soulname must contain only alphanumeric or emoji characters";
     return result;
