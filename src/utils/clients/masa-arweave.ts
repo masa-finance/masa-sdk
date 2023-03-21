@@ -37,7 +37,7 @@ export class MasaArweave extends Arweave {
       }
     } catch (error) {
       if (error instanceof Error && this.masaConfig.verbose) {
-        console.error("Arweave getData failed!");
+        console.error("Arweave getData failed!", error.message);
       }
     }
 
