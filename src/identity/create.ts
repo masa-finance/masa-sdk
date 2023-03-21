@@ -135,8 +135,8 @@ export const createIdentityWithSoulName = async (
       result.tokenId = soulNameInstance.tokenId;
       result.soulName = soulName;
     } else {
-      result.message = "Creating identity and soulname failed!";
-      console.error(result.message);
+        result.message = "Sorry, we were unable to create an identity and soulname for you because of blockchain network congestion. Please try the mint process again or try again in a few minutes. Thank you!";
+        console.error(result.message);
     }
   } else {
     console.error(Messages.NotLoggedIn());
