@@ -21,9 +21,11 @@ export const validateSoulName = (
     length: calculateSoulNameLength(soulName),
   };
 
-  // alpha handling
+  // alphanumeric handling
+  const alphaNumeric: RegExp = /a-zA-Z0-9/;
+  // allow some punctuation
   // eslint-disable-next-line no-useless-escape
-  const alphaNumeric: RegExp = /a-zA-Z0-9.\-/;
+  const punctuation: RegExp = /.\-/;
   // pictographic handling
   // https://en.wikipedia.org/wiki/Symbols_and_Pictographs_Extended-A
   const pictographic: RegExp = /\p{Extended_Pictographic}/u;
@@ -36,9 +38,13 @@ export const validateSoulName = (
 
   // combine validator
   const validator = new RegExp(
-    `^[${[alphaNumeric, pictographic, emojiVariants, emojiKeyCaps].map(
-      (regEx: RegExp) => regEx.source
-    )}]+$`,
+    `^[${[
+      alphaNumeric,
+      punctuation,
+      pictographic,
+      emojiVariants,
+      emojiKeyCaps,
+    ].map((regEx: RegExp) => regEx.source)}]+$`,
     "u"
   );
   const isValid = validator.test(soulName);
