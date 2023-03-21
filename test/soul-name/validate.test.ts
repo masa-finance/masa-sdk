@@ -21,6 +21,12 @@ describe("Soul Name", () => {
           assert(length === 1, length.toString());
         });
 
+        it("|.soul should be invalid!", () => {
+          const { isValid, message, length } = validateSoulName(testMasa, "|");
+          assert(isValid === valid, message);
+          assert(length === 1, length.toString());
+        });
+
         it("\u{200d}.soul should be invalid!", () => {
           const { isValid, message, length } = validateSoulName(
             testMasa,
