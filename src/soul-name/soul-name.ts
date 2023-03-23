@@ -16,7 +16,7 @@ import { MasaBase } from "../helpers/masa-base";
 
 export class MasaSoulName extends MasaBase {
   getRegistrationPrice = (
-    paymentMethod: PaymentMethod = "eth",
+    paymentMethod: PaymentMethod = "ETH",
     soulName: string,
     duration: number
   ) => getRegistrationPrice(this.masa, paymentMethod, soulName, duration);
@@ -29,7 +29,7 @@ export class MasaSoulName extends MasaBase {
   loadSoulNameByTokenId = (tokenId: string | BigNumber) =>
     loadSoulNameByTokenId(this.masa, tokenId);
   create = (
-    paymentMethod: PaymentMethod = "eth",
+    paymentMethod: PaymentMethod = "ETH",
     soulName: string,
     duration: number,
     receiver?: string

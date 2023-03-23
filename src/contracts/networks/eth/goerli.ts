@@ -1,3 +1,5 @@
+import { Tokens } from "../../addresses";
+
 // identity
 import SoulboundIdentity from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundIdentity.json";
 import SoulboundCreditScore from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundCreditScore.json";
@@ -6,11 +8,12 @@ import SoulStore from "@masa-finance/masa-contracts-identity/deployments/goerli/
 import SoulLinker from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulLinker.json";
 import SoulboundGreen from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundGreen.json";
 // token
-import MasaToken from "@masa-finance/masa-token/deployments/mainnet/MasaToken.json";
+import MasaToken from "@masa-finance/masa-token/deployments/goerli/MasaToken.json";
 
-export const MASA = MasaToken.address;
-export const USDC = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
-export const WETH = undefined;
+export const tokens: Tokens = {
+  MASA: MasaToken.address,
+  USDC: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
+};
 
 export const SoulboundIdentityAddress = SoulboundIdentity.address;
 export const SoulboundCreditScoreAddress = SoulboundCreditScore.address;

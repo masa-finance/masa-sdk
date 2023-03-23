@@ -1,8 +1,6 @@
 import { getBalances } from "./get-balances";
-import Masa from "../masa";
+import { MasaBase } from "../helpers/masa-base";
 
-export class MasaAccount {
-  constructor(private mass: Masa) {}
-
-  getBalances = (address?: string) => getBalances(this.mass, address);
+export class MasaAccount extends MasaBase {
+  getBalances = (address?: string) => getBalances(this.masa, address);
 }

@@ -16,7 +16,7 @@ export class MasaSoulLinker extends MasaBase {
 
   create = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
     createLink(this.masa, this.contract, tokenId, readerIdentityId);
-  establish = (paymentMethod: PaymentMethod = "eth", passport: string) =>
+  establish = (paymentMethod: PaymentMethod = "ETH", passport: string) =>
     establishLinkFromPassport(
       this.masa,
       paymentMethod,

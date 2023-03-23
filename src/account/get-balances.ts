@@ -1,4 +1,4 @@
-import { addresses } from "../contracts";
+import { addresses, PaymentMethod } from "../contracts";
 import {
   IERC20__factory,
   SoulboundCreditScore,
@@ -9,39 +9,37 @@ import {
 import Masa from "../masa";
 import { BigNumber, constants } from "ethers";
 
+type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
+
+export type Balances = {
+  [index in BalanceTypes]?: BigNumber;
+};
+
+type SBTContractNames = "Identity" | "SoulName" | "Green" | "CreditScore";
+
+type SBTContracts =
+  | SoulboundIdentity
+  | SoulName
+  | SoulboundCreditScore
+  | SoulboundGreen;
+
 export const getBalances = async (
   masa: Masa,
   address?: string
-): Promise<
-  | {
-      ethBalance: BigNumber;
-      masaBalance: BigNumber;
-      usdcBalance: BigNumber;
-      wethBalance: BigNumber;
-      identityBalance: BigNumber;
-      soulNameBalance: BigNumber;
-      soulboundCreditScoreBalance: BigNumber;
-      soulboundGreenBalance: BigNumber;
-    }
-  | undefined
-> => {
-  if (!masa.config.wallet.provider) return;
-
+): Promise<Balances> => {
   const contractAddresses = addresses[masa.config.network];
   const addressToLoad = address || (await masa.config.wallet.getAddress());
 
   const loadERC20Balance = async (
     userAddress: string,
     tokenAddress?: string
-  ) => {
-    let result = BigNumber.from(0);
-
+  ): Promise<BigNumber | undefined> => {
     if (
       !masa.config.wallet.provider ||
       !tokenAddress ||
       tokenAddress === constants.AddressZero
     ) {
-      return result;
+      return;
     }
 
     try {
@@ -50,7 +48,7 @@ export const getBalances = async (
         masa.config.wallet.provider
       );
 
-      result = await contract.balanceOf(userAddress);
+      return await contract.balanceOf(userAddress);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
@@ -58,23 +56,16 @@ export const getBalances = async (
         );
       }
     }
-
-    return result;
   };
 
   const loadContractBalance = async (
-    contract:
-      | SoulboundIdentity
-      | SoulName
-      | SoulboundCreditScore
-      | SoulboundGreen,
+    contract: SBTContracts,
     addressToLoad: string
-  ) => {
-    let result = BigNumber.from(0);
-    if (contract.address === constants.AddressZero) return result;
+  ): Promise<BigNumber | undefined> => {
+    if (contract.address === constants.AddressZero) return;
 
     try {
-      result = await contract.balanceOf(addressToLoad);
+      return await contract.balanceOf(addressToLoad);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
@@ -82,60 +73,63 @@ export const getBalances = async (
         );
       }
     }
-
-    return result;
   };
 
-  const [
-    ethBalance,
-    masaBalance,
-    usdcBalance,
-    wethBalance,
-    identityBalance,
-    soulNameBalance,
-    soulboundCreditScoreBalance,
-    soulboundGreenBalance,
-  ] = await Promise.all([
-    // ETH
-    masa.config.wallet.provider.getBalance(addressToLoad),
-    // MASA
-    loadERC20Balance(addressToLoad, contractAddresses?.MASA),
-    // USDC
-    loadERC20Balance(addressToLoad, contractAddresses?.USDC),
-    // WETH
-    loadERC20Balance(addressToLoad, contractAddresses?.WETH),
-    // SBI
-    loadContractBalance(
-      masa.contracts.instances.SoulboundIdentityContract,
-      addressToLoad
-    ),
-    // MSN
-    loadContractBalance(
-      masa.contracts.instances.SoulNameContract,
-      addressToLoad
-    ),
-    // SCS
-    loadContractBalance(
-      masa.contracts.instances.SoulboundCreditScoreContract,
-      addressToLoad
-    ),
-    // Green
-    loadContractBalance(
-      masa.contracts.instances.SoulboundGreenContract,
-      addressToLoad
-    ),
-  ]);
+  let ERC20Balances;
 
-  const balances = {
-    ethBalance,
-    masaBalance,
-    usdcBalance,
-    wethBalance,
-    identityBalance,
-    soulNameBalance,
-    soulboundCreditScoreBalance,
-    soulboundGreenBalance,
+  if (contractAddresses?.tokens) {
+    const paymentMethods = Object.keys(contractAddresses.tokens);
+    ERC20Balances = await paymentMethods.reduce(
+      async (
+        accumulatedBalances: Promise<Partial<Balances>>,
+        symbol: string
+      ) => {
+        const balance = await loadERC20Balance(
+          addressToLoad,
+          contractAddresses?.tokens?.[symbol as PaymentMethod]
+        );
+
+        const accumulated = await accumulatedBalances;
+        return balance
+          ? { ...accumulated, [symbol]: balance }
+          : { ...accumulated };
+      },
+      Promise.resolve({})
+    );
+  }
+
+  const Native: BigNumber | undefined =
+    await masa.config.wallet.provider?.getBalance(addressToLoad);
+
+  const SBTContractBalances: {
+    [key in SBTContractNames]: SBTContracts;
+  } = {
+    Identity: masa.contracts.instances.SoulboundIdentityContract,
+    SoulName: masa.contracts.instances.SoulNameContract,
+    CreditScore: masa.contracts.instances.SoulboundCreditScoreContract,
+    Green: masa.contracts.instances.SoulboundGreenContract,
   };
 
-  return balances;
+  const SBTBalances = await Object.keys(SBTContractBalances).reduce(
+    async (accumulatedBalances: Promise<Partial<Balances>>, symbol: string) => {
+      const balance = await loadContractBalance(
+        SBTContractBalances[symbol as SBTContractNames],
+        addressToLoad
+      );
+      const accumulated = await accumulatedBalances;
+
+      return balance
+        ? { ...accumulated, [symbol]: balance }
+        : { ...accumulated };
+    },
+    Promise.resolve({})
+  );
+
+  return {
+    Native,
+    // ERC20
+    ...ERC20Balances,
+    // SBT
+    ...SBTBalances,
+  };
 };

@@ -19,7 +19,7 @@ export class MasaCreditScore extends MasaBase {
     );
   }
 
-  create = (paymentMethod: PaymentMethod = "eth") =>
+  create = (paymentMethod: PaymentMethod = "ETH") =>
     createCreditScore(this.masa, paymentMethod);
   burn = (creditScoreId: BigNumber) =>
     burnCreditScore(this.masa, creditScoreId);

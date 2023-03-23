@@ -41,7 +41,7 @@ export class MasaGreen extends MasaBase {
    * @param signature
    */
   mint = (
-    paymentMethod: PaymentMethod = "eth",
+    paymentMethod: PaymentMethod = "ETH",
     authorityAddress: string,
     signatureDate: number,
     signature: string
@@ -61,7 +61,7 @@ export class MasaGreen extends MasaBase {
    * @param code
    */
   create = (
-    paymentMethod: PaymentMethod = "eth",
+    paymentMethod: PaymentMethod = "ETH",
     phoneNumber: string,
     code: string
   ) => createGreen(this.masa, paymentMethod, phoneNumber, code);

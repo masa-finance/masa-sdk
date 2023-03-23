@@ -19,15 +19,16 @@ import {
 import {
   addresses,
   ContractFactory,
+  isERC20Currency,
+  isNativeCurrency,
   loadIdentityContracts,
   loadSBTContract,
+  PaymentMethod,
 } from "./index";
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain, signTypedData } from "../utils";
 import { ERC20__factory } from "./stubs/ERC20__factory";
-
-export type PaymentMethod = "eth" | "weth" | "stable" | "utility";
 
 export class MasaContracts {
   public instances: IIdentityContracts;
@@ -52,7 +53,7 @@ export class MasaContracts {
       paymentMethod: PaymentMethod,
       price: BigNumber
     ): Promise<ContractReceipt | undefined> => {
-      if (paymentMethod !== "eth") {
+      if (isERC20Currency(paymentMethod)) {
         const contract = IERC20__factory.connect(
           paymentAddress,
           this.masaConfig.wallet
@@ -85,22 +86,16 @@ export class MasaContracts {
      * @param paymentMethod
      * @private
      */
-    getPaymentAddress: (paymentMethod: PaymentMethod) => {
-      let paymentAddress = constants.AddressZero;
+    getPaymentAddress: (paymentMethod: PaymentMethod): string => {
+      let paymentAddress: string | undefined = isNativeCurrency(paymentMethod)
+        ? constants.AddressZero
+        : addresses[this.masaConfig.network]?.tokens?.[paymentMethod];
 
-      switch (paymentMethod) {
-        case "utility":
-          paymentAddress =
-            addresses[this.masaConfig.network]?.MASA || constants.AddressZero;
-          break;
-        case "stable":
-          paymentAddress =
-            addresses[this.masaConfig.network]?.USDC || constants.AddressZero;
-          break;
-        case "weth":
-          paymentAddress =
-            addresses[this.masaConfig.network]?.WETH || constants.AddressZero;
-          break;
+      if (!paymentAddress) {
+        console.error(
+          `Payment address not found for payment method: ${paymentMethod} falling back to native currency!`
+        );
+        paymentAddress = constants.AddressZero;
       }
 
       return paymentAddress;
@@ -282,7 +277,7 @@ export class MasaContracts {
         let price = await selfSovereignSBT.getMintPrice(paymentAddress);
 
         if (slippage) {
-          if (paymentMethod === "eth") {
+          if (isNativeCurrency(paymentMethod)) {
             price = this.tools.addSlippage(price, slippage);
           }
         }
@@ -377,7 +372,7 @@ export class MasaContracts {
       );
 
       if (slippage) {
-        if (paymentMethod === "eth") {
+        if (isNativeCurrency(paymentMethod)) {
           price = this.tools.addSlippage(price, slippage);
         }
       }
@@ -420,7 +415,7 @@ export class MasaContracts {
         slippage
       );
 
-      if (paymentMethod !== "eth") {
+      if (isERC20Currency(paymentMethod)) {
         const paymentToken: IERC20 = IERC20__factory.connect(
           paymentAddress,
           this.masaConfig.wallet
@@ -451,7 +446,7 @@ export class MasaContracts {
           signatureDate,
           expirationDate,
           signature,
-          paymentMethod === "eth" ? { value: price } : undefined
+          isNativeCurrency(paymentMethod) ? { value: price } : undefined
         );
 
       const addLinkTransactionReceipt = await addLinkTransactionResponse.wait();
@@ -628,7 +623,7 @@ export class MasaContracts {
       ];
 
       const purchaseNameOverrides = {
-        value: paymentMethod === "eth" ? price : undefined,
+        value: isNativeCurrency(paymentMethod) ? price : undefined,
       };
 
       if (this.masaConfig.verbose) {
@@ -680,7 +675,7 @@ export class MasaContracts {
       );
 
       if (slippage) {
-        if (paymentMethod === "eth") {
+        if (isNativeCurrency(paymentMethod)) {
           price = this.tools.addSlippage(price, slippage);
         }
       }
@@ -858,7 +853,7 @@ export class MasaContracts {
       ];
 
       const purchaseIdentityAndNameOverrides = {
-        value: paymentMethod === "eth" ? price : undefined,
+        value: isNativeCurrency(paymentMethod) ? price : undefined,
       };
 
       if (this.masaConfig.verbose) {
@@ -921,7 +916,7 @@ export class MasaContracts {
         );
 
       if (slippage) {
-        if (paymentMethod === "eth") {
+        if (isNativeCurrency(paymentMethod)) {
           price = this.tools.addSlippage(price, slippage);
         }
       }
@@ -1107,7 +1102,7 @@ export class MasaContracts {
       );
 
       if (slippage) {
-        if (paymentMethod === "eth") {
+        if (isNativeCurrency(paymentMethod)) {
           price = this.tools.addSlippage(price, slippage);
         }
       }
