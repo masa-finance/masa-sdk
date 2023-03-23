@@ -1,4 +1,5 @@
 import { NetworkName } from "../interface";
+import { addresses, Addresses } from "../contracts";
 
 export interface Network {
   networkName: NetworkName;
@@ -11,6 +12,7 @@ export interface Network {
     decimals: number;
   };
   blockExplorerUrls?: string[];
+  addresses: Addresses;
 }
 
 export const getNetworkNameByChainId = (chainId: number): NetworkName => {
@@ -37,6 +39,7 @@ const bsc: Network = {
     symbol: "BNB",
     decimals: 18,
   },
+  addresses: addresses["bsc"] as Addresses,
 };
 const bsctest: Network = {
   networkName: "bsctest",
@@ -48,6 +51,7 @@ const bsctest: Network = {
     symbol: "tBNB",
     decimals: 18,
   },
+  addresses: addresses["bsctest"] as Addresses,
 };
 
 // celo
@@ -62,6 +66,7 @@ const celo: Network = {
     decimals: 18,
   },
   blockExplorerUrls: ["https://celoscan.io"],
+  addresses: addresses["celo"] as Addresses,
 };
 const alfajores: Network = {
   networkName: "alfajores",
@@ -74,6 +79,7 @@ const alfajores: Network = {
     decimals: 18,
   },
   blockExplorerUrls: ["https://alfajores.celoscan.io"],
+  addresses: addresses["alfajores"] as Addresses,
 };
 
 // polygon
@@ -88,6 +94,7 @@ const polygon: Network = {
   },
   rpcUrls: ["https://polygon-rpc.com/"],
   blockExplorerUrls: ["https://polygonscan.com/"],
+  addresses: addresses["polygon"] as Addresses,
 };
 const mumbai: Network = {
   networkName: "mumbai",
@@ -100,6 +107,7 @@ const mumbai: Network = {
   },
   rpcUrls: ["https://polygon-testnet-rpc.allthatnode.com:8545"],
   blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+  addresses: addresses["mumbai"] as Addresses,
 };
 
 // ethereum
@@ -114,6 +122,7 @@ const ethereum: Network = {
   },
   rpcUrls: ["https://rpc.ankr.com/eth"],
   blockExplorerUrls: ["https://etherscan.io"],
+  addresses: addresses["ethereum"] as Addresses,
 };
 const goerli: Network = {
   networkName: "goerli",
@@ -126,6 +135,7 @@ const goerli: Network = {
   },
   rpcUrls: ["https://rpc.ankr.com/eth_goerli"],
   blockExplorerUrls: ["https://goerli.etherscan.io"],
+  addresses: addresses["goerli"] as Addresses,
 };
 
 // base
@@ -140,6 +150,7 @@ const basegoerli: Network = {
   },
   rpcUrls: ["https://goerli.base.org"],
   blockExplorerUrls: ["https://goerli.basescan.org"],
+  addresses: addresses["basegoerli"] as Addresses,
 };
 
 export const SupportedNetworks: Partial<{

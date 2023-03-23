@@ -65,11 +65,7 @@ export const verifyGreen = async (
   };
 
   // try to verify with the code
-  const greenVerifyResult = await masa.client.green.verify(
-    phoneNumber,
-    code,
-    masa.config.network
-  );
+  const greenVerifyResult = await masa.client.green.verify(phoneNumber, code);
 
   if (masa.config.verbose) {
     console.log({ greenVerifyResult });

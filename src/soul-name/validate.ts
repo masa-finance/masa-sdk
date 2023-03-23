@@ -7,7 +7,8 @@ export const calculateSoulNameLength = (soulName: string) => {
 
 export const getSoulNameMetadataPrefix = (masa: Masa): string => {
   // special handling for celo networks
-  return masa.config.network === "celo" || masa.config.network === "alfajores"
+  return masa.config.networkName === "celo" ||
+    masa.config.networkName === "alfajores"
     ? "https://arweave.net/"
     : "ar://";
 };

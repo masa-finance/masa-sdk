@@ -40,8 +40,7 @@ const purchaseSoulName = async (
     const storeMetadataData = await masa.client.soulName.store(
       `${soulName}${extension}`,
       receiver,
-      duration,
-      masa.config.network
+      duration
     );
 
     if (storeMetadataData) {

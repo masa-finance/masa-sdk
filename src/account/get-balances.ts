@@ -1,4 +1,4 @@
-import { addresses, PaymentMethod } from "../contracts";
+import { PaymentMethod } from "../contracts";
 import {
   SoulboundCreditScore,
   SoulboundGreen,
@@ -27,7 +27,6 @@ export const getBalances = async (
   masa: Masa,
   address?: string
 ): Promise<Balances> => {
-  const contractAddresses = addresses[masa.config.network];
   const addressToLoad = address || (await masa.config.wallet.getAddress());
 
   const loadERC20Balance = async (
@@ -82,8 +81,8 @@ export const getBalances = async (
 
   let ERC20Balances;
 
-  if (contractAddresses?.tokens) {
-    const paymentMethods = Object.keys(contractAddresses.tokens);
+  if (masa.config.network?.addresses?.tokens) {
+    const paymentMethods = Object.keys(masa.config.network.addresses.tokens);
     ERC20Balances = await paymentMethods.reduce(
       async (
         accumulatedBalances: Promise<Partial<Balances>>,
@@ -91,7 +90,7 @@ export const getBalances = async (
       ): Promise<Balances> => {
         const balance = await loadERC20Balance(
           addressToLoad,
-          contractAddresses?.tokens?.[symbol as PaymentMethod]
+          masa.config.network?.addresses?.tokens?.[symbol as PaymentMethod]
         );
 
         const accumulated = await accumulatedBalances;

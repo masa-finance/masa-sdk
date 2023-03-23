@@ -8,18 +8,19 @@ import {
   IIdentity,
   ISession,
   LogoutResult,
-  NetworkName,
   SessionUser,
   SoulNameMetadataStoreResult,
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
+import { MasaBase } from "../../helpers/masa-base";
+import Masa from "../../masa";
 
 const headers = {
   "Content-Type": "application/json",
 };
 
-export class MasaClient {
+export class MasaClient extends MasaBase {
   private _middlewareClient: AxiosInstance;
   private _cookie?: string;
 
@@ -27,7 +28,16 @@ export class MasaClient {
     return this._cookie;
   }
 
-  constructor({ apiUrl, cookie }: { apiUrl: string; cookie?: string }) {
+  constructor({
+    masa,
+    apiUrl,
+    cookie,
+  }: {
+    masa: Masa;
+    apiUrl: string;
+    cookie?: string;
+  }) {
+    super(masa);
     this._cookie = cookie;
 
     this._middlewareClient = axios.create({
@@ -185,13 +195,11 @@ export class MasaClient {
      * @param soulName
      * @param receiver
      * @param duration
-     * @param network
      */
     store: async (
       soulName: string,
       receiver: string,
-      duration: number,
-      network: NetworkName
+      duration: number
     ): Promise<SoulNameMetadataStoreResult | undefined> => {
       console.log(`Writing metadata for '${soulName}'`);
 
@@ -202,7 +210,7 @@ export class MasaClient {
             soulName,
             receiver,
             duration,
-            network,
+            network: this.masa.config.networkName,
           },
           {
             headers: {
@@ -270,8 +278,7 @@ export class MasaClient {
 
     verify: async (
       phoneNumber: string,
-      code: string,
-      network: string
+      code: string
     ): Promise<VerifyGreenResult | undefined> => {
       const result = {
         success: false,
@@ -285,7 +292,7 @@ export class MasaClient {
           {
             phoneNumber,
             code,
-            network,
+            network: this.masa.config.networkName,
           },
           {
             headers: {

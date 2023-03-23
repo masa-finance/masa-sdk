@@ -7,7 +7,7 @@ export const checkLogin = async (masa: Masa): Promise<boolean> => {
   if (checkSessionResponse) {
     console.log(`User ID: '${checkSessionResponse.user.userId}'`);
     console.log(`Signer Address: '${await masa.config.wallet.getAddress()}'`);
-    console.log(`Network: '${masa.config.network}'`);
+    console.log(`Network: '${masa.config.networkName}'`);
     console.log("\n");
 
     loggedIn = true;

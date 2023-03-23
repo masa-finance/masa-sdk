@@ -11,6 +11,7 @@ import {
   MasaSBT,
   MasaSession,
   MasaSoulName,
+  SupportedNetworks,
   version,
 } from "./";
 
@@ -34,7 +35,7 @@ export default class Masa {
     wallet,
     apiUrl = "https://middleware.masa.finance",
     environment = "production",
-    defaultNetwork = "ethereum",
+    networkName = "ethereum",
     arweave = {
       host: "arweave.net",
       port: 443,
@@ -46,13 +47,15 @@ export default class Masa {
     this.config = {
       apiUrl,
       environment,
-      network: defaultNetwork,
+      networkName,
+      network: SupportedNetworks[networkName],
       wallet,
       verbose,
     };
 
     // masa client
     this.client = new MasaClient({
+      masa: this,
       apiUrl,
       cookie,
     });

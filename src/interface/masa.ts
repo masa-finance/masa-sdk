@@ -1,5 +1,6 @@
 import { BigNumber, Signer, Wallet } from "ethers";
 import { ApiConfig as ArweaveConfig } from "arweave/node/lib/api";
+import { Network } from "../utils";
 
 export type EnvironmentName = "dev" | "test" | "beta" | "production";
 
@@ -27,7 +28,7 @@ export interface MasaArgs {
   wallet: Signer | Wallet;
   apiUrl?: string;
   environment?: EnvironmentName;
-  defaultNetwork?: NetworkName;
+  networkName?: NetworkName;
   verbose?: boolean;
   arweave?: ArweaveConfig;
 }
@@ -35,7 +36,8 @@ export interface MasaArgs {
 export interface MasaConfig {
   readonly apiUrl: string;
   readonly environment: string;
-  readonly network: NetworkName;
+  readonly networkName: NetworkName;
+  readonly network?: Network;
   readonly wallet: Signer | Wallet;
   readonly verbose: boolean;
 }

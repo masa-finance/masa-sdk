@@ -39,7 +39,7 @@ export const loadSBTContract = async <Contract extends MasaSBTSelfSovereign>(
       }
     } else {
       console.error(
-        `Smart contract '${address}' does not exist on network '${masaConfig.network}'!`
+        `Smart contract '${address}' does not exist on network '${masaConfig.networkName}'!`
       );
     }
   } else {

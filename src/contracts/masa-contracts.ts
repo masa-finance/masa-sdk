@@ -17,7 +17,6 @@ import {
   Wallet,
 } from "ethers";
 import {
-  addresses,
   ContractFactory,
   isERC20Currency,
   isNativeCurrency,
@@ -36,7 +35,7 @@ export class MasaContracts {
   public constructor(private masaConfig: MasaConfig) {
     this.instances = loadIdentityContracts({
       provider: masaConfig.wallet.provider,
-      network: masaConfig.network,
+      networkName: masaConfig.networkName,
     });
   }
 
@@ -89,7 +88,7 @@ export class MasaContracts {
     getPaymentAddress: (paymentMethod: PaymentMethod): string => {
       let paymentAddress: string | undefined = isNativeCurrency(paymentMethod)
         ? constants.AddressZero
-        : addresses[this.masaConfig.network]?.tokens?.[paymentMethod];
+        : this.masaConfig.network?.addresses?.tokens?.[paymentMethod];
 
       if (!paymentAddress) {
         console.error(

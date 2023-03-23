@@ -26,8 +26,7 @@ export const purchaseIdentityWithSoulName = async (
     const storedSoulNameMetadata = await masa.client.soulName.store(
       `${soulName}${extension}`,
       await masa.config.wallet.getAddress(),
-      duration,
-      masa.config.network
+      duration
     );
 
     if (storedSoulNameMetadata) {

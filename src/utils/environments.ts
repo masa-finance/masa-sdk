@@ -12,7 +12,7 @@ export const environments: Environment[] = [
     name: "local",
     environment: "dev",
     apiUrl: "http://localhost:4000/",
-    defaultNetwork: "goerli",
+    networkName: "goerli",
     arweave: {
       host: "arweave.net",
       port: 443,
@@ -24,7 +24,7 @@ export const environments: Environment[] = [
     name: "dev",
     environment: "dev",
     apiUrl: "https://dev.middleware.masa.finance/",
-    defaultNetwork: "goerli",
+    networkName: "goerli",
     arweave: {
       host: "arweave.net",
       port: 443,
@@ -36,7 +36,7 @@ export const environments: Environment[] = [
     name: "test",
     environment: "test",
     apiUrl: "https://test.middleware.masa.finance/",
-    defaultNetwork: "goerli",
+    networkName: "goerli",
     arweave: {
       host: "arweave.net",
       port: 443,
@@ -48,7 +48,7 @@ export const environments: Environment[] = [
     name: "stage",
     environment: "beta",
     apiUrl: "https://beta.middleware.masa.finance/",
-    defaultNetwork: "goerli",
+    networkName: "goerli",
     arweave: {
       host: "arweave.net",
       port: 443,
@@ -60,7 +60,7 @@ export const environments: Environment[] = [
     name: "production",
     environment: "production",
     apiUrl: "https://middleware.masa.finance/",
-    defaultNetwork: "ethereum",
+    networkName: "ethereum",
     arweave: {
       host: "arweave.net",
       port: 443,

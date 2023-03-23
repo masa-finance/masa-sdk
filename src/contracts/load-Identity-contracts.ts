@@ -18,12 +18,12 @@ import { addresses } from "./addresses";
 
 export interface LoadContractArgs {
   provider?: providers.Provider;
-  network?: NetworkName;
+  networkName?: NetworkName;
 }
 
 export const loadIdentityContracts = ({
   provider,
-  network = "ethereum",
+  networkName = "ethereum",
 }: LoadContractArgs): IIdentityContracts => {
   const loadedProvider =
     // take provider as is if supplied
@@ -37,35 +37,36 @@ export const loadIdentityContracts = ({
 
   const SoulboundIdentityContract: SoulboundIdentity =
     SoulboundIdentity__factory.connect(
-      addresses[network]?.SoulboundIdentityAddress || constants.AddressZero,
+      addresses[networkName]?.SoulboundIdentityAddress || constants.AddressZero,
       loadedProvider
     );
 
   const SoulboundCreditScoreContract: SoulboundCreditScore =
     SoulboundCreditScore__factory.connect(
-      addresses[network]?.SoulboundCreditScoreAddress || constants.AddressZero,
+      addresses[networkName]?.SoulboundCreditScoreAddress ||
+        constants.AddressZero,
       loadedProvider
     );
 
   const SoulNameContract: SoulName = SoulName__factory.connect(
-    addresses[network]?.SoulNameAddress || constants.AddressZero,
+    addresses[networkName]?.SoulNameAddress || constants.AddressZero,
     loadedProvider
   );
 
   const SoulLinkerContract: SoulLinker = SoulLinker__factory.connect(
-    addresses[network]?.SoulLinkerAddress || constants.AddressZero,
+    addresses[networkName]?.SoulLinkerAddress || constants.AddressZero,
     loadedProvider
   );
 
   const SoulStoreContract: SoulStore = SoulStore__factory.connect(
-    addresses[network]?.SoulStoreAddress || constants.AddressZero,
+    addresses[networkName]?.SoulStoreAddress || constants.AddressZero,
     loadedProvider
   );
 
   const SoulboundGreenContract: SoulboundGreen =
     SoulboundGreen__factory.connect(
       // this might be empty
-      addresses[network]?.SoulboundGreenAddress || constants.AddressZero,
+      addresses[networkName]?.SoulboundGreenAddress || constants.AddressZero,
       loadedProvider
     );
 
