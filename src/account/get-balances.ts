@@ -1,19 +1,19 @@
 import { addresses, PaymentMethod } from "../contracts";
 import {
-  IERC20__factory,
   SoulboundCreditScore,
   SoulboundGreen,
   SoulboundIdentity,
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
 import Masa from "../masa";
-import { BigNumber, constants } from "ethers";
+import { constants, utils } from "ethers";
+import { ERC20__factory } from "../contracts/stubs/ERC20__factory";
 
 type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
-export type Balances = {
-  [index in BalanceTypes]?: BigNumber;
-};
+export type Balances = Partial<{
+  [index in BalanceTypes]: number | undefined;
+}>;
 
 type SBTContractNames = "Identity" | "SoulName" | "Green" | "CreditScore";
 
@@ -33,7 +33,7 @@ export const getBalances = async (
   const loadERC20Balance = async (
     userAddress: string,
     tokenAddress?: string
-  ): Promise<BigNumber | undefined> => {
+  ): Promise<number | undefined> => {
     if (
       !masa.config.wallet.provider ||
       !tokenAddress ||
@@ -43,12 +43,17 @@ export const getBalances = async (
     }
 
     try {
-      const contract = IERC20__factory.connect(
+      const contract = ERC20__factory.connect(
         tokenAddress,
         masa.config.wallet.provider
       );
 
-      return await contract.balanceOf(userAddress);
+      const [balance, decimals] = await Promise.all([
+        contract.balanceOf(userAddress),
+        contract.decimals(),
+      ]);
+
+      return parseFloat(utils.formatUnits(balance, decimals));
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
@@ -58,14 +63,14 @@ export const getBalances = async (
     }
   };
 
-  const loadContractBalance = async (
+  const loadSBTContractBalance = async (
     contract: SBTContracts,
     addressToLoad: string
-  ): Promise<BigNumber | undefined> => {
+  ): Promise<number | undefined> => {
     if (contract.address === constants.AddressZero) return;
 
     try {
-      return await contract.balanceOf(addressToLoad);
+      return (await contract.balanceOf(addressToLoad)).toNumber();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
@@ -83,14 +88,14 @@ export const getBalances = async (
       async (
         accumulatedBalances: Promise<Partial<Balances>>,
         symbol: string
-      ) => {
+      ): Promise<Balances> => {
         const balance = await loadERC20Balance(
           addressToLoad,
           contractAddresses?.tokens?.[symbol as PaymentMethod]
         );
 
         const accumulated = await accumulatedBalances;
-        return balance
+        return balance !== undefined
           ? { ...accumulated, [symbol]: balance }
           : { ...accumulated };
       },
@@ -98,8 +103,13 @@ export const getBalances = async (
     );
   }
 
-  const Native: BigNumber | undefined =
-    await masa.config.wallet.provider?.getBalance(addressToLoad);
+  const nativeBalance = await masa.config.wallet.provider?.getBalance(
+    addressToLoad
+  );
+
+  const Native: number | undefined = nativeBalance
+    ? parseFloat(utils.formatEther(nativeBalance))
+    : undefined;
 
   const SBTContractBalances: {
     [key in SBTContractNames]: SBTContracts;
@@ -110,15 +120,18 @@ export const getBalances = async (
     Green: masa.contracts.instances.SoulboundGreenContract,
   };
 
-  const SBTBalances = await Object.keys(SBTContractBalances).reduce(
-    async (accumulatedBalances: Promise<Partial<Balances>>, symbol: string) => {
-      const balance = await loadContractBalance(
+  const SBTBalances: Balances = await Object.keys(SBTContractBalances).reduce(
+    async (
+      accumulatedBalances: Promise<Partial<Balances>>,
+      symbol: string
+    ): Promise<Balances> => {
+      const balance = await loadSBTContractBalance(
         SBTContractBalances[symbol as SBTContractNames],
         addressToLoad
       );
       const accumulated = await accumulatedBalances;
 
-      return balance
+      return balance !== undefined
         ? { ...accumulated, [symbol]: balance }
         : { ...accumulated };
     },
