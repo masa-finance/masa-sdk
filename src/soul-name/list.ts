@@ -143,6 +143,7 @@ export const loadSoulNameDetailsByAddress = async (
     await loadSoulNamesByAddress(masa, address)
   );
 };
+
 export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
   console.log("\n");
 
@@ -173,10 +174,19 @@ export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
   );
 };
 
-export const listSoulNames = async (masa: Masa, address?: string) => {
+export const listSoulNames = async (
+  masa: Masa,
+  address?: string
+): Promise<SoulNameDetails[]> => {
   address = address || (await masa.config.wallet.getAddress());
+  return await loadSoulNameDetailsByAddress(masa, address);
+};
 
-  const soulNames = await loadSoulNameDetailsByAddress(masa, address);
+export const listSoulNamesAndPrint = async (
+  masa: Masa,
+  address?: string
+): Promise<SoulNameDetails[]> => {
+  const soulNames = await listSoulNames(masa, address);
 
   if (soulNames.length > 0) {
     let index = 0;

@@ -47,9 +47,12 @@ export interface SessionUser {
   address: string;
 }
 
-export interface GetChallengeResult {
+export interface ChallengeResult {
   challenge: string;
   expires: string;
+}
+
+export interface ChallengeResultWithCookie extends ChallengeResult {
   cookie?: string;
 }
 

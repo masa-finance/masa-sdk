@@ -28,9 +28,11 @@ export const login = async (
 
       const address = await masa.config.wallet.getAddress();
 
-      console.log(`Signer Address: '${address}'`);
-      console.log(`Signing: \n'${msg}'\n`);
+      if (masa.config.verbose) {
+        console.info(`Signer Address: '${address}'`);
+      }
 
+      console.info(`Signing: \n'${msg}'\n`);
       const signature = await signMessage(msg, masa.config.wallet);
       console.log(`Signature: '${signature}'`);
 
@@ -44,8 +46,13 @@ export const login = async (
         if (checkSignatureResponse) {
           console.log("\nLogged in as:");
           console.log(`Address: '${address}'`);
-          console.log(`User ID: '${checkSignatureResponse.userId}'`);
-          console.log(`Session ID: '${unpackSessionId(challengeData.cookie)}'`);
+
+          if (masa.config.verbose) {
+            console.log(`User ID: '${checkSignatureResponse.userId}'`);
+            console.log(
+              `Session ID: '${unpackSessionId(challengeData.cookie)}'`
+            );
+          }
 
           return {
             address,
