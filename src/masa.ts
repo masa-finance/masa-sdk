@@ -64,7 +64,7 @@ export default class Masa {
     this.arweave = new MasaArweave(arweave, this.config);
 
     // masa contracts wrapper
-    this.contracts = new MasaContracts(this.config);
+    this.contracts = new MasaContracts(this);
     // account + session
     this.account = new MasaAccount(this);
     this.session = new MasaSession(this);

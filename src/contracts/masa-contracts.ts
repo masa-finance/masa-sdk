@@ -24,17 +24,21 @@ import {
   loadSBTContract,
   PaymentMethod,
 } from "./index";
-import { IIdentityContracts, MasaConfig } from "../interface";
+import { IIdentityContracts } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
-import { generateSignatureDomain, signTypedData } from "../utils";
+import { generateSignatureDomain, Messages, signTypedData } from "../utils";
+import { MasaBase } from "../helpers/masa-base";
+import Masa from "../masa";
 
-export class MasaContracts {
+export class MasaContracts extends MasaBase {
   public instances: IIdentityContracts;
 
-  public constructor(private masaConfig: MasaConfig) {
+  public constructor(masa: Masa) {
+    super(masa);
+
     this.instances = loadIdentityContracts({
-      provider: masaConfig.wallet.provider,
-      networkName: masaConfig.networkName,
+      provider: this.masa.config.wallet.provider,
+      networkName: this.masa.config.networkName,
     });
   }
 
@@ -43,38 +47,52 @@ export class MasaContracts {
      * Checks or gives allowance on ERC20 tokens
      * @param paymentAddress
      * @param paymentMethod
+     * @param spenderAddress
      * @param price
      * @private
      */
     checkOrGiveAllowance: async (
       paymentAddress: string,
       paymentMethod: PaymentMethod,
+      spenderAddress: string,
       price: BigNumber
     ): Promise<ContractReceipt | undefined> => {
       if (isERC20Currency(paymentMethod)) {
         const contract: ERC20 = ERC20__factory.connect(
           paymentAddress,
-          this.masaConfig.wallet
+          this.masa.config.wallet
         );
 
-        const allowanceRequired = price.sub(
-          await contract.allowance(
-            // owner
-            await this.masaConfig.wallet.getAddress(),
-            // spender
-            this.instances.SoulStoreContract.address
-          )
+        // get current allowance
+        const currentAllowance = await contract.allowance(
+          // owner
+          await this.masa.config.wallet.getAddress(),
+          // spender
+          spenderAddress
         );
 
-        if (allowanceRequired.gt(0)) {
+        // is price greater the allowance?
+        if (price.gt(currentAllowance)) {
+          // yes, lets set the allowance to the price
+
+          if (this.masa.config.verbose) {
+            console.info(
+              `Creating allowance for ${spenderAddress}: ${price.toString()}`
+            );
+          }
+
           const tx: ContractTransaction = await contract
-            .connect(this.masaConfig.wallet)
+            .connect(this.masa.config.wallet)
             .approve(
               // spender
-              this.instances.SoulStoreContract.address,
+              spenderAddress,
               // amount
-              allowanceRequired
+              price
             );
+
+          if (this.masa.config.verbose) {
+            console.info(Messages.WaitingToFinalize(tx.hash));
+          }
 
           return await tx.wait();
         }
@@ -89,7 +107,7 @@ export class MasaContracts {
     getPaymentAddress: (paymentMethod: PaymentMethod): string => {
       let paymentAddress: string | undefined = isNativeCurrency(paymentMethod)
         ? constants.AddressZero
-        : this.masaConfig.network?.addresses?.tokens?.[paymentMethod];
+        : this.masa.config.network?.addresses?.tokens?.[paymentMethod];
 
       if (!paymentAddress) {
         console.error(
@@ -111,7 +129,7 @@ export class MasaContracts {
       if (paymentAddress !== constants.AddressZero) {
         const contract: ERC20 = ERC20__factory.connect(
           paymentAddress,
-          this.masaConfig.wallet
+          this.masa.config.wallet
         );
         decimals = await contract.decimals();
       }
@@ -148,7 +166,7 @@ export class MasaContracts {
       signature: string,
       authorityAddress: string
     ) => {
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.log({
           domain,
           types: JSON.stringify(types),
@@ -167,7 +185,7 @@ export class MasaContracts {
       // first line of defense, check that the address properly recovers
       const recoveredAddress = verifyTypedData(domain, types, value, signature);
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.info({
           recoveredAddress,
           authorityAddress,
@@ -192,7 +210,7 @@ export class MasaContracts {
             console.error(`Retrieving authorities failed! ${error.message}.`);
         }
 
-        if (this.masaConfig.verbose) {
+        if (this.masa.config.verbose) {
           console.info({
             recoveredAddressIsAuthority,
           });
@@ -213,7 +231,7 @@ export class MasaContracts {
     factory: ContractFactory = MasaSBTSelfSovereign__factory
   ) => {
     const selfSovereignSBT: Contract | undefined = await loadSBTContract(
-      this.masaConfig,
+      this.masa.config,
       address,
       factory
     );
@@ -243,11 +261,11 @@ export class MasaContracts {
       > => {
         if (!selfSovereignSBT) return;
 
-        const authorityAddress = await this.masaConfig.wallet.getAddress();
+        const authorityAddress = await this.masa.config.wallet.getAddress();
 
         const { signature, domain } = await signTypedData(
           selfSovereignSBT,
-          this.masaConfig.wallet as Wallet,
+          this.masa.config.wallet as Wallet,
           name,
           types,
           value
@@ -306,7 +324,7 @@ export class MasaContracts {
         if (!selfSovereignSBT) return;
 
         const domain: TypedDataDomain = await generateSignatureDomain(
-          this.masaConfig.wallet as Wallet,
+          this.masa.config.wallet as Wallet,
           name,
           selfSovereignSBT.address
         );
@@ -326,7 +344,7 @@ export class MasaContracts {
 
         if (!priceObject) return;
 
-        if (this.masaConfig.verbose) {
+        if (this.masa.config.verbose) {
           console.log({
             price: priceObject.price.toString(),
             paymentAddress: priceObject.paymentAddress,
@@ -377,7 +395,7 @@ export class MasaContracts {
         }
       }
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.info({ paymentAddress, price });
       }
 
@@ -415,28 +433,16 @@ export class MasaContracts {
         slippage
       );
 
-      if (isERC20Currency(paymentMethod)) {
-        const paymentToken: ERC20 = ERC20__factory.connect(
-          paymentAddress,
-          this.masaConfig.wallet
-        );
-
-        const allowance = await paymentToken.allowance(
-          await this.masaConfig.wallet.getAddress(),
-          this.instances.SoulLinkerContract.address
-        );
-        if (allowance < price) {
-          console.log("approving allowance");
-          await paymentToken.approve(
-            this.instances.SoulLinkerContract.address,
-            price
-          );
-        }
-      }
+      await this.tools.checkOrGiveAllowance(
+        paymentAddress,
+        paymentMethod,
+        this.instances.SoulLinkerContract.address,
+        price
+      );
 
       const addLinkTransactionResponse =
         await this.instances.SoulLinkerContract.connect(
-          this.masaConfig.wallet
+          this.masa.config.wallet
         ).addLink(
           paymentAddress,
           readerIdentityId,
@@ -494,7 +500,7 @@ export class MasaContracts {
 
       const { signature, domain } = await signTypedData(
         this.instances.SoulLinkerContract,
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulLinker",
         this.soulLinker.types,
         value
@@ -507,7 +513,7 @@ export class MasaContracts {
         this.soulLinker.types,
         value,
         signature,
-        await this.masaConfig.wallet.getAddress()
+        await this.masa.config.wallet.getAddress()
       );
 
       return { signature, signatureDate, expirationDate };
@@ -558,10 +564,10 @@ export class MasaContracts {
       signature: string,
       receiver?: string
     ): Promise<ContractTransaction> => {
-      const to = receiver || (await this.masaConfig.wallet.getAddress());
+      const to = receiver || (await this.masa.config.wallet.getAddress());
 
       const domain: TypedDataDomain = await generateSignatureDomain(
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulStore",
         this.instances.SoulStoreContract.address
       );
@@ -599,6 +605,7 @@ export class MasaContracts {
       await this.tools.checkOrGiveAllowance(
         paymentAddress,
         paymentMethod,
+        this.instances.SoulStoreContract.address,
         price
       );
 
@@ -626,13 +633,13 @@ export class MasaContracts {
         value: isNativeCurrency(paymentMethod) ? price : undefined,
       };
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.log({ purchaseNameParameters, purchaseNameOverrides });
       }
 
       // connect
       const soulStore = this.instances.SoulStoreContract.connect(
-        this.masaConfig.wallet
+        this.masa.config.wallet
       );
 
       // estimate gas
@@ -741,13 +748,13 @@ export class MasaContracts {
 
       const { signature, domain } = await signTypedData(
         this.instances.SoulStoreContract,
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulStore",
         this.soulName.types,
         value
       );
 
-      const authorityAddress = await this.masaConfig.wallet.getAddress();
+      const authorityAddress = await this.masa.config.wallet.getAddress();
 
       await this.tools.verify(
         "Signing soul name failed!",
@@ -769,7 +776,7 @@ export class MasaContracts {
      */
     purchase: async (): Promise<ContractTransaction> => {
       return await this.instances.SoulStoreContract.connect(
-        this.masaConfig.wallet
+        this.masa.config.wallet
       ).purchaseIdentity();
     },
 
@@ -793,7 +800,7 @@ export class MasaContracts {
       signature: string
     ): Promise<ContractTransaction> => {
       const domain: TypedDataDomain = await generateSignatureDomain(
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulStore",
         this.instances.SoulStoreContract.address
       );
@@ -805,7 +812,7 @@ export class MasaContracts {
         yearsPeriod: number;
         tokenURI: string;
       } = {
-        to: await this.masaConfig.wallet.getAddress(),
+        to: await this.masa.config.wallet.getAddress(),
         name,
         nameLength,
         yearsPeriod: duration,
@@ -831,6 +838,7 @@ export class MasaContracts {
       await this.tools.checkOrGiveAllowance(
         paymentAddress,
         paymentMethod,
+        this.instances.SoulStoreContract.address,
         price
       );
 
@@ -856,7 +864,7 @@ export class MasaContracts {
         value: isNativeCurrency(paymentMethod) ? price : undefined,
       };
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.log({
           purchaseIdentityAndNameParameters,
           purchaseIdentityAndNameOverrides,
@@ -865,7 +873,7 @@ export class MasaContracts {
 
       // connect
       const soulStore = this.instances.SoulStoreContract.connect(
-        this.masaConfig.wallet
+        this.masa.config.wallet
       );
 
       // estimate gas
@@ -961,7 +969,7 @@ export class MasaContracts {
       };
 
       const domain: TypedDataDomain = await generateSignatureDomain(
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulboundCreditScore",
         this.instances.SoulboundCreditScoreContract.address
       );
@@ -979,6 +987,13 @@ export class MasaContracts {
       const { price, paymentAddress } = await this.creditScore.getPrice(
         paymentMethod,
         slippage
+      );
+
+      await this.tools.checkOrGiveAllowance(
+        paymentAddress,
+        paymentMethod,
+        this.instances.SoulboundCreditScoreContract.address,
+        price
       );
 
       const creditScoreMintParameters: [
@@ -999,14 +1014,14 @@ export class MasaContracts {
         value: price,
       };
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.log({ creditScoreMintParameters, creditScoreMintOverrides });
       }
 
       // connect
       const creditScoreContract =
         await this.instances.SoulboundCreditScoreContract.connect(
-          this.masaConfig.wallet
+          this.masa.config.wallet
         );
 
       // estimate
@@ -1037,7 +1052,7 @@ export class MasaContracts {
     > => {
       const signatureDate = Math.floor(Date.now() / 1000);
 
-      const authorityAddress = await this.masaConfig.wallet.getAddress();
+      const authorityAddress = await this.masa.config.wallet.getAddress();
       const value: {
         identityId: BigNumber;
         authorityAddress: string;
@@ -1050,7 +1065,7 @@ export class MasaContracts {
 
       const { signature, domain } = await signTypedData(
         this.instances.SoulboundCreditScoreContract,
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulboundCreditScore",
         this.creditScore.types,
         value
@@ -1112,7 +1127,7 @@ export class MasaContracts {
         price
       );
 
-      const gasPrice = await this.masaConfig.wallet.getGasPrice();
+      const gasPrice = await this.masa.config.wallet.getGasPrice();
 
       // hardcoded estimation for now
       const mintTransactionEstimatedGas = BigNumber.from(250_000);
@@ -1161,7 +1176,7 @@ export class MasaContracts {
       };
 
       const domain: TypedDataDomain = await generateSignatureDomain(
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulboundGreen",
         this.instances.SoulboundGreenContract.address
       );
@@ -1179,7 +1194,7 @@ export class MasaContracts {
       const { paymentAddress, price, formattedPrice, mintTransactionFee } =
         await this.green.getPrice(paymentMethod, slippage);
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.log({
           price: price.toString(),
           mintTransactionFee: mintTransactionFee.toString(),
@@ -1188,9 +1203,16 @@ export class MasaContracts {
         });
       }
 
+      await this.tools.checkOrGiveAllowance(
+        paymentAddress,
+        paymentMethod,
+        this.instances.SoulboundGreenContract.address,
+        price
+      );
+
       const greenMintParameters: [string, string, string, number, string] = [
         paymentAddress,
-        await this.masaConfig.wallet.getAddress(),
+        await this.masa.config.wallet.getAddress(),
         authorityAddress,
         signatureDate,
         signature,
@@ -1200,13 +1222,13 @@ export class MasaContracts {
         value: price,
       };
 
-      if (this.masaConfig.verbose) {
+      if (this.masa.config.verbose) {
         console.log({ greenMintParameters, greenMintOverrides });
       }
 
       // connect
       const contract = await this.instances.SoulboundGreenContract.connect(
-        this.masaConfig.wallet
+        this.masa.config.wallet
       );
 
       // estimate gas
@@ -1237,7 +1259,7 @@ export class MasaContracts {
     > => {
       const signatureDate = Math.floor(Date.now() / 1000);
 
-      const authorityAddress = await this.masaConfig.wallet.getAddress();
+      const authorityAddress = await this.masa.config.wallet.getAddress();
       const value: {
         to: string;
         authorityAddress: string;
@@ -1250,7 +1272,7 @@ export class MasaContracts {
 
       const { signature, domain } = await signTypedData(
         this.instances.SoulboundGreenContract,
-        this.masaConfig.wallet as Wallet,
+        this.masa.config.wallet as Wallet,
         "SoulboundGreen",
         this.green.types,
         value
