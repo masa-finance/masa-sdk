@@ -9,9 +9,11 @@ export const burnSBTById = async (
   SBTId: BigNumber
 ): Promise<boolean> => {
   try {
-    const tx = await contract.connect(masa.config.wallet).burn(SBTId);
-    console.log(Messages.WaitingToFinalize(tx.hash));
-    await tx.wait();
+    const { wait, hash } = await contract
+      .connect(masa.config.wallet)
+      .burn(SBTId);
+    console.log(Messages.WaitingToFinalize(hash));
+    await wait();
 
     return true;
   } catch (error: unknown) {

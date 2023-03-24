@@ -10,6 +10,7 @@ import {
   LogoutResult,
   SessionUser,
   SoulNameMetadataStoreResult,
+  SoulNameResultBase,
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
@@ -200,11 +201,13 @@ export class MasaClient extends MasaBase {
       soulName: string,
       receiver: string,
       duration: number
-    ): Promise<SoulNameMetadataStoreResult | undefined> => {
+    ): Promise<
+      SoulNameMetadataStoreResult | SoulNameResultBase | undefined
+    > => {
       console.log(`Writing metadata for '${soulName}'`);
 
       const storeMetadataResponse = await this._middlewareClient
-        .post<SoulNameMetadataStoreResult>(
+        .post<SoulNameMetadataStoreResult | SoulNameResultBase>(
           "/storage/store",
           {
             soulName,

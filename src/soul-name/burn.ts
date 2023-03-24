@@ -10,12 +10,13 @@ export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
     );
 
     try {
-      const tx = await masa.contracts.instances.SoulNameContract.connect(
-        masa.config.wallet
-      ).burn(soulNameData.tokenId);
+      const { wait, hash } =
+        await masa.contracts.instances.SoulNameContract.connect(
+          masa.config.wallet
+        ).burn(soulNameData.tokenId);
 
-      console.log(Messages.WaitingToFinalize(tx.hash));
-      await tx.wait();
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
 
       console.log(
         `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' burned!`

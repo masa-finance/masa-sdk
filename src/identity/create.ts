@@ -1,15 +1,68 @@
 import Masa from "../masa";
 import { PaymentMethod } from "../contracts";
 import { Messages } from "../utils";
-import { Event } from "ethers";
-import { CreateSoulNameResult } from "../interface";
+import { BigNumber } from "ethers";
+import {
+  BaseResult,
+  CreateSoulNameResult,
+  isSoulNameMetadataStoreResult,
+  SoulNameErrorCodes,
+} from "../interface";
+import { LogDescription } from "@ethersproject/abi";
 
-export const purchaseIdentity = async (masa: Masa) => {
-  const tx = await masa.contracts.identity.purchase();
-  console.log(Messages.WaitingToFinalize(tx.hash));
+export const purchaseIdentity = async (masa: Masa): Promise<BaseResult> => {
+  const result = {
+    success: false,
+    message: "Unknown Error",
+  };
 
-  const result = await tx.wait();
-  console.log(result);
+  const { hash, wait } = await masa.contracts.identity.purchase();
+  console.log(Messages.WaitingToFinalize(hash));
+
+  const { logs } = await wait();
+  const parsedLogs = masa.contracts.parseLogs(logs);
+
+  let tokenId: string | undefined;
+
+  const identityMintEvent = parsedLogs.find(
+    (event: LogDescription) => event.name === "Mint"
+  );
+
+  if (identityMintEvent) {
+    if (masa.config.verbose) {
+      console.info({ identityMintEvent });
+    }
+
+    tokenId = identityMintEvent.args._tokenId.toString();
+    console.log(`Identity with ID: '${tokenId}' created.`);
+  }
+
+  if (tokenId) {
+    return {
+      success: false,
+      message: "",
+      tokenId,
+    };
+  }
+
+  return result;
+};
+
+export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
+  const result = {
+    success: false,
+    message: "Unknown Error",
+  };
+
+  const { identityId } = await masa.identity.load();
+
+  if (identityId) {
+    result.message = `Identity already created! '${identityId}'`;
+    console.error(result.message);
+    return result;
+  }
+
+  return await purchaseIdentity(masa);
 };
 
 export const purchaseIdentityWithSoulName = async (
@@ -18,70 +71,101 @@ export const purchaseIdentityWithSoulName = async (
   soulNameLength: number,
   duration: number,
   paymentMethod: PaymentMethod
-): Promise<{ tokenId: string; soulName: string } | undefined> => {
+): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
+  const result: CreateSoulNameResult = {
+    success: false,
+    errorCode: SoulNameErrorCodes.UnknownError,
+    message: "Unknown Error",
+  };
+
   if (await masa.contracts.soulName.isAvailable(soulName)) {
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
 
-    const storedSoulNameMetadata = await masa.client.soulName.store(
+    const storeMetadataResponse = await masa.client.soulName.store(
       `${soulName}${extension}`,
       await masa.config.wallet.getAddress(),
       duration
     );
 
-    if (storedSoulNameMetadata) {
-      const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
-        storedSoulNameMetadata.metadataTransaction.id
-      }`;
-      console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
+    if (storeMetadataResponse) {
+      if (isSoulNameMetadataStoreResult(storeMetadataResponse)) {
+        const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
+          storeMetadataResponse.metadataTransaction.id
+        }`;
+        console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-      const tx = await masa.contracts.identity.purchaseIdentityAndName(
-        paymentMethod,
-        soulName,
-        soulNameLength,
-        duration,
-        soulNameMetadataUrl,
-        storedSoulNameMetadata.authorityAddress,
-        storedSoulNameMetadata.signature
-      );
+        const { wait, hash } =
+          await masa.contracts.identity.purchaseIdentityAndName(
+            paymentMethod,
+            soulName,
+            soulNameLength,
+            duration,
+            soulNameMetadataUrl,
+            storeMetadataResponse.authorityAddress,
+            storeMetadataResponse.signature
+          );
 
-      console.log(Messages.WaitingToFinalize(tx.hash));
-      const result = await tx.wait();
+        console.log(Messages.WaitingToFinalize(hash));
+        const { logs } = await wait();
 
-      const purchasedEvent = result.events?.find(
-        (event: Event) => event.event === "SoulboundIdentityAndNamePurchased"
-      );
+        const parsedLogs = masa.contracts.parseLogs(logs);
 
-      let tokenId;
-      if (purchasedEvent && purchasedEvent.decode) {
-        const decodedEvent = purchasedEvent.decode(purchasedEvent.data);
-        tokenId = decodedEvent.tokenId.toNumber();
-        console.log(`Token with ID: '${tokenId}' created.`);
+        {
+          let identityId: string | undefined, tokenId: string | undefined;
+
+          const identityMintEvent = parsedLogs.find(
+            (event: LogDescription) => event.name === "Mint"
+          );
+
+          if (identityMintEvent) {
+            if (masa.config.verbose) {
+              console.info({ identityMintEvent });
+            }
+
+            identityId = identityMintEvent.args._tokenId.toString();
+            console.log(`Identity with ID: '${identityId}' created.`);
+          }
+
+          const soulnameTransferEvent = parsedLogs.find(
+            (event: LogDescription) => event.name === "Transfer"
+          );
+
+          if (soulnameTransferEvent) {
+            if (masa.config.verbose) {
+              console.info({ soulnameTransferEvent });
+            }
+
+            tokenId = soulnameTransferEvent.args.tokenId.toString();
+            console.log(`SoulName with ID: '${tokenId}' created.`);
+          }
+
+          if (identityId && tokenId) {
+            return {
+              success: true,
+              errorCode: SoulNameErrorCodes.NoError,
+              message: "",
+              tokenId,
+              identityId,
+              soulName,
+            };
+          }
+        }
+      } else {
         return {
-          tokenId,
-          soulName,
+          success: storeMetadataResponse.success,
+          message: storeMetadataResponse.message,
+          errorCode: storeMetadataResponse.errorCode,
         };
       }
     }
   } else {
-    console.error(`Soulname ${soulName}.soul already taken.`);
-  }
-};
-
-export const createIdentity = async (masa: Masa): Promise<boolean> => {
-  let identityCreated = false;
-
-  const { identityId } = await masa.identity.load();
-
-  if (identityId) {
-    console.error(`Identity already created! '${identityId}'`);
-    return identityCreated;
+    result.message = `Soulname ${soulName}.soul already taken.`;
+    result.errorCode = SoulNameErrorCodes.SoulNameError;
+    console.error(result.message);
   }
 
-  await purchaseIdentity(masa);
-
-  identityCreated = true;
-  return identityCreated;
+  return result;
 };
 
 export const createIdentityWithSoulName = async (
@@ -89,9 +173,10 @@ export const createIdentityWithSoulName = async (
   paymentMethod: PaymentMethod,
   soulName: string,
   duration: number
-): Promise<CreateSoulNameResult | undefined> => {
+): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
+    errorCode: SoulNameErrorCodes.UnknownError,
     message: "Unknown Error",
   };
 
@@ -107,6 +192,7 @@ export const createIdentityWithSoulName = async (
 
     if (!isValid) {
       result.message = "Soulname not valid!";
+      result.errorCode = SoulNameErrorCodes.SoulNameError;
       console.error(result.message);
       return result;
     }
@@ -116,29 +202,21 @@ export const createIdentityWithSoulName = async (
 
     if (identityId) {
       result.message = `Identity already created! '${identityId}'`;
+      result.errorCode = SoulNameErrorCodes.SoulNameError;
       console.error(result.message);
       return result;
     }
 
-    const soulNameInstance = await purchaseIdentityWithSoulName(
+    return await purchaseIdentityWithSoulName(
       masa,
       soulName,
       length,
       duration,
       paymentMethod
     );
-
-    if (soulNameInstance) {
-      result.success = true;
-      result.message = "Identity and soulname created!";
-      result.tokenId = soulNameInstance.tokenId;
-      result.soulName = soulName;
-    } else {
-      result.message = "Creating identity and soulname failed!";
-      console.error(result.message);
-    }
   } else {
-    console.error(Messages.NotLoggedIn());
+    result.message = Messages.NotLoggedIn();
+    console.error(result.message);
   }
 
   return result;

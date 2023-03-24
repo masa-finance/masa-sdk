@@ -10,12 +10,13 @@ export const burnIdentityById = async (
 
   console.log("Burning Identity");
   try {
-    const tx = await masa.contracts.instances.SoulboundIdentityContract.connect(
-      masa.config.wallet
-    ).burn(identityId);
+    const { wait, hash } =
+      await masa.contracts.instances.SoulboundIdentityContract.connect(
+        masa.config.wallet
+      ).burn(identityId);
 
-    console.log(Messages.WaitingToFinalize(tx.hash));
-    await tx.wait();
+    console.log(Messages.WaitingToFinalize(hash));
+    await wait();
 
     console.log(`Identity with token ID '${identityId}' burned!`);
     success = true;

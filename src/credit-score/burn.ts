@@ -7,13 +7,13 @@ export const burnCreditScoreById = async (
   creditScoreId: BigNumber
 ): Promise<boolean> => {
   try {
-    const tx =
+    const { wait, hash } =
       await masa.contracts.instances.SoulboundCreditScoreContract.connect(
         masa.config.wallet
       ).burn(creditScoreId);
 
-    console.log(Messages.WaitingToFinalize(tx.hash));
-    await tx.wait();
+    console.log(Messages.WaitingToFinalize(hash));
+    await wait();
 
     return true;
   } catch (error: unknown) {

@@ -7,12 +7,13 @@ export const burnGreenById = async (
   greenId: BigNumber
 ): Promise<boolean> => {
   try {
-    const tx = await masa.contracts.instances.SoulboundGreenContract.connect(
-      masa.config.wallet
-    ).burn(greenId);
+    const { hash, wait } =
+      await masa.contracts.instances.SoulboundGreenContract.connect(
+        masa.config.wallet
+      ).burn(greenId);
 
-    console.log(Messages.WaitingToFinalize(tx.hash));
-    await tx.wait();
+    console.log(Messages.WaitingToFinalize(hash));
+    await wait();
 
     return true;
   } catch (error: unknown) {

@@ -26,6 +26,9 @@ import {
 } from "./index";
 import { IIdentityContracts } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
+import { Log } from "@ethersproject/abstract-provider";
+import { LogDescription } from "@ethersproject/abi";
+
 import { generateSignatureDomain, Messages, signTypedData } from "../utils";
 import { MasaBase } from "../helpers/masa-base";
 import Masa from "../masa";
@@ -81,7 +84,7 @@ export class MasaContracts extends MasaBase {
             );
           }
 
-          const tx: ContractTransaction = await contract
+          const { wait, hash } = await contract
             .connect(this.masa.config.wallet)
             .approve(
               // spender
@@ -91,10 +94,10 @@ export class MasaContracts extends MasaBase {
             );
 
           if (this.masa.config.verbose) {
-            console.info(Messages.WaitingToFinalize(tx.hash));
+            console.info(Messages.WaitingToFinalize(hash));
           }
 
-          return await tx.wait();
+          return await wait();
         }
       }
     },
@@ -224,6 +227,19 @@ export class MasaContracts extends MasaBase {
         }
       }
     },
+  };
+
+  parseLogs = (logs: Log[]): LogDescription[] => {
+    const parsedLogs: LogDescription[] = [];
+
+    for (const contract of Object.values(this.instances)) {
+      parsedLogs.push(
+        ...logs
+          .filter((l: Log) => l.address === contract.address)
+          .map((l: Log) => contract.interface.parseLog(l))
+      );
+    }
+    return parsedLogs;
   };
 
   sbt = async <Contract extends MasaSBTSelfSovereign>(
@@ -440,23 +456,22 @@ export class MasaContracts extends MasaBase {
         price
       );
 
-      const addLinkTransactionResponse =
-        await this.instances.SoulLinkerContract.connect(
-          this.masa.config.wallet
-        ).addLink(
-          paymentAddress,
-          readerIdentityId,
-          ownerIdentityId,
-          tokenAddress,
-          tokenId,
-          signatureDate,
-          expirationDate,
-          signature,
-          isNativeCurrency(paymentMethod) ? { value: price } : undefined
-        );
+      const { hash, wait } = await this.instances.SoulLinkerContract.connect(
+        this.masa.config.wallet
+      ).addLink(
+        paymentAddress,
+        readerIdentityId,
+        ownerIdentityId,
+        tokenAddress,
+        tokenId,
+        signatureDate,
+        expirationDate,
+        signature,
+        isNativeCurrency(paymentMethod) ? { value: price } : undefined
+      );
 
-      const addLinkTransactionReceipt = await addLinkTransactionResponse.wait();
-      console.log(addLinkTransactionReceipt.transactionHash);
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
 
       return true;
     },

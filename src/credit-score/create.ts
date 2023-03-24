@@ -39,7 +39,7 @@ export const createCreditScore = async (
       creditScoreResponse?.authorityAddress
     ) {
       try {
-        const tx = await masa.contracts.creditScore.mint(
+        const { hash, wait } = await masa.contracts.creditScore.mint(
           paymentMethod,
           identityId,
           creditScoreResponse.authorityAddress,
@@ -47,12 +47,12 @@ export const createCreditScore = async (
           creditScoreResponse.signature
         );
 
-        console.log(Messages.WaitingToFinalize(tx.hash));
-        const transactionReceipt = await tx.wait();
+        console.log(Messages.WaitingToFinalize(hash));
+        const { transactionHash } = await wait();
 
         console.log("Updating Credit Score Record!");
         const creditScoreUpdateResponse = await masa.client.creditScore.update(
-          transactionReceipt.transactionHash
+          transactionHash
         );
 
         if (masa.config.verbose) {

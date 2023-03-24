@@ -14,16 +14,17 @@ export const sendSoulNameByName = async (
     );
 
     try {
-      const tx = await masa.contracts.instances.SoulNameContract.connect(
-        masa.config.wallet
-      ).transferFrom(
-        masa.config.wallet.getAddress(),
-        receiver,
-        soulNameData.tokenId
-      );
+      const { wait, hash } =
+        await masa.contracts.instances.SoulNameContract.connect(
+          masa.config.wallet
+        ).transferFrom(
+          masa.config.wallet.getAddress(),
+          receiver,
+          soulNameData.tokenId
+        );
 
-      console.log(Messages.WaitingToFinalize(tx.hash));
-      await tx.wait();
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
 
       console.log(
         `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' sent!`

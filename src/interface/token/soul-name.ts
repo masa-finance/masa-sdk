@@ -24,11 +24,30 @@ export interface ISoulName {
   attributes: Attribute[];
 }
 
-export interface CreateSoulNameResult extends BaseResult {
+export enum SoulNameErrorCodes {
+  NoError,
+  ArweaveError,
+  NetworkError,
+  CryptoError,
+  SoulNameError,
+  UnknownError = 1337,
+}
+
+export interface SoulNameResultBase extends BaseResult {
+  errorCode: SoulNameErrorCodes;
+}
+
+export const isSoulNameMetadataStoreResult = (
+  result: SoulNameResultBase
+): result is SoulNameMetadataStoreResult => {
+  return !!(result as SoulNameMetadataStoreResult).authorityAddress;
+};
+
+export interface CreateSoulNameResult extends SoulNameResultBase {
   soulName?: string;
 }
 
-export interface SoulNameMetadataStoreResult {
+export interface SoulNameMetadataStoreResult extends SoulNameResultBase {
   // image info
   imageTransaction: Transaction;
   imageResponse: {

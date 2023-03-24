@@ -1,15 +1,23 @@
 import Masa from "../masa";
 
-export const patchMetadataUrl = (masa: Masa, tokeUri: string) => {
-  const apiUrl: string = masa.config.apiUrl;
+/**
+ * todo: fix this thing, its not good
+ * @param masa
+ * @param metadataUrl
+ */
+export const patchMetadataUrl = (masa: Masa, metadataUrl: string) => {
   const env: string = masa.config.environment;
+  // make sure this ends with / otherwise it blows
+  const apiUrl: string = !masa.config.apiUrl.endsWith("/")
+    ? masa.config.apiUrl + "/"
+    : masa.config.apiUrl;
 
-  if (tokeUri.indexOf("beta") > -1) {
+  if (metadataUrl.indexOf("beta") > -1) {
     if (apiUrl.indexOf("localhost") > -1 || apiUrl.indexOf("127.0.0.1") > -1) {
-      return tokeUri.replace("https://beta.metadata.masa.finance/", apiUrl);
+      return metadataUrl.replace("https://beta.metadata.masa.finance/", apiUrl);
     } else {
-      return tokeUri.replace("beta", env);
+      return metadataUrl.replace("beta", env);
     }
   }
-  return tokeUri;
+  return metadataUrl;
 };

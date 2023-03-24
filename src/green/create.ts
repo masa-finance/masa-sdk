@@ -5,8 +5,8 @@ import {
   VerifyGreenResult,
 } from "../interface";
 import { PaymentMethod } from "../contracts";
-import { BigNumber, Event } from "ethers";
 import { Messages } from "../utils";
+import { LogDescription } from "@ethersproject/abi";
 
 export const generateGreen = async (
   masa: Masa,
@@ -154,8 +154,13 @@ export const mintGreen = async (
   authorityAddress: string,
   signatureDate: number,
   signature: string
-): Promise<{ tokenId: BigNumber } | undefined> => {
-  const tx = await masa.contracts.green.mint(
+): Promise<BaseResult> => {
+  const result = {
+    success: false,
+    message: "Unknown Error",
+  };
+
+  const { hash, wait } = await masa.contracts.green.mint(
     paymentMethod,
     await masa.config.wallet.getAddress(),
     authorityAddress,
@@ -163,16 +168,34 @@ export const mintGreen = async (
     signature
   );
 
-  console.log(Messages.WaitingToFinalize(tx.hash));
+  console.log(Messages.WaitingToFinalize(hash));
 
-  const receipt = await tx.wait();
+  const { logs } = await wait();
 
-  if (receipt.events) {
-    const mintEvent = receipt.events.find((e: Event) => e.event === "Mint");
-    if (mintEvent && mintEvent.args) {
-      return {
-        tokenId: mintEvent.args._tokenId,
-      };
+  const parsedLogs = masa.contracts.parseLogs(logs);
+
+  let tokenId: string | undefined;
+
+  const greenMintEvent = parsedLogs.find(
+    (event: LogDescription) => event.name === "Mint"
+  );
+
+  if (greenMintEvent) {
+    if (masa.config.verbose) {
+      console.info({ greenMintEvent });
     }
+
+    tokenId = greenMintEvent.args._tokenId.toString();
+    console.log(`Green with ID: '${tokenId}' created.`);
   }
+
+  if (tokenId) {
+    return {
+      success: true,
+      message: "",
+      tokenId,
+    };
+  }
+
+  return result;
 };

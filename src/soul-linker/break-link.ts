@@ -42,18 +42,19 @@ export const breakLink = async (
   console.log({ filteredLinks });
   for (const link of filteredLinks) {
     console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
-    const response = await masa.contracts.instances.SoulLinkerContract.connect(
-      masa.config.wallet
-    ).revokeLink(
-      readerIdentityId,
-      identityId,
-      contract.address,
-      tokenId,
-      link.signatureDate
-    );
+    const { wait, hash } =
+      await masa.contracts.instances.SoulLinkerContract.connect(
+        masa.config.wallet
+      ).revokeLink(
+        readerIdentityId,
+        identityId,
+        contract.address,
+        tokenId,
+        link.signatureDate
+      );
 
-    const tx = await response.wait();
-    console.log(tx.transactionHash);
+    console.log(Messages.WaitingToFinalize(hash));
+    await wait();
   }
 
   return result;
