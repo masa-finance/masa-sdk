@@ -12,8 +12,8 @@ import {
 } from "./networks";
 import { NetworkName } from "../interface";
 
-const erc20 = ["MASA", "WETH", "G$", "USDC", "cUSD"] as const;
-export type ERC20 = (typeof erc20)[number];
+const erc20Currencies = ["MASA", "WETH", "G$", "USDC", "cUSD"] as const;
+export type ERC20Currencies = (typeof erc20Currencies)[number];
 
 const nativeCurrencies = ["ETH", "CELO"] as const;
 export type NativeCurrencies = (typeof nativeCurrencies)[number];
@@ -25,9 +25,10 @@ export const isNativeCurrency = (
 
 export const isERC20Currency = (
   paymentMethod: unknown
-): paymentMethod is ERC20 => erc20.includes(paymentMethod as ERC20);
+): paymentMethod is ERC20Currencies =>
+  erc20Currencies.includes(paymentMethod as ERC20Currencies);
 
-export type PaymentMethod = NativeCurrencies | ERC20;
+export type PaymentMethod = NativeCurrencies | ERC20Currencies;
 
 export type Tokens = Partial<{ [key in PaymentMethod]: string }>;
 

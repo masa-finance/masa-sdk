@@ -1,4 +1,4 @@
-import { PaymentMethod } from "../contracts";
+import { ERC20__factory, PaymentMethod } from "../contracts";
 import {
   SoulboundCreditScore,
   SoulboundGreen,
@@ -7,7 +7,6 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import Masa from "../masa";
 import { constants, utils } from "ethers";
-import { ERC20__factory } from "../contracts/stubs/ERC20__factory";
 
 type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 

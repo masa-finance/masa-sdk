@@ -1,7 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import {
-  IERC20,
-  IERC20__factory,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
   SoulLinker,
@@ -18,6 +16,8 @@ import {
 } from "ethers";
 import {
   ContractFactory,
+  ERC20,
+  ERC20__factory,
   isERC20Currency,
   isNativeCurrency,
   loadIdentityContracts,
@@ -27,7 +27,6 @@ import {
 import { IIdentityContracts, MasaConfig } from "../interface";
 import { verifyTypedData } from "ethers/lib/utils";
 import { generateSignatureDomain, signTypedData } from "../utils";
-import { ERC20__factory } from "./stubs/ERC20__factory";
 
 export class MasaContracts {
   public instances: IIdentityContracts;
@@ -53,26 +52,28 @@ export class MasaContracts {
       price: BigNumber
     ): Promise<ContractReceipt | undefined> => {
       if (isERC20Currency(paymentMethod)) {
-        const contract = IERC20__factory.connect(
+        const contract: ERC20 = ERC20__factory.connect(
           paymentAddress,
           this.masaConfig.wallet
         );
 
-        if (
-          (await contract.allowance(
+        const allowanceRequired = price.sub(
+          await contract.allowance(
             // owner
             await this.masaConfig.wallet.getAddress(),
             // spender
             this.instances.SoulStoreContract.address
-          )) < price
-        ) {
+          )
+        );
+
+        if (allowanceRequired.gt(0)) {
           const tx: ContractTransaction = await contract
             .connect(this.masaConfig.wallet)
             .approve(
               // spender
               this.instances.SoulStoreContract.address,
               // amount
-              price
+              allowanceRequired
             );
 
           return await tx.wait();
@@ -108,7 +109,7 @@ export class MasaContracts {
     formatPrice: async (paymentAddress: string, price: BigNumber) => {
       let decimals = 18;
       if (paymentAddress !== constants.AddressZero) {
-        const contract = ERC20__factory.connect(
+        const contract: ERC20 = ERC20__factory.connect(
           paymentAddress,
           this.masaConfig.wallet
         );
@@ -415,7 +416,7 @@ export class MasaContracts {
       );
 
       if (isERC20Currency(paymentMethod)) {
-        const paymentToken: IERC20 = IERC20__factory.connect(
+        const paymentToken: ERC20 = ERC20__factory.connect(
           paymentAddress,
           this.masaConfig.wallet
         );
