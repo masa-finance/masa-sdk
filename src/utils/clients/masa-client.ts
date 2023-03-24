@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import {
+  ChallengeResult,
+  ChallengeResultWithCookie,
   GenerateCreditScoreResult,
   GenerateGreenResult,
-  GetChallengeResult,
   ICreditScore,
   IGreen,
   IIdentity,
@@ -54,7 +55,7 @@ export class MasaClient extends MasaBase {
      */
     check: async (): Promise<ISession | undefined> => {
       const checkResponse = await this._middlewareClient
-        .get(`/session/check`, {
+        .get("/session/check", {
           headers: {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
@@ -85,7 +86,7 @@ export class MasaClient extends MasaBase {
 
       const checkSignatureResponse = await this._middlewareClient
         .post<SessionUser>(
-          `/session/check-signature`,
+          "/session/check-signature",
           {
             address,
             signature,
@@ -116,9 +117,9 @@ export class MasaClient extends MasaBase {
     /**
      * Get challenge
      */
-    getChallenge: async (): Promise<GetChallengeResult | undefined> => {
+    getChallenge: async (): Promise<ChallengeResultWithCookie | undefined> => {
       const getChallengeResponse = await this._middlewareClient
-        .get(`/session/get-challenge`)
+        .get<ChallengeResult>("/session/get-challenge")
         .catch((error: Error | AxiosError) => {
           console.error("Get Challenge failed!", error.message);
         });
@@ -144,7 +145,7 @@ export class MasaClient extends MasaBase {
 
     logout: async (): Promise<LogoutResult | undefined> => {
       const logoutResponse = await this._middlewareClient
-        .post<LogoutResult>(`/session/logout`, undefined, {
+        .post<LogoutResult>("/session/logout", undefined, {
           headers: {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
@@ -248,7 +249,7 @@ export class MasaClient extends MasaBase {
 
       const greenGenerateResponse = await this._middlewareClient
         .post<GenerateGreenResult>(
-          `/green/generate`,
+          "/green/generate",
           {
             phoneNumber,
           },
@@ -291,7 +292,7 @@ export class MasaClient extends MasaBase {
 
       const greenVerifyResponse = await this._middlewareClient
         .post<VerifyGreenResult>(
-          `/green/verify`,
+          "/green/verify",
           {
             phoneNumber,
             code,
@@ -337,7 +338,7 @@ export class MasaClient extends MasaBase {
       };
 
       const generateCreditScoreResponse = await this._middlewareClient
-        .get<GenerateCreditScoreResult>(`/credit-score/generate`, {
+        .get<GenerateCreditScoreResult>("/credit-score/generate", {
           headers: {
             cookie: this.cookie ? [this.cookie] : undefined,
           },
@@ -379,7 +380,7 @@ export class MasaClient extends MasaBase {
 
       const updateCreditScoreResponse = await this._middlewareClient
         .post<UpdateCreditScoreResult>(
-          `/credit-score/update`,
+          "/credit-score/update",
           {
             transactionHash,
           },
