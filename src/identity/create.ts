@@ -62,6 +62,7 @@ export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
     return result;
   }
 
+  console.log("Creating Identity ...");
   return await purchaseIdentity(masa);
 };
 

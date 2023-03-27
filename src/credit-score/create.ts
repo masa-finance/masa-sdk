@@ -6,14 +6,14 @@ import { Messages } from "../utils";
 export const createCreditScore = async (
   masa: Masa,
   paymentMethod: PaymentMethod
-): Promise<GenerateCreditScoreResult | undefined> => {
+): Promise<GenerateCreditScoreResult> => {
   const result: GenerateCreditScoreResult = {
     success: false,
     message: "Unknown Error",
   };
 
   if (await masa.session.checkLogin()) {
-    console.log("Creating Credit Score!");
+    console.log("Creating Credit Score ...");
 
     const { identityId, address } = await masa.identity.load();
     if (!identityId || !address) {
@@ -33,39 +33,42 @@ export const createCreditScore = async (
 
     const creditScoreResponse = await masa.client.creditScore.generate();
 
-    if (
-      creditScoreResponse?.signature &&
-      creditScoreResponse?.signatureDate &&
-      creditScoreResponse?.authorityAddress
-    ) {
-      try {
-        const { hash, wait } = await masa.contracts.creditScore.mint(
-          paymentMethod,
-          identityId,
-          creditScoreResponse.authorityAddress,
-          creditScoreResponse.signatureDate,
-          creditScoreResponse.signature
-        );
+    if (creditScoreResponse) {
+      result.message = creditScoreResponse.message;
 
-        console.log(Messages.WaitingToFinalize(hash));
-        const { transactionHash } = await wait();
+      if (
+        creditScoreResponse.signature &&
+        creditScoreResponse.signatureDate &&
+        creditScoreResponse.authorityAddress
+      ) {
+        try {
+          const { hash, wait } = await masa.contracts.creditScore.mint(
+            paymentMethod,
+            identityId,
+            creditScoreResponse.authorityAddress,
+            creditScoreResponse.signatureDate,
+            creditScoreResponse.signature
+          );
 
-        console.log("Updating Credit Score Record!");
-        const creditScoreUpdateResponse = await masa.client.creditScore.update(
-          transactionHash
-        );
+          console.log(Messages.WaitingToFinalize(hash));
+          const { transactionHash } = await wait();
 
-        if (masa.config.verbose) {
-          console.log({ creditScoreUpdateResponse });
-        }
+          console.log("Updating Credit Score Record!");
+          const creditScoreUpdateResponse =
+            await masa.client.creditScore.update(transactionHash);
 
-        return { ...result, ...creditScoreUpdateResponse };
-      } catch (error: unknown) {
-        result.success = false;
+          if (masa.config.verbose) {
+            console.log({ creditScoreUpdateResponse });
+          }
 
-        if (error instanceof Error) {
-          result.message = `Unexpected error: ${error.message}`;
-          console.error(result.message);
+          return { ...result, ...creditScoreUpdateResponse };
+        } catch (error: unknown) {
+          result.success = false;
+
+          if (error instanceof Error) {
+            result.message = `Unexpected error: ${error.message}`;
+            console.error(result.message);
+          }
         }
       }
     }
