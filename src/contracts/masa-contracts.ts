@@ -6,6 +6,7 @@ import {
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
 import {
+  BaseContract,
   constants,
   ContractReceipt,
   ContractTransaction,
@@ -229,16 +230,34 @@ export class MasaContracts extends MasaBase {
     },
   };
 
-  parseLogs = (logs: Log[]): LogDescription[] => {
+  parseLogs = (
+    logs: Log[],
+    additionalContracts: BaseContract[] = []
+  ): LogDescription[] => {
     const parsedLogs: LogDescription[] = [];
 
-    for (const contract of Object.values(this.instances)) {
+    for (const contract of [
+      ...Object.values(this.instances),
+      ...additionalContracts,
+    ]) {
       parsedLogs.push(
         ...logs
-          .filter((l: Log) => l.address === contract.address)
-          .map((l: Log) => contract.interface.parseLog(l))
+          .filter(
+            (log: Log) =>
+              log.address.toLowerCase() === contract.address.toLowerCase()
+          )
+          .map((log: Log) => {
+            try {
+              return contract.interface.parseLog(log);
+            } catch (error) {
+              if (error instanceof Error) {
+                console.warn(error.message);
+              }
+            }
+          })
       );
     }
+
     return parsedLogs;
   };
 
