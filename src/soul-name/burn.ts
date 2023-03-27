@@ -3,10 +3,11 @@ import { Messages } from "../utils";
 
 export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
   const soulNameData = await masa.contracts.soulName.getSoulnameData(soulName);
+  const extension = await masa.contracts.instances.SoulNameContract.extension();
 
   if (soulNameData.exists) {
     console.log(
-      `Burning '${soulName}.soul' with token ID '${soulNameData.tokenId}'!`
+      `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`
     );
 
     try {
@@ -19,17 +20,17 @@ export const burnSoulNameByName = async (masa: Masa, soulName: string) => {
       await wait();
 
       console.log(
-        `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' burned!`
+        `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' burned!`
       );
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
-          `Burning of Soulname '${soulName}.soul' Failed! ${error.message}`
+          `Burning of Soulname '${soulName}${extension}' Failed! ${error.message}`
         );
       }
     }
   } else {
-    console.error(`Soulname '${soulName}.soul' does not exist!`);
+    console.error(`Soulname '${soulName}${extension}' does not exist!`);
   }
 };
 

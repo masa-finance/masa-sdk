@@ -7,10 +7,11 @@ export const sendSoulNameByName = async (
   receiver: string
 ) => {
   const soulNameData = await masa.contracts.soulName.getSoulnameData(soulName);
+  const extension = await masa.contracts.instances.SoulNameContract.extension();
 
   if (soulNameData.exists) {
     console.log(
-      `Sending '${soulName}.soul' with token ID '${soulNameData.tokenId}' to '${receiver}'!`
+      `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`
     );
 
     try {
@@ -27,7 +28,7 @@ export const sendSoulNameByName = async (
       await wait();
 
       console.log(
-        `Soulname '${soulName}.soul' with token ID '${soulNameData.tokenId}' sent!`
+        `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`
       );
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -35,7 +36,7 @@ export const sendSoulNameByName = async (
       }
     }
   } else {
-    console.error(`Soulname '${soulName}.soul' does not exist!`);
+    console.error(`Soulname '${soulName}${extension}' does not exist!`);
   }
 };
 
