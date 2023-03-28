@@ -1,11 +1,14 @@
 import { BigNumber, constants } from "ethers";
 import Masa from "../masa";
 import { patchMetadataUrl } from "../helpers";
-import { MasaSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import {
+  MasaSBTAuthority,
+  MasaSBTSelfSovereign,
+} from "@masa-finance/masa-contracts-identity";
 
 export const loadSBTIDs = async (
   masa: Masa,
-  contract: MasaSBTSelfSovereign,
+  contract: MasaSBTSelfSovereign | MasaSBTAuthority,
   sbtIDs: BigNumber[]
 ) => {
   return await Promise.all(
@@ -39,7 +42,7 @@ export const loadSBTsByIdentityId = async (
 
 export const loadSBTsByAddress = async (
   masa: Masa,
-  contract: MasaSBTSelfSovereign,
+  contract: MasaSBTSelfSovereign | MasaSBTAuthority,
   address: string
 ): Promise<
   {
@@ -78,7 +81,7 @@ export const loadSBTsByAddress = async (
 
 export const listSBTs = async (
   masa: Masa,
-  contract: MasaSBTSelfSovereign,
+  contract: MasaSBTSelfSovereign | MasaSBTAuthority,
   address?: string
 ): Promise<
   {
@@ -90,7 +93,13 @@ export const listSBTs = async (
 
   const sbts = await loadSBTsByAddress(masa, contract, address);
 
-  if (sbts.length === 0) console.log("No SBTs found");
+  if (sbts.length === 0) {
+    console.log(
+      `No SBTs found on contract '${await contract.name()}' (${
+        contract.address
+      })`
+    );
+  }
 
   let i = 1;
   for (const sbt of sbts) {

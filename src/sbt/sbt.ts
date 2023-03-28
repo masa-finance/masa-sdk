@@ -1,6 +1,7 @@
 import { MasaBase } from "../helpers/masa-base";
 import { loadSBTContract } from "../contracts";
 import {
+  MasaSBTAuthority,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
@@ -11,7 +12,7 @@ import { MasaSoulLinker } from "../soul-linker";
 
 export class MasaSBT extends MasaBase {
   connect = async (address: string) => {
-    const selfSovereignSBT: MasaSBTSelfSovereign | undefined =
+    const sbtContract: MasaSBTSelfSovereign | MasaSBTAuthority | undefined =
       await loadSBTContract(
         this.masa.config,
         address,
@@ -19,17 +20,26 @@ export class MasaSBT extends MasaBase {
       );
 
     return {
-      links: selfSovereignSBT
-        ? new MasaSoulLinker(this.masa, selfSovereignSBT)
+      links: sbtContract
+        ? new MasaSoulLinker(this.masa, sbtContract)
         : undefined,
 
+      /**
+       *
+       * @param address
+       */
       list: (address?: string) => {
-        if (!selfSovereignSBT) return;
-        return listSBTs(this.masa, selfSovereignSBT, address);
+        if (!sbtContract) return;
+        return listSBTs(this.masa, sbtContract, address);
       },
+
+      /**
+       *
+       * @param SBTId
+       */
       burn: (SBTId: BigNumber) => {
-        if (!selfSovereignSBT) return;
-        return burnSBT(this.masa, selfSovereignSBT, SBTId);
+        if (!sbtContract) return;
+        return burnSBT(this.masa, sbtContract, SBTId);
       },
     };
   };
