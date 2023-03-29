@@ -1,4 +1,4 @@
-import { ERC20__factory, PaymentMethod } from "../contracts";
+import { ERC20, ERC20__factory, PaymentMethod } from "../contracts";
 import {
   SoulboundCreditScore,
   SoulboundGreen,
@@ -26,7 +26,8 @@ export const getBalances = async (
   masa: Masa,
   address?: string
 ): Promise<Balances> => {
-  const addressToLoad = address || (await masa.config.wallet.getAddress());
+  const addressToLoad: string =
+    address || (await masa.config.wallet.getAddress());
 
   const loadERC20Balance = async (
     userAddress: string,
@@ -41,7 +42,7 @@ export const getBalances = async (
     }
 
     try {
-      const contract = ERC20__factory.connect(
+      const contract: ERC20 = ERC20__factory.connect(
         tokenAddress,
         masa.config.wallet.provider
       );
