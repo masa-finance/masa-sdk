@@ -1,13 +1,13 @@
-import Masa from "../masa";
-import { createLink } from "./create-link";
-import { PaymentMethod } from "../contracts";
-import { establishLinkFromPassport } from "./establish-link";
 import { BigNumber, Contract } from "ethers";
+import Masa from "../masa";
+import { PaymentMethod } from "../interface";
+import { MasaBase } from "../helpers/masa-base";
+import { createLink } from "./create-link";
+import { establishLinkFromPassport } from "./establish-link";
 import { verifyLink } from "./verify-link";
 import { listLinks } from "./list-links";
 import { breakLink } from "./break-link";
 import { queryLinkFromPassport } from "./query-link";
-import { MasaBase } from "../helpers/masa-base";
 
 export class MasaSoulLinker extends MasaBase {
   constructor(masa: Masa, private contract: Contract) {

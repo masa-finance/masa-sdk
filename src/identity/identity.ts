@@ -1,11 +1,14 @@
-import { PaymentMethod } from "../contracts";
-import { createIdentity, createIdentityWithSoulName } from "./create";
-import { loadIdentityByAddress } from "./load";
-import { burnIdentity } from "./burn";
-import { showIdentity } from "./show";
+import { PaymentMethod } from "../interface";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
+import {
+  burnIdentity,
+  createIdentity,
+  createIdentityWithSoulName,
+  loadIdentityByAddress,
+  showIdentity,
+} from "./";
 
 export class MasaIdentity extends MasaBase {
   public readonly links: MasaSoulLinker;

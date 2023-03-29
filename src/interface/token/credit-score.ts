@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { BaseResult } from "../masa";
 
 export interface ICreditScore {
@@ -14,6 +15,12 @@ export interface ICreditScore {
     decile?: string;
     value_rating?: string;
   };
+}
+
+export interface CreditScoreDetails {
+  tokenId: BigNumber;
+  tokenUri: string;
+  metadata?: ICreditScore;
 }
 
 export interface GenerateCreditScoreResult extends BaseResult {

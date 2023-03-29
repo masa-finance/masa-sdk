@@ -1,5 +1,6 @@
-import { BaseResult } from "../masa";
 import Transaction from "arweave/node/lib/transaction";
+import { BigNumber } from "ethers";
+import { BaseResult } from "../masa";
 
 export interface Attribute {
   display_type?: string;
@@ -22,6 +23,21 @@ export interface ISoulName {
   chainId: string;
   signature: string;
   attributes: Attribute[];
+}
+
+export interface SoulNameDetails {
+  owner: string;
+  tokenUri: string;
+  tokenDetails: {
+    sbtName: string;
+    extension: string;
+    linked: boolean;
+    identityId: BigNumber;
+    tokenId: BigNumber;
+    expirationDate: BigNumber;
+    active: boolean;
+  };
+  metadata: ISoulName;
 }
 
 export enum SoulNameErrorCodes {

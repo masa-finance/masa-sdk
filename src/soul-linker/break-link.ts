@@ -1,8 +1,8 @@
+import { BigNumber, Contract } from "ethers";
 import Masa from "../masa";
 import { BaseResult } from "../interface";
-import { BigNumber, Contract } from "ethers";
-import { Link, loadLinks } from "./list-links";
 import { Messages } from "../utils";
+import { Link, loadLinks } from "./list-links";
 
 export type BreakLinkResult = BaseResult;
 

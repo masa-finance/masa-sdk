@@ -1,17 +1,5 @@
 import Masa from "../masa";
-import GraphemeSplitter from "grapheme-splitter";
-
-export const calculateSoulNameLength = (soulName: string) => {
-  return new GraphemeSplitter().countGraphemes(soulName);
-};
-
-export const getSoulNameMetadataPrefix = (masa: Masa): string => {
-  // special handling for celo networks
-  return masa.config.networkName === "celo" ||
-    masa.config.networkName === "alfajores"
-    ? "https://arweave.net/"
-    : "ar://";
-};
+import { calculateSoulNameLength } from "./helpers";
 
 export const validateSoulName = (
   masa: Masa,

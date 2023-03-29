@@ -1,11 +1,17 @@
-import { createGreen, generateGreen, mintGreen, verifyGreen } from "./create";
-import { burnGreen } from "./burn";
-import { listGreens, loadGreensByIdentityId } from "./list";
 import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
-import { PaymentMethod } from "../contracts";
+import { PaymentMethod } from "../interface";
+import {
+  burnGreen,
+  createGreen,
+  generateGreen,
+  listGreens,
+  loadGreensByIdentityId,
+  mintGreen,
+  verifyGreen,
+} from "./";
 
 export class MasaGreen extends MasaBase {
   public readonly links: MasaSoulLinker;

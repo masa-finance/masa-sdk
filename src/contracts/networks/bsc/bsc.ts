@@ -1,3 +1,6 @@
-import SoulboundGreen from "@masa-finance/masa-contracts-identity/deployments/bsc/SoulboundGreen.json";
+import { address as SoulboundGreenAddress } from "@masa-finance/masa-contracts-identity/deployments/bsc/SoulboundGreen.json";
+import { Addresses } from "../../addresses";
 
-export const SoulboundGreenAddress = SoulboundGreen.address;
+export const bsc: Addresses = {
+  SoulboundGreenAddress,
+};

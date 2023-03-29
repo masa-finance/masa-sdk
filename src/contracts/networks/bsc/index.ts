@@ -1,2 +1,2 @@
-export * as bsctest from "./bsctest";
-export * as bsc from "./bsc";
+export * from "./bsctest";
+export * from "./bsc";

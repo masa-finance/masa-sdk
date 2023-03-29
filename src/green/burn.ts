@@ -1,12 +1,13 @@
+import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { Messages } from "../utils";
-import { BigNumber } from "ethers";
 
-export const burnGreenById = async (
+export const burnGreen = async (
   masa: Masa,
   greenId: BigNumber
 ): Promise<boolean> => {
   try {
+    console.log(`Burning Green with ID '${greenId}'!`);
     const { hash, wait } =
       await masa.contracts.instances.SoulboundGreenContract.connect(
         masa.config.wallet
@@ -15,6 +16,7 @@ export const burnGreenById = async (
     console.log(Messages.WaitingToFinalize(hash));
     await wait();
 
+    console.log(`Burned Green with ID '${greenId}'!`);
     return true;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -23,24 +25,4 @@ export const burnGreenById = async (
   }
 
   return false;
-};
-
-export const burnGreen = async (
-  masa: Masa,
-  greenId: BigNumber
-): Promise<boolean> => {
-  let success = false;
-
-  if (await masa.session.checkLogin()) {
-    console.log(`Burning Green with ID '${greenId}'!`);
-    success = await burnGreenById(masa, greenId);
-
-    if (success) {
-      console.log(`Burned Green with ID '${greenId}'!`);
-    }
-  } else {
-    console.error(Messages.NotLoggedIn());
-  }
-
-  return success;
 };

@@ -1,6 +1,6 @@
+import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { unpackSessionId } from "../helpers";
-import { BigNumber } from "ethers";
 import { signMessage, Templates } from "../utils";
 
 export const login = async (

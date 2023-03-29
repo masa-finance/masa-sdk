@@ -8,7 +8,7 @@ export const burnIdentityById = async (
 ): Promise<boolean> => {
   let success = false;
 
-  console.log("Burning Identity");
+  console.log(`Burning Identity with ID '${identityId}'!`);
   try {
     const { wait, hash } =
       await masa.contracts.instances.SoulboundIdentityContract.connect(
@@ -18,11 +18,11 @@ export const burnIdentityById = async (
     console.log(Messages.WaitingToFinalize(hash));
     await wait();
 
-    console.log(`Identity with token ID '${identityId}' burned!`);
+    console.log(`Burned Identity with ID '${identityId}'!`);
     success = true;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Burning of Identity Failed! ${error.message}`);
+      console.error(`Burning Identity Failed! ${error.message}`);
     }
   }
 
@@ -30,16 +30,11 @@ export const burnIdentityById = async (
 };
 
 export const burnIdentity = async (masa: Masa): Promise<boolean> => {
-  let success = false;
-
-  if (await masa.session.checkLogin()) {
-    const { identityId } = await masa.identity.load();
-    if (!identityId) return success;
-
-    success = await burnIdentityById(masa, identityId);
-  } else {
-    console.error(Messages.NotLoggedIn());
+  const { identityId, address } = await masa.identity.load();
+  if (!identityId) {
+    console.error(Messages.NoIdentity(address));
+    return false;
   }
 
-  return success;
+  return burnIdentityById(masa, identityId);
 };

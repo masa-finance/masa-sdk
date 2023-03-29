@@ -1,2 +1,2 @@
-export * as alfajores from "./alfajores";
-export * as celo from "./celo";
+export * from "./alfajores";
+export * from "./celo";

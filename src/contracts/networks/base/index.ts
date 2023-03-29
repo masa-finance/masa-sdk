@@ -1,1 +1,1 @@
-export * as basegoerli from "./basegoerli";
+export * from "./basegoerli";

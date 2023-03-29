@@ -1,20 +1,23 @@
-import Masa from "../masa";
-import { Messages } from "../utils";
 import { MasaSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
+import Masa from "../masa";
+import { Messages } from "../utils";
 
-export const burnSBTById = async (
+export const burnSBT = async (
   masa: Masa,
   contract: MasaSBTSelfSovereign,
   SBTId: BigNumber
 ): Promise<boolean> => {
   try {
+    console.log(`Burning SBT with ID '${SBTId}'!`);
+
     const { wait, hash } = await contract
       .connect(masa.config.wallet)
       .burn(SBTId);
     console.log(Messages.WaitingToFinalize(hash));
     await wait();
 
+    console.log(`Burned SBT with ID '${SBTId}'!`);
     return true;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -23,25 +26,4 @@ export const burnSBTById = async (
   }
 
   return false;
-};
-
-export const burnSBT = async (
-  masa: Masa,
-  contract: MasaSBTSelfSovereign,
-  SBTId: BigNumber
-): Promise<boolean> => {
-  let success = false;
-
-  if (await masa.session.checkLogin()) {
-    console.log(`Burning SBT with ID '${SBTId}'!`);
-    success = await burnSBTById(masa, contract, SBTId);
-
-    if (success) {
-      console.log(`Burned SBT with ID '${SBTId}'!`);
-    }
-  } else {
-    console.error(Messages.NotLoggedIn());
-  }
-
-  return success;
 };

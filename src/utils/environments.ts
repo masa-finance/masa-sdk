@@ -1,5 +1,5 @@
-import { MasaArgs } from "../interface";
 import { Signer, Wallet } from "ethers";
+import { MasaArgs } from "../interface";
 
 // special type for env config that makes wallet optional
 export type Environment = {

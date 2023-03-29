@@ -5,7 +5,7 @@ export const sendSoulNameByName = async (
   masa: Masa,
   soulName: string,
   receiver: string
-) => {
+): Promise<boolean> => {
   const soulNameData = await masa.contracts.soulName.getSoulnameData(soulName);
   const extension = await masa.contracts.instances.SoulNameContract.extension();
 
@@ -30,6 +30,8 @@ export const sendSoulNameByName = async (
       console.log(
         `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`
       );
+
+      return true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(`Sending of Soul Name Failed! ${error.message}`);
@@ -38,26 +40,26 @@ export const sendSoulNameByName = async (
   } else {
     console.error(`Soulname '${soulName}${extension}' does not exist!`);
   }
+
+  return false;
 };
 
 export const sendSoulName = async (
   masa: Masa,
   soulName: string,
   receiver: string
-) => {
-  if (await masa.session.checkLogin()) {
-    const extension =
-      await masa.contracts.instances.SoulNameContract.extension();
+): Promise<boolean> => {
+  const extension = await masa.contracts.instances.SoulNameContract.extension();
 
-    if (soulName.endsWith(extension)) {
-      soulName = soulName.replace(extension, "");
-    }
-
-    const { identityId } = await masa.identity.load();
-    if (!identityId) return;
-
-    await sendSoulNameByName(masa, soulName, receiver);
-  } else {
-    console.error(Messages.NotLoggedIn());
+  if (soulName.endsWith(extension)) {
+    soulName = soulName.replace(extension, "");
   }
+
+  const { identityId, address } = await masa.identity.load();
+  if (!identityId) {
+    console.error(Messages.NoIdentity(address));
+    return false;
+  }
+
+  return sendSoulNameByName(masa, soulName, receiver);
 };

@@ -1,11 +1,14 @@
-import { createCreditScore } from "./create";
-import { burnCreditScore } from "./burn";
-import { listCreditScores, loadCreditScoreByTokenId } from "./load";
 import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
-import { PaymentMethod } from "../contracts";
+import { PaymentMethod } from "../interface";
+import {
+  burnCreditScore,
+  createCreditScore,
+  listCreditScores,
+  loadCreditScoreByTokenId,
+} from "./";
 
 export class MasaCreditScore extends MasaBase {
   public readonly links: MasaSoulLinker;

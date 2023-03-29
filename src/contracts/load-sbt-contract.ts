@@ -1,9 +1,9 @@
 import { Signer, utils, Wallet } from "ethers";
-import { MasaConfig } from "../interface";
 import {
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
+import { MasaConfig } from "../interface";
 
 export class ContractFactory {
   static connect: <Contract>(

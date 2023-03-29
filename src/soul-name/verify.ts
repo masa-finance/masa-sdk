@@ -1,5 +1,5 @@
-import Masa from "../masa";
 import { utils } from "ethers";
+import Masa from "../masa";
 import { recoverAddress } from "../utils";
 
 const minters = [

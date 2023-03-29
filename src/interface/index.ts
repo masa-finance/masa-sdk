@@ -1,4 +1,5 @@
+export * from "./token/";
 export * from "./contracts";
 export * from "./masa";
-export * from "./token";
 export * from "./session";
+export * from "./tokens";

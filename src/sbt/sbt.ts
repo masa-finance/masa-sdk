@@ -1,14 +1,13 @@
-import { MasaBase } from "../helpers/masa-base";
-import { loadSBTContract } from "../contracts";
 import {
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
-import { listSBTs } from "./list";
-import { burnSBT } from "./burn";
 import { BigNumber } from "ethers";
+import { MasaBase } from "../helpers/masa-base";
+import { loadSBTContract } from "../contracts";
 import { MasaSoulLinker } from "../soul-linker";
+import { burnSBT, listSBTs } from "./";
 
 export class MasaSBT extends MasaBase {
   connect = async (address: string) => {

@@ -1,33 +1,14 @@
+import { LogDescription } from "@ethersproject/abi";
 import Masa from "../masa";
-import { PaymentMethod } from "../contracts";
 import {
   CreateSoulNameResult,
   isSoulNameMetadataStoreResult,
+  PaymentMethod,
   SoulNameErrorCodes,
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
 } from "../interface";
 import { Messages } from "../utils";
-import { LogDescription } from "@ethersproject/abi";
-
-export const getRegistrationPrice = async (
-  masa: Masa,
-  paymentMethod: PaymentMethod,
-  soulName: string,
-  duration: number
-) => {
-  const { length } = masa.soulName.validate(soulName);
-
-  const { price, formattedPrice } = await masa.contracts.soulName.getPrice(
-    paymentMethod,
-    length,
-    duration
-  );
-
-  console.log(`Soulname price is ${formattedPrice} ${paymentMethod}.`);
-
-  return price;
-};
 
 const purchaseSoulName = async (
   masa: Masa,
@@ -97,7 +78,7 @@ const purchaseSoulName = async (
             console.log(`SoulName with ID: '${tokenId}' created.`);
           }
 
-          if (!tokenId) {
+          if (tokenId) {
             return {
               success: true,
               message: "",
@@ -154,8 +135,11 @@ export const createSoulName = async (
       return result;
     }
 
-    const { identityId } = await masa.identity.load();
-    if (!identityId) return result;
+    const { identityId, address } = await masa.identity.load();
+    if (!identityId) {
+      console.error(Messages.NoIdentity(address));
+      return result;
+    }
 
     return await purchaseSoulName(
       masa,

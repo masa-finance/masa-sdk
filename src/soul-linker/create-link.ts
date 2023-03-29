@@ -1,5 +1,5 @@
-import Masa from "../masa";
 import { BigNumber, Contract } from "ethers";
+import Masa from "../masa";
 import { BaseResult, IPassport } from "../interface";
 import { loadAddressFromIdentityId } from "../identity";
 import { Messages } from "../utils";

@@ -1,8 +1,8 @@
+import { MasaBase } from "../helpers/masa-base";
 import { checkLogin } from "./check-login";
 import { login } from "./login";
 import { logout } from "./logout";
 import { getSession } from "./get-session";
-import { MasaBase } from "../helpers/masa-base";
 
 export class MasaSession extends MasaBase {
   checkLogin = () => checkLogin(this.masa);

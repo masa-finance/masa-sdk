@@ -1,3 +1,5 @@
+import { BigNumber } from "@ethersproject/bignumber";
+
 export interface IIdentity {
   name: "Masa Soulbound Identity v1.0.0";
   description: "A self-sovereign identity for accessing DeFi";
@@ -7,4 +9,10 @@ export interface IIdentity {
     account?: string;
     soulName?: string;
   };
+}
+
+export interface IdentityDetails {
+  tokenId: BigNumber;
+  tokenUri: string;
+  metadata?: IIdentity;
 }

@@ -1,62 +1,16 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import Masa from "../masa";
-import { IIdentity } from "../interface";
-import { patchMetadataUrl } from "../helpers";
-import { Messages } from "../utils";
-
-export const loadIdentityDetails = async (
-  masa: Masa,
-  identityId: BigNumber
-): Promise<{
-  tokenId: BigNumber;
-  tokenUri: string;
-  metadata?: IIdentity;
-}> => {
-  const tokenUri = patchMetadataUrl(
-    masa,
-    await masa.contracts.instances.SoulboundIdentityContract[
-      "tokenURI(uint256)"
-    ](identityId)
-  );
-
-  const metadata: IIdentity | undefined = <IIdentity | undefined>(
-    await masa.client.metadata.get(tokenUri)
-  );
-
-  return {
-    tokenId: identityId,
-    tokenUri,
-    metadata,
-  };
-};
+import { IdentityDetails } from "../interface";
+import { loadIdentity } from "./";
 
 export const showIdentity = async (
   masa: Masa,
   address?: string
-): Promise<
-  | {
-      tokenId: BigNumber;
-      tokenUri: string;
-      metadata?: IIdentity;
-    }
-  | undefined
-> => {
-  if (await masa.session.checkLogin()) {
-    address = address || (await masa.config.wallet.getAddress());
+): Promise<IdentityDetails | undefined> => {
+  const identity = await loadIdentity(masa, address);
 
-    const { identityId } = await masa.identity.load(address);
-    if (!identityId) return;
-
-    const identity = await loadIdentityDetails(masa, identityId);
-
-    console.log(`Identity Metadata URL: '${identity.tokenUri}'`);
-
-    if (identity.metadata) {
-      console.log(`Metadata: ${JSON.stringify(identity.metadata, null, 2)}`);
-    }
-
-    return identity;
-  } else {
-    console.error(Messages.NotLoggedIn());
+  if (identity?.metadata) {
+    console.log(`Metadata: ${JSON.stringify(identity.metadata, null, 2)}`);
   }
+
+  return identity;
 };

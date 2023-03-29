@@ -1,108 +1,24 @@
-import { BigNumber, constants } from "ethers";
 import Masa from "../masa";
-import { IGreen } from "../interface";
-import { patchMetadataUrl } from "../helpers";
-
-export const loadGreenIds = async (masa: Masa, greenIds: BigNumber[]) => {
-  return await Promise.all(
-    greenIds.map(async (tokenId: BigNumber) => {
-      const tokenUri = patchMetadataUrl(
-        masa,
-        await masa.contracts.instances.SoulboundGreenContract.tokenURI(tokenId)
-      );
-
-      const metadata = <IGreen | undefined>(
-        await masa.client.metadata.get(tokenUri)
-      );
-
-      return {
-        tokenId,
-        tokenUri,
-        metadata,
-      };
-    })
-  );
-};
-
-export const loadGreensByIdentityId = async (
-  masa: Masa,
-  identityId: BigNumber
-): Promise<
-  {
-    tokenId: BigNumber;
-    tokenUri: string;
-    metadata?: IGreen;
-  }[]
-> => {
-  const greenIds: BigNumber[] =
-    await masa.contracts.instances.SoulLinkerContract[
-      "getSBTConnections(uint256,address)"
-    ](identityId, masa.contracts.instances.SoulboundGreenContract.address);
-
-  return await loadGreenIds(masa, greenIds);
-};
-
-export const loadGreensByAddress = async (
-  masa: Masa,
-  address: string
-): Promise<
-  {
-    tokenId: BigNumber;
-    tokenUri: string;
-    metadata?: IGreen;
-  }[]
-> => {
-  let greenIds: BigNumber[] = [];
-
-  try {
-    // do we have a soul linker here? use it!
-    if (
-      masa.contracts.instances.SoulLinkerContract.address !==
-      constants.AddressZero
-    ) {
-      greenIds = await masa.contracts.instances.SoulLinkerContract[
-        "getSBTConnections(address,address)"
-      ](address, masa.contracts.instances.SoulboundGreenContract.address);
-    } else {
-      const balance: number = (
-        await masa.contracts.instances.SoulboundGreenContract.balanceOf(address)
-      ).toNumber();
-
-      if (balance > 0) {
-        for (let i = 0; i < balance; i++) {
-          greenIds.push(
-            await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
-              address,
-              i
-            )
-          );
-        }
-      }
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(`Loading green failed! ${error.message}`);
-    }
-  }
-
-  return await loadGreenIds(masa, greenIds);
-};
+import { GreenDetails } from "../interface";
+import { loadGreensByAddress } from "./";
 
 export const listGreens = async (
   masa: Masa,
   address?: string
-): Promise<
-  {
-    tokenId: BigNumber;
-    tokenUri: string;
-    metadata?: IGreen;
-  }[]
-> => {
+): Promise<GreenDetails[]> => {
   address = address || (await masa.config.wallet.getAddress());
+  return loadGreensByAddress(masa, address);
+};
 
-  const greens = await loadGreensByAddress(masa, address);
+export const listGreensAndPrint = async (
+  masa: Masa,
+  address?: string
+): Promise<GreenDetails[]> => {
+  const greens = await listGreens(masa, address);
 
-  if (greens.length === 0) console.log("No Masa Green found");
+  if (greens.length === 0) {
+    console.warn("No Masa Green found");
+  }
 
   let i = 1;
   for (const green of greens) {

@@ -1,6 +1,8 @@
-import Masa from "../masa";
 import { BigNumber } from "ethers";
+import Masa from "../masa";
 import { Messages } from "../utils";
+import { patchMetadataUrl } from "../helpers";
+import { IdentityDetails, IIdentity } from "../interface";
 
 export const loadIdentityByAddress = async (
   masa: Masa,
@@ -52,4 +54,45 @@ export const loadAddressFromIdentityId = async (
   }
 
   return address;
+};
+
+export const loadIdentityDetails = async (
+  masa: Masa,
+  identityId: BigNumber
+): Promise<IdentityDetails> => {
+  const tokenUri = patchMetadataUrl(
+    masa,
+    await masa.contracts.instances.SoulboundIdentityContract[
+      "tokenURI(uint256)"
+    ](identityId)
+  );
+
+  if (masa.config.verbose) {
+    console.info(`Identity Metadata URL: '${tokenUri}'`);
+  }
+
+  const metadata: IIdentity | undefined = <IIdentity | undefined>(
+    await masa.client.metadata.get(tokenUri)
+  );
+
+  return {
+    tokenId: identityId,
+    tokenUri,
+    metadata,
+  };
+};
+
+export const loadIdentity = async (
+  masa: Masa,
+  address?: string
+): Promise<IdentityDetails | undefined> => {
+  address = address || (await masa.config.wallet.getAddress());
+
+  const { identityId } = await masa.identity.load(address);
+  if (!identityId) {
+    console.error(Messages.NoIdentity(address));
+    return;
+  }
+
+  return loadIdentityDetails(masa, identityId);
 };

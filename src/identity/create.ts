@@ -1,14 +1,14 @@
-import Masa from "../masa";
-import { PaymentMethod } from "../contracts";
-import { Messages } from "../utils";
 import { BigNumber } from "ethers";
+import { LogDescription } from "@ethersproject/abi";
+import Masa from "../masa";
 import {
+  PaymentMethod,
   BaseResult,
   CreateSoulNameResult,
   isSoulNameMetadataStoreResult,
   SoulNameErrorCodes,
 } from "../interface";
-import { LogDescription } from "@ethersproject/abi";
+import { Messages } from "../utils";
 
 export const purchaseIdentity = async (masa: Masa): Promise<BaseResult> => {
   const result = {

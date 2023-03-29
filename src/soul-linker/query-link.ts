@@ -1,10 +1,9 @@
-import Masa from "../masa";
-import { PaymentMethod } from "../contracts";
 import { BigNumber, Contract } from "ethers";
-import { BaseResult, IPassport } from "../interface";
-import { parsePassport } from "./parse-passport";
+import Masa from "../masa";
+import { PaymentMethod, BaseResult, IPassport } from "../interface";
 import { patchMetadataUrl } from "../helpers";
 import { Messages } from "../utils";
+import { parsePassport } from "./parse-passport";
 
 export type QueryLinkResult = BaseResult;
 

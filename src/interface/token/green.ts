@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { BaseResult } from "../masa";
 
 export interface IGreen {
@@ -9,6 +10,12 @@ export interface IGreen {
     identityId?: string;
     account?: string;
   };
+}
+
+export interface GreenDetails {
+  tokenId: BigNumber;
+  tokenUri: string;
+  metadata?: IGreen;
 }
 
 interface GreenBaseResult extends BaseResult {
