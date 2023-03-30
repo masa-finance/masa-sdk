@@ -12,34 +12,105 @@ import {
   loadSoulNamesByIdentityId,
   resolve,
   sendSoulName,
+  tailSoulNames,
   validateSoulName,
   verifyByName,
 } from "./";
 
 export class MasaSoulName extends MasaBase {
+  /**
+   *
+   * @param paymentMethod
+   * @param soulName
+   * @param duration
+   */
   getRegistrationPrice = (
     paymentMethod: PaymentMethod = "ETH",
     soulName: string,
     duration: number
   ) => getRegistrationPrice(this.masa, paymentMethod, soulName, duration);
+
+  /**
+   *
+   * @param address
+   */
   list = (address?: string) => listSoulNames(this.masa, address);
+
+  /**
+   *
+   * @param limit
+   */
+  tail = (limit?: number) => tailSoulNames(this.masa, limit);
+
+  /**
+   *
+   * @param soulName
+   */
   resolve = (soulName: string) => resolve(this.masa, soulName);
+
+  /**
+   *
+   * @param identityId
+   */
   loadSoulNamesByIdentityId = (identityId: BigNumber) =>
     loadSoulNamesByIdentityId(this.masa, identityId);
+
+  /**
+   *
+   * @param soulName
+   */
   loadSoulNameByName = (soulName: string) =>
     loadSoulNameByName(this.masa, soulName);
+
+  /**
+   *
+   * @param tokenId
+   */
   loadSoulNameByTokenId = (tokenId: string | BigNumber) =>
     loadSoulNameByTokenId(this.masa, tokenId);
+
+  /**
+   *
+   * @param paymentMethod
+   * @param soulName
+   * @param duration
+   * @param receiver
+   */
   create = (
     paymentMethod: PaymentMethod = "ETH",
     soulName: string,
     duration: number,
     receiver?: string
   ) => createSoulName(this.masa, paymentMethod, soulName, duration, receiver);
+
+  /**
+   *
+   * @param soulName
+   */
   burn = (soulName: string) => burnSoulName(this.masa, soulName);
+
+  /**
+   *
+   * @param soulName
+   * @param receiver
+   */
   send = (soulName: string, receiver: string) =>
     sendSoulName(this.masa, soulName, receiver);
+
+  /**
+   *
+   * @param soulName
+   */
   verify = (soulName: string) => verifyByName(this.masa, soulName);
+
+  /**
+   *
+   * @param soulName
+   */
   validate = (soulName: string) => validateSoulName(this.masa, soulName);
+
+  /**
+   *
+   */
   getSoulNameMetadataPrefix = () => getSoulNameMetadataPrefix(this.masa);
 }

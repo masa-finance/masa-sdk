@@ -5,5 +5,6 @@ export * from "./list";
 export * from "./load";
 export * from "./send";
 export * from "./soul-name";
+export * from "./tail";
 export * from "./validate";
 export * from "./verify";
