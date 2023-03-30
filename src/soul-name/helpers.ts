@@ -1,27 +1,12 @@
 import GraphemeSplitter from "grapheme-splitter";
 import Masa from "../masa";
-import { PaymentMethod, SoulNameDetails } from "../interface";
+import { SoulNameDetails } from "../interface";
 
-export const getRegistrationPrice = async (
-  masa: Masa,
-  paymentMethod: PaymentMethod,
-  soulName: string,
-  duration: number
-) => {
-  const { length } = masa.soulName.validate(soulName);
-
-  const { price, formattedPrice } = await masa.contracts.soulName.getPrice(
-    paymentMethod,
-    length,
-    duration
-  );
-
-  console.log(`Soulname price is ${formattedPrice} ${paymentMethod}.`);
-
-  return price;
-};
-
-export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
+export const printSoulName = (
+  soulName: SoulNameDetails,
+  index?: number,
+  verbose: boolean = false
+): void => {
   console.log("\n");
 
   if (index) {
@@ -38,7 +23,7 @@ export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
   console.log(`Active: ${soulName.tokenDetails.active}`);
   console.log(`Metadata URL: '${soulName.tokenUri}'`);
 
-  if (soulName.metadata) {
+  if (soulName.metadata && verbose) {
     console.log(`Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`);
   }
 
@@ -49,7 +34,7 @@ export const printSoulName = (soulName: SoulNameDetails, index?: number) => {
   );
 };
 
-export const calculateSoulNameLength = (soulName: string) => {
+export const calculateSoulNameLength = (soulName: string): number => {
   return new GraphemeSplitter().countGraphemes(soulName);
 };
 

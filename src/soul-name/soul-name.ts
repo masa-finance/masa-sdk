@@ -4,7 +4,6 @@ import { MasaBase } from "../helpers/masa-base";
 import {
   burnSoulName,
   createSoulName,
-  getRegistrationPrice,
   getSoulNameMetadataPrefix,
   listSoulNames,
   loadSoulNameByName,
@@ -18,18 +17,6 @@ import {
 } from "./";
 
 export class MasaSoulName extends MasaBase {
-  /**
-   *
-   * @param paymentMethod
-   * @param soulName
-   * @param duration
-   */
-  getRegistrationPrice = (
-    paymentMethod: PaymentMethod = "ETH",
-    soulName: string,
-    duration: number
-  ) => getRegistrationPrice(this.masa, paymentMethod, soulName, duration);
-
   /**
    *
    * @param address

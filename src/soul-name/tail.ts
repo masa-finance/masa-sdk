@@ -58,7 +58,7 @@ export const tailSoulNamesAndPrint = async (
   if (soulNames.length > 0) {
     let index = 0;
     for (const soulName of soulNames) {
-      printSoulName(soulName, index);
+      printSoulName(soulName, index, masa.config.verbose);
       index++;
     }
   } else {
