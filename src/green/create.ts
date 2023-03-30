@@ -3,8 +3,8 @@ import Masa from "../masa";
 import {
   BaseResult,
   GenerateGreenResult,
-  VerifyGreenResult,
   PaymentMethod,
+  VerifyGreenResult,
 } from "../interface";
 import { Messages } from "../utils";
 
@@ -22,7 +22,7 @@ export const generateGreen = async (
       const greenGenerateResult = await masa.client.green.generate(phoneNumber);
 
       if (masa.config.verbose) {
-        console.log({ greenGenerateResult });
+        console.dir({ greenGenerateResult }, { depth: null });
       }
 
       return greenGenerateResult;
@@ -182,7 +182,7 @@ export const mintGreen = async (
 
   if (greenMintEvent) {
     if (masa.config.verbose) {
-      console.info({ greenMintEvent });
+      console.dir({ greenMintEvent }, { depth: null });
     }
 
     tokenId = greenMintEvent.args._tokenId.toString();
