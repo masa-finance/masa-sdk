@@ -71,7 +71,7 @@ const purchaseSoulName = async (
 
           if (soulnameTransferEvent) {
             if (masa.config.verbose) {
-              console.info({ soulnameTransferEvent });
+              console.dir({ soulnameTransferEvent }, { depth: null });
             }
 
             tokenId = soulnameTransferEvent.args.tokenId.toString();

@@ -2,10 +2,10 @@ import { BigNumber } from "ethers";
 import { LogDescription } from "@ethersproject/abi";
 import Masa from "../masa";
 import {
-  PaymentMethod,
   BaseResult,
   CreateSoulNameResult,
   isSoulNameMetadataStoreResult,
+  PaymentMethod,
   SoulNameErrorCodes,
 } from "../interface";
 import { Messages } from "../utils";
@@ -134,7 +134,7 @@ export const purchaseIdentityWithSoulName = async (
 
           if (soulnameTransferEvent) {
             if (masa.config.verbose) {
-              console.info({ soulnameTransferEvent });
+              console.dir({ soulnameTransferEvent }, { depth: null });
             }
 
             tokenId = soulnameTransferEvent.args.tokenId.toString();
