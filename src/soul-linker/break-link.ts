@@ -24,7 +24,8 @@ export const breakLink = async (
   }
 
   if (!identityId) {
-    console.error("Owner identity not found");
+    result.message = "Owner identity not found!";
+    console.error(result.message);
     return result;
   }
 

@@ -137,7 +137,7 @@ export const createSoulName = async (
 
     const { identityId, address } = await masa.identity.load();
     if (!identityId) {
-      console.error(Messages.NoIdentity(address));
+      result.message = Messages.NoIdentity(address);
       return result;
     }
 
@@ -151,7 +151,6 @@ export const createSoulName = async (
     );
   } else {
     result.message = Messages.NotLoggedIn();
-    console.error(result.message);
   }
 
   return result;

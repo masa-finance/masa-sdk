@@ -9,9 +9,10 @@ export const tailSoulNames = async (
   masa: Masa,
   limit: number = 5
 ): Promise<SoulNameDetails[]> => {
-  const filter = masa.contracts.instances.SoulNameContract.filters.Transfer(
-    constants.AddressZero
-  );
+  const soulNameMintEventsFilter =
+    masa.contracts.instances.SoulNameContract.filters.Transfer(
+      constants.AddressZero
+    );
 
   const { number } =
     (await masa.config.wallet.provider?.getBlock("latest")) || {};
@@ -28,7 +29,7 @@ export const tailSoulNames = async (
 
     soulNameMintEvents.push(
       ...(await masa.contracts.instances.SoulNameContract.queryFilter(
-        filter,
+        soulNameMintEventsFilter,
         fromBlock,
         toBlock
       ))

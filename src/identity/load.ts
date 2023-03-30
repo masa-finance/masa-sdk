@@ -25,7 +25,7 @@ export const loadIdentityByAddress = async (
         );
     }
 
-    if (!identityId) {
+    if (!identityId && masa.config.verbose) {
       console.error(Messages.NoIdentity(address));
     }
   } catch {

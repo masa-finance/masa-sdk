@@ -43,7 +43,10 @@ export const burnSoulNameByName = async (
   return false;
 };
 
-export const burnSoulName = async (masa: Masa, soulName: string) => {
+export const burnSoulName = async (
+  masa: Masa,
+  soulName: string
+): Promise<boolean> => {
   const extension = await masa.contracts.instances.SoulNameContract.extension();
 
   if (soulName.endsWith(extension)) {
