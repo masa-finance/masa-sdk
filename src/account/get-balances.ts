@@ -9,13 +9,17 @@ import { ERC20, ERC20__factory } from "../contracts";
 import Masa from "../masa";
 import { PaymentMethod } from "../interface";
 
-type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
+export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
 export type Balances = Partial<{
   [index in BalanceTypes]: number | undefined;
 }>;
 
-type SBTContractNames = "Identity" | "SoulName" | "Green" | "CreditScore";
+export type SBTContractNames =
+  | "Identity"
+  | "SoulName"
+  | "Green"
+  | "CreditScore";
 
 type SBTContracts =
   | SoulboundIdentity
