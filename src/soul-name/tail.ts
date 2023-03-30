@@ -62,7 +62,7 @@ export const tailSoulNamesAndPrint = async (
       index++;
     }
   } else {
-    console.error(`No soulnames found for '${limit}'`);
+    console.error(`No soulnames found!`);
   }
 
   return soulNames;
