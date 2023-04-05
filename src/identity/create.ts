@@ -10,13 +10,17 @@ import {
 } from "../interface";
 import { Messages } from "../utils";
 
+/**
+ * Identity only
+ * @param masa
+ */
 export const purchaseIdentity = async (masa: Masa): Promise<BaseResult> => {
   const result = {
     success: false,
     message: "Unknown Error",
   };
 
-  const { hash, wait } = await masa.contracts.identity.purchase();
+  const { wait, hash } = await masa.contracts.identity.purchase();
   console.log(Messages.WaitingToFinalize(hash));
 
   const { logs } = await wait();
@@ -48,11 +52,23 @@ export const purchaseIdentity = async (masa: Masa): Promise<BaseResult> => {
   return result;
 };
 
+/**
+ *
+ * @param masa
+ */
 export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
   const result = {
     success: false,
     message: "Unknown Error",
   };
+
+  if (
+    !masa.contracts.instances.SoulStoreContract.hasAddress ||
+    !masa.contracts.instances.SoulboundIdentityContract.hasAddress
+  ) {
+    result.message = Messages.ContractNotDeployed(masa.config.networkName);
+    return result;
+  }
 
   const { identityId } = await masa.identity.load();
 
@@ -66,6 +82,14 @@ export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
   return await purchaseIdentity(masa);
 };
 
+/**
+ * Identity with soul name
+ * @param masa
+ * @param soulName
+ * @param soulNameLength
+ * @param duration
+ * @param paymentMethod
+ */
 export const purchaseIdentityWithSoulName = async (
   masa: Masa,
   soulName: string,
@@ -169,6 +193,13 @@ export const purchaseIdentityWithSoulName = async (
   return result;
 };
 
+/**
+ *
+ * @param masa
+ * @param paymentMethod
+ * @param soulName
+ * @param duration
+ */
 export const createIdentityWithSoulName = async (
   masa: Masa,
   paymentMethod: PaymentMethod,
@@ -182,6 +213,15 @@ export const createIdentityWithSoulName = async (
   };
 
   if (await masa.session.checkLogin()) {
+    if (
+      !masa.contracts.instances.SoulStoreContract.hasAddress ||
+      !masa.contracts.instances.SoulboundIdentityContract.hasAddress ||
+      !masa.contracts.instances.SoulNameContract.hasAddress
+    ) {
+      result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      return result;
+    }
+
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
 
@@ -217,7 +257,6 @@ export const createIdentityWithSoulName = async (
     );
   } else {
     result.message = Messages.NotLoggedIn();
-    console.error(result.message);
   }
 
   return result;

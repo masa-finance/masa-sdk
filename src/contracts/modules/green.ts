@@ -1,7 +1,7 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
-import { generateSignatureDomain, signTypedData } from "../../utils";
+import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class Green extends MasaModuleBase {
@@ -141,7 +141,7 @@ export class Green extends MasaModuleBase {
     ];
 
     const greenMintOverrides = {
-      value: price,
+      value: isNativeCurrency(paymentMethod) ? price : undefined,
     };
 
     if (this.masa.config.verbose) {
@@ -149,20 +149,30 @@ export class Green extends MasaModuleBase {
     }
 
     // connect
-    const contract = await this.instances.SoulboundGreenContract.connect(
+    const {
+      estimateGas: {
+        "mint(address,address,address,uint256,bytes)": estimateGas,
+      },
+      "mint(address,address,address,uint256,bytes)": mint,
+    } = await this.instances.SoulboundGreenContract.connect(
       this.masa.config.wallet
     );
 
     // estimate gas
-    const gasLimit = contract.estimateGas[
-      "mint(address,address,address,uint256,bytes)"
-    ](...greenMintParameters, greenMintOverrides);
+    let gasLimit: BigNumber = await estimateGas(
+      ...greenMintParameters,
+      greenMintOverrides
+    );
+
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = this.addSlippage(
+        gasLimit,
+        this.masa.config.network.gasSlippagePercentage
+      );
+    }
 
     // execute
-    return contract["mint(address,address,address,uint256,bytes)"](
-      ...greenMintParameters,
-      { ...greenMintOverrides, gasLimit }
-    );
+    return mint(...greenMintParameters, { ...greenMintOverrides, gasLimit });
   };
 
   /**
@@ -211,5 +221,46 @@ export class Green extends MasaModuleBase {
     );
 
     return { signature, signatureDate, authorityAddress };
+  };
+
+  /**
+   *
+   * @param greenId
+   */
+  burn = async (greenId: BigNumber): Promise<boolean> => {
+    try {
+      console.log(`Burning Green with ID '${greenId}'!`);
+
+      const {
+        estimateGas: { burn: estimateGas },
+        burn,
+      } = this.masa.contracts.instances.SoulboundGreenContract.connect(
+        this.masa.config.wallet
+      );
+
+      let gasLimit: BigNumber = await estimateGas(greenId);
+
+      if (this.masa.config.network?.gasSlippagePercentage) {
+        gasLimit = this.addSlippage(
+          gasLimit,
+          this.masa.config.network.gasSlippagePercentage
+        );
+      }
+      const { wait, hash } = await burn(greenId, {
+        gasLimit,
+      });
+
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
+
+      console.log(`Burned Green with ID '${greenId}'!`);
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Burning Green Failed! '${error.message}'`);
+      }
+    }
+
+    return false;
   };
 }

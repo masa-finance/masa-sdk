@@ -1,7 +1,8 @@
-import { BigNumber, constants } from "ethers";
+import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { patchMetadataUrl } from "../helpers";
 import { GreenDetails, IGreen } from "../interface";
+import { isBigNumber } from "../utils";
 
 export const loadGreenDetails = async (
   masa: Masa,
@@ -35,43 +36,41 @@ export const loadGreenDetails = async (
   ).filter((green: GreenDetails) => !!green.metadata);
 };
 
-export const loadGreensByIdentityId = async (
+export const loadGreens = async (
   masa: Masa,
-  identityId: BigNumber
-): Promise<GreenDetails[]> => {
-  const greenIds: BigNumber[] =
-    await masa.contracts.instances.SoulLinkerContract[
-      "getSBTConnections(uint256,address)"
-    ](identityId, masa.contracts.instances.SoulboundGreenContract.address);
-
-  return await loadGreenDetails(masa, greenIds);
-};
-
-export const loadGreensByAddress = async (
-  masa: Masa,
-  address: string
+  identityIdOrAddress: BigNumber | string
 ): Promise<GreenDetails[]> => {
   let greenIds: BigNumber[] = [];
 
   try {
     // do we have a soul linker here? use it!
-    if (
-      masa.contracts.instances.SoulLinkerContract.address !==
-      constants.AddressZero
-    ) {
-      greenIds = await masa.contracts.instances.SoulLinkerContract[
-        "getSBTConnections(address,address)"
-      ](address, masa.contracts.instances.SoulboundGreenContract.address);
-    } else {
+    if (masa.contracts.instances.SoulLinkerContract.hasAddress) {
+      const {
+        "getSBTConnections(address,address)": getSBTConnectionsByAddress,
+        "getSBTConnections(uint256,address)": getSBTConnectionsByIdentity,
+      } = masa.contracts.instances.SoulLinkerContract;
+
+      greenIds = await (isBigNumber(identityIdOrAddress)
+        ? getSBTConnectionsByIdentity(
+            identityIdOrAddress,
+            masa.contracts.instances.SoulboundGreenContract.address
+          )
+        : getSBTConnectionsByAddress(
+            identityIdOrAddress,
+            masa.contracts.instances.SoulboundGreenContract.address
+          ));
+    } else if (!isBigNumber(identityIdOrAddress)) {
       const balance: number = (
-        await masa.contracts.instances.SoulboundGreenContract.balanceOf(address)
+        await masa.contracts.instances.SoulboundGreenContract.balanceOf(
+          identityIdOrAddress
+        )
       ).toNumber();
 
       if (balance > 0) {
         for (let i = 0; i < balance; i++) {
           greenIds.push(
             await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
-              address,
+              identityIdOrAddress,
               i
             )
           );

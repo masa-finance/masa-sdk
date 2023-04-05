@@ -1,28 +1,25 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
-import { Messages } from "../utils";
+import { isBigNumber, Messages } from "../utils";
 import { patchMetadataUrl } from "../helpers";
 import { IdentityDetails, IIdentity } from "../interface";
+import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (
   masa: Masa,
   address?: string
-): Promise<{ identityId?: BigNumber; address?: string }> => {
+): Promise<{ identityId?: BigNumber; address: string }> => {
+  address = address || (await masa.config.wallet.getAddress());
   let identityId;
 
   try {
-    address = address || (await masa.config.wallet.getAddress());
-
     const balance =
       await masa.contracts.instances.SoulboundIdentityContract.balanceOf(
         address
       );
 
     if (balance.toNumber() > 0) {
-      identityId =
-        await masa.contracts.instances.SoulboundIdentityContract.tokenOfOwner(
-          address
-        );
+      identityId = await resolveReverseIdentity(masa, address);
     }
 
     if (!identityId && masa.config.verbose) {
@@ -35,36 +32,26 @@ export const loadIdentityByAddress = async (
   return { identityId, address };
 };
 
-export const loadAddressFromIdentityId = async (
-  masa: Masa,
-  identityId: BigNumber
-): Promise<string | undefined> => {
-  let address;
-
-  try {
-    address = await masa.contracts.instances.SoulboundIdentityContract[
-      "ownerOf(uint256)"
-    ](identityId);
-  } catch {
-    // ignore
-  }
-
-  if (!address) {
-    console.error(`Identity '${identityId}' does not exist`);
-  }
-
-  return address;
-};
-
 export const loadIdentityDetails = async (
   masa: Masa,
-  identityId: BigNumber
+  identityIdOrAddress: BigNumber | string
 ): Promise<IdentityDetails> => {
+  const {
+    "tokenURI(address)": tokenURIByAddress,
+    "tokenURI(uint256)": tokenURIByIdentity,
+  } = masa.contracts.instances.SoulboundIdentityContract;
+
+  const identityId = !isBigNumber(identityIdOrAddress)
+    ? await masa.contracts.instances.SoulboundIdentityContract.tokenOfOwner(
+        identityIdOrAddress
+      )
+    : identityIdOrAddress;
+
   const tokenUri = patchMetadataUrl(
     masa,
-    await masa.contracts.instances.SoulboundIdentityContract[
-      "tokenURI(uint256)"
-    ](identityId)
+    await (isBigNumber(identityIdOrAddress)
+      ? tokenURIByIdentity(identityIdOrAddress)
+      : tokenURIByAddress(identityIdOrAddress))
   );
 
   if (masa.config.verbose) {

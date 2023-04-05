@@ -1,9 +1,14 @@
 import { IIdentityContracts } from "../interface";
 import Masa from "../masa";
 import { loadIdentityContracts } from "./index";
-import { CreditScore, Green, Identity, SoulName } from "./modules";
-import { SBT } from "./modules/sbt";
-import { SoulLinker } from "./modules/soul-linker";
+import {
+  CreditScore,
+  Green,
+  Identity,
+  SBT,
+  SoulLinker,
+  SoulName,
+} from "./modules";
 import { MasaBase } from "../helpers/masa-base";
 import { Log } from "@ethersproject/abstract-provider";
 import { BaseContract } from "ethers";

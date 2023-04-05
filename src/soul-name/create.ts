@@ -119,6 +119,14 @@ export const createSoulName = async (
   };
 
   if (await masa.session.checkLogin()) {
+    if (
+      !masa.contracts.instances.SoulStoreContract.hasAddress ||
+      !masa.contracts.instances.SoulNameContract.hasAddress
+    ) {
+      result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      return result;
+    }
+
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
 

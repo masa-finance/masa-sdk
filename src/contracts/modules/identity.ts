@@ -1,6 +1,11 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
-import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
-import { generateSignatureDomain } from "../../utils";
+import {
+  BigNumber,
+  ContractTransaction,
+  TypedDataDomain,
+  Wallet,
+} from "ethers";
+import { generateSignatureDomain, Messages } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class Identity extends MasaModuleBase {
@@ -8,9 +13,22 @@ export class Identity extends MasaModuleBase {
    * purchase only identity
    */
   purchase = async (): Promise<ContractTransaction> => {
-    return await this.instances.SoulStoreContract.connect(
-      this.masa.config.wallet
-    ).purchaseIdentity();
+    const {
+      estimateGas: { purchaseIdentity: estimateGas },
+      purchaseIdentity,
+    } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
+
+    // estimate gas
+    let gasLimit: BigNumber = await estimateGas();
+
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = this.addSlippage(
+        gasLimit,
+        this.masa.config.network.gasSlippagePercentage
+      );
+    }
+
+    return await purchaseIdentity({ gasLimit });
   };
 
   /**
@@ -83,7 +101,7 @@ export class Identity extends MasaModuleBase {
       number, // yearsPeriod: PromiseOrValue<BigNumberish>
       string, // tokenURI: PromiseOrValue<string>
       string, // authorityAddress: PromiseOrValue<string>
-      string //signature: PromiseOrValue<BytesLike>
+      string // signature: PromiseOrValue<BytesLike>
     ] = [
       paymentAddress,
       name,
@@ -106,23 +124,70 @@ export class Identity extends MasaModuleBase {
     }
 
     // connect
-    const soulStore = this.instances.SoulStoreContract.connect(
-      this.masa.config.wallet
-    );
+    const {
+      estimateGas: { purchaseIdentityAndName: estimateGas },
+      purchaseIdentityAndName,
+    } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
 
     // estimate gas
-    const gasLimit = await soulStore.estimateGas.purchaseIdentityAndName(
+    let gasLimit: BigNumber = await estimateGas(
       ...purchaseIdentityAndNameParameters,
       purchaseIdentityAndNameOverrides
     );
 
-    // execute tx
-    return await soulStore.purchaseIdentityAndName(
-      ...purchaseIdentityAndNameParameters,
-      {
-        ...purchaseIdentityAndNameOverrides,
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = this.addSlippage(
         gasLimit,
+        this.masa.config.network.gasSlippagePercentage
+      );
+    }
+
+    // execute tx
+    return await purchaseIdentityAndName(...purchaseIdentityAndNameParameters, {
+      ...purchaseIdentityAndNameOverrides,
+      gasLimit,
+    });
+  };
+
+  /**
+   *
+   * @param identityId
+   */
+  burn = async (identityId: BigNumber): Promise<boolean> => {
+    let success = false;
+
+    console.log(`Burning Identity with ID '${identityId}'!`);
+    try {
+      const {
+        estimateGas: { burn: estimateGas },
+        burn,
+      } = this.masa.contracts.instances.SoulboundIdentityContract.connect(
+        this.masa.config.wallet
+      );
+
+      // estimate gas
+      let gasLimit: BigNumber = await estimateGas(identityId);
+
+      if (this.masa.config.network?.gasSlippagePercentage) {
+        gasLimit = this.addSlippage(
+          gasLimit,
+          this.masa.config.network.gasSlippagePercentage
+        );
       }
-    );
+
+      const { wait, hash } = await burn(identityId, { gasLimit });
+
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
+
+      console.log(`Burned Identity with ID '${identityId}'!`);
+      success = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Burning Identity Failed! ${error.message}`);
+      }
+    }
+
+    return success;
   };
 }

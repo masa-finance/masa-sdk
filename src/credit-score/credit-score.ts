@@ -3,12 +3,7 @@ import Masa from "../masa";
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
 import { PaymentMethod } from "../interface";
-import {
-  burnCreditScore,
-  createCreditScore,
-  listCreditScores,
-  loadCreditScoreByTokenId,
-} from "./";
+import { createCreditScore, listCreditScores, loadCreditScores } from "./";
 
 export class MasaCreditScore extends MasaBase {
   public readonly links: MasaSoulLinker;
@@ -25,8 +20,8 @@ export class MasaCreditScore extends MasaBase {
   create = (paymentMethod: PaymentMethod = "ETH") =>
     createCreditScore(this.masa, paymentMethod);
   burn = (creditScoreId: BigNumber) =>
-    burnCreditScore(this.masa, creditScoreId);
+    this.masa.contracts.creditScore.burn(creditScoreId);
   list = (address?: string) => listCreditScores(this.masa, address);
-  load = (creditScoreId: BigNumber) =>
-    loadCreditScoreByTokenId(this.masa, creditScoreId);
+  load = (identityIdOrAddress: BigNumber | string) =>
+    loadCreditScores(this.masa, identityIdOrAddress);
 }

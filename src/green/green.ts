@@ -4,11 +4,10 @@ import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "../helpers/masa-base";
 import { PaymentMethod } from "../interface";
 import {
-  burnGreen,
   createGreen,
   generateGreen,
   listGreens,
-  loadGreensByIdentityId,
+  loadGreens,
   mintGreen,
   verifyGreen,
 } from "./";
@@ -76,7 +75,7 @@ export class MasaGreen extends MasaBase {
    * Burns a green
    * @param greenId
    */
-  burn = (greenId: BigNumber) => burnGreen(this.masa, greenId);
+  burn = (greenId: BigNumber) => this.masa.contracts.green.burn(greenId);
 
   /**
    * Lits all greens on the current network
@@ -86,8 +85,8 @@ export class MasaGreen extends MasaBase {
 
   /**
    * Loads all greens for an identity on the current network
-   * @param identityId
+   * @param identityIdOrAddress
    */
-  load = (identityId: BigNumber) =>
-    loadGreensByIdentityId(this.masa, identityId);
+  load = (identityIdOrAddress: BigNumber | string) =>
+    loadGreens(this.masa, identityIdOrAddress);
 }

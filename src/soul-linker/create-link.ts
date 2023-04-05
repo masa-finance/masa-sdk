@@ -1,7 +1,7 @@
 import { BigNumber, Contract } from "ethers";
 import Masa from "../masa";
 import { BaseResult, IPassport } from "../interface";
-import { loadAddressFromIdentityId } from "../identity";
+import { resolveIdentity } from "../identity";
 import { Messages } from "../utils";
 
 export type CreateLinkResult = BaseResult & { passport?: string };
@@ -24,10 +24,7 @@ export const createLink = async (
     return result;
   }
 
-  const receiverAddress = await loadAddressFromIdentityId(
-    masa,
-    readerIdentityId
-  );
+  const receiverAddress = await resolveIdentity(masa, readerIdentityId);
 
   if (!receiverAddress) {
     result.message = `Receiver identity not found! ${readerIdentityId}`;

@@ -440,10 +440,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@masa-finance/masa-contracts-identity@^1.4.4":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-1.5.0.tgz#8129702aa6453f95504271bb6ed7dfee35a8c796"
-  integrity sha512-3vlE8jmeZZjJsa3s0BBk1bSokPQ0HpEs3l64umcHHqEvF8ZRAE5+0Q7zZmI7sziL/U1zqOFxCGFYYu0KU3f5Dg==
+"@masa-finance/masa-contracts-identity@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-1.5.2.tgz#b39369c0be306d8c21d85ae432c1c4c037e8ad10"
+  integrity sha512-jxmZJ+o9O0GvvJ+Hmyl/OkMhd87oJAyf3+1rwN/wjR7R82vl3VZSGiqeSUT+S25+oj+UFu1k3IA2pRcr7xM4bA==
   dependencies:
     ethers "~5.7.2"
 

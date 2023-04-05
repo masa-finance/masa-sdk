@@ -1,6 +1,6 @@
 import { BigNumber, Contract } from "ethers";
 import Masa from "../masa";
-import { PaymentMethod, BaseResult, IPassport } from "../interface";
+import { BaseResult, IPassport, PaymentMethod } from "../interface";
 import { patchMetadataUrl } from "../helpers";
 import { Messages } from "../utils";
 import { parsePassport } from "./parse-passport";
@@ -85,10 +85,9 @@ export const queryLink = async (
 
   console.log("tx hash for middleware", txHash);
 
-  const tokenUri = patchMetadataUrl(
-    masa,
-    await contract["tokenURI(uint256)"](tokenId)
-  );
+  const { "tokenURI(uint256)": tokenURI } = contract;
+
+  const tokenUri = patchMetadataUrl(masa, await tokenURI(tokenId));
 
   console.log({ tokenUri });
 

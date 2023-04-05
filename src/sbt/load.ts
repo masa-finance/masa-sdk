@@ -2,9 +2,10 @@ import {
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import { BigNumber, constants } from "ethers";
+import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { patchMetadataUrl } from "../helpers";
+import { isBigNumber } from "../utils";
 
 export const loadSBTIDs = async (
   masa: Masa,
@@ -23,27 +24,10 @@ export const loadSBTIDs = async (
   );
 };
 
-export const loadSBTsByIdentityId = async (
-  masa: Masa,
-  contract: MasaSBTSelfSovereign,
-  identityId: BigNumber
-): Promise<
-  {
-    tokenId: BigNumber;
-    tokenUri: string;
-  }[]
-> => {
-  const SBTIds: BigNumber[] = await masa.contracts.instances.SoulLinkerContract[
-    "getSBTConnections(uint256,address)"
-  ](identityId, contract.address);
-
-  return await loadSBTIDs(masa, contract, SBTIds);
-};
-
-export const loadSBTsByAddress = async (
+export const loadSBTs = async (
   masa: Masa,
   contract: MasaSBTSelfSovereign | MasaSBTAuthority,
-  address: string
+  identityIdOrAddress: BigNumber | string
 ): Promise<
   {
     tokenId: BigNumber;
@@ -54,19 +38,25 @@ export const loadSBTsByAddress = async (
 
   try {
     // do we have a soul linker here? use it!
-    if (
-      masa.contracts.instances.SoulLinkerContract.address !==
-      constants.AddressZero
-    ) {
-      SBTIDs = await masa.contracts.instances.SoulLinkerContract[
-        "getSBTConnections(address,address)"
-      ](address, contract.address);
-    } else {
-      const balance: number = (await contract.balanceOf(address)).toNumber();
+    if (masa.contracts.instances.SoulLinkerContract.hasAddress) {
+      const {
+        "getSBTConnections(address,address)": getSBTConnectionsByAddress,
+        "getSBTConnections(uint256,address)": getSBTConnectionsByIdentity,
+      } = masa.contracts.instances.SoulLinkerContract;
+
+      SBTIDs = await (isBigNumber(identityIdOrAddress)
+        ? getSBTConnectionsByIdentity(identityIdOrAddress, contract.address)
+        : getSBTConnectionsByAddress(identityIdOrAddress, contract.address));
+    } else if (!isBigNumber(identityIdOrAddress)) {
+      const balance: number = (
+        await contract.balanceOf(identityIdOrAddress)
+      ).toNumber();
 
       if (balance > 0) {
         for (let i = 0; i < balance; i++) {
-          SBTIDs.push(await contract.tokenOfOwnerByIndex(address, i));
+          SBTIDs.push(
+            await contract.tokenOfOwnerByIndex(identityIdOrAddress, i)
+          );
         }
       }
     }

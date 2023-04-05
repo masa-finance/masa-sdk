@@ -4,7 +4,7 @@ import {
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
 import Masa from "../masa";
-import { loadSBTsByAddress } from "./load";
+import { loadSBTs } from "./load";
 
 export const listSBTs = async (
   masa: Masa,
@@ -18,9 +18,9 @@ export const listSBTs = async (
 > => {
   address = address || (await masa.config.wallet.getAddress());
 
-  const sbts = await loadSBTsByAddress(masa, contract, address);
+  const SBTs = await loadSBTs(masa, contract, address);
 
-  if (sbts.length === 0) {
+  if (SBTs.length === 0) {
     console.log(
       `No SBTs found on contract '${await contract.name()}' (${
         contract.address
@@ -29,13 +29,13 @@ export const listSBTs = async (
   }
 
   let i = 1;
-  for (const sbt of sbts) {
+  for (const SBT of SBTs) {
     console.log(`Token: ${i}`);
-    console.log(`Token ID: ${sbt.tokenId}`);
-    console.log(`Metadata: ${sbt.tokenUri}`);
+    console.log(`Token ID: ${SBT.tokenId}`);
+    console.log(`Metadata: ${SBT.tokenUri}`);
 
     i++;
   }
 
-  return sbts;
+  return SBTs;
 };

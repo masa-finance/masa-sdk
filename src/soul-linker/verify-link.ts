@@ -29,9 +29,10 @@ export const verifyLink = async (
 
   let readerAddress;
   try {
-    readerAddress = await masa.contracts.instances.SoulboundIdentityContract[
-      "ownerOf(uint256)"
-    ](readerIdentityId);
+    const { "ownerOf(uint256)": ownerOf } =
+      masa.contracts.instances.SoulboundIdentityContract;
+
+    readerAddress = await ownerOf(readerIdentityId);
   } catch {
     //
   }

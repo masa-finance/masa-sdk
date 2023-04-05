@@ -1,8 +1,11 @@
 import { MasaModuleBase } from "./masa-module-base";
-import { isNativeCurrency, PaymentMethod } from "../../interface";
+import { BaseResult, isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Messages, signTypedData } from "../../utils";
-import { Wallet } from "ethers";
+import { Contract, Wallet } from "ethers";
+import { Link, loadLinks } from "../../soul-linker";
+
+export type BreakLinkResult = BaseResult;
 
 export class SoulLinker extends MasaModuleBase {
   /**
@@ -87,9 +90,21 @@ export class SoulLinker extends MasaModuleBase {
       price
     );
 
-    const { hash, wait } = await this.instances.SoulLinkerContract.connect(
-      this.masa.config.wallet
-    ).addLink(
+    const {
+      estimateGas: { addLink: estimateGas },
+      addLink,
+    } = this.instances.SoulLinkerContract.connect(this.masa.config.wallet);
+
+    const params: [
+      string,
+      BigNumber,
+      BigNumber,
+      string,
+      BigNumber,
+      number,
+      number,
+      string
+    ] = [
       paymentAddress,
       readerIdentityId,
       ownerIdentityId,
@@ -98,8 +113,27 @@ export class SoulLinker extends MasaModuleBase {
       signatureDate,
       expirationDate,
       signature,
-      isNativeCurrency(paymentMethod) ? { value: price } : undefined
-    );
+    ];
+
+    const overrides = {
+      value: isNativeCurrency(paymentMethod) ? price : undefined,
+    };
+
+    let gasLimit: BigNumber = await estimateGas(...params, overrides);
+
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = this.addSlippage(
+        gasLimit,
+        this.masa.config.network.gasSlippagePercentage
+      );
+    }
+
+    const overridesWithGasLimit = {
+      ...overrides,
+      gasLimit,
+    };
+
+    const { wait, hash } = await addLink(...params, overridesWithGasLimit);
 
     console.log(Messages.WaitingToFinalize(hash));
     await wait();
@@ -163,5 +197,64 @@ export class SoulLinker extends MasaModuleBase {
     );
 
     return { signature, signatureDate, expirationDate };
+  };
+
+  /**
+   *
+   * @param contract
+   * @param tokenId
+   * @param readerIdentityId
+   */
+  breakLink = async (
+    contract: Contract,
+    tokenId: BigNumber,
+    readerIdentityId: BigNumber
+  ): Promise<BreakLinkResult> => {
+    const result: BreakLinkResult = {
+      success: false,
+      message: "Unknown Error",
+    };
+
+    const { identityId, address } = await this.masa.identity.load();
+    if (!identityId) {
+      result.message = Messages.NoIdentity(address);
+      console.error(result.message);
+      return result;
+    }
+
+    const links: Link[] = await loadLinks(this.masa, contract, tokenId);
+
+    console.log({ links, readerIdentityId });
+
+    const filteredLinks: Link[] = links.filter(
+      (link: Link) =>
+        link.readerIdentityId.toString() === readerIdentityId.toString() &&
+        link.exists &&
+        !link.isRevoked
+    );
+
+    console.log({ filteredLinks });
+
+    for (const link of filteredLinks) {
+      console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
+
+      const { revokeLink } =
+        this.masa.contracts.instances.SoulLinkerContract.connect(
+          this.masa.config.wallet
+        );
+
+      const { wait, hash } = await revokeLink(
+        readerIdentityId,
+        identityId,
+        contract.address,
+        tokenId,
+        link.signatureDate
+      );
+
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
+    }
+
+    return result;
   };
 }

@@ -1,13 +1,13 @@
 import Masa from "../masa";
 import { GreenDetails } from "../interface";
-import { loadGreensByAddress } from "./";
+import { loadGreens } from "./";
 
 export const listGreens = async (
   masa: Masa,
   address?: string
 ): Promise<GreenDetails[]> => {
   address = address || (await masa.config.wallet.getAddress());
-  return loadGreensByAddress(masa, address);
+  return loadGreens(masa, address);
 };
 
 export const listGreensAndPrint = async (

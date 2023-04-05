@@ -11,9 +11,15 @@ export const burnSBT = async (
   try {
     console.log(`Burning SBT with ID '${SBTId}'!`);
 
-    const { wait, hash } = await contract
-      .connect(masa.config.wallet)
-      .burn(SBTId);
+    const {
+      estimateGas: { burn: estimateGas },
+      burn,
+    } = contract.connect(masa.config.wallet);
+
+    const gasLimit: BigNumber = await estimateGas(SBTId);
+
+    const { wait, hash } = await burn(SBTId, { gasLimit });
+
     console.log(Messages.WaitingToFinalize(hash));
     await wait();
 

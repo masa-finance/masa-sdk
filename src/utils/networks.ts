@@ -13,6 +13,7 @@ export interface Network {
   };
   blockExplorerUrls?: string[];
   addresses: Addresses;
+  gasSlippagePercentage?: number;
 }
 
 export const getNetworkNameByChainId = (chainId: number): NetworkName => {
@@ -105,9 +106,10 @@ const mumbai: Network = {
     symbol: "tMATIC", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://polygon-testnet-rpc.allthatnode.com:8545"],
+  rpcUrls: ["https://polygon-testnet.public.blastapi.io"],
   blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
   addresses: addresses["mumbai"] as Addresses,
+  gasSlippagePercentage: 5000,
 };
 
 // ethereum

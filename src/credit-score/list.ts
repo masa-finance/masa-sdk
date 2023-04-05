@@ -1,7 +1,7 @@
 import Masa from "../masa";
 import { Messages } from "../utils";
 import { CreditScoreDetails } from "../interface";
-import { loadCreditScoresByIdentityId } from "./";
+import { loadCreditScores } from "./";
 
 export const listCreditScores = async (
   masa: Masa,
@@ -11,11 +11,10 @@ export const listCreditScores = async (
 
   const { identityId } = await masa.identity.load(address);
   if (!identityId) {
-    console.error(Messages.NoIdentity(address));
-    return [];
+    console.warn(Messages.NoIdentity(address));
   }
 
-  return await loadCreditScoresByIdentityId(masa, identityId);
+  return await loadCreditScores(masa, identityId || address);
 };
 
 export const listCreditScoresAndPrint = async (
@@ -33,9 +32,15 @@ export const listCreditScoresAndPrint = async (
     console.log(`Token: ${i}`);
     console.log(`Token ID: ${creditScore.tokenId}`);
     i++;
-    if (creditScore.metadata) {
-      console.log(`Metadata: ${JSON.stringify(creditScore.metadata, null, 2)}`);
+    if (creditScore.metadata && masa.config.verbose) {
+      console.info(
+        `Metadata: ${JSON.stringify(creditScore.metadata, null, 2)}`
+      );
     }
+
+    console.log(
+      `Score: ${creditScore.metadata?.properties.value || "Unknown"}`
+    );
   }
 
   return creditScores;

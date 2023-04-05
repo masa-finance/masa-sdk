@@ -6,7 +6,6 @@ import { createLink } from "./create-link";
 import { establishLinkFromPassport } from "./establish-link";
 import { verifyLink } from "./verify-link";
 import { listLinks } from "./list-links";
-import { breakLink } from "./break-link";
 import { queryLinkFromPassport } from "./query-link";
 
 export class MasaSoulLinker extends MasaBase {
@@ -27,7 +26,11 @@ export class MasaSoulLinker extends MasaBase {
     verifyLink(this.masa, this.contract, tokenId, readerIdentityId);
   list = (tokenId: BigNumber) => listLinks(this.masa, this.contract, tokenId);
   break = (tokenId: BigNumber, readerIdentityId: BigNumber) =>
-    breakLink(this.masa, this.contract, tokenId, readerIdentityId);
+    this.masa.contracts.soulLinker.breakLink(
+      this.contract,
+      tokenId,
+      readerIdentityId
+    );
   query = (paymentMethod: PaymentMethod, passport: string) =>
     queryLinkFromPassport(this.masa, paymentMethod, this.contract, passport);
 }

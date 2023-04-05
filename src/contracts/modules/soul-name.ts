@@ -1,6 +1,6 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
-import { generateSignatureDomain, signTypedData } from "../../utils";
+import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { BigNumber } from "@ethersproject/bignumber";
 import { MasaModuleBase } from "./masa-module-base";
 
@@ -125,18 +125,26 @@ export class SoulName extends MasaModuleBase {
     }
 
     // connect
-    const soulStore = this.instances.SoulStoreContract.connect(
-      this.masa.config.wallet
-    );
+    const {
+      estimateGas: { purchaseName: estimateGas },
+      purchaseName,
+    } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
 
     // estimate gas
-    const gasLimit = await soulStore.estimateGas.purchaseName(
+    let gasLimit: BigNumber = await estimateGas(
       ...purchaseNameParameters,
       purchaseNameOverrides
     );
 
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = this.addSlippage(
+        gasLimit,
+        this.masa.config.network.gasSlippagePercentage
+      );
+    }
+
     // execute
-    return await soulStore.purchaseName(...purchaseNameParameters, {
+    return await purchaseName(...purchaseNameParameters, {
       ...purchaseNameOverrides,
       gasLimit,
     });
@@ -251,5 +259,112 @@ export class SoulName extends MasaModuleBase {
     );
 
     return { signature, authorityAddress };
+  };
+
+  /**
+   *
+   * @param soulName
+   * @param receiver
+   */
+  transfer = async (soulName: string, receiver: string): Promise<boolean> => {
+    const [soulNameData, extension] = await Promise.all([
+      this.getSoulnameData(soulName),
+      this.masa.contracts.instances.SoulNameContract.extension(),
+    ]);
+
+    if (soulNameData.exists) {
+      console.log(
+        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`
+      );
+
+      try {
+        const { transferFrom } =
+          this.masa.contracts.instances.SoulNameContract.connect(
+            this.masa.config.wallet
+          );
+
+        const { wait, hash } = await transferFrom(
+          this.masa.config.wallet.getAddress(),
+          receiver,
+          soulNameData.tokenId
+        );
+
+        console.log(Messages.WaitingToFinalize(hash));
+        await wait();
+
+        console.log(
+          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`
+        );
+
+        return true;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(`Sending of Soul Name Failed! ${error.message}`);
+        }
+      }
+    } else {
+      console.error(`Soulname '${soulName}${extension}' does not exist!`);
+    }
+
+    return false;
+  };
+
+  /**
+   *
+   * @param soulName
+   */
+  burn = async (soulName: string): Promise<boolean> => {
+    const [soulNameData, extension] = await Promise.all([
+      this.getSoulnameData(soulName),
+      this.masa.contracts.instances.SoulNameContract.extension(),
+    ]);
+
+    if (soulNameData.exists) {
+      console.log(
+        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`
+      );
+
+      try {
+        const {
+          estimateGas: { burn: estimateGas },
+          burn,
+        } = this.masa.contracts.instances.SoulNameContract.connect(
+          this.masa.config.wallet
+        );
+
+        // estimate gas
+        let gasLimit: BigNumber = await estimateGas(soulNameData.tokenId);
+
+        if (this.masa.config.network?.gasSlippagePercentage) {
+          gasLimit = this.addSlippage(
+            gasLimit,
+            this.masa.config.network.gasSlippagePercentage
+          );
+        }
+
+        const { wait, hash } = await burn(soulNameData.tokenId, {
+          gasLimit,
+        });
+
+        console.log(Messages.WaitingToFinalize(hash));
+        await wait();
+
+        console.log(
+          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`
+        );
+
+        return true;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(
+            `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`
+          );
+        }
+      }
+    } else {
+      console.error(`Soulname '${soulName}${extension}' does not exist!`);
+    }
+
+    return false;
   };
 }

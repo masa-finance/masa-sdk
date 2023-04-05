@@ -1,7 +1,7 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
-import { generateSignatureDomain, signTypedData } from "../../utils";
+import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class CreditScore extends MasaModuleBase {
@@ -77,7 +77,6 @@ export class CreditScore extends MasaModuleBase {
       authorityAddress,
       signatureDate,
     };
-
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.wallet as Wallet,
       "SoulboundCreditScore",
@@ -106,7 +105,21 @@ export class CreditScore extends MasaModuleBase {
       price
     );
 
-    const creditScoreMintParameters: [
+    // connect
+    const {
+      estimateGas: {
+        "mint(address,uint256,address,uint256,bytes)": estimateGas,
+      },
+      "mint(address,uint256,address,uint256,bytes)": mint,
+    } = await this.instances.SoulboundCreditScoreContract.connect(
+      this.masa.config.wallet
+    );
+
+    const creditScoreMintOverrides = {
+      value: isNativeCurrency(paymentMethod) ? price : undefined,
+    };
+
+    const creditScoreMintParametersIdentity: [
       string,
       BigNumber,
       string,
@@ -120,29 +133,34 @@ export class CreditScore extends MasaModuleBase {
       signature,
     ];
 
-    const creditScoreMintOverrides = {
-      value: price,
-    };
+    // estimate gas
+    let gasLimit: BigNumber = await estimateGas(
+      ...creditScoreMintParametersIdentity,
+      creditScoreMintOverrides
+    );
 
-    if (this.masa.config.verbose) {
-      console.log({ creditScoreMintParameters, creditScoreMintOverrides });
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = this.addSlippage(
+        gasLimit,
+        this.masa.config.network.gasSlippagePercentage
+      );
     }
 
-    // connect
-    const creditScoreContract =
-      await this.instances.SoulboundCreditScoreContract.connect(
-        this.masa.config.wallet
-      );
-
-    // estimate
-    const gasLimit = await creditScoreContract.estimateGas[
-      "mint(address,uint256,address,uint256,bytes)"
-    ](...creditScoreMintParameters, creditScoreMintOverrides);
+    const creditScoreMintOverridesWithGasLimit = {
+      ...creditScoreMintOverrides,
+      gasLimit,
+    };
+    if (this.masa.config.verbose) {
+      console.info({
+        creditScoreMintParametersIdentity,
+        creditScoreMintOverridesWithGasLimit,
+      });
+    }
 
     // execute
-    return creditScoreContract["mint(address,uint256,address,uint256,bytes)"](
-      ...creditScoreMintParameters,
-      { ...creditScoreMintOverrides, gasLimit }
+    return mint(
+      ...creditScoreMintParametersIdentity,
+      creditScoreMintOverridesWithGasLimit
     );
   };
 
@@ -161,8 +179,8 @@ export class CreditScore extends MasaModuleBase {
     | undefined
   > => {
     const signatureDate = Math.floor(Date.now() / 1000);
-
     const authorityAddress = await this.masa.config.wallet.getAddress();
+
     const value: {
       identityId: BigNumber;
       authorityAddress: string;
@@ -192,5 +210,46 @@ export class CreditScore extends MasaModuleBase {
     );
 
     return { signature, signatureDate, authorityAddress };
+  };
+
+  /**
+   *
+   * @param creditScoreId
+   */
+  burn = async (creditScoreId: BigNumber): Promise<boolean> => {
+    console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
+
+    try {
+      const {
+        estimateGas: { burn: estimateGas },
+        burn,
+      } = this.masa.contracts.instances.SoulboundCreditScoreContract.connect(
+        this.masa.config.wallet
+      );
+
+      let gasLimit: BigNumber = await estimateGas(creditScoreId);
+      if (this.masa.config.network?.gasSlippagePercentage) {
+        gasLimit = this.addSlippage(
+          gasLimit,
+          this.masa.config.network.gasSlippagePercentage
+        );
+      }
+
+      const { wait, hash } = await burn(creditScoreId, {
+        gasLimit,
+      });
+
+      console.log(Messages.WaitingToFinalize(hash));
+      await wait();
+
+      console.log(`Burned Credit Score with ID '${creditScoreId}'!`);
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Burning Credit Score Failed! '${error.message}'`);
+      }
+    }
+
+    return false;
   };
 }

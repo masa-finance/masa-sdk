@@ -11,8 +11,18 @@ import { Messages } from "../utils";
 export const generateGreen = async (
   masa: Masa,
   phoneNumber: string
-): Promise<GenerateGreenResult | undefined> => {
+): Promise<GenerateGreenResult> => {
+  const result: GenerateGreenResult = {
+    success: false,
+    message: "Unknown Error",
+  };
+
   if (await masa.session.checkLogin()) {
+    if (!masa.contracts.instances.SoulboundGreenContract.hasAddress) {
+      result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      return result;
+    }
+
     const balance =
       await masa.contracts.instances.SoulboundGreenContract.balanceOf(
         await masa.config.wallet.getAddress()
@@ -35,8 +45,10 @@ export const generateGreen = async (
       };
     }
   } else {
-    console.error(Messages.NotLoggedIn());
+    result.message = Messages.NotLoggedIn();
   }
+
+  return result;
 };
 
 export const verifyGreen = async (
@@ -160,7 +172,7 @@ export const mintGreen = async (
     message: "Unknown Error",
   };
 
-  const { hash, wait } = await masa.contracts.green.mint(
+  const { wait, hash } = await masa.contracts.green.mint(
     paymentMethod,
     await masa.config.wallet.getAddress(),
     authorityAddress,

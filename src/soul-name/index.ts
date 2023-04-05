@@ -3,6 +3,7 @@ export * from "./create";
 export * from "./helpers";
 export * from "./list";
 export * from "./load";
+export * from "./resolve";
 export * from "./send";
 export * from "./soul-name";
 export * from "./tail";

@@ -12,10 +12,15 @@ export const createCreditScore = async (
   };
 
   if (await masa.session.checkLogin()) {
+    if (!masa.contracts.instances.SoulboundCreditScoreContract.hasAddress) {
+      result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      return result;
+    }
+
     console.log("Creating Credit Score ...");
 
-    const { identityId, address } = await masa.identity.load();
-    if (!identityId || !address) {
+    const { identityId, address } = (await masa.identity.load()) || {};
+    if (!identityId) {
       result.message = Messages.NoIdentity(address);
       return result;
     }
@@ -41,7 +46,7 @@ export const createCreditScore = async (
         creditScoreResponse.authorityAddress
       ) {
         try {
-          const { hash, wait } = await masa.contracts.creditScore.mint(
+          const { wait, hash } = await masa.contracts.creditScore.mint(
             paymentMethod,
             identityId,
             creditScoreResponse.authorityAddress,
@@ -73,7 +78,6 @@ export const createCreditScore = async (
     }
   } else {
     result.message = Messages.NotLoggedIn();
-    console.error(result.message);
   }
 
   return result;

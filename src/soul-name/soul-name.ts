@@ -8,8 +8,8 @@ import {
   listSoulNames,
   loadSoulNameByName,
   loadSoulNameByTokenId,
-  loadSoulNamesByIdentityId,
-  resolve,
+  loadSoulNames,
+  resolveSoulName,
   sendSoulName,
   tailSoulNames,
   validateSoulName,
@@ -33,14 +33,14 @@ export class MasaSoulName extends MasaBase {
    *
    * @param soulName
    */
-  resolve = (soulName: string) => resolve(this.masa, soulName);
+  resolve = (soulName: string) => resolveSoulName(this.masa, soulName);
 
   /**
    *
-   * @param identityId
+   * @param identityIdOrAddress
    */
-  loadSoulNamesByIdentityId = (identityId: BigNumber) =>
-    loadSoulNamesByIdentityId(this.masa, identityId);
+  loadSoulNames = (identityIdOrAddress: BigNumber | string) =>
+    loadSoulNames(this.masa, identityIdOrAddress);
 
   /**
    *

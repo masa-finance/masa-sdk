@@ -13,7 +13,7 @@ import {
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { constants, providers } from "ethers";
-import { IIdentityContracts, NetworkName } from "../interface";
+import { ContractInfo, IIdentityContracts, NetworkName } from "../interface";
 import { addresses } from "./addresses";
 
 export interface LoadContractArgs {
@@ -35,40 +35,51 @@ export const loadIdentityContracts = ({
       window.ethereum
     );
 
-  const SoulboundIdentityContract: SoulboundIdentity =
+  const SoulboundIdentityContract: SoulboundIdentity & ContractInfo =
     SoulboundIdentity__factory.connect(
       addresses[networkName]?.SoulboundIdentityAddress || constants.AddressZero,
       loadedProvider
     );
+  SoulboundIdentityContract.hasAddress =
+    !!addresses[networkName]?.SoulboundIdentityAddress;
 
-  const SoulboundCreditScoreContract: SoulboundCreditScore =
+  const SoulboundCreditScoreContract: SoulboundCreditScore & ContractInfo =
     SoulboundCreditScore__factory.connect(
       addresses[networkName]?.SoulboundCreditScoreAddress ||
         constants.AddressZero,
       loadedProvider
     );
+  SoulboundCreditScoreContract.hasAddress =
+    !!addresses[networkName]?.SoulboundCreditScoreAddress;
 
-  const SoulNameContract: SoulName = SoulName__factory.connect(
+  const SoulNameContract: SoulName & ContractInfo = SoulName__factory.connect(
     addresses[networkName]?.SoulNameAddress || constants.AddressZero,
     loadedProvider
   );
+  SoulNameContract.hasAddress = !!addresses[networkName]?.SoulNameAddress;
 
-  const SoulLinkerContract: SoulLinker = SoulLinker__factory.connect(
-    addresses[networkName]?.SoulLinkerAddress || constants.AddressZero,
-    loadedProvider
-  );
+  const SoulLinkerContract: SoulLinker & ContractInfo =
+    SoulLinker__factory.connect(
+      addresses[networkName]?.SoulLinkerAddress || constants.AddressZero,
+      loadedProvider
+    );
+  SoulLinkerContract.hasAddress = !!addresses[networkName]?.SoulLinkerAddress;
 
-  const SoulStoreContract: SoulStore = SoulStore__factory.connect(
-    addresses[networkName]?.SoulStoreAddress || constants.AddressZero,
-    loadedProvider
-  );
+  const SoulStoreContract: SoulStore & ContractInfo =
+    SoulStore__factory.connect(
+      addresses[networkName]?.SoulStoreAddress || constants.AddressZero,
+      loadedProvider
+    );
+  SoulStoreContract.hasAddress = !!addresses[networkName]?.SoulStoreAddress;
 
-  const SoulboundGreenContract: SoulboundGreen =
+  const SoulboundGreenContract: SoulboundGreen & ContractInfo =
     SoulboundGreen__factory.connect(
       // this might be empty
       addresses[networkName]?.SoulboundGreenAddress || constants.AddressZero,
       loadedProvider
     );
+  SoulboundGreenContract.hasAddress =
+    !!addresses[networkName]?.SoulboundGreenAddress;
 
   return {
     SoulboundIdentityContract,

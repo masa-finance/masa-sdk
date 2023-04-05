@@ -238,9 +238,7 @@ export class MasaClient extends MasaBase {
      * Generates a new masa green request
      * @param phoneNumber
      */
-    generate: async (
-      phoneNumber: string
-    ): Promise<GenerateGreenResult | undefined> => {
+    generate: async (phoneNumber: string): Promise<GenerateGreenResult> => {
       const result = {
         success: false,
         status: "failed",
@@ -338,11 +336,15 @@ export class MasaClient extends MasaBase {
       };
 
       const generateCreditScoreResponse = await this._middlewareClient
-        .get<GenerateCreditScoreResult>("/credit-score/generate", {
-          headers: {
-            cookie: this.cookie ? [this.cookie] : undefined,
-          },
-        })
+        .post<GenerateCreditScoreResult>(
+          "/credit-score/generate",
+          { network: this.masa.config.networkName },
+          {
+            headers: {
+              cookie: this.cookie ? [this.cookie] : undefined,
+            },
+          }
+        )
         .catch((error: Error | AxiosError) => {
           console.error("Generation of credit score failed!", error.message);
         });
@@ -383,6 +385,7 @@ export class MasaClient extends MasaBase {
           "/credit-score/update",
           {
             transactionHash,
+            network: this.masa.config.networkName,
           },
           {
             headers: {

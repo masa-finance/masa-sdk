@@ -9,8 +9,22 @@ import {
   Wallet,
 } from "ethers";
 
+export const isBigNumber = (item: BigNumber | string): item is BigNumber => {
+  return (item as BigNumber)._isBigNumber;
+};
+
+/**
+ *
+ * @param data
+ */
 const hashData = (data: BytesLike) => utils.keccak256(data);
 
+/**
+ *
+ * @param msg
+ * @param wallet
+ * @param doHash
+ */
 export const signMessage = async (
   msg: string,
   wallet: Signer | Wallet,
@@ -29,6 +43,14 @@ export const signMessage = async (
   return signature;
 };
 
+/**
+ *
+ * @param contract
+ * @param wallet
+ * @param name
+ * @param types
+ * @param value
+ */
 export const signTypedData = async (
   contract: BaseContract,
   wallet: Wallet,
@@ -59,6 +81,12 @@ export const generateSignatureDomain = async (
   return domain;
 };
 
+/**
+ *
+ * @param msg
+ * @param signature
+ * @param doHash
+ */
 export const recoverAddress = (
   msg: string,
   signature: string,
