@@ -227,7 +227,17 @@ export class MasaClient extends MasaBase {
         });
 
       if (storeMetadataResponse) {
-        const { data: storeMetadataData } = storeMetadataResponse;
+        const { data: storeMetadataData, status } = storeMetadataResponse;
+
+        if (this.masa.config.verbose) {
+          console.info({
+            storeMetadataResponse: {
+              status,
+              storeMetadataData,
+            },
+          });
+        }
+
         return storeMetadataData;
       }
     },

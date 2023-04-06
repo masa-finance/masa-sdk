@@ -103,10 +103,12 @@ export const purchaseIdentityWithSoulName = async (
     message: "Unknown Error",
   };
 
-  if (await masa.contracts.soulName.isAvailable(soulName)) {
-    const extension =
-      await masa.contracts.instances.SoulNameContract.extension();
+  const [extension, isAvailable] = await Promise.all([
+    masa.contracts.instances.SoulNameContract.extension(),
+    masa.contracts.soulName.isAvailable(soulName),
+  ]);
 
+  if (isAvailable) {
     const storeMetadataResponse = await masa.client.soulName.store(
       `${soulName}${extension}`,
       await masa.config.wallet.getAddress(),
@@ -157,11 +159,12 @@ export const purchaseIdentityWithSoulName = async (
           );
 
           if (soulnameTransferEvent) {
+            const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
             if (masa.config.verbose) {
-              console.dir({ soulnameTransferEvent }, { depth: null });
+              console.dir({ soulnameTransferEventArgs }, { depth: null });
             }
 
-            tokenId = soulnameTransferEvent.args.tokenId.toString();
+            tokenId = soulnameTransferEventArgs.tokenId.toString();
             console.log(`SoulName with ID: '${tokenId}' created.`);
           }
 
@@ -185,9 +188,8 @@ export const purchaseIdentityWithSoulName = async (
       }
     }
   } else {
-    result.message = `Soulname ${soulName}.soul already taken.`;
+    result.message = `Soulname ${soulName}${extension} already taken.`;
     result.errorCode = SoulNameErrorCodes.SoulNameError;
-    console.error(result.message);
   }
 
   return result;
