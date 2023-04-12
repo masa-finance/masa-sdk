@@ -54,7 +54,7 @@ export class MasaClient extends MasaBase {
      * Check session is still alive
      */
     check: async (): Promise<ISession | undefined> => {
-      const checkResponse = await this._middlewareClient
+      const sessionCheckResponse = await this._middlewareClient
         .get("/session/check", {
           headers: {
             cookie: this.cookie ? [this.cookie] : undefined,
@@ -64,11 +64,19 @@ export class MasaClient extends MasaBase {
           // ignore
         });
 
-      if (checkResponse) {
-        const { data: checkData } = checkResponse;
+      const { data: sessionCheckResponseData, status } =
+        sessionCheckResponse || {};
 
-        return checkData;
+      if (this.masa.config.verbose) {
+        console.info({
+          sessionCheckResponse: {
+            status,
+            sessionCheckResponseData,
+          },
+        });
       }
+
+      return sessionCheckResponseData;
     },
 
     /**
@@ -101,16 +109,26 @@ export class MasaClient extends MasaBase {
           console.error("Check signature failed!", error.message);
         });
 
-      if (checkSignatureResponse) {
-        const { data: checkSignatureData } = checkSignatureResponse;
+      const { data: checkSignatureResponseData, status } =
+        checkSignatureResponse || {};
 
+      if (this.masa.config.verbose) {
+        console.info({
+          checkSignatureResponse: {
+            status,
+            checkSignatureResponseData,
+          },
+        });
+      }
+
+      if (checkSignatureResponseData) {
         // set the cookie here, so we can reuse it during the lifespan of the
         // masa object if it is not set yet
         if (cookie && !this.cookie) {
           this._cookie = cookie;
         }
 
-        return checkSignatureData;
+        return checkSignatureResponseData;
       }
     },
 
@@ -134,12 +152,24 @@ export class MasaClient extends MasaBase {
           cookie = cookies[0];
         }
 
-        const { data: challengeData } = getChallengeResponse;
+        const { data: getChallengeResponseData, status } =
+          getChallengeResponse || {};
 
-        return {
-          ...challengeData,
-          cookie,
-        };
+        if (this.masa.config.verbose) {
+          console.info({
+            getChallengeResponse: {
+              status,
+              getChallengeResponseData,
+            },
+          });
+        }
+
+        if (getChallengeResponseData) {
+          return {
+            ...getChallengeResponseData,
+            cookie,
+          };
+        }
       }
     },
 
@@ -154,10 +184,18 @@ export class MasaClient extends MasaBase {
           console.error("Logout failed!,", error.message);
         });
 
-      if (logoutResponse) {
-        const { data: logoutData } = logoutResponse;
-        return logoutData;
+      const { data: logoutResponseData, status } = logoutResponse || {};
+
+      if (this.masa.config.verbose) {
+        console.info({
+          logoutResponse: {
+            status,
+            logoutResponseData,
+          },
+        });
       }
+
+      return logoutResponseData;
     },
   };
 
@@ -184,10 +222,18 @@ export class MasaClient extends MasaBase {
           console.error("Failed to load Metadata!", error.message, uri);
         });
 
-      if (metadataResponse) {
-        const { data: metadata } = metadataResponse;
-        return metadata;
+      const { data: metadataResponseData, status } = metadataResponse || {};
+
+      if (this.masa.config.verbose) {
+        console.info({
+          metadataResponse: {
+            status,
+            metadataResponseData,
+          },
+        });
       }
+
+      return metadataResponseData;
     },
   };
 
@@ -226,20 +272,18 @@ export class MasaClient extends MasaBase {
           console.error("Storing metadata failed!", error.message);
         });
 
-      if (storeMetadataResponse) {
-        const { data: storeMetadataData, status } = storeMetadataResponse;
+      const { data: storeMetadataData, status } = storeMetadataResponse || {};
 
-        if (this.masa.config.verbose) {
-          console.info({
-            storeMetadataResponse: {
-              status,
-              storeMetadataData,
-            },
-          });
-        }
-
-        return storeMetadataData;
+      if (this.masa.config.verbose) {
+        console.info({
+          storeMetadataResponse: {
+            status,
+            storeMetadataData,
+          },
+        });
       }
+
+      return storeMetadataData;
     },
   };
 
@@ -271,15 +315,23 @@ export class MasaClient extends MasaBase {
           console.error("Generating green failed!", error.message);
         });
 
-      if (
-        greenGenerateResponse &&
-        greenGenerateResponse.status === 200 &&
-        greenGenerateResponse.data
-      ) {
+      const { data: greenGenerateResponseData, status } =
+        greenGenerateResponse || {};
+
+      if (this.masa.config.verbose) {
+        console.info({
+          greenGenerateResponse: {
+            status,
+            greenGenerateResponseData,
+          },
+        });
+      }
+
+      if (greenGenerateResponseData) {
         result.success = true;
         result.message = "";
         result.status = "success";
-        return { ...result, ...greenGenerateResponse.data };
+        return { ...result, ...greenGenerateResponseData };
       } else {
         result.message = `Generating green failed! ${result.message}`;
         console.error(result.message);
@@ -316,15 +368,23 @@ export class MasaClient extends MasaBase {
           console.error("Verifying green failed!", error.message);
         });
 
-      if (
-        greenVerifyResponse &&
-        greenVerifyResponse.status === 200 &&
-        greenVerifyResponse.data
-      ) {
+      const { data: greenVerifyResponseData, status } =
+        greenVerifyResponse || {};
+
+      if (this.masa.config.verbose) {
+        console.info({
+          greenVerifyResponse: {
+            status,
+            greenVerifyResponseData,
+          },
+        });
+      }
+
+      if (greenVerifyResponseData) {
         result.success = true;
         result.message = "";
         result.status = "success";
-        return { ...result, ...greenVerifyResponse.data };
+        return { ...result, ...greenVerifyResponseData };
       } else {
         result.message = `Verifying green failed! ${result.message}`;
         console.error(result.message);
@@ -342,7 +402,7 @@ export class MasaClient extends MasaBase {
       const result = {
         success: false,
         status: "failed",
-        message: "Credit Score failed",
+        message: "Generating Credit Score failed!",
       };
 
       const generateCreditScoreResponse = await this._middlewareClient
@@ -359,21 +419,26 @@ export class MasaClient extends MasaBase {
           console.error("Generation of credit score failed!", error.message);
         });
 
-      if (
-        generateCreditScoreResponse &&
-        generateCreditScoreResponse.status === 200 &&
-        generateCreditScoreResponse.data
-      ) {
+      const { data: generateCreditScoreResponseData, status } =
+        generateCreditScoreResponse || {};
+
+      if (this.masa.config.verbose) {
+        console.info({
+          generateCreditScoreResponse: {
+            status,
+            generateCreditScoreResponseData,
+          },
+        });
+      }
+
+      if (generateCreditScoreResponseData) {
         result.success = true;
         result.message = "";
         result.status = "success";
-        return { ...result, ...generateCreditScoreResponse.data };
+        return { ...result, ...generateCreditScoreResponseData };
       } else {
-        console.error("Generation of credit score failed!");
-        return {
-          success: false,
-          message: "Credit Score failed",
-        };
+        console.error(result.message);
+        return result;
       }
     },
 
@@ -387,7 +452,7 @@ export class MasaClient extends MasaBase {
       const result = {
         success: false,
         status: "failed",
-        message: "Credit Score failed",
+        message: "Updating of credit score failed!",
       };
 
       const updateCreditScoreResponse = await this._middlewareClient
@@ -407,16 +472,25 @@ export class MasaClient extends MasaBase {
           console.error("Updating credit score failed!", error.message);
         });
 
-      if (
-        updateCreditScoreResponse?.status === 200 &&
-        updateCreditScoreResponse?.data
-      ) {
+      const { data: updateCreditScoreResponseData, status } =
+        updateCreditScoreResponse || {};
+
+      if (this.masa.config.verbose) {
+        console.info({
+          updateCreditScoreResponse: {
+            status,
+            updateCreditScoreResponseData,
+          },
+        });
+      }
+
+      if (updateCreditScoreResponseData) {
         result.success = true;
         result.message = "";
         result.status = "success";
-        return { ...result, ...updateCreditScoreResponse.data };
+        return { ...result, ...updateCreditScoreResponseData };
       } else {
-        console.error("Updating of credit score failed!");
+        console.error(result.message);
       }
 
       return result;
