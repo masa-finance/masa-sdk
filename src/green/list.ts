@@ -14,7 +14,7 @@ export const listGreensAndPrint = async (
   masa: Masa,
   address?: string
 ): Promise<GreenDetails[]> => {
-  const greens = await listGreens(masa, address);
+  const greens: GreenDetails[] = await listGreens(masa, address);
 
   if (greens.length === 0) {
     console.warn("No Masa Green found");
