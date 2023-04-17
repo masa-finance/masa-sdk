@@ -41,6 +41,7 @@ export default class Masa {
       port: 443,
       protocol: "https",
     },
+    contractOverrides,
     verbose = false,
   }: MasaArgs) {
     // build config
@@ -64,7 +65,7 @@ export default class Masa {
     this.arweave = new MasaArweave(arweave, this.config);
 
     // masa contracts wrapper
-    this.contracts = new MasaContracts(this);
+    this.contracts = new MasaContracts(this, contractOverrides);
     // account + session
     this.account = new MasaAccount(this);
     this.session = new MasaSession(this);

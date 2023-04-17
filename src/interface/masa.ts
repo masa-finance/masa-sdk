@@ -1,6 +1,7 @@
 import { BigNumber, Signer, Wallet } from "ethers";
 import { ApiConfig as ArweaveConfig } from "arweave/node/lib/api";
 import { Network } from "../utils";
+import { IIdentityContracts } from "./contracts";
 
 export type EnvironmentName = "dev" | "test" | "beta" | "production";
 
@@ -31,6 +32,7 @@ export interface MasaArgs {
   networkName?: NetworkName;
   verbose?: boolean;
   arweave?: ArweaveConfig;
+  contractOverrides?: Partial<IIdentityContracts>;
 }
 
 export interface MasaConfig {

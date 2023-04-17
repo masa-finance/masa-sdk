@@ -23,13 +23,19 @@ export class MasaContracts extends MasaBase {
   public green: Green;
   public identity: Identity;
 
-  public constructor(masa: Masa) {
+  public constructor(
+    masa: Masa,
+    contractOverrides?: Partial<IIdentityContracts>
+  ) {
     super(masa);
 
-    this.instances = loadIdentityContracts({
-      provider: this.masa.config.wallet.provider,
-      networkName: this.masa.config.networkName,
-    });
+    this.instances = {
+      ...loadIdentityContracts({
+        provider: this.masa.config.wallet.provider,
+        networkName: this.masa.config.networkName,
+      }),
+      ...contractOverrides,
+    };
 
     this.sbt = new SBT(this.masa, this.instances);
     this.soulLinker = new SoulLinker(this.masa, this.instances);
