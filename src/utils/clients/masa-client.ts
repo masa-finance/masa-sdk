@@ -255,7 +255,7 @@ export class MasaClient extends MasaBase {
 
       const storeMetadataResponse = await this._middlewareClient
         .post<SoulNameMetadataStoreResult | SoulNameResultBase>(
-          "/storage/store",
+          "/soul-name/store",
           {
             soulName,
             receiver,
