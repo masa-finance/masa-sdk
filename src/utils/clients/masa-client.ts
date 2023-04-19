@@ -68,12 +68,15 @@ export class MasaClient extends MasaBase {
         sessionCheckResponse || {};
 
       if (this.masa.config.verbose) {
-        console.info({
-          sessionCheckResponse: {
-            status,
-            sessionCheckResponseData,
+        console.dir(
+          {
+            sessionCheckResponse: {
+              status,
+              sessionCheckResponseData,
+            },
           },
-        });
+          { depth: null }
+        );
       }
 
       return sessionCheckResponseData;
@@ -160,6 +163,7 @@ export class MasaClient extends MasaBase {
             getChallengeResponse: {
               status,
               getChallengeResponseData,
+              cookie,
             },
           });
         }
