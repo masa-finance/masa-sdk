@@ -16,6 +16,7 @@ import {
 import { ERC20, ERC20__factory } from "../stubs";
 import { Messages } from "../../utils";
 import {
+  MasaSBTAuthority,
   MasaSBTSelfSovereign,
   SoulLinker,
   SoulStore,
@@ -144,7 +145,7 @@ export class MasaModuleBase extends MasaBase {
    */
   protected verify = async (
     errorMessage: string,
-    contract: MasaSBTSelfSovereign | SoulStore | SoulLinker,
+    contract: MasaSBTSelfSovereign | MasaSBTAuthority | SoulStore | SoulLinker,
     domain: TypedDataDomain,
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number>,
@@ -162,7 +163,7 @@ export class MasaModuleBase extends MasaBase {
     }
 
     const hasAuthorities = (
-      contract: MasaSBTSelfSovereign | SoulStore | SoulLinker
+      contract: MasaSBTSelfSovereign | MasaSBTAuthority | SoulStore | SoulLinker
     ): contract is MasaSBTSelfSovereign => {
       return (contract as MasaSBTSelfSovereign).authorities !== undefined;
     };

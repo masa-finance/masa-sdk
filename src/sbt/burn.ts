@@ -1,11 +1,14 @@
-import { MasaSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import {
+  MasaSBTAuthority,
+  MasaSBTSelfSovereign,
+} from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { Messages } from "../utils";
 
 export const burnSBT = async (
   masa: Masa,
-  contract: MasaSBTSelfSovereign,
+  contract: MasaSBTSelfSovereign | MasaSBTAuthority,
   SBTId: BigNumber
 ): Promise<boolean> => {
   try {

@@ -5,7 +5,7 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 import { MasaBase } from "../helpers/masa-base";
-import { loadSBTContract } from "../contracts";
+import { ContractFactory, loadSBTContract } from "../contracts";
 import { MasaSoulLinker } from "../soul-linker";
 import { burnSBT, deployASBT, listSBTs, mintASBT } from "./";
 
@@ -27,16 +27,20 @@ export class MasaSBT extends MasaBase {
   /**
    *
    * @param address
+   * @param factory
    */
-  connect = async (address: string) => {
-    const sbtContract: MasaSBTSelfSovereign | MasaSBTAuthority | undefined =
-      await loadSBTContract(
-        this.masa.config,
-        address,
-        MasaSBTSelfSovereign__factory
-      );
+  connect = async <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
+    address: string,
+    factory: ContractFactory = MasaSBTSelfSovereign__factory
+  ) => {
+    const sbtContract: Contract | undefined = await loadSBTContract(
+      this.masa.config,
+      address,
+      factory
+    );
 
     return {
+      sbtContract,
       /**
        *
        */

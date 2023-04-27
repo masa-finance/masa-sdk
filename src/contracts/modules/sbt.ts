@@ -1,5 +1,6 @@
 import { MasaModuleBase } from "./masa-module-base";
 import {
+  MasaSBTAuthority,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
@@ -9,12 +10,17 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { generateSignatureDomain, signTypedData } from "../../utils";
 import { isNativeCurrency, PaymentMethod } from "../../interface";
 
+export const isMasaSBTSelfSovereign = (
+  contract: unknown
+): contract is MasaSBTSelfSovereign =>
+  !!(contract as MasaSBTSelfSovereign).getMintPrice;
+
 export class SBT extends MasaModuleBase {
-  connect = async <Contract extends MasaSBTSelfSovereign>(
+  connect = async <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
     address: string,
     factory: ContractFactory = MasaSBTSelfSovereign__factory
   ) => {
-    const selfSovereignSBT: Contract | undefined = await loadSBTContract(
+    const sbtContract: Contract | undefined = await loadSBTContract(
       this.masa.config,
       address,
       factory
@@ -24,7 +30,7 @@ export class SBT extends MasaModuleBase {
       /**
        * instance of the SBT that this factory instance uses
        */
-      selfSovereignSBT,
+      sbtContract,
 
       /**
        * Signs an SBT based on its address
@@ -43,12 +49,12 @@ export class SBT extends MasaModuleBase {
           }
         | undefined
       > => {
-        if (!selfSovereignSBT) return;
+        if (!sbtContract) return;
 
         const authorityAddress = await this.masa.config.wallet.getAddress();
 
         const { signature, domain } = await signTypedData(
-          selfSovereignSBT,
+          sbtContract,
           this.masa.config.wallet as Wallet,
           name,
           types,
@@ -57,7 +63,7 @@ export class SBT extends MasaModuleBase {
 
         await this.verify(
           "Signing SBT failed!",
-          selfSovereignSBT,
+          sbtContract,
           domain,
           types,
           value,
@@ -72,11 +78,11 @@ export class SBT extends MasaModuleBase {
         paymentMethod: PaymentMethod,
         slippage: number | undefined = 250
       ) => {
-        if (!selfSovereignSBT) return;
+        if (!sbtContract || !isMasaSBTSelfSovereign(sbtContract)) return;
 
         const paymentAddress = this.getPaymentAddress(paymentMethod);
 
-        let price = await selfSovereignSBT.getMintPrice(paymentAddress);
+        let price = await sbtContract.getMintPrice(paymentAddress);
 
         if (slippage) {
           if (isNativeCurrency(paymentMethod)) {
@@ -105,17 +111,17 @@ export class SBT extends MasaModuleBase {
         authorityAddress: string,
         slippage: number | undefined = 250
       ) => {
-        if (!selfSovereignSBT) return;
+        if (!sbtContract) return;
 
         const domain: TypedDataDomain = await generateSignatureDomain(
           this.masa.config.wallet as Wallet,
           name,
-          selfSovereignSBT.address
+          sbtContract.address
         );
 
         await this.verify(
           "Verifying SBT failed!",
-          selfSovereignSBT,
+          sbtContract,
           domain,
           types,
           value,

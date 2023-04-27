@@ -1,5 +1,6 @@
 import { Signer, utils, Wallet } from "ethers";
 import {
+  MasaSBTAuthority,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
@@ -12,7 +13,15 @@ export class ContractFactory {
   ) => Contract;
 }
 
-export const loadSBTContract = async <Contract extends MasaSBTSelfSovereign>(
+/**
+ *
+ * @param masaConfig
+ * @param address
+ * @param factory
+ */
+export const loadSBTContract = async <
+  Contract extends MasaSBTSelfSovereign | MasaSBTAuthority
+>(
   masaConfig: MasaConfig,
   address: string,
   factory: ContractFactory = MasaSBTSelfSovereign__factory

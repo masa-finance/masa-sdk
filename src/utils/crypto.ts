@@ -9,6 +9,10 @@ import {
   Wallet,
 } from "ethers";
 
+/**
+ *
+ * @param item
+ */
 export const isBigNumber = (item: BigNumber | string): item is BigNumber => {
   return (item as BigNumber)._isBigNumber;
 };
@@ -64,16 +68,24 @@ export const signTypedData = async (
   return { signature, domain };
 };
 
+/**
+ *
+ * @param wallet
+ * @param name
+ * @param verifyingContract
+ * @param version
+ */
 export const generateSignatureDomain = async (
   wallet: Wallet,
   name: string,
-  verifyingContract: string
+  verifyingContract: string,
+  version: string = "1.0.0"
 ): Promise<TypedDataDomain> => {
   const chainId = (await wallet.provider.getNetwork()).chainId;
 
   const domain: TypedDataDomain = {
     name,
-    version: "1.0.0",
+    version,
     chainId,
     verifyingContract,
   };
