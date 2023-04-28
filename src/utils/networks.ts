@@ -2,17 +2,48 @@ import { NetworkName } from "../interface";
 import { addresses, Addresses } from "../contracts";
 
 export interface Network {
+  /**
+   * the technical network name that the SDK knows
+   */
   networkName: NetworkName;
+  /**
+   * The long chain name that metamask displays or that we use to
+   * offer the user to switch networks
+   */
   chainName: string;
+  /**
+   * A short version of the Chain Name to be displayed in Buttons or
+   * locations with less space
+   */
+  chainNameShort: string;
+  /**
+   * The networks chain id used to add the network to the wallet
+   */
   chainId: number;
+  /**
+   * The list of available rpc urls, required for adding the network
+   * to the wallet
+   */
   rpcUrls: string[];
+  /**
+   * Information about the native currency
+   */
   nativeCurrency?: {
     name: string;
     symbol: string;
     decimals: number;
   };
+  /**
+   * set of block explorer urls
+   */
   blockExplorerUrls?: string[];
+  /**
+   * Masa Curated known Addresses of Contracts like Business logic and tokens
+   */
   addresses: Addresses;
+  /**
+   * the default gas slippage percentage used on some testnets
+   */
   gasSlippagePercentage?: number;
 }
 
@@ -33,6 +64,7 @@ export const getNetworkNameByChainId = (chainId: number): NetworkName => {
 const bsc: Network = {
   networkName: "bsc",
   chainName: "Binance Smart Chain",
+  chainNameShort: "BSC",
   chainId: 56,
   rpcUrls: ["https://endpoints.omniatech.io/v1/bsc/mainnet/public"],
   nativeCurrency: {
@@ -45,6 +77,7 @@ const bsc: Network = {
 const bsctest: Network = {
   networkName: "bsctest",
   chainName: "Binance Smart Chain Testnet",
+  chainNameShort: "BSC Testnet",
   chainId: 97,
   rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
   nativeCurrency: {
@@ -58,7 +91,8 @@ const bsctest: Network = {
 // celo
 const celo: Network = {
   networkName: "celo",
-  chainName: "Celo",
+  chainName: "Celo Mainnet",
+  chainNameShort: "Celo",
   chainId: 42220,
   rpcUrls: ["https://forno.celo.org"],
   nativeCurrency: {
@@ -72,6 +106,7 @@ const celo: Network = {
 const alfajores: Network = {
   networkName: "alfajores",
   chainName: "Alfajores Network",
+  chainNameShort: "Alfajores",
   chainId: 44787,
   rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
   nativeCurrency: {
@@ -87,6 +122,7 @@ const alfajores: Network = {
 const polygon: Network = {
   networkName: "polygon",
   chainName: "Polygon Mainnet",
+  chainNameShort: "Polygon",
   chainId: 137,
   nativeCurrency: {
     name: "MATIC",
@@ -100,6 +136,7 @@ const polygon: Network = {
 const mumbai: Network = {
   networkName: "mumbai",
   chainName: "Mumbai Testnet",
+  chainNameShort: "Mumbai",
   chainId: 80001,
   nativeCurrency: {
     name: "tMATIC",
@@ -116,6 +153,7 @@ const mumbai: Network = {
 const ethereum: Network = {
   networkName: "ethereum",
   chainName: "Ethereum Mainnet",
+  chainNameShort: "Ethereum",
   chainId: 1,
   nativeCurrency: {
     name: "ETH",
@@ -129,6 +167,7 @@ const ethereum: Network = {
 const goerli: Network = {
   networkName: "goerli",
   chainName: "Goerli Testnet",
+  chainNameShort: "Goerli",
   chainId: 5,
   nativeCurrency: {
     name: "ETH",
@@ -144,6 +183,7 @@ const goerli: Network = {
 const basegoerli: Network = {
   networkName: "basegoerli",
   chainName: "Base Goerli Testnet",
+  chainNameShort: "Base Goerli",
   chainId: 84531,
   nativeCurrency: {
     name: "ETH",
