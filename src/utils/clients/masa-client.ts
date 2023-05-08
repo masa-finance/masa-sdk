@@ -160,7 +160,12 @@ export class MasaClient extends MasaBase {
     },
 
     logout: async (): Promise<LogoutResult | undefined> => {
-      return this.post<undefined, LogoutResult>("/session/logout", undefined);
+      const logoutResult = this.post<undefined, LogoutResult>(
+        "/session/logout",
+        undefined
+      );
+      delete this._cookie;
+      return logoutResult;
     },
   };
 
