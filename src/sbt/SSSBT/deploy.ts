@@ -2,11 +2,11 @@ import { ContractFactory } from "ethers";
 import {
   abi,
   bytecode,
-} from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTAuthority.sol/ReferenceSBTAuthority.json";
+} from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTSelfSovereign.sol/ReferenceSBTSelfSovereign.json";
 import Masa from "../../masa";
 import { Messages } from "../../utils";
 
-export const deployASBT = async (
+export const deploySSSBT = async (
   masa: Masa,
   name: string,
   symbol: string,
@@ -15,7 +15,7 @@ export const deployASBT = async (
 ): Promise<string | undefined> => {
   adminAddress = adminAddress || (await masa.config.wallet.getAddress());
 
-  console.log(`Deploying ASBT to network '${masa.config.networkName}'`);
+  console.log(`Deploying SSSBT to network '${masa.config.networkName}'`);
 
   const factory: ContractFactory = new ContractFactory(
     abi,
@@ -49,13 +49,13 @@ export const deployASBT = async (
     await wait();
 
     console.log(
-      `ASBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
+      `SSSBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
     );
 
     return address;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("ASBT deployment failed!", error.message);
+      console.error("SSSBT deployment failed!", error.message);
     }
   }
 };

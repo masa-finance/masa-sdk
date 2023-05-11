@@ -1,15 +1,21 @@
 import Masa from "../../masa";
-import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
+import {
+  ReferenceSBTAuthority,
+  ReferenceSBTSelfSovereign,
+} from "@masa-finance/masa-contracts-identity";
 import { constants, Contract } from "ethers";
 
 import { abi } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTAuthority.sol/ReferenceSBTAuthority.json";
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
 
-export const mintASBT = async (
+export const mintSSSBT = async (
   masa: Masa,
   sbtContract: ReferenceSBTAuthority,
-  receiver: string
+  receiver: string,
+  authorityAddress: string,
+  signatureDate: number,
+  signature: string
 ) => {
   const [name, symbol] = await Promise.all([
     sbtContract.name(),
@@ -22,21 +28,26 @@ export const mintASBT = async (
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const asbt: ReferenceSBTAuthority = (await new Contract(
+  const sssbt: ReferenceSBTSelfSovereign = (await new Contract(
     sbtContract.address,
     abi,
     masa.config.wallet
-  ).deployed()) as ReferenceSBTAuthority;
+  ).deployed()) as ReferenceSBTSelfSovereign;
 
-  const { wait, hash } = await asbt["mint(address,address)"](
+  const { wait, hash } = await sssbt[
+    "mint(address,address,address,uint256,bytes)"
+  ](
     constants.AddressZero,
-    receiver
+    receiver,
+    authorityAddress,
+    signatureDate,
+    signature
   );
   console.log(Messages.WaitingToFinalize(hash));
 
   const { logs } = await wait();
 
-  const parsedLogs = masa.contracts.parseLogs(logs, [asbt]);
+  const parsedLogs = masa.contracts.parseLogs(logs, [sssbt]);
 
   const mintEvent = parsedLogs.find(
     (log: LogDescription) => log.name === "Mint"
