@@ -1,10 +1,12 @@
-import { ContractFactory } from "ethers";
+import { constants, ContractFactory } from "ethers";
 import {
   abi,
   bytecode,
 } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTAuthority.sol/ReferenceSBTAuthority.json";
 import Masa from "../../masa";
 import { Messages } from "../../utils";
+import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/reference/ReferenceSBTAuthority";
+import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export const deployASBT = async (
   masa: Masa,
@@ -23,27 +25,40 @@ export const deployASBT = async (
     masa.config.wallet
   );
 
+  const args: [
+    string, // address admin
+    string, // string name
+    string, // string symbol
+    string, // string baseTokenURI
+    string, // address soulboundIdentity
+    PaymentParamsStruct // PaymentParams paymentParams
+  ] = [
+    adminAddress,
+    name,
+    symbol,
+    baseTokenUri,
+    masa.contracts.instances.SoulboundIdentityContract.address,
+    {
+      swapRouter: constants.AddressZero,
+      wrappedNativeToken: constants.AddressZero,
+      stableCoin: constants.AddressZero,
+      masaToken: constants.AddressZero,
+      projectFeeReceiver: constants.AddressZero,
+      protocolFeeReceiver: constants.AddressZero,
+      protocolFeeAmount: 0,
+      protocolFeePercent: 0,
+    },
+  ];
+
   if (masa.config.verbose) {
-    console.info({
-      adminAddress,
-      name,
-      symbol,
-      baseTokenUri,
-    });
+    console.info(...args);
   }
 
   try {
     const {
       deployTransaction: { wait, hash },
       address,
-    } = await factory.deploy(
-      adminAddress,
-      name,
-      symbol,
-      baseTokenUri,
-      masa.contracts.instances.SoulboundIdentityContract.address
-    );
-
+    } = await factory.deploy(...args);
     console.log(Messages.WaitingToFinalize(hash));
 
     await wait();

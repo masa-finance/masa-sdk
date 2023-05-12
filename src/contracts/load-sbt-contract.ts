@@ -44,7 +44,9 @@ export const loadSBTContract = async <
 
     if (selfSovereignSBT) {
       if (masaConfig.verbose) {
-        console.info(await selfSovereignSBT.name());
+        console.info(
+          `Loaded contract with name: ${await selfSovereignSBT.name()}`
+        );
       }
     } else {
       console.error(
