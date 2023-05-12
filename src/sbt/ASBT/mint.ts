@@ -1,37 +1,55 @@
 import Masa from "../../masa";
 import {
   MasaSBTAuthority,
-  MasaSBTSelfSovereign,
+  ReferenceSBTAuthority,
 } from "@masa-finance/masa-contracts-identity";
 import { Contract } from "ethers";
 
-import { abi } from "./ASBT";
+import { abi } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTAuthority.sol/ReferenceSBTAuthority.json";
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
+import { PaymentMethod } from "../../interface";
 
+/**
+ *
+ * @param masa
+ * @param sbtContract
+ * @param receiver
+ * @param paymentMethod
+ */
 export const mintASBT = async (
   masa: Masa,
-  sbtContract: MasaSBTSelfSovereign | MasaSBTAuthority,
-  receiver: string
+  sbtContract: MasaSBTAuthority,
+  receiver: string,
+  paymentMethod: PaymentMethod = "ETH"
 ) => {
   const [name, symbol] = await Promise.all([
     sbtContract.name(),
     sbtContract.symbol(),
   ]);
 
-  console.log("Minting SBT on:");
+  console.log(`Minting ASBT on: '${masa.config.networkName}'`);
   console.log(`Contract Name: '${name}'`);
   console.log(`Contract Symbol: '${symbol}'`);
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const asbt = await new Contract(
+  const asbt: ReferenceSBTAuthority = (await new Contract(
     sbtContract.address,
     abi,
     masa.config.wallet
-  ).deployed();
+  ).deployed()) as ReferenceSBTAuthority;
 
-  const { wait, hash } = await asbt.mint(receiver);
+  const args: [
+    string, // paymentAddress string
+    string // receiver string
+  ] = [masa.contracts.sbt.getPaymentAddress(paymentMethod), receiver];
+
+  if (masa.config.verbose) {
+    console.info(args);
+  }
+
+  const { wait, hash } = await asbt["mint(address,address)"](...args);
   console.log(Messages.WaitingToFinalize(hash));
 
   const { logs } = await wait();

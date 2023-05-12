@@ -90,7 +90,7 @@ export class MasaModuleBase extends MasaBase {
    * @param paymentMethod
    * @private
    */
-  protected getPaymentAddress = (paymentMethod: PaymentMethod): string => {
+  public getPaymentAddress = (paymentMethod: PaymentMethod): string => {
     let paymentAddress: string | undefined = isNativeCurrency(paymentMethod)
       ? constants.AddressZero
       : this.masa.config.network?.addresses?.tokens?.[paymentMethod];
