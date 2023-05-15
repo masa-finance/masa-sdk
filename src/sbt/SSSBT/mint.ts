@@ -73,7 +73,7 @@ export const mintSSSBT = async (
 
   const prepareMintResults = await prepareMint(
     paymentMethod,
-    name,
+    "ReferenceSBTSelfSovereign",
     types,
     value,
     signature,

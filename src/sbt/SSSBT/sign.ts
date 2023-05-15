@@ -55,7 +55,7 @@ export const signSSSBT = async (
   );
 
   // sign to create a signature
-  const signResult = await sign(name, types, value);
+  const signResult = await sign("ReferenceSBTSelfSovereign", types, value);
   if (!signResult) return;
 
   const { signature, authorityAddress } = signResult;
