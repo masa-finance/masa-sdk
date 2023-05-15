@@ -114,7 +114,7 @@ export const recoverAddress = (
       signature
     );
   } catch (err) {
-    console.error(`Address recovery failed!`, err);
+    console.error("Address recovery failed!", err);
   }
 
   return recovered;
