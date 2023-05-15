@@ -1,11 +1,5 @@
 import Masa from "../../masa";
-import {
-  MasaSBTAuthority,
-  ReferenceSBTAuthority,
-} from "@masa-finance/masa-contracts-identity";
-import { Contract } from "ethers";
-
-import { abi } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTAuthority.sol/ReferenceSBTAuthority.json";
+import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
 import { PaymentMethod } from "../../interface";
@@ -19,7 +13,7 @@ import { PaymentMethod } from "../../interface";
  */
 export const mintASBT = async (
   masa: Masa,
-  sbtContract: MasaSBTAuthority,
+  sbtContract: ReferenceSBTAuthority,
   receiver: string,
   paymentMethod: PaymentMethod = "ETH"
 ) => {
@@ -34,12 +28,6 @@ export const mintASBT = async (
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const asbt: ReferenceSBTAuthority = (await new Contract(
-    sbtContract.address,
-    abi,
-    masa.config.wallet
-  ).deployed()) as ReferenceSBTAuthority;
-
   const args: [
     string, // paymentAddress string
     string // receiver string
@@ -49,12 +37,12 @@ export const mintASBT = async (
     console.info(args);
   }
 
-  const { wait, hash } = await asbt["mint(address,address)"](...args);
+  const { wait, hash } = await sbtContract["mint(address,address)"](...args);
   console.log(Messages.WaitingToFinalize(hash));
 
   const { logs } = await wait();
 
-  const parsedLogs = masa.contracts.parseLogs(logs, [asbt]);
+  const parsedLogs = masa.contracts.parseLogs(logs, [sbtContract]);
 
   const mintEvent = parsedLogs.find(
     (log: LogDescription) => log.name === "Mint"

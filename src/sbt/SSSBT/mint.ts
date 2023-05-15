@@ -1,17 +1,12 @@
 import Masa from "../../masa";
-import {
-  MasaSBTSelfSovereign,
-  ReferenceSBTSelfSovereign,
-} from "@masa-finance/masa-contracts-identity";
-import { Contract } from "ethers";
-import { abi } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTSelfSovereign.sol/ReferenceSBTSelfSovereign.json";
+import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
 import { PaymentMethod } from "../../interface";
 
 export const mintSSSBT = async (
   masa: Masa,
-  sbtContract: MasaSBTSelfSovereign,
+  sbtContract: ReferenceSBTSelfSovereign,
   authorityAddress: string,
   signatureDate: number,
   signature: string,
@@ -30,12 +25,6 @@ export const mintSSSBT = async (
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const sssbt: ReferenceSBTSelfSovereign = (await new Contract(
-    sbtContract.address,
-    abi,
-    masa.config.wallet
-  ).deployed()) as ReferenceSBTSelfSovereign;
-
   const args: [
     string, // paymentMethod string
     string, // to string
@@ -50,7 +39,7 @@ export const mintSSSBT = async (
     signature,
   ];
 
-  const { prepareMint } = await masa.contracts.sbt.attach(sssbt);
+  const { prepareMint } = await masa.contracts.sbt.attach(sbtContract);
 
   const types = {
     Mint: [
@@ -84,7 +73,7 @@ export const mintSSSBT = async (
     console.info(args, prepareMintResults);
   }
 
-  const { wait, hash } = await sssbt[
+  const { wait, hash } = await sbtContract[
     "mint(address,address,address,uint256,bytes)"
   ](...args);
 
@@ -92,7 +81,7 @@ export const mintSSSBT = async (
 
   const { logs } = await wait();
 
-  const parsedLogs = masa.contracts.parseLogs(logs, [sssbt]);
+  const parsedLogs = masa.contracts.parseLogs(logs, [sbtContract]);
 
   const mintEvent = parsedLogs.find(
     (log: LogDescription) => log.name === "Mint"
@@ -103,5 +92,9 @@ export const mintSSSBT = async (
     console.log(
       `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
     );
+
+    return true;
   }
+
+  return;
 };

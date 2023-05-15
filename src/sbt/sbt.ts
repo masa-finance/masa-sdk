@@ -2,6 +2,8 @@ import {
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
+  ReferenceSBTAuthority,
+  ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 import { MasaBase } from "../helpers/masa-base";
@@ -38,8 +40,8 @@ export class MasaSBT extends MasaBase {
      * @param contract
      * @param receiver
      */
-    mint: async (contract: MasaSBTAuthority, receiver: string) => {
-      return mintASBT(this.masa, contract as MasaSBTAuthority, receiver);
+    mint: async (contract: ReferenceSBTAuthority, receiver: string) => {
+      return mintASBT(this.masa, contract, receiver);
     },
   };
 
@@ -73,7 +75,7 @@ export class MasaSBT extends MasaBase {
      * @param contract
      * @param receiver
      */
-    sign: async (contract: MasaSBTSelfSovereign, receiver: string) => {
+    sign: async (contract: ReferenceSBTSelfSovereign, receiver: string) => {
       return signSSSBT(this.masa, contract, receiver);
     },
 
@@ -85,7 +87,7 @@ export class MasaSBT extends MasaBase {
      * @param signature
      */
     mint: async (
-      contract: MasaSBTSelfSovereign,
+      contract: ReferenceSBTSelfSovereign,
       authorityAddress: string,
       signatureDate: number,
       signature: string

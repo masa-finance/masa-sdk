@@ -1,15 +1,9 @@
 import Masa from "../../masa";
-import {
-  MasaSBTSelfSovereign,
-  ReferenceSBTSelfSovereign,
-} from "@masa-finance/masa-contracts-identity";
-import { Contract } from "ethers";
-
-import { abi } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTAuthority.sol/ReferenceSBTAuthority.json";
+import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
 export const signSSSBT = async (
   masa: Masa,
-  sbtContract: MasaSBTSelfSovereign,
+  sbtContract: ReferenceSBTSelfSovereign,
   receiver: string
 ) => {
   const [name, symbol] = await Promise.all([
@@ -22,12 +16,6 @@ export const signSSSBT = async (
   console.log(`Contract Symbol: '${symbol}'`);
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
-
-  const sssbt: ReferenceSBTSelfSovereign = (await new Contract(
-    sbtContract.address,
-    abi,
-    masa.config.wallet
-  ).deployed()) as ReferenceSBTSelfSovereign;
 
   const signatureDate = Date.now();
 
@@ -51,7 +39,7 @@ export const signSSSBT = async (
   };
 
   const { sign } = await masa.contracts.sbt.attach<ReferenceSBTSelfSovereign>(
-    sssbt
+    sbtContract
   );
 
   // sign to create a signature
