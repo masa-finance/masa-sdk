@@ -60,5 +60,13 @@ export const signSSSBT = async (
 
   const { signature, authorityAddress } = signResult;
 
-  console.log({ signature, authorityAddress, signatureDate });
+  if (masa.config.verbose) {
+    console.info({ signature, authorityAddress, signatureDate });
+  }
+
+  return {
+    authorityAddress,
+    signatureDate,
+    signature,
+  };
 };
