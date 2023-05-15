@@ -217,7 +217,7 @@ export class SBT extends MasaModuleBase {
    * attaches the contract function to an existing instances
    * @param contract
    */
-  attach = async <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
+  attach = <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
     contract: Contract
   ) => {
     return this.wrapper<Contract>(contract);

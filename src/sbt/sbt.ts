@@ -40,9 +40,8 @@ export class MasaSBT extends MasaBase {
      * @param contract
      * @param receiver
      */
-    mint: async (contract: ReferenceSBTAuthority, receiver: string) => {
-      return mintASBT(this.masa, contract, receiver);
-    },
+    mint: async (contract: ReferenceSBTAuthority, receiver: string) =>
+      mintASBT(this.masa, contract, receiver),
   };
 
   SSSBT = {
@@ -54,7 +53,7 @@ export class MasaSBT extends MasaBase {
      * @param authorityAddress
      * @param adminAddress
      */
-    deploy: async (
+    deploy: (
       name: string,
       symbol: string,
       baseTokenUri: string,
