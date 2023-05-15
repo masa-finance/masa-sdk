@@ -175,7 +175,7 @@ export class SBT extends MasaModuleBase {
         authorityAddress
       );
 
-      const { getPrice } = await this.attach(sbtContract);
+      const { getPrice } = this.attach(sbtContract);
       const priceObject = await getPrice(paymentMethod, slippage);
 
       if (!priceObject) return;
