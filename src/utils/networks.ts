@@ -129,7 +129,7 @@ const polygon: Network = {
     symbol: "MATIC", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://polygon-rpc.com/"],
+  rpcUrls: ["https://polygon-rpc.com"],
   blockExplorerUrls: ["https://polygonscan.com/"],
   addresses: addresses["polygon"] as Addresses,
 };
