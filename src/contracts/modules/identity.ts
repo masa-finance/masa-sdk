@@ -14,8 +14,8 @@ export class Identity extends MasaModuleBase {
    */
   purchase = async (): Promise<ContractTransaction> => {
     const {
-      estimateGas: { "purchaseIdentity()": estimateGas },
-      "purchaseIdentity()": purchaseIdentity,
+      estimateGas: { purchaseIdentity: estimateGas },
+      purchaseIdentity: purchaseIdentity,
     } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
 
     // estimate gas
