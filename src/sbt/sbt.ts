@@ -1,6 +1,6 @@
 import {
   MasaSBT as MasaSBTContract,
-  MasaSBTSelfSovereign__factory,
+  MasaSBT__factory,
   ReferenceSBTAuthority,
   ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
@@ -23,7 +23,7 @@ export class MasaSBT<
    */
   public async connect(
     address: string,
-    factory: ContractFactory = MasaSBTSelfSovereign__factory
+    factory: ContractFactory = MasaSBT__factory
   ) {
     const { sbtContract } =
       (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};

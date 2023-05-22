@@ -1,6 +1,6 @@
 import {
-  MasaSBTSelfSovereign__factory,
   ReferenceSBTSelfSovereign,
+  ReferenceSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { deploySSSBT } from "./deploy";
 import { signSSSBT } from "./sign";
@@ -35,7 +35,10 @@ export class MasaSSSBT<
     );
 
   public async connect(address: string) {
-    const wrapper = await super.connect(address, MasaSBTSelfSovereign__factory);
+    const wrapper = await super.connect(
+      address,
+      ReferenceSBTSelfSovereign__factory
+    );
 
     return {
       ...wrapper,

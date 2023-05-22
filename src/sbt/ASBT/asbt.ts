@@ -1,6 +1,6 @@
 import {
-  MasaSBTAuthority__factory,
   ReferenceSBTAuthority,
+  ReferenceSBTAuthority__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { deployASBT } from "./deploy";
 import { mintASBT } from "./mint";
@@ -24,7 +24,10 @@ export class MasaASBT<
   ) => deployASBT(this.masa, name, symbol, baseTokenUri, adminAddress);
 
   public async connect(address: string) {
-    const wrapper = await super.connect(address, MasaSBTAuthority__factory);
+    const wrapper = await super.connect(
+      address,
+      ReferenceSBTAuthority__factory
+    );
 
     return {
       ...wrapper,

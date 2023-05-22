@@ -22,7 +22,6 @@ import {
   MasaSBT,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
-  MasaSBTSelfSovereign__factory,
   SoulLinker,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
@@ -314,7 +313,7 @@ export class MasaModuleBase extends MasaBase {
   >(
     masaConfig: MasaConfig,
     address: string,
-    factory: ContractFactory = MasaSBTSelfSovereign__factory
+    factory: ContractFactory
   ): Promise<Contract | undefined> => {
     let sbtContract: Contract | undefined;
 
@@ -332,12 +331,12 @@ export class MasaModuleBase extends MasaBase {
           )
         : undefined;
 
-      if (sbtContract && masaConfig.verbose) {
-        console.info(`Loaded contract with name: ${await sbtContract.name()}`);
-      } else {
+      if (!sbtContract) {
         console.error(
           `Smart contract '${address}' does not exist on network '${masaConfig.networkName}'!`
         );
+      } else if (masaConfig.verbose) {
+        console.info(`Loaded contract with name: ${await sbtContract.name()}`);
       }
     } else {
       console.error(`Address '${address}' is not valid!`);

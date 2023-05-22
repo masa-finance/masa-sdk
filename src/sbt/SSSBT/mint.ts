@@ -69,16 +69,24 @@ export const mintSSSBT = async (
   ] = [paymentAddress, receiver, authorityAddress, signatureDate, signature];
 
   const mintSSSBTOverrides: PayableOverrides = {
-    value: price,
+    value: price.gt(0) ? price : undefined,
   };
 
   if (masa.config.verbose) {
     console.info(mintSSSBTArguments, prepareMintResults);
   }
 
-  const { wait, hash } = await sbtContract[
-    "mint(address,address,address,uint256,bytes)"
-  ](...mintSSSBTArguments, mintSSSBTOverrides);
+  const {
+    "mint(address,address,address,uint256,bytes)": mint,
+    estimateGas: { "mint(address,address,address,uint256,bytes)": estimateGas },
+  } = sbtContract;
+
+  const gasLimit = await estimateGas(...mintSSSBTArguments, mintSSSBTOverrides);
+
+  const { wait, hash } = await mint(...mintSSSBTArguments, {
+    ...mintSSSBTOverrides,
+    gasLimit,
+  });
 
   console.log(Messages.WaitingToFinalize(hash));
 

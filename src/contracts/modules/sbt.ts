@@ -1,9 +1,9 @@
 import { ContractFactory, MasaModuleBase } from "./masa-module-base";
 import {
   MasaSBT,
+  MasaSBT__factory,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
-  MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { TypedDataDomain, TypedDataField, Wallet } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -177,7 +177,7 @@ export class SBT extends MasaModuleBase {
     Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT
   >(
     address: string,
-    factory: ContractFactory = MasaSBTSelfSovereign__factory
+    factory: ContractFactory = MasaSBT__factory
   ): Promise<ContractWrapper<Contract> | undefined> => {
     const sbtContract: Contract | undefined = await this.loadSBTContract(
       this.masa.config,
