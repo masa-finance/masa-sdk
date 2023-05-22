@@ -3,6 +3,7 @@ import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
 import { PaymentMethod } from "../../interface";
+import { PayableOverrides } from "ethers";
 
 export const mintSSSBT = async (
   masa: Masa,
@@ -25,21 +26,9 @@ export const mintSSSBT = async (
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const args: [
-    string, // paymentMethod string
-    string, // to string
-    string, // authorityAddress string
-    number, // authorityAddress number
-    string // signature string
-  ] = [
-    masa.contracts.sbt.getPaymentAddress(paymentMethod),
-    receiver,
-    authorityAddress,
-    signatureDate,
-    signature,
-  ];
-
-  const { prepareMint } = await masa.contracts.sbt.attach(sbtContract);
+  const { prepareMint, getPrice } = await masa.contracts.sbt.attach(
+    sbtContract
+  );
 
   const types = {
     Mint: [
@@ -69,13 +58,27 @@ export const mintSSSBT = async (
     authorityAddress
   );
 
+  const { price, paymentAddress } = await getPrice(paymentMethod);
+
+  const mintSSSBTArguments: [
+    string, // paymentMethod string
+    string, // to string
+    string, // authorityAddress string
+    number, // authorityAddress number
+    string // signature string
+  ] = [paymentAddress, receiver, authorityAddress, signatureDate, signature];
+
+  const mintSSSBTOverrides: PayableOverrides = {
+    value: price,
+  };
+
   if (masa.config.verbose) {
-    console.info(args, prepareMintResults);
+    console.info(mintSSSBTArguments, prepareMintResults);
   }
 
   const { wait, hash } = await sbtContract[
     "mint(address,address,address,uint256,bytes)"
-  ](...args);
+  ](...mintSSSBTArguments, mintSSSBTOverrides);
 
   console.log(Messages.WaitingToFinalize(hash));
 

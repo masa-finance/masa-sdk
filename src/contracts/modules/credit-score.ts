@@ -30,25 +30,11 @@ export class CreditScore extends MasaModuleBase {
     paymentAddress: string;
     formattedPrice: string;
   }> => {
-    const paymentAddress = this.getPaymentAddress(paymentMethod);
-
-    let price = await this.instances.SoulboundCreditScoreContract.getMintPrice(
-      paymentAddress
+    return await this.getMintPrice(
+      paymentMethod,
+      this.instances.SoulboundCreditScoreContract,
+      slippage
     );
-
-    if (slippage) {
-      if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
-      }
-    }
-
-    const formattedPrice = await this.formatPrice(paymentAddress, price);
-
-    return {
-      price,
-      paymentAddress,
-      formattedPrice,
-    };
   };
 
   /**

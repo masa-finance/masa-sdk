@@ -1,118 +1,32 @@
 import {
-  MasaSBTAuthority,
-  MasaSBTSelfSovereign,
+  MasaSBT as MasaSBTContract,
   MasaSBTSelfSovereign__factory,
   ReferenceSBTAuthority,
   ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 import { MasaBase } from "../helpers/masa-base";
-import { ContractFactory, loadSBTContract } from "../contracts";
+import { ContractFactory } from "../contracts";
 import { MasaSoulLinker } from "../soul-linker";
-import {
-  burnSBT,
-  deployASBT,
-  deploySSSBT,
-  listSBTs,
-  mintASBT,
-  mintSSSBT,
-  signSSSBT,
-} from "./";
+import { burnSBT, listSBTs } from "./";
 
-export class MasaSBT extends MasaBase {
-  ASBT = {
-    /**
-     *
-     * @param name
-     * @param symbol
-     * @param baseTokenUri
-     * @param adminAddress
-     */
-    deploy: (
-      name: string,
-      symbol: string,
-      baseTokenUri: string,
-      adminAddress?: string
-    ) => deployASBT(this.masa, name, symbol, baseTokenUri, adminAddress),
-
-    /**
-     *
-     * @param contract
-     * @param receiver
-     */
-    mint: (contract: ReferenceSBTAuthority, receiver: string) =>
-      mintASBT(this.masa, contract, receiver),
-  };
-
-  SSSBT = {
-    /**
-     *
-     * @param name
-     * @param symbol
-     * @param baseTokenUri
-     * @param authorityAddress
-     * @param adminAddress
-     */
-    deploy: (
-      name: string,
-      symbol: string,
-      baseTokenUri: string,
-      authorityAddress: string,
-      adminAddress?: string
-    ) =>
-      deploySSSBT(
-        this.masa,
-        name,
-        symbol,
-        baseTokenUri,
-        authorityAddress,
-        adminAddress
-      ),
-
-    /**
-     *
-     * @param contract
-     * @param receiver
-     */
-    sign: (contract: ReferenceSBTSelfSovereign, receiver: string) =>
-      signSSSBT(this.masa, contract, receiver),
-
-    /**
-     *
-     * @param contract
-     * @param authorityAddress
-     * @param signatureDate
-     * @param signature
-     */
-    mint: (
-      contract: ReferenceSBTSelfSovereign,
-      authorityAddress: string,
-      signatureDate: number,
-      signature: string
-    ) =>
-      mintSSSBT(
-        this.masa,
-        contract,
-        authorityAddress,
-        signatureDate,
-        signature
-      ),
-  };
-
+export class MasaSBT<
+  Contract extends
+    | ReferenceSBTAuthority
+    | ReferenceSBTSelfSovereign
+    | MasaSBTContract
+> extends MasaBase {
   /**
    *
    * @param address
    * @param factory
    */
-  connect = async <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
+  public async connect(
     address: string,
     factory: ContractFactory = MasaSBTSelfSovereign__factory
-  ) => {
-    const sbtContract: Contract | undefined = await loadSBTContract(
-      this.masa.config,
-      address,
-      factory
-    );
+  ) {
+    const { sbtContract } =
+      (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};
 
     return {
       sbtContract,
@@ -141,5 +55,5 @@ export class MasaSBT extends MasaBase {
         return burnSBT(this.masa, sbtContract, SBTId);
       },
     };
-  };
+  }
 }

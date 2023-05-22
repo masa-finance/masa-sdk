@@ -1,4 +1,5 @@
 import {
+  MasaSBT,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
@@ -9,7 +10,7 @@ import { isBigNumber } from "../utils";
 
 export const loadSBTIDs = async (
   masa: Masa,
-  contract: MasaSBTSelfSovereign | MasaSBTAuthority,
+  contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
   sbtIDs: BigNumber[]
 ) => {
   return await Promise.all(
@@ -26,7 +27,7 @@ export const loadSBTIDs = async (
 
 export const loadSBTs = async (
   masa: Masa,
-  contract: MasaSBTSelfSovereign | MasaSBTAuthority,
+  contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
   identityIdOrAddress: BigNumber | string
 ): Promise<
   {

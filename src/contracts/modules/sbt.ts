@@ -1,65 +1,59 @@
-import { MasaModuleBase } from "./masa-module-base";
+import { ContractFactory, MasaModuleBase } from "./masa-module-base";
 import {
+  MasaSBT,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
   MasaSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
-import { ContractFactory, loadSBTContract } from "../load-sbt-contract";
 import { TypedDataDomain, TypedDataField, Wallet } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";
 import { generateSignatureDomain, signTypedData } from "../../utils";
-import { isNativeCurrency, PaymentMethod } from "../../interface";
+import { PaymentMethod } from "../../interface";
 
-export const isMasaSBTSelfSovereign = (
-  contract: unknown
-): contract is MasaSBTSelfSovereign =>
-  !!(contract as MasaSBTSelfSovereign).getMintPrice;
+interface ContractWrapper<
+  Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT
+> {
+  sbtContract: Contract;
+  sign: (
+    name: string,
+    types: Record<string, Array<TypedDataField>>,
+    value: Record<string, string | BigNumber | number>
+  ) => Promise<{
+    signature: string;
+    authorityAddress: string;
+  }>;
+  getPrice: (
+    paymentMethod: PaymentMethod,
+    slippage?: number
+  ) => Promise<{
+    paymentAddress: string;
+    price: BigNumber;
+    formattedPrice: string;
+    mintFee: BigNumber;
+    formattedMintFee: string;
+    protocolFee: BigNumber;
+    formattedProtocolFee: string;
+  }>;
+  prepareMint: (
+    paymentMethod: PaymentMethod,
+    name: string,
+    types: Record<string, Array<TypedDataField>>,
+    value: Record<string, string | BigNumber | number>,
+    signature: string,
+    authorityAddress: string,
+    slippage?: number
+  ) => Promise<{
+    price: BigNumber;
+    paymentAddress: string;
+  }>;
+}
 
 export class SBT extends MasaModuleBase {
   protected wrapper = <
-    Contract extends MasaSBTSelfSovereign | MasaSBTAuthority
+    Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT
   >(
-    sbtContract?: Contract
-  ): {
-    sbtContract?: Contract;
-    sign: (
-      name: string,
-      types: Record<string, Array<TypedDataField>>,
-      value: Record<string, string | BigNumber | number>
-    ) => Promise<
-      | {
-          signature: string;
-          authorityAddress: string;
-        }
-      | undefined
-    >;
-    getPrice: (
-      paymentMethod: PaymentMethod,
-      slippage?: number
-    ) => Promise<
-      | {
-          price: BigNumber;
-          paymentAddress: string;
-          formattedPrice: string;
-        }
-      | undefined
-    >;
-    prepareMint: (
-      paymentMethod: PaymentMethod,
-      name: string,
-      types: Record<string, Array<TypedDataField>>,
-      value: Record<string, string | BigNumber | number>,
-      signature: string,
-      authorityAddress: string,
-      slippage?: number
-    ) => Promise<
-      | {
-          price: BigNumber;
-          paymentAddress: string;
-        }
-      | undefined
-    >;
-  } => ({
+    sbtContract: Contract
+  ): ContractWrapper<Contract> => ({
     /**
      * instance of the SBT that this factory instance uses
      */
@@ -75,15 +69,10 @@ export class SBT extends MasaModuleBase {
       name: string,
       types: Record<string, Array<TypedDataField>>,
       value: Record<string, string | BigNumber | number>
-    ): Promise<
-      | {
-          signature: string;
-          authorityAddress: string;
-        }
-      | undefined
-    > => {
-      if (!sbtContract) return;
-
+    ): Promise<{
+      signature: string;
+      authorityAddress: string;
+    }> => {
       const authorityAddress = await this.masa.config.wallet.getAddress();
 
       const { signature, domain } = await signTypedData(
@@ -107,41 +96,34 @@ export class SBT extends MasaModuleBase {
       return { signature, authorityAddress };
     },
 
+    /**
+     *
+     * @param paymentMethod
+     * @param slippage
+     */
     getPrice: async (
       paymentMethod: PaymentMethod,
       slippage: number | undefined = 250
-    ): Promise<
-      | {
-          price: BigNumber;
-          paymentAddress: string;
-          formattedPrice: string;
-        }
-      | undefined
-    > => {
-      if (!sbtContract || !isMasaSBTSelfSovereign(sbtContract)) return;
+    ): Promise<{
+      paymentAddress: string;
+      price: BigNumber;
+      formattedPrice: string;
+      mintFee: BigNumber;
+      formattedMintFee: string;
+      protocolFee: BigNumber;
+      formattedProtocolFee: string;
+    }> => this.getMintPrice(paymentMethod, sbtContract, slippage),
 
-      const paymentAddress = this.getPaymentAddress(paymentMethod);
-
-      let price = await sbtContract.getMintPrice(paymentAddress);
-
-      if (slippage) {
-        if (isNativeCurrency(paymentMethod)) {
-          price = this.addSlippage(price, slippage);
-        }
-      }
-
-      const formattedPrice: string = await this.formatPrice(
-        paymentAddress,
-        price
-      );
-
-      return {
-        price,
-        paymentAddress,
-        formattedPrice,
-      };
-    },
-
+    /**
+     *
+     * @param paymentMethod
+     * @param name
+     * @param types
+     * @param value
+     * @param signature
+     * @param authorityAddress
+     * @param slippage
+     */
     prepareMint: async (
       paymentMethod: PaymentMethod,
       name: string,
@@ -150,15 +132,15 @@ export class SBT extends MasaModuleBase {
       signature: string,
       authorityAddress: string,
       slippage: number | undefined = 250
-    ): Promise<
-      | {
-          price: BigNumber;
-          paymentAddress: string;
-        }
-      | undefined
-    > => {
-      if (!sbtContract) return;
-
+    ): Promise<{
+      paymentAddress: string;
+      price: BigNumber;
+      formattedPrice: string;
+      mintFee: BigNumber;
+      formattedMintFee: string;
+      protocolFee: BigNumber;
+      formattedProtocolFee: string;
+    }> => {
       const domain: TypedDataDomain = await generateSignatureDomain(
         this.masa.config.wallet as Wallet,
         name,
@@ -176,22 +158,13 @@ export class SBT extends MasaModuleBase {
       );
 
       const { getPrice } = this.attach(sbtContract);
-      const priceObject = await getPrice(paymentMethod, slippage);
-
-      if (!priceObject) return;
+      const priceInfo = await getPrice(paymentMethod, slippage);
 
       if (this.masa.config.verbose) {
-        console.log({
-          price: priceObject.price.toString(),
-          paymentAddress: priceObject.paymentAddress,
-          formattedPrice: priceObject.formattedPrice,
-        });
+        console.info({ priceInfo });
       }
 
-      return {
-        price: priceObject.price,
-        paymentAddress: priceObject.paymentAddress,
-      };
+      return priceInfo;
     },
   });
 
@@ -200,26 +173,30 @@ export class SBT extends MasaModuleBase {
    * @param address
    * @param factory
    */
-  connect = async <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
+  connect = async <
+    Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT
+  >(
     address: string,
     factory: ContractFactory = MasaSBTSelfSovereign__factory
-  ) => {
-    const sbtContract: Contract | undefined = await loadSBTContract(
+  ): Promise<ContractWrapper<Contract> | undefined> => {
+    const sbtContract: Contract | undefined = await this.loadSBTContract(
       this.masa.config,
       address,
       factory
     );
 
-    return this.wrapper<Contract>(sbtContract);
+    if (sbtContract) {
+      return this.wrapper<Contract>(sbtContract);
+    }
   };
 
   /**
    * attaches the contract function to an existing instances
    * @param contract
    */
-  attach = <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority>(
+  attach = <Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT>(
     contract: Contract
-  ) => {
+  ): ContractWrapper<Contract> => {
     return this.wrapper<Contract>(contract);
   };
 }

@@ -2,6 +2,7 @@ import {
   MasaAccount,
   MasaArgs,
   MasaArweave,
+  MasaASBT,
   MasaClient,
   MasaConfig,
   MasaContracts,
@@ -11,9 +12,15 @@ import {
   MasaSBT,
   MasaSession,
   MasaSoulName,
+  MasaSSSBT,
   SupportedNetworks,
   version,
 } from "./";
+import {
+  MasaSBT as MasaSBTContract,
+  ReferenceSBTAuthority,
+  ReferenceSBTSelfSovereign,
+} from "@masa-finance/masa-contracts-identity";
 
 export default class Masa {
   public readonly config: MasaConfig;
@@ -28,7 +35,9 @@ export default class Masa {
   public readonly soulName: MasaSoulName;
   public readonly creditScore: MasaCreditScore;
   public readonly green: MasaGreen;
-  public readonly sbt: MasaSBT;
+  public readonly sbt: MasaSBT<MasaSBTContract>;
+  public readonly asbt: MasaASBT<ReferenceSBTAuthority>;
+  public readonly sssbt: MasaSSSBT<ReferenceSBTSelfSovereign>;
 
   public constructor({
     cookie,
@@ -79,6 +88,10 @@ export default class Masa {
     this.green = new MasaGreen(this);
     // generic sbt handler
     this.sbt = new MasaSBT(this);
+    // ASBT handler
+    this.asbt = new MasaASBT(this);
+    // SSSBT Handler
+    this.sssbt = new MasaSSSBT(this);
   }
 
   utils = {

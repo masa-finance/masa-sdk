@@ -3,6 +3,7 @@ import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
 import { PaymentMethod } from "../../interface";
+import { PayableOverrides } from "ethers";
 
 /**
  *
@@ -28,16 +29,27 @@ export const mintASBT = async (
   console.log(`Contract Address: '${sbtContract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const args: [
+  const { getPrice } = await masa.contracts.sbt.attach(sbtContract);
+
+  const { price, paymentAddress } = await getPrice(paymentMethod);
+
+  const mintASBTArguments: [
     string, // paymentAddress string
     string // receiver string
-  ] = [masa.contracts.sbt.getPaymentAddress(paymentMethod), receiver];
+  ] = [paymentAddress, receiver];
+
+  const mintASBTOverrides: PayableOverrides = {
+    value: price,
+  };
 
   if (masa.config.verbose) {
-    console.info(args);
+    console.info(mintASBTArguments, mintASBTOverrides);
   }
 
-  const { wait, hash } = await sbtContract["mint(address,address)"](...args);
+  const { wait, hash } = await sbtContract["mint(address,address)"](
+    ...mintASBTArguments,
+    mintASBTOverrides
+  );
   console.log(Messages.WaitingToFinalize(hash));
 
   const { logs } = await wait();

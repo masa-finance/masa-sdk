@@ -32,12 +32,42 @@ export class SoulLinker extends MasaModuleBase {
     tokenAddress: string,
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
-  ): Promise<{ price: BigNumber; paymentAddress: string }> => {
+  ): Promise<{
+    paymentAddress: string;
+    price: BigNumber;
+    formattedPrice: string;
+    mintFee: BigNumber;
+    formattedMintFee: string;
+    protocolFee: BigNumber;
+    formattedProtocolFee: string;
+  }> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
-    let price = await this.instances.SoulLinkerContract.getPriceForAddLink(
-      paymentAddress,
-      tokenAddress
-    );
+
+    let mintFee: BigNumber | undefined,
+      protocolFee: BigNumber = BigNumber.from(0);
+    try {
+      // load protocol and mint fee
+      const fees =
+        await this.instances.SoulLinkerContract.getPriceForAddLinkWithProtocolFee(
+          paymentAddress,
+          tokenAddress
+        );
+      mintFee = fees.price;
+      protocolFee = fees.protocolFee;
+    } catch {
+      // ignore this is a soul store 2.0 function and does not work on older contracts
+    }
+
+    if (!mintFee) {
+      // fallback to classical price calculation
+      mintFee = await this.instances.SoulLinkerContract.getPriceForAddLink(
+        paymentAddress,
+        tokenAddress
+      );
+    }
+
+    // calculate total price
+    let price = mintFee.add(protocolFee);
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
@@ -49,9 +79,26 @@ export class SoulLinker extends MasaModuleBase {
       console.info({ paymentAddress, price });
     }
 
-    return {
-      price,
+    // total price
+    const formattedPrice = await this.formatPrice(paymentAddress, price);
+
+    // mint fee
+    const formattedMintFee = await this.formatPrice(paymentAddress, mintFee);
+
+    // protocol fee
+    const formattedProtocolFee = await this.formatPrice(
       paymentAddress,
+      protocolFee
+    );
+
+    return {
+      paymentAddress,
+      price,
+      formattedPrice,
+      mintFee,
+      formattedMintFee,
+      protocolFee,
+      formattedProtocolFee,
     };
   };
   /**
@@ -96,14 +143,14 @@ export class SoulLinker extends MasaModuleBase {
     } = this.instances.SoulLinkerContract.connect(this.masa.config.wallet);
 
     const params: [
-      string,
-      BigNumber,
-      BigNumber,
-      string,
-      BigNumber,
-      number,
-      number,
-      string
+      string, // paymentMethod
+      BigNumber, //readerIdentityId
+      BigNumber, // ownerIdentityId
+      string, // token
+      BigNumber, // tokenId
+      number, // signatureDate
+      number, // expirationDate
+      string // signature
     ] = [
       paymentAddress,
       readerIdentityId,

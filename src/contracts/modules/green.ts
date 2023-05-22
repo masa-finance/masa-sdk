@@ -32,21 +32,10 @@ export class Green extends MasaModuleBase {
     mintTransactionFee: BigNumber;
     formattedMintTransactionFee: string;
   }> => {
-    const paymentAddress = this.getPaymentAddress(paymentMethod);
-
-    let price = await this.instances.SoulboundGreenContract.getMintPrice(
-      paymentAddress
-    );
-
-    if (slippage) {
-      if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
-      }
-    }
-
-    const formattedPrice: string = await this.formatPrice(
-      paymentAddress,
-      price
+    const { paymentAddress, price, formattedPrice } = await this.getMintPrice(
+      paymentMethod,
+      this.instances.SoulboundGreenContract,
+      slippage
     );
 
     const gasPrice = await this.masa.config.wallet.getGasPrice();
