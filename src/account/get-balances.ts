@@ -32,14 +32,14 @@ export const getBalances = async (
   address?: string
 ): Promise<Balances> => {
   const addressToLoad: string =
-    address || (await masa.config.wallet.getAddress());
+    address || (await masa.config.signer.getAddress());
 
   const loadERC20Balance = async (
     userAddress: string,
     tokenAddress?: string
   ): Promise<number | undefined> => {
     if (
-      !masa.config.wallet.provider ||
+      !masa.config.signer.provider ||
       !tokenAddress ||
       tokenAddress === constants.AddressZero
     ) {
@@ -49,7 +49,7 @@ export const getBalances = async (
     try {
       const contract: ERC20 = ERC20__factory.connect(
         tokenAddress,
-        masa.config.wallet.provider
+        masa.config.signer.provider
       );
 
       const [balance, decimals] = await Promise.all([
@@ -107,7 +107,7 @@ export const getBalances = async (
     );
   }
 
-  const nativeBalance = await masa.config.wallet.provider?.getBalance(
+  const nativeBalance = await masa.config.signer.provider?.getBalance(
     addressToLoad
   );
 

@@ -25,8 +25,6 @@ export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // eth
   ethereum,
   goerli,
-  // deprecated
-  mainnet: ethereum,
   // bsc
   bsc,
   bsctest,

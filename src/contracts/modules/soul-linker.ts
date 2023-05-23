@@ -2,7 +2,7 @@ import { MasaModuleBase } from "./masa-module-base";
 import { BaseResult, isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Messages, signTypedData } from "../../utils";
-import { Contract, Wallet } from "ethers";
+import { Contract } from "ethers";
 import { Link, loadLinks } from "../../soul-linker";
 
 export type BreakLinkResult = BaseResult;
@@ -140,7 +140,7 @@ export class SoulLinker extends MasaModuleBase {
     const {
       estimateGas: { addLink: estimateGas },
       addLink,
-    } = this.instances.SoulLinkerContract.connect(this.masa.config.wallet);
+    } = this.instances.SoulLinkerContract.connect(this.masa.config.signer);
 
     const params: [
       string, // paymentMethod
@@ -227,7 +227,7 @@ export class SoulLinker extends MasaModuleBase {
 
     const { signature, domain } = await signTypedData(
       this.instances.SoulLinkerContract,
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulLinker",
       this.types,
       value
@@ -240,7 +240,7 @@ export class SoulLinker extends MasaModuleBase {
       this.types,
       value,
       signature,
-      await this.masa.config.wallet.getAddress()
+      await this.masa.config.signer.getAddress()
     );
 
     return { signature, signatureDate, expirationDate };
@@ -287,7 +287,7 @@ export class SoulLinker extends MasaModuleBase {
 
       const { revokeLink } =
         this.masa.contracts.instances.SoulLinkerContract.connect(
-          this.masa.config.wallet
+          this.masa.config.signer
         );
 
       const { wait, hash } = await revokeLink(

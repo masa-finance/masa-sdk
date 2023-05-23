@@ -111,7 +111,7 @@ export const purchaseIdentityWithSoulName = async (
   if (isAvailable) {
     const storeMetadataResponse = await masa.client.soulName.store(
       `${soulName}${extension}`,
-      await masa.config.wallet.getAddress(),
+      await masa.config.signer.getAddress(),
       duration
     );
 
@@ -240,7 +240,7 @@ export const createIdentityWithSoulName = async (
       return result;
     }
 
-    const address = await masa.config.wallet.getAddress();
+    const address = await masa.config.signer.getAddress();
     const { identityId } = await masa.identity.load(address);
 
     if (identityId) {

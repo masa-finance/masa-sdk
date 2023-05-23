@@ -34,7 +34,7 @@ export const signSSSBT = async (
     signatureDate: number;
   } = {
     to: receiver,
-    authorityAddress: await masa.config.wallet.getAddress(),
+    authorityAddress: await masa.config.signer.getAddress(),
     signatureDate,
   };
 

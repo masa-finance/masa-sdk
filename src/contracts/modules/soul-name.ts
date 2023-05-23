@@ -1,5 +1,5 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
-import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
+import { ContractTransaction, TypedDataDomain } from "ethers";
 import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { BigNumber } from "@ethersproject/bignumber";
 import { MasaModuleBase } from "./masa-module-base";
@@ -51,10 +51,10 @@ export class SoulName extends MasaModuleBase {
     signature: string,
     receiver?: string
   ): Promise<ContractTransaction> => {
-    const to = receiver || (await this.masa.config.wallet.getAddress());
+    const to = receiver || (await this.masa.config.signer.getAddress());
 
     const domain: TypedDataDomain = await generateSignatureDomain(
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulStore",
       this.instances.SoulStoreContract.address
     );
@@ -128,7 +128,7 @@ export class SoulName extends MasaModuleBase {
     const {
       estimateGas: { purchaseName: estimateGas },
       purchaseName,
-    } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
+    } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -280,13 +280,13 @@ export class SoulName extends MasaModuleBase {
 
     const { signature, domain } = await signTypedData(
       this.instances.SoulStoreContract,
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulStore",
       this.types,
       value
     );
 
-    const authorityAddress = await this.masa.config.wallet.getAddress();
+    const authorityAddress = await this.masa.config.signer.getAddress();
 
     await this.verify(
       "Signing soul name failed!",
@@ -320,11 +320,11 @@ export class SoulName extends MasaModuleBase {
       try {
         const { transferFrom } =
           this.masa.contracts.instances.SoulNameContract.connect(
-            this.masa.config.wallet
+            this.masa.config.signer
           );
 
         const { wait, hash } = await transferFrom(
-          this.masa.config.wallet.getAddress(),
+          this.masa.config.signer.getAddress(),
           receiver,
           soulNameData.tokenId
         );
@@ -369,7 +369,7 @@ export class SoulName extends MasaModuleBase {
           estimateGas: { burn: estimateGas },
           burn,
         } = this.masa.contracts.instances.SoulNameContract.connect(
-          this.masa.config.wallet
+          this.masa.config.signer
         );
 
         // estimate gas

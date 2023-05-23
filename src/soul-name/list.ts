@@ -7,7 +7,7 @@ export const listSoulNames = async (
   masa: Masa,
   address?: string
 ): Promise<SoulNameDetails[]> => {
-  address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.signer.getAddress());
   return await loadSoulNameDetailsByAddress(masa, address);
 };
 

@@ -14,7 +14,6 @@ import {
   TypedDataDomain,
   TypedDataField,
   utils,
-  Wallet,
 } from "ethers";
 import { ERC20, ERC20__factory } from "../stubs";
 import { Messages } from "../../utils";
@@ -31,7 +30,7 @@ import Masa from "../../masa";
 export class ContractFactory {
   static connect: <Contract>(
     address: string,
-    signerOrProvider: Signer | Wallet
+    signerOrProvider: Signer
   ) => Contract;
 }
 
@@ -57,13 +56,13 @@ export class MasaModuleBase extends MasaBase {
     if (isERC20Currency(paymentMethod)) {
       const contract: ERC20 = ERC20__factory.connect(
         paymentAddress,
-        this.masa.config.wallet
+        this.masa.config.signer
       );
 
       // get current allowance
       const currentAllowance = await contract.allowance(
         // owner
-        await this.masa.config.wallet.getAddress(),
+        await this.masa.config.signer.getAddress(),
         // spender
         spenderAddress
       );
@@ -79,7 +78,7 @@ export class MasaModuleBase extends MasaBase {
         }
 
         const { wait, hash } = await contract
-          .connect(this.masa.config.wallet)
+          .connect(this.masa.config.signer)
           .approve(
             // spender
             spenderAddress,
@@ -126,7 +125,7 @@ export class MasaModuleBase extends MasaBase {
     if (paymentAddress !== constants.AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         paymentAddress,
-        this.masa.config.wallet
+        this.masa.config.signer
       );
       decimals = await contract.decimals();
     }
@@ -314,32 +313,38 @@ export class MasaModuleBase extends MasaBase {
     masaConfig: MasaConfig,
     address: string,
     factory: ContractFactory
-  ): Promise<Contract | undefined> => {
-    let sbtContract: Contract | undefined;
+  ): Promise<Contract> => {
+    let error = `Smart contract '${address}' does not exist on network '${masaConfig.networkName}'!`;
 
-    if (utils.isAddress(address)) {
-      // fetch code to see if the contract exists
-      const code: string | undefined =
-        await masaConfig.wallet.provider?.getCode(address);
+    // address invalid, unable to load
+    if (!utils.isAddress(address)) {
+      error = `Address '${address}' is not valid!`;
+      console.error(error);
+      throw new Error(error);
+    }
+    // fetch code to see if the contract exists
+    const code: string | undefined = await masaConfig.signer.provider?.getCode(
+      address
+    );
 
-      const contractExists: boolean = !!code && code !== "0x";
+    const contractExists: boolean = !!code && code !== "0x";
 
-      sbtContract = contractExists
-        ? (factory as typeof ContractFactory).connect<Contract>(
-            address,
-            masaConfig.wallet
-          )
-        : undefined;
+    // no code exists, unable to load
+    if (!contractExists) {
+      throw new Error(error);
+    }
 
-      if (!sbtContract) {
-        console.error(
-          `Smart contract '${address}' does not exist on network '${masaConfig.networkName}'!`
-        );
-      } else if (masaConfig.verbose) {
-        console.info(`Loaded contract with name: ${await sbtContract.name()}`);
-      }
-    } else {
-      console.error(`Address '${address}' is not valid!`);
+    const sbtContract = (factory as typeof ContractFactory).connect<Contract>(
+      address,
+      masaConfig.signer
+    );
+
+    // failed to load, unable to load
+    if (!sbtContract) {
+      console.error(error);
+      throw new Error(error);
+    } else if (masaConfig.verbose) {
+      console.info(`Loaded contract with name: ${await sbtContract.name()}`);
     }
 
     return sbtContract;

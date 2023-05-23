@@ -1,20 +1,12 @@
 import { BigNumber } from "ethers";
 import Masa from "../masa";
-import { MasaSoulLinker } from "../soul-linker";
-import { MasaBase } from "../helpers/masa-base";
 import { PaymentMethod } from "../interface";
 import { createCreditScore, listCreditScores, loadCreditScores } from "./";
+import { MasaLinkable } from "../helpers/masa-linkable";
 
-export class MasaCreditScore extends MasaBase {
-  public readonly links: MasaSoulLinker;
-
+export class MasaCreditScore extends MasaLinkable {
   constructor(masa: Masa) {
-    super(masa);
-
-    this.links = new MasaSoulLinker(
-      masa,
-      this.masa.contracts.instances.SoulboundCreditScoreContract
-    );
+    super(masa, masa.contracts.instances.SoulboundCreditScoreContract);
   }
 
   create = (paymentMethod: PaymentMethod = "ETH") =>

@@ -5,10 +5,37 @@ import {
   ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
-import { MasaBase } from "../helpers/masa-base";
+import { MasaBase, MasaLinkable } from "../helpers";
 import { ContractFactory } from "../contracts";
-import { MasaSoulLinker } from "../soul-linker";
 import { burnSBT, listSBTs } from "./";
+import Masa from "../masa";
+
+export class SBTWrapper<
+  Contract extends
+    | ReferenceSBTAuthority
+    | ReferenceSBTSelfSovereign
+    | MasaSBTContract
+> extends MasaLinkable {
+  constructor(protected masa: Masa, readonly sbtContract: Contract) {
+    super(masa, sbtContract);
+  }
+
+  /**
+   *
+   * @param address
+   */
+  list(address?: string) {
+    return listSBTs(this.masa, this.sbtContract, address);
+  }
+
+  /**
+   *
+   * @param SBTId
+   */
+  burn(SBTId: BigNumber) {
+    return burnSBT(this.masa, this.sbtContract, SBTId);
+  }
+}
 
 export class MasaSBT<
   Contract extends
@@ -28,32 +55,6 @@ export class MasaSBT<
     const { sbtContract } =
       (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};
 
-    return {
-      sbtContract,
-      /**
-       *
-       */
-      links: sbtContract
-        ? new MasaSoulLinker(this.masa, sbtContract)
-        : undefined,
-
-      /**
-       *
-       * @param address
-       */
-      list: (address?: string) => {
-        if (!sbtContract) return;
-        return listSBTs(this.masa, sbtContract, address);
-      },
-
-      /**
-       *
-       * @param SBTId
-       */
-      burn: (SBTId: BigNumber) => {
-        if (!sbtContract) return;
-        return burnSBT(this.masa, sbtContract, SBTId);
-      },
-    };
+    return new SBTWrapper<Contract>(this.masa, sbtContract);
   }
 }

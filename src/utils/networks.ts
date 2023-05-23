@@ -201,7 +201,6 @@ export const SupportedNetworks: Partial<{
   // ETH
   ethereum,
   goerli,
-  mainnet: ethereum,
   // BSC
   bsc,
   bsctest,

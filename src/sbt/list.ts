@@ -17,7 +17,7 @@ export const listSBTs = async (
     tokenUri: string;
   }[]
 > => {
-  address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.signer.getAddress());
 
   const SBTs = await loadSBTs(masa, contract, address);
 

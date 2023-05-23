@@ -9,7 +9,7 @@ export const loadIdentityByAddress = async (
   masa: Masa,
   address?: string
 ): Promise<{ identityId?: BigNumber; address: string }> => {
-  address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.signer.getAddress());
   let identityId;
 
   try {
@@ -73,7 +73,7 @@ export const loadIdentity = async (
   masa: Masa,
   address?: string
 ): Promise<IdentityDetails | undefined> => {
-  address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.signer.getAddress());
 
   const { identityId } = await masa.identity.load(address);
   if (!identityId) {

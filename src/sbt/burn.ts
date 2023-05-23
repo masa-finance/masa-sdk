@@ -18,7 +18,7 @@ export const burnSBT = async (
     const {
       estimateGas: { burn: estimateGas },
       burn,
-    } = contract.connect(masa.config.wallet);
+    } = contract.connect(masa.config.signer);
 
     const gasLimit: BigNumber = await estimateGas(SBTId);
 

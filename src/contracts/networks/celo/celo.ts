@@ -1,8 +1,12 @@
-import { address as SoulboundIdentityAddress } from "@masa-finance/masa-contracts-identity/deployments/celo/SoulboundIdentity.json";
-import { address as SoulNameAddress } from "@masa-finance/masa-contracts-identity/deployments/celo/SoulName.json";
-import { address as SoulStoreAddress } from "@masa-finance/masa-contracts-identity/deployments/celo/SoulStore.json";
-import { address as SoulboundGreenAddress } from "@masa-finance/masa-contracts-identity/deployments/celo/SoulboundGreen.json";
 import { Addresses } from "../../addresses";
+import { celo as celoAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
+
+const {
+  SoulboundIdentity: SoulboundIdentityAddress,
+  SoulName: SoulNameAddress,
+  SoulStore: SoulStoreAddress,
+  SoulboundGreen: SoulboundGreenAddress,
+} = celoAddresses;
 
 export const celo: Addresses = {
   tokens: {

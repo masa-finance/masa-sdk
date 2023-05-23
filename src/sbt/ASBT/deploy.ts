@@ -13,16 +13,17 @@ export const deployASBT = async (
   name: string,
   symbol: string,
   baseTokenUri: string,
+  limit: number = 1,
   adminAddress?: string
 ): Promise<string | undefined> => {
-  adminAddress = adminAddress || (await masa.config.wallet.getAddress());
+  adminAddress = adminAddress || (await masa.config.signer.getAddress());
 
   console.log(`Deploying ASBT to network '${masa.config.networkName}'`);
 
   const factory: ContractFactory = new ContractFactory(
     abi,
     bytecode,
-    masa.config.wallet
+    masa.config.signer
   );
 
   const args: [
@@ -31,7 +32,8 @@ export const deployASBT = async (
     string, // string symbol
     string, // string baseTokenURI
     string, // address soulboundIdentity
-    PaymentParamsStruct // PaymentParams paymentParams
+    PaymentParamsStruct, // PaymentParams paymentParams,
+    number // number _maxSBTToMint
   ] = [
     adminAddress,
     name,
@@ -48,6 +50,7 @@ export const deployASBT = async (
       protocolFeeAmount: 0,
       protocolFeePercent: 0,
     },
+    limit,
   ];
 
   if (masa.config.verbose) {

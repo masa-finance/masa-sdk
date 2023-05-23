@@ -41,7 +41,7 @@ export default class Masa {
 
   public constructor({
     cookie,
-    wallet,
+    signer,
     apiUrl = "https://middleware.masa.finance",
     environment = "production",
     networkName = "ethereum",
@@ -59,7 +59,7 @@ export default class Masa {
       environment,
       networkName,
       network: SupportedNetworks[networkName],
-      wallet,
+      signer,
       verbose,
     };
 

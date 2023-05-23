@@ -1,4 +1,4 @@
-import { BigNumber, Signer, Wallet } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { ApiConfig as ArweaveConfig } from "arweave/node/lib/api";
 import { Network } from "../utils";
 import { IIdentityContracts } from "./contracts";
@@ -9,7 +9,6 @@ export type NetworkName =
   // eth
   | "goerli" // testnet
   | "ethereum" // mainnet
-  | "mainnet" // mainnet deprecated
   // celo
   | "alfajores" // testnet
   | "celo" // mainnet
@@ -26,7 +25,7 @@ export type NetworkName =
 
 export interface MasaArgs {
   cookie?: string;
-  wallet: Signer | Wallet;
+  signer: Signer;
   apiUrl?: string;
   environment?: EnvironmentName;
   networkName?: NetworkName;
@@ -40,7 +39,7 @@ export interface MasaConfig {
   readonly environment: string;
   readonly networkName: NetworkName;
   readonly network?: Network;
-  readonly wallet: Signer | Wallet;
+  readonly signer: Signer;
   readonly verbose: boolean;
 }
 

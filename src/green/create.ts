@@ -25,7 +25,7 @@ export const generateGreen = async (
 
     const balance =
       await masa.contracts.instances.SoulboundGreenContract.balanceOf(
-        await masa.config.wallet.getAddress()
+        await masa.config.signer.getAddress()
       );
 
     if (balance.eq(0)) {
@@ -174,7 +174,7 @@ export const mintGreen = async (
 
   const { wait, hash } = await masa.contracts.green.mint(
     paymentMethod,
-    await masa.config.wallet.getAddress(),
+    await masa.config.signer.getAddress(),
     authorityAddress,
     signatureDate,
     signature

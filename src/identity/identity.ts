@@ -1,7 +1,5 @@
 import { PaymentMethod } from "../interface";
 import Masa from "../masa";
-import { MasaSoulLinker } from "../soul-linker";
-import { MasaBase } from "../helpers/masa-base";
 import {
   burnIdentity,
   createIdentity,
@@ -9,17 +7,11 @@ import {
   loadIdentityByAddress,
   showIdentity,
 } from "./";
+import { MasaLinkable } from "../helpers/masa-linkable";
 
-export class MasaIdentity extends MasaBase {
-  public readonly links: MasaSoulLinker;
-
+export class MasaIdentity extends MasaLinkable {
   constructor(masa: Masa) {
-    super(masa);
-
-    this.links = new MasaSoulLinker(
-      this.masa,
-      this.masa.contracts.instances.SoulboundIdentityContract
-    );
+    super(masa, masa.contracts.instances.SoulboundIdentityContract);
   }
 
   create = () => createIdentity(this.masa);

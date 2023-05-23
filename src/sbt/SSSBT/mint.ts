@@ -13,7 +13,7 @@ export const mintSSSBT = async (
   signature: string,
   paymentMethod: PaymentMethod = "ETH"
 ) => {
-  const receiver = await masa.config.wallet.getAddress();
+  const receiver = await masa.config.signer.getAddress();
 
   const [name, symbol] = await Promise.all([
     sbtContract.name(),

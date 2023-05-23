@@ -15,7 +15,7 @@ export const tailSoulNames = async (
     );
 
   const { number } =
-    (await masa.config.wallet.provider?.getBlock("latest")) || {};
+    (await masa.config.signer.provider?.getBlock("latest")) || {};
 
   const lastBlockNumber = await number;
   const soulNameMintEvents = [];

@@ -6,7 +6,7 @@ export const listGreens = async (
   masa: Masa,
   address?: string
 ): Promise<GreenDetails[]> => {
-  address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.signer.getAddress());
   return loadGreens(masa, address);
 };
 

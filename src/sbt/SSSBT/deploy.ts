@@ -17,16 +17,16 @@ export const deploySSSBT = async (
   authorityAddress?: string,
   adminAddress?: string
 ): Promise<string | undefined> => {
-  adminAddress = adminAddress || (await masa.config.wallet.getAddress());
+  adminAddress = adminAddress || (await masa.config.signer.getAddress());
   authorityAddress =
-    authorityAddress || (await masa.config.wallet.getAddress());
+    authorityAddress || (await masa.config.signer.getAddress());
 
   console.log(`Deploying SSSBT to network '${masa.config.networkName}'`);
 
   const factory: ContractFactory = new ContractFactory(
     abi,
     bytecode,
-    masa.config.wallet
+    masa.config.signer
   );
 
   const args: [

@@ -1,10 +1,5 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
-import {
-  BigNumber,
-  ContractTransaction,
-  TypedDataDomain,
-  Wallet,
-} from "ethers";
+import { BigNumber, ContractTransaction, TypedDataDomain } from "ethers";
 import { generateSignatureDomain, Messages } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
@@ -16,7 +11,7 @@ export class Identity extends MasaModuleBase {
     const {
       estimateGas: { purchaseIdentity: estimateGas },
       purchaseIdentity: purchaseIdentity,
-    } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
+    } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas();
@@ -51,7 +46,7 @@ export class Identity extends MasaModuleBase {
     signature: string
   ): Promise<ContractTransaction> => {
     const domain: TypedDataDomain = await generateSignatureDomain(
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulStore",
       this.instances.SoulStoreContract.address
     );
@@ -63,7 +58,7 @@ export class Identity extends MasaModuleBase {
       yearsPeriod: number;
       tokenURI: string;
     } = {
-      to: await this.masa.config.wallet.getAddress(),
+      to: await this.masa.config.signer.getAddress(),
       name,
       nameLength,
       yearsPeriod: duration,
@@ -127,7 +122,7 @@ export class Identity extends MasaModuleBase {
     const {
       estimateGas: { purchaseIdentityAndName: estimateGas },
       purchaseIdentityAndName,
-    } = this.instances.SoulStoreContract.connect(this.masa.config.wallet);
+    } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -162,7 +157,7 @@ export class Identity extends MasaModuleBase {
         estimateGas: { burn: estimateGas },
         burn,
       } = this.masa.contracts.instances.SoulboundIdentityContract.connect(
-        this.masa.config.wallet
+        this.masa.config.signer
       );
 
       // estimate gas

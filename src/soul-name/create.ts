@@ -30,7 +30,7 @@ const purchaseSoulName = async (
   ]);
 
   if (isAvailable) {
-    receiver = receiver || (await masa.config.wallet.getAddress());
+    receiver = receiver || (await masa.config.signer.getAddress());
 
     const storeMetadataResponse:
       | SoulNameMetadataStoreResult

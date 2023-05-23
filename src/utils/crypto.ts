@@ -6,8 +6,9 @@ import {
   TypedDataDomain,
   TypedDataField,
   utils,
-  Wallet,
 } from "ethers";
+
+import { TypedDataSigner } from "@ethersproject/abstract-signer";
 
 /**
  *
@@ -31,7 +32,7 @@ const hashData = (data: BytesLike) => utils.keccak256(data);
  */
 export const signMessage = async (
   msg: string,
-  wallet: Signer | Wallet,
+  wallet: Signer,
   doHash: boolean = false
 ): Promise<string | undefined> => {
   let signature;
@@ -57,13 +58,17 @@ export const signMessage = async (
  */
 export const signTypedData = async (
   contract: BaseContract,
-  wallet: Wallet,
+  wallet: Signer,
   name: string,
   types: Record<string, Array<TypedDataField>>,
   value: Record<string, string | BigNumber | number>
 ): Promise<{ signature: string; domain: TypedDataDomain }> => {
   const domain = await generateSignatureDomain(wallet, name, contract.address);
-  const signature = await wallet._signTypedData(domain, types, value);
+  const signature = await (wallet as Signer & TypedDataSigner)._signTypedData(
+    domain,
+    types,
+    value
+  );
 
   return { signature, domain };
 };
@@ -76,12 +81,12 @@ export const signTypedData = async (
  * @param version
  */
 export const generateSignatureDomain = async (
-  wallet: Wallet,
+  wallet: Signer,
   name: string,
   verifyingContract: string,
   version: string = "1.0.0"
 ): Promise<TypedDataDomain> => {
-  const chainId = (await wallet.provider.getNetwork()).chainId;
+  const chainId = (await wallet.provider?.getNetwork())?.chainId;
 
   const domain: TypedDataDomain = {
     name,

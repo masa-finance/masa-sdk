@@ -5,7 +5,7 @@ import {
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import { TypedDataDomain, TypedDataField, Wallet } from "ethers";
+import { TypedDataDomain, TypedDataField } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";
 import { generateSignatureDomain, signTypedData } from "../../utils";
 import { PaymentMethod } from "../../interface";
@@ -73,11 +73,11 @@ export class SBT extends MasaModuleBase {
       signature: string;
       authorityAddress: string;
     }> => {
-      const authorityAddress = await this.masa.config.wallet.getAddress();
+      const authorityAddress = await this.masa.config.signer.getAddress();
 
       const { signature, domain } = await signTypedData(
         sbtContract,
-        this.masa.config.wallet as Wallet,
+        this.masa.config.signer,
         name,
         types,
         value
@@ -142,7 +142,7 @@ export class SBT extends MasaModuleBase {
       formattedProtocolFee: string;
     }> => {
       const domain: TypedDataDomain = await generateSignatureDomain(
-        this.masa.config.wallet as Wallet,
+        this.masa.config.signer,
         name,
         sbtContract.address
       );
@@ -178,16 +178,14 @@ export class SBT extends MasaModuleBase {
   >(
     address: string,
     factory: ContractFactory = MasaSBT__factory
-  ): Promise<ContractWrapper<Contract> | undefined> => {
-    const sbtContract: Contract | undefined = await this.loadSBTContract(
+  ): Promise<ContractWrapper<Contract>> => {
+    const sbtContract: Contract = await this.loadSBTContract(
       this.masa.config,
       address,
       factory
     );
 
-    if (sbtContract) {
-      return this.wrapper<Contract>(sbtContract);
-    }
+    return this.wrapper<Contract>(sbtContract);
   };
 
   /**

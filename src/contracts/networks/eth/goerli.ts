@@ -1,14 +1,17 @@
-// identity
 import { Addresses } from "../../addresses";
-
-import { address as SoulboundIdentityAddress } from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundIdentity.json";
-import { address as SoulboundCreditScoreAddress } from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundCreditScore.json";
-import { address as SoulNameAddress } from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulName.json";
-import { address as SoulStoreAddress } from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulStore.json";
-import { address as SoulLinkerAddress } from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulLinker.json";
-import { address as SoulboundGreenAddress } from "@masa-finance/masa-contracts-identity/deployments/goerli/SoulboundGreen.json";
+// identity
+import { goerli as goerliAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
 // token
 import { address as MASA } from "@masa-finance/masa-token/deployments/goerli/MasaToken.json";
+
+const {
+  SoulboundIdentity: SoulboundIdentityAddress,
+  SoulName: SoulNameAddress,
+  SoulStore: SoulStoreAddress,
+  SoulboundCreditScore: SoulboundCreditScoreAddress,
+  SoulLinker: SoulLinkerAddress,
+  SoulboundGreen: SoulboundGreenAddress,
+} = goerliAddresses;
 
 export const goerli: Addresses = {
   tokens: {

@@ -7,7 +7,7 @@ export const listCreditScores = async (
   masa: Masa,
   address?: string
 ): Promise<CreditScoreDetails[]> => {
-  address = address || (await masa.config.wallet.getAddress());
+  address = address || (await masa.config.signer.getAddress());
 
   const { identityId } = await masa.identity.load(address);
   if (!identityId) {

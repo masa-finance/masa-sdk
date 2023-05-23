@@ -5,7 +5,39 @@ import {
 import { deploySSSBT } from "./deploy";
 import { signSSSBT } from "./sign";
 import { mintSSSBT } from "./mint";
-import { MasaSBT } from "../sbt";
+import { MasaSBT, SBTWrapper } from "../sbt";
+
+export class SSSBTWrapper<
+  Contract extends ReferenceSBTSelfSovereign
+> extends SBTWrapper<Contract> {
+  /**
+   *
+   * @param receiver
+   */
+  async sign(receiver: string) {
+    return await signSSSBT(this.masa, this.sbtContract, receiver);
+  }
+
+  /**
+   *
+   * @param authorityAddress
+   * @param signatureDate
+   * @param signature
+   */
+  async mint(
+    authorityAddress: string,
+    signatureDate: number,
+    signature: string
+  ) {
+    return await mintSSSBT(
+      this.masa,
+      this.sbtContract,
+      authorityAddress,
+      signatureDate,
+      signature
+    );
+  }
+}
 
 export class MasaSSSBT<
   Contract extends ReferenceSBTSelfSovereign
@@ -40,39 +72,6 @@ export class MasaSSSBT<
       ReferenceSBTSelfSovereign__factory
     );
 
-    return {
-      ...wrapper,
-      /**
-       *
-       * @param receiver
-       */
-      sign: async (receiver: string) => {
-        if (wrapper.sbtContract) {
-          return await signSSSBT(this.masa, wrapper.sbtContract, receiver);
-        }
-      },
-
-      /**
-       *
-       * @param authorityAddress
-       * @param signatureDate
-       * @param signature
-       */
-      mint: async (
-        authorityAddress: string,
-        signatureDate: number,
-        signature: string
-      ) => {
-        if (wrapper.sbtContract) {
-          return await mintSSSBT(
-            this.masa,
-            wrapper.sbtContract,
-            authorityAddress,
-            signatureDate,
-            signature
-          );
-        }
-      },
-    };
+    return new SSSBTWrapper<Contract>(this.masa, wrapper.sbtContract);
   }
 }

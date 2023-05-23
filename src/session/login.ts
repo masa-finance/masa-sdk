@@ -26,14 +26,14 @@ export const login = async (
         challengeData.expires
       );
 
-      const address = await masa.config.wallet.getAddress();
+      const address = await masa.config.signer.getAddress();
 
       if (masa.config.verbose) {
         console.info(`Signer Address: '${address}'`);
       }
 
       console.info(`Signing: \n'${msg}'\n`);
-      const signature = await signMessage(msg, masa.config.wallet);
+      const signature = await signMessage(msg, masa.config.signer);
       console.log(`Signature: '${signature}'`);
 
       if (signature) {

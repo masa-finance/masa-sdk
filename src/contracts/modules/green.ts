@@ -1,6 +1,6 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
+import { ContractTransaction, TypedDataDomain } from "ethers";
 import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
@@ -38,7 +38,7 @@ export class Green extends MasaModuleBase {
       slippage
     );
 
-    const gasPrice = await this.masa.config.wallet.getGasPrice();
+    const gasPrice = await this.masa.config.signer.getGasPrice();
 
     // hardcoded estimation for now
     const mintTransactionEstimatedGas = BigNumber.from(250_000);
@@ -87,7 +87,7 @@ export class Green extends MasaModuleBase {
     };
 
     const domain: TypedDataDomain = await generateSignatureDomain(
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulboundGreen",
       this.instances.SoulboundGreenContract.address
     );
@@ -123,7 +123,7 @@ export class Green extends MasaModuleBase {
 
     const greenMintParameters: [string, string, string, number, string] = [
       paymentAddress,
-      await this.masa.config.wallet.getAddress(),
+      await this.masa.config.signer.getAddress(),
       authorityAddress,
       signatureDate,
       signature,
@@ -144,7 +144,7 @@ export class Green extends MasaModuleBase {
       },
       "mint(address,address,address,uint256,bytes)": mint,
     } = await this.instances.SoulboundGreenContract.connect(
-      this.masa.config.wallet
+      this.masa.config.signer
     );
 
     // estimate gas
@@ -180,7 +180,7 @@ export class Green extends MasaModuleBase {
   > => {
     const signatureDate = Math.floor(Date.now() / 1000);
 
-    const authorityAddress = await this.masa.config.wallet.getAddress();
+    const authorityAddress = await this.masa.config.signer.getAddress();
     const value: {
       to: string;
       authorityAddress: string;
@@ -193,7 +193,7 @@ export class Green extends MasaModuleBase {
 
     const { signature, domain } = await signTypedData(
       this.instances.SoulboundGreenContract,
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulboundGreen",
       this.types,
       value
@@ -224,7 +224,7 @@ export class Green extends MasaModuleBase {
         estimateGas: { burn: estimateGas },
         burn,
       } = this.masa.contracts.instances.SoulboundGreenContract.connect(
-        this.masa.config.wallet
+        this.masa.config.signer
       );
 
       let gasLimit: BigNumber = await estimateGas(greenId);

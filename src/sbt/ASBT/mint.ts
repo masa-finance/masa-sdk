@@ -32,12 +32,19 @@ export const mintASBT = async (
   const { getPrice } = await masa.contracts.sbt.attach(sbtContract);
 
   // current limit for ASBT is 1 on the default installation
-  const limit: number = 1;
+  let limit: number = 1;
 
-  // todo get the limit from the contract if done
+  try {
+    limit = (await sbtContract.maxSBTToMint()).toNumber();
+  } catch {
+    if (masa.config.verbose) {
+      console.info("Loading limit failed, falling back to 1!");
+    }
+  }
+
   const balance: BigNumber = await sbtContract.balanceOf(receiver);
 
-  if (balance.gte(limit)) {
+  if (limit > 0 && balance.gte(limit)) {
     console.error(
       `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
     );

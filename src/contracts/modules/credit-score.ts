@@ -1,6 +1,6 @@
 import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ContractTransaction, TypedDataDomain, Wallet } from "ethers";
+import { ContractTransaction, TypedDataDomain } from "ethers";
 import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
@@ -64,7 +64,7 @@ export class CreditScore extends MasaModuleBase {
       signatureDate,
     };
     const domain: TypedDataDomain = await generateSignatureDomain(
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulboundCreditScore",
       this.instances.SoulboundCreditScoreContract.address
     );
@@ -98,7 +98,7 @@ export class CreditScore extends MasaModuleBase {
       },
       "mint(address,uint256,address,uint256,bytes)": mint,
     } = await this.instances.SoulboundCreditScoreContract.connect(
-      this.masa.config.wallet
+      this.masa.config.signer
     );
 
     const creditScoreMintOverrides = {
@@ -165,7 +165,7 @@ export class CreditScore extends MasaModuleBase {
     | undefined
   > => {
     const signatureDate = Math.floor(Date.now() / 1000);
-    const authorityAddress = await this.masa.config.wallet.getAddress();
+    const authorityAddress = await this.masa.config.signer.getAddress();
 
     const value: {
       identityId: BigNumber;
@@ -179,7 +179,7 @@ export class CreditScore extends MasaModuleBase {
 
     const { signature, domain } = await signTypedData(
       this.instances.SoulboundCreditScoreContract,
-      this.masa.config.wallet as Wallet,
+      this.masa.config.signer,
       "SoulboundCreditScore",
       this.types,
       value
@@ -210,7 +210,7 @@ export class CreditScore extends MasaModuleBase {
         estimateGas: { burn: estimateGas },
         burn,
       } = this.masa.contracts.instances.SoulboundCreditScoreContract.connect(
-        this.masa.config.wallet
+        this.masa.config.signer
       );
 
       let gasLimit: BigNumber = await estimateGas(creditScoreId);

@@ -1,8 +1,12 @@
-import { address as SoulboundIdentityAddress } from "@masa-finance/masa-contracts-identity/deployments/basegoerli/SoulboundIdentity.json";
-import { address as SoulNameAddress } from "@masa-finance/masa-contracts-identity/deployments/basegoerli/SoulName.json";
-import { address as SoulStoreAddress } from "@masa-finance/masa-contracts-identity/deployments/basegoerli/SoulStore.json";
-import { address as SoulboundGreenAddress } from "@masa-finance/masa-contracts-identity/deployments/basegoerli/SoulboundGreen.json";
 import { Addresses } from "../../addresses";
+import { basegoerli as basegoerliAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
+
+const {
+  SoulboundIdentity: SoulboundIdentityAddress,
+  SoulName: SoulNameAddress,
+  SoulStore: SoulStoreAddress,
+  SoulboundGreen: SoulboundGreenAddress,
+} = basegoerliAddresses;
 
 export const basegoerli: Addresses = {
   SoulboundIdentityAddress,

@@ -1,8 +1,12 @@
-import { address as SoulboundIdentityAddress } from "@masa-finance/masa-contracts-identity/deployments/alfajores/SoulboundIdentity.json";
-import { address as SoulNameAddress } from "@masa-finance/masa-contracts-identity/deployments/alfajores/SoulName.json";
-import { address as SoulStoreAddress } from "@masa-finance/masa-contracts-identity/deployments/alfajores/SoulStore.json";
-import { address as SoulboundGreenAddress } from "@masa-finance/masa-contracts-identity/deployments/alfajores/SoulboundGreen.json";
 import { Addresses } from "../../addresses";
+import { alfajores as alfajoresAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
+
+const {
+  SoulboundIdentity: SoulboundIdentityAddress,
+  SoulName: SoulNameAddress,
+  SoulStore: SoulStoreAddress,
+  SoulboundGreen: SoulboundGreenAddress,
+} = alfajoresAddresses;
 
 export const alfajores: Addresses = {
   tokens: {
