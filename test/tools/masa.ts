@@ -6,5 +6,5 @@ const provider = new ethers.providers.JsonRpcProvider(
 );
 
 export const testMasa = new Masa({
-  wallet: provider.getSigner(),
+  signer: provider.getSigner(),
 });

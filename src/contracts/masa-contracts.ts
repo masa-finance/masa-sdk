@@ -9,7 +9,7 @@ import {
   SoulLinker,
   SoulName,
 } from "./modules";
-import { MasaBase } from "../helpers/masa-base";
+import { MasaBase } from "../helpers";
 import { Log } from "@ethersproject/abstract-provider";
 import { BaseContract } from "ethers";
 import { LogDescription } from "@ethersproject/abi";
