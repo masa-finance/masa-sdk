@@ -14,9 +14,9 @@ export class SSSBTWrapper<
    *
    * @param receiver
    */
-  async sign(receiver: string) {
-    return await signSSSBT(this.masa, this.sbtContract, receiver);
-  }
+  sign = async (receiver: string) => {
+    return await signSSSBT(this.masa, this.contract, receiver);
+  };
 
   /**
    *
@@ -24,19 +24,19 @@ export class SSSBTWrapper<
    * @param signatureDate
    * @param signature
    */
-  async mint(
+  mint = async (
     authorityAddress: string,
     signatureDate: number,
     signature: string
-  ) {
+  ) => {
     return await mintSSSBT(
       this.masa,
-      this.sbtContract,
+      this.contract,
       authorityAddress,
       signatureDate,
       signature
     );
-  }
+  };
 }
 
 export class MasaSSSBT<
@@ -67,11 +67,11 @@ export class MasaSSSBT<
     );
 
   public async connect(address: string) {
-    const wrapper = await super.connect(
+    const { contract } = await super.connect(
       address,
       ReferenceSBTSelfSovereign__factory
     );
 
-    return new SSSBTWrapper<Contract>(this.masa, wrapper.sbtContract);
+    return new SSSBTWrapper<Contract>(this.masa, contract);
   }
 }

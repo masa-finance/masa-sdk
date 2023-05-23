@@ -13,9 +13,9 @@ export class ASBTWrapper<
    *
    * @param receiver
    */
-  async mint(receiver: string) {
-    return await mintASBT(this.masa, this.sbtContract, receiver);
-  }
+  mint = async (receiver: string) => {
+    return await mintASBT(this.masa, this.contract, receiver);
+  };
 }
 
 export class MasaASBT<
@@ -38,11 +38,11 @@ export class MasaASBT<
   ) => deployASBT(this.masa, name, symbol, baseTokenUri, limit, adminAddress);
 
   public async connect(address: string) {
-    const wrapper = await super.connect(
+    const { contract } = await super.connect(
       address,
       ReferenceSBTAuthority__factory
     );
 
-    return new ASBTWrapper<Contract>(this.masa, wrapper.sbtContract);
+    return new ASBTWrapper<Contract>(this.masa, contract);
   }
 }

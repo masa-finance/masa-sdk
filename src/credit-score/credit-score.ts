@@ -2,9 +2,10 @@ import { BigNumber } from "ethers";
 import Masa from "../masa";
 import { PaymentMethod } from "../interface";
 import { createCreditScore, listCreditScores, loadCreditScores } from "./";
-import { MasaLinkable } from "../helpers/masa-linkable";
+import { MasaLinkable } from "../helpers";
+import { SoulboundCreditScore } from "@masa-finance/masa-contracts-identity";
 
-export class MasaCreditScore extends MasaLinkable {
+export class MasaCreditScore extends MasaLinkable<SoulboundCreditScore> {
   constructor(masa: Masa) {
     super(masa, masa.contracts.instances.SoulboundCreditScoreContract);
   }

@@ -9,9 +9,10 @@ import {
   mintGreen,
   verifyGreen,
 } from "./";
-import { MasaLinkable } from "../helpers/masa-linkable";
+import { MasaLinkable } from "../helpers";
+import { SoulboundGreen } from "@masa-finance/masa-contracts-identity";
 
-export class MasaGreen extends MasaLinkable {
+export class MasaGreen extends MasaLinkable<SoulboundGreen> {
   constructor(masa: Masa) {
     super(masa, masa.contracts.instances.SoulboundGreenContract);
   }

@@ -8,33 +8,28 @@ import { BigNumber } from "ethers";
 import { MasaBase, MasaLinkable } from "../helpers";
 import { ContractFactory } from "../contracts";
 import { burnSBT, listSBTs } from "./";
-import Masa from "../masa";
 
 export class SBTWrapper<
   Contract extends
     | ReferenceSBTAuthority
     | ReferenceSBTSelfSovereign
     | MasaSBTContract
-> extends MasaLinkable {
-  constructor(protected masa: Masa, readonly sbtContract: Contract) {
-    super(masa, sbtContract);
-  }
-
+> extends MasaLinkable<Contract> {
   /**
    *
    * @param address
    */
-  list(address?: string) {
-    return listSBTs(this.masa, this.sbtContract, address);
-  }
+  list = (address?: string) => {
+    return listSBTs(this.masa, this.contract, address);
+  };
 
   /**
    *
    * @param SBTId
    */
-  burn(SBTId: BigNumber) {
-    return burnSBT(this.masa, this.sbtContract, SBTId);
-  }
+  burn = (SBTId: BigNumber) => {
+    return burnSBT(this.masa, this.contract, SBTId);
+  };
 }
 
 export class MasaSBT<

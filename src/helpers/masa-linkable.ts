@@ -3,11 +3,12 @@ import { MasaSoulLinker } from "../soul-linker";
 import { Contract } from "ethers";
 import { MasaBase } from "./masa-base";
 
-export class MasaLinkable extends MasaBase {
+export class MasaLinkable<LinkContract extends Contract> extends MasaBase {
   public readonly links: MasaSoulLinker;
 
-  public constructor(protected masa: Masa, protected contract: Contract) {
+  public constructor(masa: Masa, public readonly contract: LinkContract) {
     super(masa);
+
     this.links = new MasaSoulLinker(this.masa, contract);
   }
 }

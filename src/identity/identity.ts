@@ -7,9 +7,10 @@ import {
   loadIdentityByAddress,
   showIdentity,
 } from "./";
-import { MasaLinkable } from "../helpers/masa-linkable";
+import { MasaLinkable } from "../helpers";
+import { SoulboundIdentity } from "@masa-finance/masa-contracts-identity";
 
-export class MasaIdentity extends MasaLinkable {
+export class MasaIdentity extends MasaLinkable<SoulboundIdentity> {
   constructor(masa: Masa) {
     super(masa, masa.contracts.instances.SoulboundIdentityContract);
   }
