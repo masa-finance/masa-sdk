@@ -3,7 +3,7 @@ import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { Messages } from "../../utils";
 import { LogDescription } from "@ethersproject/abi";
 import { PaymentMethod } from "../../interface";
-import { PayableOverrides } from "ethers";
+import { BigNumber, PayableOverrides } from "ethers";
 
 /**
  *
@@ -17,7 +17,7 @@ export const mintASBT = async (
   sbtContract: ReferenceSBTAuthority,
   receiver: string,
   paymentMethod: PaymentMethod = "ETH"
-) => {
+): Promise<boolean> => {
   const [name, symbol] = await Promise.all([
     sbtContract.name(),
     sbtContract.symbol(),
@@ -30,6 +30,19 @@ export const mintASBT = async (
   console.log(`To receiver: '${receiver}'`);
 
   const { getPrice } = await masa.contracts.sbt.attach(sbtContract);
+
+  // current limit for ASBT is 1 on the default installation
+  const limit: number = 1;
+
+  // todo get the limit from the contract if done
+  const balance: BigNumber = await sbtContract.balanceOf(receiver);
+
+  if (balance.gte(limit)) {
+    console.error(
+      `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
+    );
+    return false;
+  }
 
   const { price, paymentAddress } = await getPrice(paymentMethod);
 
@@ -73,5 +86,9 @@ export const mintASBT = async (
     console.log(
       `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
     );
+
+    return true;
   }
+
+  return false;
 };
