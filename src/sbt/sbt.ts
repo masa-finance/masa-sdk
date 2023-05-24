@@ -44,8 +44,9 @@ export class MasaSBT<
     factory: ContractFactory = MasaSBT__factory
   ) {
     const { sbtContract } =
-      (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};
+      (await super.masa.contracts.sbt.connect<Contract>(address, factory)) ||
+      {};
 
-    return new SBTWrapper<Contract>(this.masa, sbtContract);
+    return new SBTWrapper<Contract>(super.masa, sbtContract);
   }
 }
