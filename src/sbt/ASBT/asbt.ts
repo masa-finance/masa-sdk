@@ -13,9 +13,7 @@ export class ASBTWrapper<
    *
    * @param receiver
    */
-  mint = async (receiver: string) => {
-    return await mintASBT(this.masa, this.contract, receiver);
-  };
+  mint = (receiver: string) => mintASBT(this.masa, this.contract, receiver);
 }
 
 export class MasaASBT<
@@ -43,6 +41,6 @@ export class MasaASBT<
       ReferenceSBTAuthority__factory
     );
 
-    return new ASBTWrapper<Contract>(this.masa, contract);
+    return new ASBTWrapper<Contract>(super.masa, contract);
   }
 }

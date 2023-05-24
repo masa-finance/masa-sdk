@@ -9,6 +9,6 @@ export class MasaLinkable<LinkContract extends Contract> extends MasaBase {
   public constructor(masa: Masa, public readonly contract: LinkContract) {
     super(masa);
 
-    this.links = new MasaSoulLinker(this.masa, contract);
+    this.links = new MasaSoulLinker(masa, contract);
   }
 }

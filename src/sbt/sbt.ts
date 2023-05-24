@@ -19,17 +19,13 @@ export class SBTWrapper<
    *
    * @param address
    */
-  list = (address?: string) => {
-    return listSBTs(this.masa, this.contract, address);
-  };
+  list = (address?: string) => listSBTs(this.masa, this.contract, address);
 
   /**
    *
    * @param SBTId
    */
-  burn = (SBTId: BigNumber) => {
-    return burnSBT(this.masa, this.contract, SBTId);
-  };
+  burn = (SBTId: BigNumber) => burnSBT(this.masa, this.contract, SBTId);
 }
 
 export class MasaSBT<
