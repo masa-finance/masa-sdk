@@ -14,6 +14,7 @@ export const deploySSSBT = async (
   name: string,
   symbol: string,
   baseTokenUri: string,
+  limit: number = 1,
   authorityAddress?: string,
   adminAddress?: string
 ): Promise<string | undefined> => {
@@ -35,7 +36,8 @@ export const deploySSSBT = async (
     string, // string symbol
     string, // string baseTokenURI
     string, // address soulboundIdentity
-    PaymentParamsStruct // PaymentParams paymentParams
+    PaymentParamsStruct, // PaymentParams paymentParams
+    number
   ] = [
     adminAddress,
     name,
@@ -52,6 +54,7 @@ export const deploySSSBT = async (
       protocolFeeAmount: 0,
       protocolFeePercent: 0,
     },
+    limit,
   ];
 
   if (masa.config.verbose) {

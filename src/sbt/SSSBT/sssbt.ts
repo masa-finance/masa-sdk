@@ -48,12 +48,14 @@ export class MasaSSSBT<
    * @param symbol
    * @param baseTokenUri
    * @param authorityAddress
+   * @param limit
    * @param adminAddress
    */
   deploy = (
     name: string,
     symbol: string,
     baseTokenUri: string,
+    limit: number = 1,
     authorityAddress: string,
     adminAddress?: string
   ) =>
@@ -62,6 +64,7 @@ export class MasaSSSBT<
       name,
       symbol,
       baseTokenUri,
+      limit,
       authorityAddress,
       adminAddress
     );
