@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.0.3](../README.md) / [Exports](../modules.md) / ChallengeResult
+ - v3.0.4](../README.md) / [Exports](../modules.md) / ChallengeResult
 
 # Interface: ChallengeResult
 
