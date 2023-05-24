@@ -5,6 +5,7 @@ import {
 import { deployASBT } from "./deploy";
 import { mintASBT } from "./mint";
 import { MasaSBT, SBTWrapper } from "../sbt";
+import Masa from "../../masa";
 
 export class ASBTWrapper<
   Contract extends ReferenceSBTAuthority
@@ -19,6 +20,12 @@ export class ASBTWrapper<
 export class MasaASBT<
   Contract extends ReferenceSBTAuthority
 > extends MasaSBT<Contract> {
+  constructor(masa: Masa) {
+    super(masa);
+
+    this.connect.bind(this);
+  }
+
   /**
    *
    * @param name
@@ -35,12 +42,16 @@ export class MasaASBT<
     adminAddress?: string
   ) => deployASBT(this.masa, name, symbol, baseTokenUri, limit, adminAddress);
 
+  /**
+   *
+   * @param address
+   */
   public async connect(address: string) {
     const { contract } = await super.connect(
       address,
       ReferenceSBTAuthority__factory
     );
 
-    return new ASBTWrapper<Contract>(super.masa, contract);
+    return new ASBTWrapper<Contract>(this.masa, contract);
   }
 }

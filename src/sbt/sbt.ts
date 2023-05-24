@@ -8,6 +8,7 @@ import { BigNumber } from "ethers";
 import { MasaBase, MasaLinkable } from "../helpers";
 import { ContractFactory } from "../contracts";
 import { burnSBT, listSBTs } from "./";
+import Masa from "../masa";
 
 export class SBTWrapper<
   Contract extends
@@ -34,6 +35,11 @@ export class MasaSBT<
     | ReferenceSBTSelfSovereign
     | MasaSBTContract
 > extends MasaBase {
+  constructor(mass: Masa) {
+    super(mass);
+    this.connect.bind(this);
+  }
+
   /**
    *
    * @param address
@@ -44,9 +50,8 @@ export class MasaSBT<
     factory: ContractFactory = MasaSBT__factory
   ) {
     const { sbtContract } =
-      (await super.masa.contracts.sbt.connect<Contract>(address, factory)) ||
-      {};
+      (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};
 
-    return new SBTWrapper<Contract>(super.masa, sbtContract);
+    return new SBTWrapper<Contract>(this.masa, sbtContract);
   }
 }

@@ -6,6 +6,7 @@ import { deploySSSBT } from "./deploy";
 import { signSSSBT } from "./sign";
 import { mintSSSBT } from "./mint";
 import { MasaSBT, SBTWrapper } from "../sbt";
+import Masa from "../../masa";
 
 export class SSSBTWrapper<
   Contract extends ReferenceSBTSelfSovereign
@@ -35,6 +36,12 @@ export class SSSBTWrapper<
 export class MasaSSSBT<
   Contract extends ReferenceSBTSelfSovereign
 > extends MasaSBT<Contract> {
+  constructor(masa: Masa) {
+    super(masa);
+
+    this.connect.bind(this);
+  }
+
   /**
    *
    * @param name
@@ -62,12 +69,16 @@ export class MasaSSSBT<
       adminAddress
     );
 
+  /**
+   *
+   * @param address
+   */
   public async connect(address: string) {
     const { contract } = await super.connect(
       address,
       ReferenceSBTSelfSovereign__factory
     );
 
-    return new SSSBTWrapper<Contract>(super.masa, contract);
+    return new SSSBTWrapper<Contract>(this.masa, contract);
   }
 }
