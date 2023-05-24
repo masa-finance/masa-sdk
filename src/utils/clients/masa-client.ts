@@ -388,6 +388,7 @@ export class MasaClient extends MasaBase {
 
     const postResponse = await this._middlewareClient
       .post<Payload, AxiosResponse<Result>>(endpoint, data, {
+        withCredentials: true,
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
         },
@@ -423,6 +424,7 @@ export class MasaClient extends MasaBase {
 
     const patchResponse = await this._middlewareClient
       .patch<Payload, AxiosResponse<Result>>(endpoint, data, {
+        withCredentials: true,
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
         },
@@ -457,6 +459,7 @@ export class MasaClient extends MasaBase {
 
     const getResponse = await this._middlewareClient
       .get<Result>(endpoint, {
+        withCredentials: true,
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
         },
