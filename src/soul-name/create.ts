@@ -16,7 +16,8 @@ const purchaseSoulName = async (
   soulName: string,
   soulNameLength: number,
   duration: number,
-  receiver?: string
+  receiver?: string,
+  style?: string
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -38,7 +39,8 @@ const purchaseSoulName = async (
       | undefined = await masa.client.soulName.store(
       `${soulName}${extension}`,
       receiver,
-      duration
+      duration,
+      style
     );
 
     if (storeMetadataResponse) {
@@ -112,7 +114,8 @@ export const createSoulName = async (
   paymentMethod: PaymentMethod,
   soulName: string,
   duration: number,
-  receiver?: string
+  receiver?: string,
+  style?: string
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -157,7 +160,8 @@ export const createSoulName = async (
       soulName,
       length,
       duration,
-      receiver
+      receiver,
+      style
     );
   } else {
     result.message = Messages.NotLoggedIn();

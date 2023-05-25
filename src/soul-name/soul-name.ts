@@ -62,13 +62,23 @@ export class MasaSoulName extends MasaBase {
    * @param soulName
    * @param duration
    * @param receiver
+   * @param style
    */
   create = (
     paymentMethod: PaymentMethod = "ETH",
     soulName: string,
     duration: number,
-    receiver?: string
-  ) => createSoulName(this.masa, paymentMethod, soulName, duration, receiver);
+    receiver?: string,
+    style?: string
+  ) =>
+    createSoulName(
+      this.masa,
+      paymentMethod,
+      soulName,
+      duration,
+      receiver,
+      style
+    );
 
   /**
    *

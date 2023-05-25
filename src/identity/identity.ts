@@ -19,8 +19,16 @@ export class MasaIdentity extends MasaLinkable<SoulboundIdentity> {
   createWithSoulName = (
     paymentMethod: PaymentMethod,
     soulName: string,
-    duration: number
-  ) => createIdentityWithSoulName(this.masa, paymentMethod, soulName, duration);
+    duration: number,
+    style?: string
+  ) =>
+    createIdentityWithSoulName(
+      this.masa,
+      paymentMethod,
+      soulName,
+      duration,
+      style
+    );
   load = (address?: string) => loadIdentityByAddress(this.masa, address);
   burn = () => burnIdentity(this.masa);
   show = (address?: string) => showIdentity(this.masa, address);

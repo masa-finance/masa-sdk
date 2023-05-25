@@ -213,11 +213,13 @@ export class MasaClient extends MasaBase {
      * @param soulName
      * @param receiver
      * @param duration
+     * @param style
      */
     store: async (
       soulName: string,
       receiver: string,
-      duration: number
+      duration: number,
+      style?: string
     ): Promise<
       SoulNameMetadataStoreResult | SoulNameResultBase | undefined
     > => {
@@ -229,6 +231,7 @@ export class MasaClient extends MasaBase {
           receiver: string;
           duration: number;
           network: NetworkName;
+          style?: string;
         },
         SoulNameMetadataStoreResult | SoulNameResultBase
       >("/soul-name/store", {
@@ -236,6 +239,7 @@ export class MasaClient extends MasaBase {
         receiver,
         duration,
         network: this.masa.config.networkName,
+        style,
       });
     },
   };

@@ -89,13 +89,15 @@ export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
  * @param soulNameLength
  * @param duration
  * @param paymentMethod
+ * @param style
  */
 export const purchaseIdentityWithSoulName = async (
   masa: Masa,
   soulName: string,
   soulNameLength: number,
   duration: number,
-  paymentMethod: PaymentMethod
+  paymentMethod: PaymentMethod,
+  style?: string
 ): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -112,7 +114,8 @@ export const purchaseIdentityWithSoulName = async (
     const storeMetadataResponse = await masa.client.soulName.store(
       `${soulName}${extension}`,
       await masa.config.signer.getAddress(),
-      duration
+      duration,
+      style
     );
 
     if (storeMetadataResponse) {
@@ -201,13 +204,19 @@ export const purchaseIdentityWithSoulName = async (
  * @param paymentMethod
  * @param soulName
  * @param duration
+ * @param style
  */
 export const createIdentityWithSoulName = async (
   masa: Masa,
   paymentMethod: PaymentMethod,
   soulName: string,
-  duration: number
-): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
+  duration: number,
+  style?: string
+): Promise<
+  {
+    identityId?: string | BigNumber;
+  } & CreateSoulNameResult
+> => {
   const result: CreateSoulNameResult = {
     success: false,
     errorCode: SoulNameErrorCodes.UnknownError,
@@ -255,7 +264,8 @@ export const createIdentityWithSoulName = async (
       soulName,
       length,
       duration,
-      paymentMethod
+      paymentMethod,
+      style
     );
   } else {
     result.message = Messages.NotLoggedIn();
