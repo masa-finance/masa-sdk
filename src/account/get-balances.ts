@@ -78,7 +78,11 @@ export const getBalances = async (
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
-          `Contract: ${contract.name} Wallet Address: ${addressToLoad} ${error.message}`
+          `Contract: ${await contract
+            .name()
+            .catch(() => contract.address)} Wallet Address: ${addressToLoad} ${
+            error.message
+          }`
         );
       }
     }
