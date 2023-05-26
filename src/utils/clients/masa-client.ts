@@ -477,12 +477,17 @@ export class MasaClient extends MasaBase {
     const { data: getData, status } = getResponse || {};
 
     if (this.masa.config.verbose) {
-      console.info({
-        getResponse: {
-          status,
-          getData,
+      console.dir(
+        {
+          getResponse: {
+            status,
+            getData,
+          },
         },
-      });
+        {
+          depth: null,
+        }
+      );
     }
 
     return getData;

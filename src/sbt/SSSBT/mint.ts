@@ -7,7 +7,7 @@ import { PayableOverrides } from "ethers";
 
 export const mintSSSBT = async (
   masa: Masa,
-  sbtContract: ReferenceSBTSelfSovereign,
+  contract: ReferenceSBTSelfSovereign,
   authorityAddress: string,
   signatureDate: number,
   signature: string,
@@ -16,19 +16,17 @@ export const mintSSSBT = async (
   const receiver = await masa.config.signer.getAddress();
 
   const [name, symbol] = await Promise.all([
-    sbtContract.name(),
-    sbtContract.symbol(),
+    contract.name(),
+    contract.symbol(),
   ]);
 
   console.log(`Minting SSSBT on: '${masa.config.networkName}'`);
   console.log(`Contract Name: '${name}'`);
   console.log(`Contract Symbol: '${symbol}'`);
-  console.log(`Contract Address: '${sbtContract.address}'`);
+  console.log(`Contract Address: '${contract.address}'`);
   console.log(`To receiver: '${receiver}'`);
 
-  const { prepareMint, getPrice } = await masa.contracts.sbt.attach(
-    sbtContract
-  );
+  const { prepareMint, getPrice } = await masa.contracts.sbt.attach(contract);
 
   const types = {
     Mint: [
@@ -79,7 +77,7 @@ export const mintSSSBT = async (
   const {
     "mint(address,address,address,uint256,bytes)": mint,
     estimateGas: { "mint(address,address,address,uint256,bytes)": estimateGas },
-  } = sbtContract;
+  } = contract;
 
   const gasLimit = await estimateGas(...mintSSSBTArguments, mintSSSBTOverrides);
 
@@ -92,7 +90,7 @@ export const mintSSSBT = async (
 
   const { logs } = await wait();
 
-  const parsedLogs = masa.contracts.parseLogs(logs, [sbtContract]);
+  const parsedLogs = masa.contracts.parseLogs(logs, [contract]);
 
   const mintEvent = parsedLogs.find(
     (log: LogDescription) => log.name === "Mint"

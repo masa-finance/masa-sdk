@@ -7,6 +7,7 @@ import { signSSSBT } from "./sign";
 import { mintSSSBT } from "./mint";
 import { MasaSBT, SBTWrapper } from "../sbt";
 import Masa from "../../masa";
+import { addAuthority } from "./add-authority";
 
 export class SSSBTWrapper<
   Contract extends ReferenceSBTSelfSovereign
@@ -31,6 +32,13 @@ export class SSSBTWrapper<
       signatureDate,
       signature
     );
+
+  /**
+   *
+   * @param authorityAddress
+   */
+  addAuthority = (authorityAddress: string) =>
+    addAuthority(this.masa, this.contract, authorityAddress);
 }
 
 export class MasaSSSBT<
