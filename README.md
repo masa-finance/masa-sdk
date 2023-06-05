@@ -27,7 +27,7 @@ const provider = new providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 
 export const masa = new Masa({
-  wallet: signer,
+  signer,
 });
 ```
 
@@ -42,7 +42,7 @@ const provider = new providers.JsonRpcProvider("your blockchain rpc endpoint");
 const wallet = new Wallet("your private key", provider);
 
 export const masa = new Masa({
-  wallet,
+  signer: wallet,
 });
 ```
 
