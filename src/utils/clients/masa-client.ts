@@ -195,12 +195,17 @@ export class MasaClient extends MasaBase {
       const { data: metadataResponseData, status } = metadataResponse || {};
 
       if (this.masa.config.verbose) {
-        console.info({
-          metadataResponse: {
-            status,
-            metadataResponseData,
+        console.dir(
+          {
+            metadataResponse: {
+              status,
+              metadataResponseData,
+            },
           },
-        });
+          {
+            depth: null,
+          }
+        );
       }
 
       return metadataResponseData;
