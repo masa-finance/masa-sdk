@@ -59,10 +59,23 @@ export const loadGreens = async (
             identityIdOrAddress,
             masa.contracts.instances.SoulboundGreenContract.address
           ));
-    } else if (!isBigNumber(identityIdOrAddress)) {
+    }
+    // no soul linker, lets try by identity or address
+    else {
+      let identityAddress: string;
+
+      if (isBigNumber(identityIdOrAddress)) {
+        identityAddress =
+          await masa.contracts.instances.SoulboundIdentityContract[
+            "ownerOf(uint256)"
+          ](identityIdOrAddress);
+      } else {
+        identityAddress = identityIdOrAddress as string;
+      }
+
       const balance: number = (
         await masa.contracts.instances.SoulboundGreenContract.balanceOf(
-          identityIdOrAddress
+          identityAddress
         )
       ).toNumber();
 
@@ -70,7 +83,7 @@ export const loadGreens = async (
         for (let i = 0; i < balance; i++) {
           greenIds.push(
             await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
-              identityIdOrAddress,
+              identityAddress,
               i
             )
           );

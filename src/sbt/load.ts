@@ -48,16 +48,27 @@ export const loadSBTs = async (
       SBTIDs = await (isBigNumber(identityIdOrAddress)
         ? getSBTConnectionsByIdentity(identityIdOrAddress, contract.address)
         : getSBTConnectionsByAddress(identityIdOrAddress, contract.address));
-    } else if (!isBigNumber(identityIdOrAddress)) {
+    }
+    // no soul linker, lets try by identity or address
+    else {
+      let identityAddress: string;
+
+      if (isBigNumber(identityIdOrAddress)) {
+        identityAddress =
+          await masa.contracts.instances.SoulboundIdentityContract[
+            "ownerOf(uint256)"
+          ](identityIdOrAddress);
+      } else {
+        identityAddress = identityIdOrAddress as string;
+      }
+
       const balance: number = (
-        await contract.balanceOf(identityIdOrAddress)
+        await contract.balanceOf(identityAddress)
       ).toNumber();
 
       if (balance > 0) {
         for (let i = 0; i < balance; i++) {
-          SBTIDs.push(
-            await contract.tokenOfOwnerByIndex(identityIdOrAddress, i)
-          );
+          SBTIDs.push(await contract.tokenOfOwnerByIndex(identityAddress, i));
         }
       }
     }
