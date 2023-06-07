@@ -1,4 +1,3 @@
-import Transaction from "arweave/node/lib/transaction";
 import { BigNumber } from "ethers";
 import { BaseResult } from "../masa";
 
@@ -65,18 +64,12 @@ export interface CreateSoulNameResult extends SoulNameResultBase {
 
 export interface SoulNameMetadataStoreResult extends SoulNameResultBase {
   // image info
-  imageTransaction: Transaction;
-  imageResponse: {
-    status: number;
-    statusText: string;
-    data: unknown;
+  imageTransaction: {
+    id: string;
   };
   // metadata info
-  metadataTransaction: Transaction;
-  metadataResponse: {
-    status: number;
-    statusText: string;
-    data: unknown;
+  metadataTransaction: {
+    id: string;
   };
   // signature from the authority to be verified in the contract
   signature: string;
