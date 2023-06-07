@@ -33,7 +33,15 @@ export const login = async (
       }
 
       console.info(`Signing: \n'${msg}'\n`);
-      const signature = await signMessage(msg, masa.config.signer);
+      let signature;
+      try {
+        signature = await signMessage(msg, masa.config.signer);
+      } catch (e) {
+        if (masa.config.verbose) {
+          console.log("Signature failed!", masa.config);
+        }
+        throw new Error(e as string);
+      }
       console.log(`Signature: '${signature}'`);
 
       if (signature) {
