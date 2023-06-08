@@ -38,10 +38,14 @@ export const calculateSoulNameLength = (soulName: string): number => {
   return new GraphemeSplitter().countGraphemes(soulName);
 };
 
+/**
+ * try to evaluate the right prefix
+ * @param masa
+ */
 export const getSoulNameMetadataPrefix = (masa: Masa): string => {
   // special handling for celo networks
-  return masa.config.networkName === "celo" ||
-    masa.config.networkName === "alfajores"
-    ? "https://arweave.net/"
-    : "ar://";
+  return masa.config.networkName === "ethereum" ||
+    masa.config.networkName === "goerli"
+    ? "ar://"
+    : "https://arweave.net/";
 };
