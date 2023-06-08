@@ -24,7 +24,7 @@ export const loadSoulNameByTokenId = async (
     ]);
 
     const metadata = (await masa.arweave.loadTransactionData(
-      tokenUri.replace(masa.soulName.getSoulNameMetadataPrefix(), "")
+      tokenUri.replace("ar://", "").replace("https://arweave.net/", "")
     )) as ISoulName;
 
     return {

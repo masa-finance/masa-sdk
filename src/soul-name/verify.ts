@@ -43,10 +43,9 @@ export const verifyByName = async (
       soulNameInstance.tokenDetails.sbtName === soulNameInstance.metadata?.name;
 
     // check if metadata was deployed to arweave by masa
-    const soulNameMetadataTxId = soulNameInstance.tokenUri.replace(
-      masa.soulName.getSoulNameMetadataPrefix(),
-      ""
-    );
+    const soulNameMetadataTxId = soulNameInstance.tokenUri
+      .replace("ar://", "")
+      .replace("https://arweave.net/", "");
 
     if (soulNameMetadataTxId) {
       try {
@@ -66,10 +65,9 @@ export const verifyByName = async (
       }
     }
 
-    const imageTxId = soulNameInstance.metadata?.image?.replace(
-      masa.soulName.getSoulNameMetadataPrefix(),
-      ""
-    );
+    const imageTxId = soulNameInstance.metadata?.image
+      ?.replace("ar://", "")
+      .replace("https://arweave.net/", "");
 
     if (imageTxId) {
       try {
