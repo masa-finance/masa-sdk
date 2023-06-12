@@ -40,31 +40,30 @@ export const getBalances = async (
     tokenAddress?: string
   ): Promise<number | undefined> => {
     let result;
+
     if (
-      !masa.config.signer.provider ||
-      !tokenAddress ||
-      tokenAddress === constants.AddressZero
+      masa.config.signer.provider &&
+      tokenAddress &&
+      tokenAddress !== constants.AddressZero
     ) {
-      return;
-    }
-
-    try {
-      const contract: ERC20 = ERC20__factory.connect(
-        tokenAddress,
-        masa.config.signer.provider
-      );
-
-      const [balance, decimals] = await Promise.all([
-        contract.balanceOf(userAddress),
-        contract.decimals(),
-      ]);
-
-      result = parseFloat(utils.formatUnits(balance, decimals));
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(
-          `Token: ${tokenAddress} Wallet Address: ${addressToLoad} ${error.message}`
+      try {
+        const contract: ERC20 = ERC20__factory.connect(
+          tokenAddress,
+          masa.config.signer.provider
         );
+
+        const [balance, decimals] = await Promise.all([
+          contract.balanceOf(userAddress),
+          contract.decimals(),
+        ]);
+
+        result = parseFloat(utils.formatUnits(balance, decimals));
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(
+            `Token: ${tokenAddress} Wallet Address: ${addressToLoad} ${error.message}`
+          );
+        }
       }
     }
 
