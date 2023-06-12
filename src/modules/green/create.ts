@@ -108,6 +108,58 @@ export const verifyGreen = async (
   return result;
 };
 
+export const mintGreen = async (
+  masa: MasaInterface,
+  paymentMethod: PaymentMethod,
+  authorityAddress: string,
+  signatureDate: number,
+  signature: string
+): Promise<BaseResult> => {
+  const result = {
+    success: false,
+    message: "Unknown Error",
+  };
+
+  const { wait, hash } = await masa.contracts.green.mint(
+    paymentMethod,
+    await masa.config.signer.getAddress(),
+    authorityAddress,
+    signatureDate,
+    signature
+  );
+
+  console.log(Messages.WaitingToFinalize(hash));
+
+  const { logs } = await wait();
+
+  const parsedLogs = masa.contracts.parseLogs(logs);
+
+  let tokenId: string | undefined;
+
+  const greenMintEvent = parsedLogs.find(
+    (event: LogDescription) => event.name === "Mint"
+  );
+
+  if (greenMintEvent) {
+    if (masa.config.verbose) {
+      console.dir({ greenMintEvent }, { depth: null });
+    }
+
+    tokenId = greenMintEvent.args._tokenId.toString();
+    console.log(`Green with ID: '${tokenId}' created.`);
+  }
+
+  if (tokenId) {
+    return {
+      success: true,
+      message: "",
+      tokenId,
+    };
+  }
+
+  return result;
+};
+
 export const createGreen = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
@@ -156,58 +208,6 @@ export const createGreen = async (
     } else {
       result.errorCode = verifyGreenResult.errorCode;
     }
-  }
-
-  return result;
-};
-
-export const mintGreen = async (
-  masa: MasaInterface,
-  paymentMethod: PaymentMethod,
-  authorityAddress: string,
-  signatureDate: number,
-  signature: string
-): Promise<BaseResult> => {
-  const result = {
-    success: false,
-    message: "Unknown Error",
-  };
-
-  const { wait, hash } = await masa.contracts.green.mint(
-    paymentMethod,
-    await masa.config.signer.getAddress(),
-    authorityAddress,
-    signatureDate,
-    signature
-  );
-
-  console.log(Messages.WaitingToFinalize(hash));
-
-  const { logs } = await wait();
-
-  const parsedLogs = masa.contracts.parseLogs(logs);
-
-  let tokenId: string | undefined;
-
-  const greenMintEvent = parsedLogs.find(
-    (event: LogDescription) => event.name === "Mint"
-  );
-
-  if (greenMintEvent) {
-    if (masa.config.verbose) {
-      console.dir({ greenMintEvent }, { depth: null });
-    }
-
-    tokenId = greenMintEvent.args._tokenId.toString();
-    console.log(`Green with ID: '${tokenId}' created.`);
-  }
-
-  if (tokenId) {
-    return {
-      success: true,
-      message: "",
-      tokenId,
-    };
   }
 
   return result;
