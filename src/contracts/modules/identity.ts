@@ -1,4 +1,9 @@
-import { BigNumber, ContractTransaction, TypedDataDomain } from "ethers";
+import {
+  BigNumber,
+  ContractTransaction,
+  PayableOverrides,
+  TypedDataDomain,
+} from "ethers";
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
@@ -12,7 +17,7 @@ export class Identity extends MasaModuleBase {
   purchase = async (): Promise<ContractTransaction> => {
     const {
       estimateGas: { purchaseIdentity: estimateGas },
-      purchaseIdentity: purchaseIdentity,
+      purchaseIdentity,
     } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
 
     // estimate gas
@@ -109,8 +114,16 @@ export class Identity extends MasaModuleBase {
       signature,
     ];
 
-    const purchaseIdentityAndNameOverrides = {
+    const feeData = await this.getNetworkParameters();
+
+    const purchaseIdentityAndNameOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,
+      ...(feeData
+        ? {
+            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
+            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+          }
+        : undefined),
     };
 
     if (this.masa.config.verbose) {

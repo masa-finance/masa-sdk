@@ -1,5 +1,9 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import { ContractTransaction, TypedDataDomain } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
+import type {
+  ContractTransaction,
+  PayableOverrides,
+  TypedDataDomain,
+} from "ethers";
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
@@ -97,18 +101,16 @@ export class CreditScore extends MasaModuleBase {
       price
     );
 
-    // connect
-    const {
-      estimateGas: {
-        "mint(address,uint256,address,uint256,bytes)": estimateGas,
-      },
-      "mint(address,uint256,address,uint256,bytes)": mint,
-    } = await this.instances.SoulboundCreditScoreContract.connect(
-      this.masa.config.signer
-    );
+    const feeData = await this.getNetworkParameters();
 
-    const creditScoreMintOverrides = {
+    const creditScoreMintOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,
+      ...(feeData
+        ? {
+            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
+            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+          }
+        : undefined),
     };
 
     const creditScoreMintParametersIdentity: [
@@ -124,6 +126,16 @@ export class CreditScore extends MasaModuleBase {
       signatureDate,
       signature,
     ];
+
+    // connect
+    const {
+      estimateGas: {
+        "mint(address,uint256,address,uint256,bytes)": estimateGas,
+      },
+      "mint(address,uint256,address,uint256,bytes)": mint,
+    } = await this.instances.SoulboundCreditScoreContract.connect(
+      this.masa.config.signer
+    );
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -142,6 +154,7 @@ export class CreditScore extends MasaModuleBase {
       ...creditScoreMintOverrides,
       gasLimit,
     };
+
     if (this.masa.config.verbose) {
       console.info({
         creditScoreMintParametersIdentity,

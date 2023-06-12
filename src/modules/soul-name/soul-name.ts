@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import type { BigNumber } from "@ethersproject/bignumber";
 
 import { MasaBase } from "../../base/masa-base";
 import type { PaymentMethod } from "../../interface";

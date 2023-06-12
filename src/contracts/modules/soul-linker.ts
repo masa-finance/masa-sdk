@@ -1,5 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { Contract } from "ethers";
+import type { Contract, PayableOverrides } from "ethers";
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
@@ -48,6 +48,7 @@ export class SoulLinker extends MasaModuleBase {
 
     let mintFee: BigNumber | undefined,
       protocolFee: BigNumber = BigNumber.from(0);
+
     try {
       // load protocol and mint fee
       const fees =
@@ -140,11 +141,6 @@ export class SoulLinker extends MasaModuleBase {
       price
     );
 
-    const {
-      estimateGas: { addLink: estimateGas },
-      addLink,
-    } = this.instances.SoulLinkerContract.connect(this.masa.config.signer);
-
     const params: [
       string, // paymentMethod
       BigNumber, //readerIdentityId
@@ -165,9 +161,22 @@ export class SoulLinker extends MasaModuleBase {
       signature,
     ];
 
-    const overrides = {
+    const feeData = await this.getNetworkParameters();
+
+    const overrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,
+      ...(feeData
+        ? {
+            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
+            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+          }
+        : undefined),
     };
+
+    const {
+      estimateGas: { addLink: estimateGas },
+      addLink,
+    } = this.instances.SoulLinkerContract.connect(this.masa.config.signer);
 
     let gasLimit: BigNumber = await estimateGas(...params, overrides);
 

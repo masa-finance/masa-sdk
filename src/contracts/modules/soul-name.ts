@@ -1,5 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { ContractTransaction, TypedDataDomain } from "ethers";
+import type {
+  ContractTransaction,
+  PayableOverrides,
+  TypedDataDomain,
+} from "ethers";
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
@@ -122,8 +126,16 @@ export class SoulName extends MasaModuleBase {
       signature,
     ];
 
-    const purchaseNameOverrides = {
+    const feeData = await this.getNetworkParameters();
+
+    const purchaseNameOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,
+      ...(feeData
+        ? {
+            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
+            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+          }
+        : undefined),
     };
 
     if (this.masa.config.verbose) {
@@ -182,6 +194,7 @@ export class SoulName extends MasaModuleBase {
 
     let mintFee: BigNumber | undefined,
       protocolFee: BigNumber = BigNumber.from(0);
+
     try {
       // load protocol and mint fee
       const fees =

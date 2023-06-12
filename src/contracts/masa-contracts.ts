@@ -117,13 +117,17 @@ export class MasaContracts extends MasaBase {
               log.address.toLowerCase() === contract.address.toLowerCase()
           )
           .map((log: Log) => {
+            let result;
+
             try {
-              return contract.interface.parseLog(log);
+              result = contract.interface.parseLog(log);
             } catch (error) {
               if (error instanceof Error) {
                 console.warn(error.message);
               }
             }
+
+            return result;
           })
       );
     }

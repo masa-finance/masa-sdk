@@ -71,6 +71,8 @@ export class MasaClient extends MasaBase {
       signature: string,
       cookie?: string
     ): Promise<SessionUser | undefined> => {
+      let result;
+
       const cookieToUse = cookie || this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
@@ -115,14 +117,18 @@ export class MasaClient extends MasaBase {
           this._cookie = cookie;
         }
 
-        return checkSignatureResponseData;
+        result = checkSignatureResponseData;
       }
+
+      return result;
     },
 
     /**
      * Get challenge
      */
     getChallenge: async (): Promise<ChallengeResultWithCookie | undefined> => {
+      let result;
+
       const getChallengeResponse = await this._middlewareClient
         .get<ChallengeResult>("/session/get-challenge")
         .catch((error: Error | AxiosError) => {
@@ -153,12 +159,14 @@ export class MasaClient extends MasaBase {
         }
 
         if (getChallengeResponseData) {
-          return {
+          result = {
             ...getChallengeResponseData,
             cookie,
           };
         }
       }
+
+      return result;
     },
 
     logout: async (): Promise<LogoutResult | undefined> => {

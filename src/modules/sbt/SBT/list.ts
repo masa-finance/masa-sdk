@@ -1,9 +1,9 @@
+import type { BigNumber } from "@ethersproject/bignumber";
 import {
   MasaSBT,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import { BigNumber } from "ethers";
 
 import type { MasaInterface } from "../../../interface";
 import { loadSBTs } from "./load";

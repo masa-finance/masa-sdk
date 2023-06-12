@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import type { BigNumber } from "@ethersproject/bignumber";
 
 import { Messages } from "../../collections";
 import type {
