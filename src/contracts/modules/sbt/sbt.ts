@@ -38,7 +38,7 @@ export class SBT<Contract extends MasaSBT> extends MasaModuleBase {
      * @param paymentMethod
      * @param slippage
      */
-    getPrice: async (
+    getPrice: (
       paymentMethod: PaymentMethod,
       slippage: number | undefined = 250
     ): Promise<{
