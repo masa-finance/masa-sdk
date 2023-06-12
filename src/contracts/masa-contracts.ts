@@ -1,11 +1,11 @@
-import { LogDescription } from "@ethersproject/abi";
-import { Log } from "@ethersproject/abstract-provider";
-import {
+import type { LogDescription } from "@ethersproject/abi";
+import type { Log } from "@ethersproject/abstract-provider";
+import type {
   MasaSBT,
   ReferenceSBTAuthority,
   ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import { BaseContract } from "ethers";
+import type { BaseContract } from "ethers";
 
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { MasaBase } from "../interface";
