@@ -9,6 +9,8 @@ export const logout = async (
     }
   | undefined
 > => {
+  let result;
+
   console.log("Logging out");
 
   if (await masa.session.checkLogin()) {
@@ -17,12 +19,13 @@ export const logout = async (
     if (logoutData) {
       console.log(`Logout: ${logoutData.status}`);
 
-      return {
+      result = {
         status: logoutData.status,
       };
     }
   } else {
     console.error(Messages.NotLoggedIn());
   }
-  return;
+
+  return result;
 };

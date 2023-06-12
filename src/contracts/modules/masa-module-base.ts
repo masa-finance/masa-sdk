@@ -42,6 +42,8 @@ export class MasaModuleBase extends MasaBase {
     spenderAddress: string,
     price: BigNumber
   ): Promise<ContractReceipt | undefined> => {
+    let contractReceipt;
+
     if (isERC20Currency(paymentMethod)) {
       const contract: ERC20 = ERC20__factory.connect(
         paymentAddress,
@@ -79,11 +81,11 @@ export class MasaModuleBase extends MasaBase {
           console.info(Messages.WaitingToFinalize(hash));
         }
 
-        return await wait();
+        contractReceipt = await wait();
       }
     }
 
-    return;
+    return contractReceipt;
   };
 
   /**
