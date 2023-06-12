@@ -2,19 +2,10 @@ import type { LogDescription } from "@ethersproject/abi";
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber, PayableOverrides } from "ethers";
 
-import type { PaymentMethod } from "../../../interface";
-import { Messages } from "../../../utils";
-import { SBT, SBTContractWrapper } from "./sbt";
-
-export interface ASBTContractWrapper<Contract extends ReferenceSBTAuthority>
-  extends SBTContractWrapper<Contract> {
-  /**
-   *
-   * @param paymentMethod
-   * @param receiver
-   */
-  mint: (paymentMethod: PaymentMethod, receiver: string) => Promise<boolean>;
-}
+import type { PaymentMethod } from "../../../../interface";
+import { Messages } from "../../../../utils";
+import { SBT } from "../sbt";
+import type { ASBTContractWrapper } from "./ASBTContractWrapper";
 
 export class ASBT<
   Contract extends ReferenceSBTAuthority

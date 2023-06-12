@@ -1,12 +1,12 @@
 import { BigNumber, ContractTransaction, TypedDataDomain } from "ethers";
 
+import { MasaModuleBase } from "../../base/masa-module-base";
 import type { PaymentMethod } from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
   Messages,
 } from "../../utils";
-import { MasaModuleBase } from "./masa-module-base";
 
 export class Identity extends MasaModuleBase {
   /**

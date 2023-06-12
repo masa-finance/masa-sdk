@@ -1,0 +1,14 @@
+import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
+
+import type { PaymentMethod } from "../../../../interface";
+import type { SBTContractWrapper } from "../SBTContractWrapper";
+
+export interface ASBTContractWrapper<Contract extends ReferenceSBTAuthority>
+  extends SBTContractWrapper<Contract> {
+  /**
+   *
+   * @param paymentMethod
+   * @param receiver
+   */
+  mint: (paymentMethod: PaymentMethod, receiver: string) => Promise<boolean>;
+}

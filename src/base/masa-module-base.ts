@@ -10,17 +10,17 @@ import type { ContractReceipt, TypedDataDomain, TypedDataField } from "ethers";
 import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
-import { MasaBase } from "../../base/masa-base";
+import type { ContractFactory } from "../contracts";
 import type {
   IIdentityContracts,
   MasaConfig,
   MasaInterface,
   PaymentMethod,
-} from "../../interface";
-import { isERC20Currency, isNativeCurrency, Messages } from "../../utils";
+} from "../interface";
 import type { ERC20 } from "../stubs";
 import { ERC20__factory } from "../stubs";
-import type { ContractFactory } from "./contract-factory";
+import { isERC20Currency, isNativeCurrency, Messages } from "../utils";
+import { MasaBase } from "./masa-base";
 
 export class MasaModuleBase extends MasaBase {
   constructor(masa: MasaInterface, protected instances: IIdentityContracts) {

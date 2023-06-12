@@ -2,25 +2,10 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 
+import { MasaModuleBase } from "../../../base/masa-module-base";
 import type { PaymentMethod } from "../../../interface";
-import { ContractFactory } from "../contract-factory";
-import { MasaModuleBase } from "../masa-module-base";
-
-export interface SBTContractWrapper<Contract extends MasaSBT> {
-  sbtContract: Contract;
-  getPrice: (
-    paymentMethod: PaymentMethod,
-    slippage?: number
-  ) => Promise<{
-    paymentAddress: string;
-    price: BigNumber;
-    formattedPrice: string;
-    mintFee: BigNumber;
-    formattedMintFee: string;
-    protocolFee: BigNumber;
-    formattedProtocolFee: string;
-  }>;
-}
+import type { ContractFactory } from "../contract-factory";
+import type { SBTContractWrapper } from "./SBTContractWrapper";
 
 export class SBT<Contract extends MasaSBT> extends MasaModuleBase {
   protected wrapper = (

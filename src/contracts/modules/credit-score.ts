@@ -1,6 +1,7 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import { ContractTransaction, TypedDataDomain } from "ethers";
 
+import { MasaModuleBase } from "../../base/masa-module-base";
 import type { PaymentMethod } from "../../interface";
 import {
   generateSignatureDomain,
@@ -8,7 +9,6 @@ import {
   Messages,
   signTypedData,
 } from "../../utils";
-import { MasaModuleBase } from "./masa-module-base";
 
 export class CreditScore extends MasaModuleBase {
   /**
