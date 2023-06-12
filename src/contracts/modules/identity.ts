@@ -22,7 +22,7 @@ export class Identity extends MasaModuleBase {
     let gasLimit: BigNumber = await estimateGas();
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = Identity.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -136,7 +136,7 @@ export class Identity extends MasaModuleBase {
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = Identity.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -169,7 +169,7 @@ export class Identity extends MasaModuleBase {
       let gasLimit: BigNumber = await estimateGas(identityId);
 
       if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = this.addSlippage(
+        gasLimit = Identity.addSlippage(
           gasLimit,
           this.masa.config.network.gasSlippagePercentage
         );

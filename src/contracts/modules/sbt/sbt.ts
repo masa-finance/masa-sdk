@@ -61,7 +61,7 @@ export class SBT<Contract extends MasaSBT> extends MasaModuleBase {
     address: string,
     factory: ContractFactory = MasaSBT__factory
   ): Promise<SBTContractWrapper<Contract>> => {
-    const sbtContract: Contract = await this.loadSBTContract(
+    const sbtContract: Contract = await SBT.loadSBTContract(
       this.masa.config,
       address,
       factory

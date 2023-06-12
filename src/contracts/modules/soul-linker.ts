@@ -72,7 +72,7 @@ export class SoulLinker extends MasaModuleBase {
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
+        price = SoulLinker.addSlippage(price, slippage);
       }
     }
 
@@ -170,7 +170,7 @@ export class SoulLinker extends MasaModuleBase {
     let gasLimit: BigNumber = await estimateGas(...params, overrides);
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = SoulLinker.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );

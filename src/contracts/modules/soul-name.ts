@@ -143,7 +143,7 @@ export class SoulName extends MasaModuleBase {
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = SoulName.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -210,7 +210,7 @@ export class SoulName extends MasaModuleBase {
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
+        price = SoulName.addSlippage(price, slippage);
       }
     }
 
@@ -382,7 +382,7 @@ export class SoulName extends MasaModuleBase {
         let gasLimit: BigNumber = await estimateGas(soulNameData.tokenId);
 
         if (this.masa.config.network?.gasSlippagePercentage) {
-          gasLimit = this.addSlippage(
+          gasLimit = SoulName.addSlippage(
             gasLimit,
             this.masa.config.network.gasSlippagePercentage
           );

@@ -251,7 +251,7 @@ export class SSSBT<
       );
 
       if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = this.addSlippage(
+        gasLimit = SSSBT.addSlippage(
           gasLimit,
           this.masa.config.network.gasSlippagePercentage
         );

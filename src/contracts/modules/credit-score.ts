@@ -132,7 +132,7 @@ export class CreditScore extends MasaModuleBase {
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = CreditScore.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -221,7 +221,7 @@ export class CreditScore extends MasaModuleBase {
 
       let gasLimit: BigNumber = await estimateGas(creditScoreId);
       if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = this.addSlippage(
+        gasLimit = CreditScore.addSlippage(
           gasLimit,
           this.masa.config.network.gasSlippagePercentage
         );

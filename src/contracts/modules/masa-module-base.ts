@@ -132,7 +132,7 @@ export class MasaModuleBase extends MasaBase {
    * @param price
    * @param slippage
    */
-  protected addSlippage = (price: BigNumber, slippage: number) => {
+  protected static addSlippage = (price: BigNumber, slippage: number) => {
     price = price.add(price.mul(slippage).div(10000));
     return price;
   };
@@ -268,7 +268,7 @@ export class MasaModuleBase extends MasaBase {
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
+        price = MasaModuleBase.addSlippage(price, slippage);
       }
     }
 
@@ -301,7 +301,7 @@ export class MasaModuleBase extends MasaBase {
    * @param address
    * @param factory
    */
-  protected loadSBTContract = async <
+  protected static loadSBTContract = async <
     Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT
   >(
     masaConfig: MasaConfig,
