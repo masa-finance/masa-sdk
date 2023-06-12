@@ -13,26 +13,6 @@ import { parsePassport } from "./parse-passport";
 
 export type QueryLinkResult = BaseResult;
 
-export const queryLinkFromPassport = async (
-  masa: MasaInterface,
-  paymentMethod: PaymentMethod,
-  contract: Contract,
-  passport: string
-) => {
-  const unpackedPassport: IPassport = parsePassport(passport);
-
-  return await queryLink(
-    masa,
-    contract,
-    paymentMethod,
-    BigNumber.from(unpackedPassport.tokenId),
-    BigNumber.from(unpackedPassport.readerIdentityId),
-    unpackedPassport.signature,
-    unpackedPassport.signatureDate,
-    unpackedPassport.expirationDate
-  );
-};
-
 export const queryLink = async (
   masa: MasaInterface,
   contract: Contract,
@@ -100,4 +80,24 @@ export const queryLink = async (
   result.success = true;
 
   return result;
+};
+
+export const queryLinkFromPassport = async (
+  masa: MasaInterface,
+  paymentMethod: PaymentMethod,
+  contract: Contract,
+  passport: string
+) => {
+  const unpackedPassport: IPassport = parsePassport(passport);
+
+  return await queryLink(
+    masa,
+    contract,
+    paymentMethod,
+    BigNumber.from(unpackedPassport.tokenId),
+    BigNumber.from(unpackedPassport.readerIdentityId),
+    unpackedPassport.signature,
+    unpackedPassport.signatureDate,
+    unpackedPassport.expirationDate
+  );
 };
