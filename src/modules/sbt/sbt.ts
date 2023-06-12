@@ -1,27 +1,8 @@
-import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
-import type { BigNumber } from "ethers";
 
-import { MasaBase, MasaLinkable } from "../../base";
-import { ContractFactory } from "../../contracts";
-import { burnSBT } from "./burn";
-import { listSBTs } from "./list";
-
-export class SBTWrapper<
-  Contract extends MasaSBT
-> extends MasaLinkable<Contract> {
-  /**
-   *
-   * @param address
-   */
-  list = (address?: string) => listSBTs(this.masa, this.contract, address);
-
-  /**
-   *
-   * @param SBTId
-   */
-  burn = (SBTId: BigNumber) => burnSBT(this.masa, this.contract, SBTId);
-}
+import { MasaBase } from "../../base";
+import type { ContractFactory } from "../../contracts";
+import { SBTWrapper } from "./SBTWrapper";
 
 export class MasaSBTs extends MasaBase {
   /**

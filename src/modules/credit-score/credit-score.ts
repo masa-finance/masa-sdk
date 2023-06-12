@@ -1,5 +1,5 @@
-import { SoulboundCreditScore } from "@masa-finance/masa-contracts-identity";
-import { BigNumber } from "ethers";
+import type { SoulboundCreditScore } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
 import { MasaLinkable } from "../../base";
 import type { MasaInterface, PaymentMethod } from "../../interface";

@@ -1,17 +1,8 @@
-import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { ReferenceSBTAuthority__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaSBTs, SBTWrapper } from "../sbt";
+import { MasaSBTs } from "../sbt";
+import { ASBTWrapper } from "./ASBTWrapper";
 import { deployASBT } from "./deploy";
-import { mintASBT } from "./mint";
-
-export class ASBTWrapper extends SBTWrapper<ReferenceSBTAuthority> {
-  /**
-   *
-   * @param receiver
-   */
-  mint = (receiver: string) => mintASBT(this.masa, this.contract, receiver);
-}
 
 export class MasaASBT extends MasaSBTs {
   /**
