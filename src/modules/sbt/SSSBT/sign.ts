@@ -13,7 +13,7 @@ export const signSSSBT = async (
         signatureDate: number;
         signature: string;
       }
-    | undefined = undefined;
+    | undefined;
 
   const [name, symbol] = await Promise.all([
     contract.name(),
