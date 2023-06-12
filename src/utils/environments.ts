@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
 
-import { MasaArgs } from "../interface";
+import { MasaArgs } from "../interface/masa-args";
 
 // special type for env config that makes wallet optional
 export type Environment = {

@@ -1,4 +1,4 @@
-import { NetworkName } from "../interface";
+import { NetworkName } from "../interface/network-name";
 
 export const Messages = {
   NoIdentity: (address?: string) =>

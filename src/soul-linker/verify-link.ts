@@ -1,6 +1,6 @@
 import { BigNumber, Contract } from "ethers";
 
-import { BaseResult } from "../interface";
+import { BaseResult } from "../interface/base-result";
 import { MasaInterface } from "../interface/masa-interface";
 import { Link, loadLinks } from "./list-links";
 

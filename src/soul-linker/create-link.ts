@@ -1,7 +1,8 @@
 import { BigNumber, Contract } from "ethers";
 
 import { resolveIdentity } from "../identity";
-import { BaseResult, IPassport } from "../interface";
+import { IPassport } from "../interface";
+import { BaseResult } from "../interface/base-result";
 import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 

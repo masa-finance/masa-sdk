@@ -10,7 +10,6 @@ import {
   IIdentity,
   ISession,
   LogoutResult,
-  NetworkName,
   SessionUser,
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
@@ -19,6 +18,7 @@ import {
 } from "../../interface";
 import { MasaBase } from "../../interface/masa-base";
 import { MasaInterface } from "../../interface/masa-interface";
+import { NetworkName } from "../../interface/network-name";
 
 const headers = {
   "Content-Type": "application/json",

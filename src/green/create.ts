@@ -1,11 +1,11 @@
 import { LogDescription } from "@ethersproject/abi";
 
 import {
-  BaseResult,
   GenerateGreenResult,
   PaymentMethod,
   VerifyGreenResult,
 } from "../interface";
+import { BaseResult } from "../interface/base-result";
 import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 

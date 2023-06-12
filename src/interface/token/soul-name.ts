@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 
-import { BaseResult } from "../masa";
+import { BaseResult } from "../base-result";
 
 export interface Attribute {
   display_type?: string;

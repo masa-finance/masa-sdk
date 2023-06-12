@@ -11,16 +11,14 @@ import { IIdentityContracts } from "../interface";
 import { MasaBase } from "../interface/masa-base";
 import { MasaInterface } from "../interface/masa-interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
-import {
-  ASBT,
-  CreditScore,
-  Green,
-  Identity,
-  SBT,
-  SoulLinker,
-  SoulName,
-  SSSBT,
-} from "./modules";
+import { CreditScore } from "./modules/credit-score";
+import { Green } from "./modules/green";
+import { Identity } from "./modules/identity";
+import { ASBT } from "./modules/sbt/asbt";
+import { SBT } from "./modules/sbt/sbt";
+import { SSSBT } from "./modules/sbt/sssbt";
+import { SoulLinker } from "./modules/soul-linker";
+import { SoulName } from "./modules/soul-name";
 
 export class MasaContracts extends MasaBase {
   public instances: IIdentityContracts;

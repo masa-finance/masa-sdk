@@ -14,7 +14,8 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { constants, providers } from "ethers";
 
-import { ContractInfo, IIdentityContracts, NetworkName } from "../interface";
+import { ContractInfo, IIdentityContracts } from "../interface";
+import { NetworkName } from "../interface/network-name";
 import { addresses } from "./addresses";
 
 export interface LoadContractArgs {

@@ -3,7 +3,7 @@ import { Config } from "arweave/node/common";
 import { ApiConfig } from "arweave/node/lib/api";
 import axios from "axios";
 
-import { MasaConfig } from "../../interface";
+import { MasaConfig } from "../../interface/masa-config";
 
 export class MasaArweave extends Arweave {
   constructor(config: ApiConfig, private masaConfig: MasaConfig) {

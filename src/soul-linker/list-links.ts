@@ -1,7 +1,7 @@
 import { SoulLinker } from "@masa-finance/masa-contracts-identity";
 import { BigNumber, Contract } from "ethers";
 
-import { BaseResult } from "../interface";
+import { BaseResult } from "../interface/base-result";
 import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 
