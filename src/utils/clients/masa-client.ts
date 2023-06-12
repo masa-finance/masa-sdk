@@ -71,6 +71,8 @@ export class MasaClient extends MasaBase {
       signature: string,
       cookie?: string
     ): Promise<SessionUser | undefined> => {
+      let result;
+
       const cookieToUse = cookie || this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
@@ -115,8 +117,10 @@ export class MasaClient extends MasaBase {
           this._cookie = cookie;
         }
 
-        return checkSignatureResponseData;
+        result = checkSignatureResponseData;
       }
+
+      return result;
     },
 
     /**
