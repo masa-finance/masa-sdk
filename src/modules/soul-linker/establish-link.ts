@@ -11,26 +11,6 @@ import { parsePassport } from "./parse-passport";
 
 export type EstablishLinkResult = BaseResult;
 
-export const establishLinkFromPassport = async (
-  masa: MasaInterface,
-  paymentMethod: PaymentMethod,
-  contract: Contract,
-  passport: string
-) => {
-  const unpackedPassport: IPassport = parsePassport(passport);
-
-  return await establishLink(
-    masa,
-    paymentMethod,
-    contract,
-    BigNumber.from(unpackedPassport.tokenId),
-    BigNumber.from(unpackedPassport.readerIdentityId),
-    unpackedPassport.signature,
-    unpackedPassport.signatureDate,
-    unpackedPassport.expirationDate
-  );
-};
-
 export const establishLink = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
@@ -90,4 +70,24 @@ export const establishLink = async (
   result.success = true;
 
   return result;
+};
+
+export const establishLinkFromPassport = async (
+  masa: MasaInterface,
+  paymentMethod: PaymentMethod,
+  contract: Contract,
+  passport: string
+) => {
+  const unpackedPassport: IPassport = parsePassport(passport);
+
+  return await establishLink(
+    masa,
+    paymentMethod,
+    contract,
+    BigNumber.from(unpackedPassport.tokenId),
+    BigNumber.from(unpackedPassport.readerIdentityId),
+    unpackedPassport.signature,
+    unpackedPassport.signatureDate,
+    unpackedPassport.expirationDate
+  );
 };
