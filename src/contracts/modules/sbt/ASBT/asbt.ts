@@ -3,13 +3,27 @@ import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identit
 import type { BigNumber, PayableOverrides } from "ethers";
 
 import { Messages } from "../../../../collections";
-import type { PaymentMethod } from "../../../../interface";
+import type {
+  IIdentityContracts,
+  MasaInterface,
+  PaymentMethod,
+} from "../../../../interface";
 import { SBT } from "../SBT";
 import type { ASBTContractWrapper } from "./ASBTContractWrapper";
 
 export class ASBT<
   Contract extends ReferenceSBTAuthority
 > extends SBT<Contract> {
+  constructor(masa: MasaInterface, instances: IIdentityContracts) {
+    super(masa, instances);
+
+    this.wrapper.bind(this);
+  }
+
+  /**
+   *
+   * @param sbtContract
+   */
   protected wrapper = (
     sbtContract: Contract
   ): ASBTContractWrapper<Contract> => ({

@@ -67,13 +67,31 @@ export class MasaContracts extends MasaBase {
       ...contractOverrides,
     };
 
+    /**
+     * SBTS
+     */
     this.sbt = new SBT(this.masa, this.instances);
     this.sssbt = new SSSBT(this.masa, this.instances);
     this.asbt = new ASBT(this.masa, this.instances);
+    /**
+     * Soul Linker
+     */
     this.soulLinker = new SoulLinker(this.masa, this.instances);
+    /**
+     * Soul Name
+     */
     this.soulName = new SoulName(this.masa, this.instances);
+    /**
+     * Identity
+     */
     this.identity = new Identity(this.masa, this.instances);
+    /**
+     * Credit Score
+     */
     this.creditScore = new CreditScore(this.masa, this.instances);
+    /**
+     * Greens
+     */
     this.green = new Green(this.masa, this.instances);
   }
 

@@ -5,6 +5,7 @@ import type { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 
 import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
+import { IIdentityContracts, MasaInterface } from "../../../../interface";
 import { generateSignatureDomain, signTypedData } from "../../../../utils";
 import { SBT } from "../SBT";
 import type { SSSBTContractWrapper } from "./SSSBTContractWrapper";
@@ -12,6 +13,16 @@ import type { SSSBTContractWrapper } from "./SSSBTContractWrapper";
 export class SSSBT<
   Contract extends ReferenceSBTSelfSovereign
 > extends SBT<Contract> {
+  constructor(masa: MasaInterface, instances: IIdentityContracts) {
+    super(masa, instances);
+
+    this.wrapper.bind(this);
+  }
+
+  /**
+   *
+   * @param sbtContract
+   */
   protected wrapper = (
     sbtContract: Contract
   ): SSSBTContractWrapper<Contract> => ({
