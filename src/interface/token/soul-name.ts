@@ -53,12 +53,6 @@ export interface SoulNameResultBase extends BaseResult {
   errorCode: SoulNameErrorCodes;
 }
 
-export const isSoulNameMetadataStoreResult = (
-  result: SoulNameResultBase
-): result is SoulNameMetadataStoreResult => {
-  return !!(result as SoulNameMetadataStoreResult).authorityAddress;
-};
-
 export interface CreateSoulNameResult extends SoulNameResultBase {
   soulName?: string;
 }

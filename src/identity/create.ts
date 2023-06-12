@@ -4,12 +4,11 @@ import { BigNumber } from "ethers";
 import {
   BaseResult,
   CreateSoulNameResult,
-  isSoulNameMetadataStoreResult,
   MasaInterface,
   PaymentMethod,
   SoulNameErrorCodes,
 } from "../interface";
-import { Messages } from "../utils";
+import { isSoulNameMetadataStoreResult, Messages } from "../utils";
 
 /**
  * Identity only

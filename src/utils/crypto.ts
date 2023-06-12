@@ -11,14 +11,6 @@ import {
 
 /**
  *
- * @param item
- */
-export const isBigNumber = (item: BigNumber | string): item is BigNumber => {
-  return (item as BigNumber)._isBigNumber;
-};
-
-/**
- *
  * @param data
  */
 const hashData = (data: BytesLike) => utils.keccak256(data);

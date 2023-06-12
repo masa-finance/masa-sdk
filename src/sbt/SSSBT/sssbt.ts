@@ -71,7 +71,7 @@ export class MasaSSSBT extends MasaSBTs {
    *
    * @param address
    */
-  public connect = async (address: string) => {
+  public connect = async (address: string): Promise<SSSBTWrapper> => {
     const { sbtContract } = await this.masa.contracts.sssbt.connect(
       address,
       ReferenceSBTSelfSovereign__factory

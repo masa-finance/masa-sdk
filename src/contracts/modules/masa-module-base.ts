@@ -17,14 +17,12 @@ import { verifyTypedData } from "ethers/lib/utils";
 
 import {
   IIdentityContracts,
-  isERC20Currency,
-  isNativeCurrency,
   MasaBase,
   MasaConfig,
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
-import { Messages } from "../../utils";
+import { isERC20Currency, isNativeCurrency, Messages } from "../../utils";
 import { ERC20, ERC20__factory } from "../stubs";
 import { ContractFactory } from "./contract-factory";
 
