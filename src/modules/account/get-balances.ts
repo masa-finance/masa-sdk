@@ -39,6 +39,7 @@ export const getBalances = async (
     userAddress: string,
     tokenAddress?: string
   ): Promise<number | undefined> => {
+    let result;
     if (
       !masa.config.signer.provider ||
       !tokenAddress ||
@@ -58,7 +59,7 @@ export const getBalances = async (
         contract.decimals(),
       ]);
 
-      return parseFloat(utils.formatUnits(balance, decimals));
+      result = parseFloat(utils.formatUnits(balance, decimals));
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
@@ -66,16 +67,20 @@ export const getBalances = async (
         );
       }
     }
+
+    return result;
   };
 
   const loadSBTContractBalance = async (
     contract: SBTContracts,
     addressToLoad: string
   ): Promise<number | undefined> => {
-    if (contract.address === constants.AddressZero) return;
+    let result;
+
+    if (contract.address === constants.AddressZero) return result;
 
     try {
-      return (await contract.balanceOf(addressToLoad)).toNumber();
+      result = (await contract.balanceOf(addressToLoad)).toNumber();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(
@@ -87,6 +92,8 @@ export const getBalances = async (
         );
       }
     }
+
+    return result;
   };
 
   let ERC20Balances;

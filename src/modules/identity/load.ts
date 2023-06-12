@@ -77,13 +77,16 @@ export const loadIdentity = async (
   masa: MasaInterface,
   address?: string
 ): Promise<IdentityDetails | undefined> => {
+  let result;
+
   address = address || (await masa.config.signer.getAddress());
 
   const { identityId } = await masa.identity.load(address);
-  if (!identityId) {
+  if (identityId) {
+    result = await loadIdentityDetails(masa, identityId);
+  } else {
     console.error(Messages.NoIdentity(address));
-    return;
   }
 
-  return loadIdentityDetails(masa, identityId);
+  return result;
 };
