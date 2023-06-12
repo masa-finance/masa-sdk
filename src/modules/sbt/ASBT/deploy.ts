@@ -17,6 +17,8 @@ export const deployASBT = async (
   limit: number = 1,
   adminAddress?: string
 ): Promise<string | undefined> => {
+  let result = undefined;
+
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
 
   console.log(`Deploying ASBT to network '${masa.config.networkName}'`);
@@ -71,10 +73,12 @@ export const deployASBT = async (
       `ASBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
     );
 
-    return address;
+    result = address;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("ASBT deployment failed!", error.message);
     }
   }
+
+  return result;
 };

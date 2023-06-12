@@ -7,6 +7,14 @@ export const signSSSBT = async (
   contract: ReferenceSBTSelfSovereign,
   receiver: string
 ) => {
+  let result:
+    | {
+        authorityAddress: string;
+        signatureDate: number;
+        signature: string;
+      }
+    | undefined = undefined;
+
   const [name, symbol] = await Promise.all([
     contract.name(),
     contract.symbol(),
@@ -43,17 +51,25 @@ export const signSSSBT = async (
 
   // sign to create a signature
   const signResult = await sign("ReferenceSBTSelfSovereign", types, value);
-  if (!signResult) return;
+  if (!signResult) {
+    return result;
+  }
 
   const { signature, authorityAddress } = signResult;
 
   if (masa.config.verbose) {
-    console.info({ signature, authorityAddress, signatureDate });
+    console.info({
+      signature,
+      authorityAddress,
+      signatureDate,
+    });
   }
 
-  return {
+  result = {
     authorityAddress,
     signatureDate,
     signature,
   };
+
+  return result;
 };
