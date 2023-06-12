@@ -1,4 +1,3 @@
-export * from "./addresses";
 export * from "./contracts";
 export * from "./masa";
 export * from "./masa-base";

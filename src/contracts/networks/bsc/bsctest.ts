@@ -1,6 +1,6 @@
 import { bsctest as bsctestAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
 
-import { Addresses } from "../../../interface";
+import { Addresses } from "../../../interface/addresses";
 
 const { SoulboundGreen: SoulboundGreenAddress } = bsctestAddresses;
 
