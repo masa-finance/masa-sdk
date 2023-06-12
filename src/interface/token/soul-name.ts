@@ -1,5 +1,6 @@
 import type { BigNumber } from "ethers";
 
+import { SoulNameErrorCodes } from "../../collections";
 import type { BaseResult } from "../base-result";
 
 export interface Attribute {
@@ -38,15 +39,6 @@ export interface SoulNameDetails {
     active: boolean;
   };
   metadata: ISoulName;
-}
-
-export enum SoulNameErrorCodes {
-  NoError,
-  ArweaveError,
-  NetworkError,
-  CryptoError,
-  SoulNameError,
-  UnknownError = 1337,
 }
 
 export interface SoulNameResultBase extends BaseResult {

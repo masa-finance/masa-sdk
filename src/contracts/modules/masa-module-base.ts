@@ -10,13 +10,13 @@ import type { ContractReceipt, TypedDataDomain, TypedDataField } from "ethers";
 import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
+import { MasaBase } from "../../base/masa-base";
 import type {
   IIdentityContracts,
   MasaConfig,
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
-import { MasaBase } from "../../interface";
 import { isERC20Currency, isNativeCurrency, Messages } from "../../utils";
 import type { ERC20 } from "../stubs";
 import { ERC20__factory } from "../stubs";

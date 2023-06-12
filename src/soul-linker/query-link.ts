@@ -1,4 +1,5 @@
-import { BigNumber, Contract } from "ethers";
+import type { Contract } from "ethers";
+import { BigNumber } from "ethers";
 
 import { patchMetadataUrl } from "../helpers";
 import type {

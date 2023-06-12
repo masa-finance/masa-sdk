@@ -1,9 +1,10 @@
 import { LogDescription } from "@ethersproject/abi";
 
-import type { MasaInterface, PaymentMethod } from "../interface";
-import {
+import { SoulNameErrorCodes } from "../collections";
+import type {
   CreateSoulNameResult,
-  SoulNameErrorCodes,
+  MasaInterface,
+  PaymentMethod,
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
 } from "../interface";

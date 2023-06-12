@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import type { BigNumber } from "ethers";
 
 import type { ISoulName, MasaInterface, SoulNameDetails } from "../interface";
 import { isBigNumber } from "../utils";

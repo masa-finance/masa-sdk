@@ -1,4 +1,4 @@
-import { BigNumber, Contract } from "ethers";
+import type { BigNumber, Contract } from "ethers";
 
 import type { BaseResult, MasaInterface } from "../interface";
 import { Link, loadLinks } from "./list-links";

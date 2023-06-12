@@ -1,4 +1,7 @@
-import { SoulNameMetadataStoreResult, SoulNameResultBase } from "../interface";
+import type {
+  SoulNameMetadataStoreResult,
+  SoulNameResultBase,
+} from "../interface";
 
 export const isSoulNameMetadataStoreResult = (
   result: SoulNameResultBase

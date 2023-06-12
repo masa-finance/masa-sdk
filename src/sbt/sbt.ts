@@ -2,8 +2,9 @@ import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
+import { MasaBase } from "../base/masa-base";
+import { MasaLinkable } from "../base/masa-linkable";
 import { ContractFactory } from "../contracts";
-import { MasaBase, MasaLinkable } from "../interface";
 import { burnSBT } from "./burn";
 import { listSBTs } from "./list";
 

@@ -1,4 +1,5 @@
-import { NativeCurrencies, nativeCurrencies } from "../interface";
+import { nativeCurrencies } from "../collections";
+import type { NativeCurrencies } from "../interface";
 
 export const isNativeCurrency = (
   paymentMethod: unknown

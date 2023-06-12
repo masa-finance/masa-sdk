@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import type { Signer } from "ethers";
 
 export class ContractFactory {
   static connect: <Contract>(

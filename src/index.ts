@@ -1,4 +1,7 @@
 export * from "./account";
+export * from "./base/masa-base";
+export * from "./base/masa-linkable";
+export * from "./collections";
 export * from "./contracts";
 export * from "./credit-score";
 export * from "./green";

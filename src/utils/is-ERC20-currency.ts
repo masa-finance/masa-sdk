@@ -1,4 +1,5 @@
-import { ERC20Currencies, erc20Currencies } from "../interface";
+import { erc20Currencies } from "../collections";
+import type { ERC20Currencies } from "../interface";
 
 export const isERC20Currency = (
   paymentMethod: unknown
