@@ -1,0 +1,11 @@
+import { Tokens } from "./tokens";
+
+export interface Addresses {
+  tokens?: Tokens;
+  SoulboundIdentityAddress?: string;
+  SoulboundCreditScoreAddress?: string;
+  SoulNameAddress?: string;
+  SoulStoreAddress?: string;
+  SoulLinkerAddress?: string;
+  SoulboundGreenAddress?: string;
+}

@@ -1,6 +1,6 @@
 import { basegoerli as basegoerliAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
 
-import { Addresses } from "../../addresses";
+import { Addresses } from "../../../interface";
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,

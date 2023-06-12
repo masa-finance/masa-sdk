@@ -3,7 +3,7 @@ import { mainnet as ethereumAddresses } from "@masa-finance/masa-contracts-ident
 // token
 import { address as MASA } from "@masa-finance/masa-token/deployments/mainnet/MasaToken.json";
 
-import { Addresses } from "../../addresses";
+import { Addresses } from "../../../interface";
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,

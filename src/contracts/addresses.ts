@@ -1,4 +1,4 @@
-import { NetworkName, Tokens } from "../interface";
+import { Addresses, NetworkName } from "../interface";
 import {
   alfajores,
   basegoerli,
@@ -10,16 +10,6 @@ import {
   mumbai,
   polygon,
 } from "./networks";
-
-export interface Addresses {
-  tokens?: Tokens;
-  SoulboundIdentityAddress?: string;
-  SoulboundCreditScoreAddress?: string;
-  SoulNameAddress?: string;
-  SoulStoreAddress?: string;
-  SoulLinkerAddress?: string;
-  SoulboundGreenAddress?: string;
-}
 
 export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // eth
