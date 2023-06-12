@@ -1,6 +1,5 @@
 export * from "./account";
-export * from "./base/masa-base";
-export * from "./base/masa-linkable";
+export * from "./base";
 export * from "./collections";
 export * from "./contracts";
 export * from "./credit-score";
@@ -8,7 +7,7 @@ export * from "./green";
 export * from "./helpers";
 export * from "./identity";
 export * from "./interface";
-export * from "./masa";
+export { Masa } from "./masa";
 export * from "./sbt";
 export * from "./session";
 export * from "./soul-linker";
