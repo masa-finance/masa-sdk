@@ -1,6 +1,6 @@
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaBase } from "../../../base";
+import { MasaBase } from "../../../base/masa-base";
 import type { ContractFactory } from "../../../contracts";
 import { SBTWrapper } from "./SBTWrapper";
 

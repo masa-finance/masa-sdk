@@ -10,24 +10,47 @@ import type { BaseContract } from "ethers";
 import { MasaBase } from "../base";
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
-import { CreditScore } from "./modules/credit-score";
-import { Green } from "./modules/green";
-import { Identity } from "./modules/identity";
-import { ASBT } from "./modules/sbt/ASBT";
-import { SBT } from "./modules/sbt/SBT";
-import { SSSBT } from "./modules/sbt/SSSBT";
-import { SoulLinker } from "./modules/soul-linker";
-import { SoulName } from "./modules/soul-name";
+import {
+  ASBT,
+  CreditScore,
+  Green,
+  Identity,
+  SBT,
+  SoulLinker,
+  SoulName,
+  SSSBT,
+} from "./modules";
 
 export class MasaContracts extends MasaBase {
+  /**
+   * direct contract access
+   */
   public instances: IIdentityContracts;
+  /**
+   * SBTs
+   */
   public sbt: SBT<MasaSBT>;
   public sssbt: SSSBT<ReferenceSBTSelfSovereign>;
   public asbt: ASBT<ReferenceSBTAuthority>;
+  /**
+   * Soul Linker
+   */
   public soulLinker: SoulLinker;
+  /**
+   * Soul Name
+   */
   public soulName: SoulName;
+  /**
+   * Credit Score
+   */
   public creditScore: CreditScore;
+  /**
+   * Green
+   */
   public green: Green;
+  /**
+   * Identity
+   */
   public identity: Identity;
 
   public constructor(
