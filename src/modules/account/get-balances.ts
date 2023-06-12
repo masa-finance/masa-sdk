@@ -77,21 +77,19 @@ export const getBalances = async (
   ): Promise<number | undefined> => {
     let result;
 
-    if (contract.address === constants.AddressZero) {
-      return result;
-    }
-
-    try {
-      result = (await contract.balanceOf(addressToLoad)).toNumber();
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(
-          `Contract: ${await contract
-            .name()
-            .catch(() => contract.address)} Wallet Address: ${addressToLoad} ${
-            error.message
-          }`
-        );
+    if (contract.address !== constants.AddressZero) {
+      try {
+        result = (await contract.balanceOf(addressToLoad)).toNumber();
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(
+            `Contract: ${await contract
+              .name()
+              .catch(
+                () => contract.address
+              )} Wallet Address: ${addressToLoad} ${error.message}`
+          );
+        }
       }
     }
 

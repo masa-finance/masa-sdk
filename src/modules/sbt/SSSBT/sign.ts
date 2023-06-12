@@ -51,25 +51,22 @@ export const signSSSBT = async (
 
   // sign to create a signature
   const signResult = await sign("ReferenceSBTSelfSovereign", types, value);
-  if (!signResult) {
-    return result;
-  }
 
-  const { signature, authorityAddress } = signResult;
-
-  if (masa.config.verbose) {
-    console.info({
-      signature,
+  if (signResult) {
+    const { signature, authorityAddress } = signResult;
+    if (masa.config.verbose) {
+      console.info({
+        signature,
+        authorityAddress,
+        signatureDate,
+      });
+    }
+    result = {
       authorityAddress,
       signatureDate,
-    });
+      signature,
+    };
   }
-
-  result = {
-    authorityAddress,
-    signatureDate,
-    signature,
-  };
 
   return result;
 };
