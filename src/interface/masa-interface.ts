@@ -1,5 +1,5 @@
 import { MasaAccount } from "../account/account";
-import { MasaContracts } from "../contracts";
+import { MasaContracts } from "../contracts/masa-contracts";
 import { MasaCreditScore } from "../credit-score/credit-score";
 import { MasaGreen } from "../green/green";
 import { MasaIdentity } from "../identity/identity";
@@ -8,7 +8,8 @@ import { MasaSBTs } from "../sbt/sbt";
 import { MasaSSSBT } from "../sbt/SSSBT";
 import { MasaSession } from "../session/session";
 import { MasaSoulName } from "../soul-name/soul-name";
-import { MasaArweave, MasaClient } from "../utils";
+import { MasaArweave } from "../utils/clients/masa-arweave";
+import { MasaClient } from "../utils/clients/masa-client";
 import { MasaConfig } from "./masa-config";
 
 export interface MasaInterface {
