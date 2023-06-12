@@ -85,6 +85,8 @@ export class MasaModuleBase extends MasaBase {
         return await wait();
       }
     }
+
+    return;
   };
 
   /**

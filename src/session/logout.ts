@@ -24,4 +24,5 @@ export const logout = async (
   } else {
     console.error(Messages.NotLoggedIn());
   }
+  return;
 };
