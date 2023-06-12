@@ -75,7 +75,7 @@ export const getBalances = async (
     contract: SBTContracts,
     addressToLoad: string
   ): Promise<number | undefined> => {
-    let result = undefined;
+    let result;
 
     if (contract.address === constants.AddressZero) {
       return result;

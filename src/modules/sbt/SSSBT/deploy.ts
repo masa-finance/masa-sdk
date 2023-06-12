@@ -19,7 +19,7 @@ export const deploySSSBT = async (
   authorityAddress?: string,
   adminAddress?: string
 ): Promise<string | undefined> => {
-  let result = undefined;
+  let result;
 
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
   authorityAddress =
