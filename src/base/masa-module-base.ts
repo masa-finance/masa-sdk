@@ -1,3 +1,4 @@
+import type { FeeData } from "@ethersproject/abstract-provider";
 import { BigNumber } from "@ethersproject/bignumber";
 import type {
   MasaSBT,
@@ -93,7 +94,7 @@ export class MasaModuleBase extends MasaBase {
    * @param paymentMethod
    * @private
    */
-  public getPaymentAddress = (paymentMethod: PaymentMethod): string => {
+  protected getPaymentAddress = (paymentMethod: PaymentMethod): string => {
     let paymentAddress: string | undefined = isNativeCurrency(paymentMethod)
       ? constants.AddressZero
       : this.masa.config.network?.addresses?.tokens?.[paymentMethod];
@@ -106,6 +107,21 @@ export class MasaModuleBase extends MasaBase {
     }
 
     return paymentAddress;
+  };
+
+  /**
+   *
+   */
+  protected getNetworkParameters = async (): Promise<FeeData | undefined> => {
+    let result;
+
+    try {
+      result = this.masa.config.signer.provider?.getFeeData();
+    } catch {
+      console.warn("Unable to get network fee data!");
+    }
+
+    return result;
   };
 
   /**
@@ -248,6 +264,7 @@ export class MasaModuleBase extends MasaBase {
 
     let mintFee: BigNumber | undefined,
       protocolFee: BigNumber = BigNumber.from(0);
+
     try {
       // load protocol and mint fee
       const fees = await contract.getMintPriceWithProtocolFee(paymentAddress);

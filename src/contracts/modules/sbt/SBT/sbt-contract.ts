@@ -12,7 +12,7 @@ export class SBTContract<Contract extends MasaSBT> extends MasaModuleBase {
    *
    * @param sbtContract
    */
-  protected wrapper(sbtContract: Contract): SBTContractWrapper<Contract> {
+  public attach(sbtContract: Contract): SBTContractWrapper<Contract> {
     return {
       /**
        * instance of the SBT that this factory instance uses
@@ -44,7 +44,7 @@ export class SBTContract<Contract extends MasaSBT> extends MasaModuleBase {
    * @param address
    * @param factory
    */
-  connect = async (
+  public connect = async (
     address: string,
     factory: ContractFactory = MasaSBT__factory
   ): Promise<SBTContractWrapper<Contract>> => {
@@ -54,14 +54,6 @@ export class SBTContract<Contract extends MasaSBT> extends MasaModuleBase {
       factory
     );
 
-    return this.wrapper(sbtContract);
-  };
-
-  /**
-   * attaches the contract function to an existing instances
-   * @param sbtContract
-   */
-  attach = (sbtContract: Contract): SBTContractWrapper<Contract> => {
-    return this.wrapper(sbtContract);
+    return this.attach(sbtContract);
   };
 }

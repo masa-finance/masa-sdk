@@ -1,31 +1,40 @@
 import type { LogDescription } from "@ethersproject/abi";
-import type { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "@ethersproject/bignumber";
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import type { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 
 import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
 import { IIdentityContracts, MasaInterface } from "../../../../interface";
-import { generateSignatureDomain, signTypedData } from "../../../../utils";
+import {
+  generateSignatureDomain,
+  isNativeCurrency,
+  signTypedData,
+} from "../../../../utils";
 import { SBTContract } from "../SBT";
 import type { SSSBTContractWrapper } from "./sssbt-contract-wrapper";
 
 export class SSSBTContract<
   Contract extends ReferenceSBTSelfSovereign
 > extends SBTContract<Contract> {
+  /**
+   *
+   * @param masa
+   * @param instances
+   */
   constructor(masa: MasaInterface, instances: IIdentityContracts) {
     super(masa, instances);
 
-    this.wrapper.bind(this);
+    this.attach.bind(this);
   }
 
   /**
    *
    * @param sbtContract
    */
-  protected wrapper(sbtContract: Contract): SSSBTContractWrapper<Contract> {
+  public attach(sbtContract: Contract): SSSBTContractWrapper<Contract> {
     return {
-      ...super.wrapper(sbtContract),
+      ...super.attach(sbtContract),
 
       /**
        * Signs an SBT based on its address
@@ -178,8 +187,18 @@ export class SSSBTContract<
           signature,
         ];
 
+        const feeData = await this.getNetworkParameters();
+
         const mintSSSBTOverrides: PayableOverrides = {
-          value: price.gt(0) ? price : undefined,
+          value: isNativeCurrency(paymentMethod) ? price : undefined,
+          ...(feeData
+            ? {
+                maxPriorityFeePerGas: BigNumber.from(
+                  feeData.maxPriorityFeePerGas
+                ),
+                maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+              }
+            : undefined),
         };
 
         if (this.masa.config.verbose) {
@@ -233,12 +252,4 @@ export class SSSBTContract<
       },
     };
   }
-
-  /**
-   * attaches the contract function to an existing instances
-   * @param sbtContract
-   */
-  attach = (sbtContract: Contract): SSSBTContractWrapper<Contract> => {
-    return this.wrapper(sbtContract);
-  };
 }

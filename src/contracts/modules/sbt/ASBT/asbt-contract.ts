@@ -1,6 +1,7 @@
 import type { LogDescription } from "@ethersproject/abi";
+import { BigNumber } from "@ethersproject/bignumber";
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
-import type { BigNumber, PayableOverrides } from "ethers";
+import type { PayableOverrides } from "ethers";
 
 import { Messages } from "../../../../collections";
 import type {
@@ -8,25 +9,31 @@ import type {
   MasaInterface,
   PaymentMethod,
 } from "../../../../interface";
+import { isNativeCurrency } from "../../../../utils";
 import { SBTContract } from "../SBT";
 import { ASBTContractWrapper } from "./asbt-contract-wrapper";
 
 export class ASBTContract<
   Contract extends ReferenceSBTAuthority
 > extends SBTContract<Contract> {
+  /**
+   *
+   * @param masa
+   * @param instances
+   */
   constructor(masa: MasaInterface, instances: IIdentityContracts) {
     super(masa, instances);
 
-    this.wrapper.bind(this);
+    this.attach.bind(this);
   }
 
   /**
    *
    * @param sbtContract
    */
-  protected wrapper(sbtContract: Contract): ASBTContractWrapper<Contract> {
+  public attach(sbtContract: Contract): ASBTContractWrapper<Contract> {
     return {
-      ...super.wrapper(sbtContract),
+      ...super.attach(sbtContract),
 
       /**
        *
@@ -63,8 +70,18 @@ export class ASBTContract<
           string // receiver string
         ] = [paymentAddress, receiver];
 
+        const feeData = await this.getNetworkParameters();
+
         const mintASBTOverrides: PayableOverrides = {
-          value: price.gt(0) ? price : undefined,
+          value: isNativeCurrency(paymentMethod) ? price : undefined,
+          ...(feeData
+            ? {
+                maxPriorityFeePerGas: BigNumber.from(
+                  feeData.maxPriorityFeePerGas
+                ),
+                maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+              }
+            : undefined),
         };
 
         if (this.masa.config.verbose) {
@@ -116,12 +133,4 @@ export class ASBTContract<
       },
     };
   }
-
-  /**
-   * attaches the contract function to an existing instances
-   * @param sbtContract
-   */
-  attach = (sbtContract: Contract): ASBTContractWrapper<Contract> => {
-    return this.wrapper(sbtContract);
-  };
 }

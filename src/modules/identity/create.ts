@@ -1,5 +1,5 @@
 import { LogDescription } from "@ethersproject/abi";
-import { BigNumber } from "ethers";
+import type { BigNumber } from "@ethersproject/bignumber";
 
 import { Messages, SoulNameErrorCodes } from "../../collections";
 import type {

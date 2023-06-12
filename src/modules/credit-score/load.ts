@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import type { BigNumber } from "@ethersproject/bignumber";
 
 import type { MasaInterface } from "../../interface";
 import { CreditScoreDetails, ICreditScore } from "../../interface";

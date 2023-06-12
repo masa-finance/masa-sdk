@@ -1,5 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { ContractTransaction, TypedDataDomain } from "ethers";
+import type {
+  ContractTransaction,
+  PayableOverrides,
+  TypedDataDomain,
+} from "ethers";
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
@@ -135,8 +139,16 @@ export class Green extends MasaModuleBase {
       signature,
     ];
 
-    const greenMintOverrides = {
+    const feeData = await this.getNetworkParameters();
+
+    const greenMintOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,
+      ...(feeData
+        ? {
+            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
+            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+          }
+        : undefined),
     };
 
     if (this.masa.config.verbose) {

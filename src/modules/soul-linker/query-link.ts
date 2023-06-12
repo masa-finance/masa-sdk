@@ -1,5 +1,5 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "ethers";
-import { BigNumber } from "ethers";
 
 import { Messages } from "../../collections";
 import type {
