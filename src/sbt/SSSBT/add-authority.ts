@@ -1,6 +1,6 @@
 import { MasaSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import { MasaInterface } from "../../interface";
+import { MasaInterface } from "../../interface/masa-interface";
 
 export const addAuthority = async (
   masa: MasaInterface,

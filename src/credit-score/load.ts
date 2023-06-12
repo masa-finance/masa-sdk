@@ -1,7 +1,8 @@
 import { BigNumber } from "ethers";
 
 import { patchMetadataUrl } from "../helpers";
-import { CreditScoreDetails, ICreditScore, MasaInterface } from "../interface";
+import { CreditScoreDetails, ICreditScore } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { isBigNumber } from "../utils";
 
 export const loadCreditScoreDetails = async (

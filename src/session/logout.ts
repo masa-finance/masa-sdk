@@ -1,4 +1,4 @@
-import { MasaInterface } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 
 export const logout = async (

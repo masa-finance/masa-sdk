@@ -15,13 +15,9 @@ import {
 } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
-import {
-  IIdentityContracts,
-  MasaBase,
-  MasaConfig,
-  MasaInterface,
-  PaymentMethod,
-} from "../../interface";
+import { IIdentityContracts, MasaConfig, PaymentMethod } from "../../interface";
+import { MasaBase } from "../../interface/masa-base";
+import { MasaInterface } from "../../interface/masa-interface";
 import { isERC20Currency, isNativeCurrency, Messages } from "../../utils";
 import { ERC20, ERC20__factory } from "../stubs";
 import { ContractFactory } from "./contract-factory";

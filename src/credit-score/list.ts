@@ -1,4 +1,5 @@
-import { CreditScoreDetails, MasaInterface } from "../interface";
+import { CreditScoreDetails } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 import { loadCreditScores } from "./load";
 

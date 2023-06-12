@@ -1,7 +1,8 @@
 import { BigNumber } from "ethers";
 
 import { patchMetadataUrl } from "../helpers";
-import { GreenDetails, IGreen, MasaInterface } from "../interface";
+import { GreenDetails, IGreen } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { isBigNumber } from "../utils";
 
 export const loadGreenDetails = async (

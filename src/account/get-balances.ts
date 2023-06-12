@@ -7,7 +7,8 @@ import {
 import { constants, utils } from "ethers";
 
 import { ERC20, ERC20__factory } from "../contracts";
-import { MasaInterface, PaymentMethod } from "../interface";
+import { PaymentMethod } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 

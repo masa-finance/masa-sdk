@@ -1,4 +1,4 @@
-import { MasaBase } from "../interface";
+import { MasaBase } from "../interface/masa-base";
 import { getBalances } from "./get-balances";
 
 export class MasaAccount extends MasaBase {

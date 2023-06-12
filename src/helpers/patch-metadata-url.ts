@@ -1,4 +1,4 @@
-import { MasaInterface } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 
 /**
  * todo: fix this thing, its not good

@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 
 import { unpackSessionId } from "../helpers";
-import { MasaInterface } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { signMessage, Templates } from "../utils";
 
 export const login = async (

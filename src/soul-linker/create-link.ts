@@ -1,7 +1,8 @@
 import { BigNumber, Contract } from "ethers";
 
 import { resolveIdentity } from "../identity";
-import { BaseResult, IPassport, MasaInterface } from "../interface";
+import { BaseResult, IPassport } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 
 export type CreateLinkResult = BaseResult & { passport?: string };

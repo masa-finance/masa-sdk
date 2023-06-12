@@ -1,4 +1,4 @@
-import { MasaInterface } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 
 export const sendSoulName = async (
   masa: MasaInterface,

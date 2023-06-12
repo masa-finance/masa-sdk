@@ -7,7 +7,9 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { BaseContract } from "ethers";
 
-import { IIdentityContracts, MasaBase, MasaInterface } from "../interface";
+import { IIdentityContracts } from "../interface";
+import { MasaBase } from "../interface/masa-base";
+import { MasaInterface } from "../interface/masa-interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
 import {
   ASBT,

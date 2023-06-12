@@ -1,6 +1,6 @@
 import { utils } from "ethers";
 
-import { MasaInterface } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { recoverAddress } from "../utils";
 
 const minters = [

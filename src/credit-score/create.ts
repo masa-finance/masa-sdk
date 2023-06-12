@@ -1,8 +1,5 @@
-import {
-  GenerateCreditScoreResult,
-  MasaInterface,
-  PaymentMethod,
-} from "../interface";
+import { GenerateCreditScoreResult, PaymentMethod } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 
 export const createCreditScore = async (

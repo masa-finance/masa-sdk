@@ -10,8 +10,6 @@ import {
   IIdentity,
   ISession,
   LogoutResult,
-  MasaBase,
-  MasaInterface,
   NetworkName,
   SessionUser,
   SoulNameMetadataStoreResult,
@@ -19,6 +17,8 @@ import {
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
+import { MasaBase } from "../../interface/masa-base";
+import { MasaInterface } from "../../interface/masa-interface";
 
 const headers = {
   "Content-Type": "application/json",

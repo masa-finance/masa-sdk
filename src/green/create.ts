@@ -3,10 +3,10 @@ import { LogDescription } from "@ethersproject/abi";
 import {
   BaseResult,
   GenerateGreenResult,
-  MasaInterface,
   PaymentMethod,
   VerifyGreenResult,
 } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { Messages } from "../utils";
 
 export const generateGreen = async (

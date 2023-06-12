@@ -1,6 +1,6 @@
 import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import { MasaInterface } from "../../interface";
+import { MasaInterface } from "../../interface/masa-interface";
 
 export const signSSSBT = async (
   masa: MasaInterface,

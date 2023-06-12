@@ -4,10 +4,10 @@ import { BigNumber } from "ethers";
 import {
   BaseResult,
   CreateSoulNameResult,
-  MasaInterface,
   PaymentMethod,
   SoulNameErrorCodes,
 } from "../interface";
+import { MasaInterface } from "../interface/masa-interface";
 import { isSoulNameMetadataStoreResult, Messages } from "../utils";
 
 /**
