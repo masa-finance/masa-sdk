@@ -9,7 +9,7 @@ export const patchMetadataUrl = (masa: MasaInterface, metadataUrl: string) => {
   const env: string = masa.config.environment;
   // make sure this ends with / otherwise it blows
   const apiUrl: string = !masa.config.apiUrl.endsWith("/")
-    ? masa.config.apiUrl + "/"
+    ? `${masa.config.apiUrl}/`
     : masa.config.apiUrl;
 
   if (metadataUrl.indexOf("beta") > -1) {
