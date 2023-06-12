@@ -16,6 +16,8 @@ export const login = async (
 > => {
   console.log("Logging in");
 
+  let result;
+
   if (!(await masa.session.checkLogin())) {
     // get challenge
     const challengeData = await masa.client.session.getChallenge();
@@ -55,7 +57,7 @@ export const login = async (
             );
           }
 
-          return {
+          result = {
             address,
             userId: checkSignatureResponse.userId,
             cookie: challengeData.cookie,
@@ -68,4 +70,6 @@ export const login = async (
   } else {
     console.error("Already logged in! Please logout before logging in again.");
   }
+
+  return result;
 };

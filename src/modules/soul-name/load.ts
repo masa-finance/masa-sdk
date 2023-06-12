@@ -55,17 +55,21 @@ export const loadSoulNameByName = async (
   masa: MasaInterface,
   soulName: string
 ): Promise<SoulNameDetails | undefined> => {
+  let result;
+
   try {
     const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
       soulName
     );
 
-    return await loadSoulNameByTokenId(masa, tokenId);
+    result = await loadSoulNameByTokenId(masa, tokenId);
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(`Failed to load Soul Name '${soulName}'`, error.message);
     }
   }
+
+  return result;
 };
 
 export const loadSoulNamesByNames = async (
