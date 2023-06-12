@@ -11,6 +11,8 @@ export const loadSoulNameByTokenId = async (
   masa: MasaInterface,
   tokenId: string | BigNumber
 ): Promise<SoulNameDetails | undefined> => {
+  let result;
+
   try {
     const {
       getTokenData,
@@ -31,7 +33,7 @@ export const loadSoulNameByTokenId = async (
       tokenUri.replace("ar://", "").replace("https://arweave.net/", "")
     )) as ISoulName;
 
-    return {
+    result = {
       owner,
       tokenUri,
       tokenDetails: { ...tokenDetails, extension },
@@ -45,6 +47,8 @@ export const loadSoulNameByTokenId = async (
       );
     }
   }
+
+  return result;
 };
 
 export const loadSoulNameByName = async (
