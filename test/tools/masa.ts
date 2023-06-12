@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+
 import { Masa } from "../../src";
 
 const provider = new ethers.providers.JsonRpcProvider(

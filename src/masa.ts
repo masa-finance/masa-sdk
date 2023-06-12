@@ -1,43 +1,36 @@
-import {
-  MasaAccount,
-  MasaArgs,
-  MasaArweave,
-  MasaASBT,
-  MasaClient,
-  MasaConfig,
-  MasaContracts,
-  MasaCreditScore,
-  MasaGreen,
-  MasaIdentity,
-  MasaSBT,
-  MasaSession,
-  MasaSoulName,
-  MasaSSSBT,
-  SupportedNetworks,
-  version,
-} from "./";
-import {
-  MasaSBT as MasaSBTContract,
-  ReferenceSBTAuthority,
-  ReferenceSBTSelfSovereign,
-} from "@masa-finance/masa-contracts-identity";
+import { SupportedNetworks } from "./collections";
+import { MasaContracts } from "./contracts";
+import type { MasaArgs, MasaConfig, MasaInterface } from "./interface";
+import { MasaAccount } from "./modules/account";
+import { MasaCreditScore } from "./modules/credit-score";
+import { MasaGreen } from "./modules/green";
+import { MasaIdentity } from "./modules/identity";
+import { MasaSBTs } from "./modules/sbt";
+import { MasaASBT } from "./modules/sbt/ASBT";
+import { MasaSSSBT } from "./modules/sbt/SSSBT";
+import { MasaSession } from "./modules/session";
+import { MasaSoulName } from "./modules/soul-name";
+import { version } from "./modules/version";
+import { MasaArweave, MasaClient } from "./utils";
 
-export default class Masa {
-  public readonly config: MasaConfig;
-
-  public readonly arweave: MasaArweave;
-  public readonly client: MasaClient;
-
-  public readonly contracts: MasaContracts;
-  public readonly account: MasaAccount;
-  public readonly session: MasaSession;
-  public readonly identity: MasaIdentity;
-  public readonly soulName: MasaSoulName;
-  public readonly creditScore: MasaCreditScore;
-  public readonly green: MasaGreen;
-  public readonly sbt: MasaSBT<MasaSBTContract>;
-  public readonly asbt: MasaASBT<ReferenceSBTAuthority>;
-  public readonly sssbt: MasaSSSBT<ReferenceSBTSelfSovereign>;
+export class Masa implements MasaInterface {
+  // config
+  readonly config: MasaConfig;
+  // clients
+  readonly arweave: MasaArweave;
+  readonly client: MasaClient;
+  // contracts
+  readonly contracts: MasaContracts;
+  // modules
+  readonly account: MasaAccount;
+  readonly session: MasaSession;
+  readonly identity: MasaIdentity;
+  readonly soulName: MasaSoulName;
+  readonly creditScore: MasaCreditScore;
+  readonly green: MasaGreen;
+  readonly sbt: MasaSBTs;
+  readonly asbt: MasaASBT;
+  readonly sssbt: MasaSSSBT;
 
   public constructor({
     cookie,
@@ -87,7 +80,7 @@ export default class Masa {
     // green
     this.green = new MasaGreen(this);
     // generic sbt handler
-    this.sbt = new MasaSBT(this);
+    this.sbt = new MasaSBTs(this);
     // ASBT handler
     this.asbt = new MasaASBT(this);
     // SSSBT Handler

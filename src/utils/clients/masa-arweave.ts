@@ -1,8 +1,9 @@
 import Arweave from "arweave";
-import { ApiConfig } from "arweave/node/lib/api";
-import { Config } from "arweave/node/common";
+import type { Config } from "arweave/node/common";
+import type { ApiConfig } from "arweave/node/lib/api";
 import axios from "axios";
-import { MasaConfig } from "../../interface";
+
+import type { MasaConfig } from "../../interface";
 
 export class MasaArweave extends Arweave {
   constructor(config: ApiConfig, private masaConfig: MasaConfig) {

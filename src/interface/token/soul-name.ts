@@ -1,5 +1,7 @@
-import { BigNumber } from "ethers";
-import { BaseResult } from "../masa";
+import type { BigNumber } from "ethers";
+
+import { SoulNameErrorCodes } from "../../collections";
+import type { BaseResult } from "../base-result";
 
 export interface Attribute {
   display_type?: string;
@@ -39,24 +41,9 @@ export interface SoulNameDetails {
   metadata: ISoulName;
 }
 
-export enum SoulNameErrorCodes {
-  NoError,
-  ArweaveError,
-  NetworkError,
-  CryptoError,
-  SoulNameError,
-  UnknownError = 1337,
-}
-
 export interface SoulNameResultBase extends BaseResult {
   errorCode: SoulNameErrorCodes;
 }
-
-export const isSoulNameMetadataStoreResult = (
-  result: SoulNameResultBase
-): result is SoulNameMetadataStoreResult => {
-  return !!(result as SoulNameMetadataStoreResult).authorityAddress;
-};
 
 export interface CreateSoulNameResult extends SoulNameResultBase {
   soulName?: string;

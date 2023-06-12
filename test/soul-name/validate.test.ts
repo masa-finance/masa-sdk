@@ -1,5 +1,6 @@
-import { describe } from "mocha";
 import { assert } from "chai";
+import { describe } from "mocha";
+
 import { calculateSoulNameLength, validateSoulName } from "../../src";
 import { testMasa } from "../tools/masa";
 

@@ -1,22 +1,13 @@
-import {
+import type { TypedDataSigner } from "@ethersproject/abstract-signer";
+import type {
   BaseContract,
   BigNumber,
   BytesLike,
   Signer,
   TypedDataDomain,
   TypedDataField,
-  utils,
 } from "ethers";
-
-import { TypedDataSigner } from "@ethersproject/abstract-signer";
-
-/**
- *
- * @param item
- */
-export const isBigNumber = (item: BigNumber | string): item is BigNumber => {
-  return (item as BigNumber)._isBigNumber;
-};
+import { utils } from "ethers";
 
 /**
  *

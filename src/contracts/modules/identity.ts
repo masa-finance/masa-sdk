@@ -1,7 +1,9 @@
-import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber, ContractTransaction, TypedDataDomain } from "ethers";
-import { generateSignatureDomain, Messages } from "../../utils";
-import { MasaModuleBase } from "./masa-module-base";
+
+import { MasaModuleBase } from "../../base";
+import { Messages } from "../../collections";
+import type { PaymentMethod } from "../../interface";
+import { generateSignatureDomain, isNativeCurrency } from "../../utils";
 
 export class Identity extends MasaModuleBase {
   /**
@@ -17,7 +19,7 @@ export class Identity extends MasaModuleBase {
     let gasLimit: BigNumber = await estimateGas();
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = Identity.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -131,7 +133,7 @@ export class Identity extends MasaModuleBase {
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = Identity.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -164,7 +166,7 @@ export class Identity extends MasaModuleBase {
       let gasLimit: BigNumber = await estimateGas(identityId);
 
       if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = this.addSlippage(
+        gasLimit = Identity.addSlippage(
           gasLimit,
           this.masa.config.network.gasSlippagePercentage
         );

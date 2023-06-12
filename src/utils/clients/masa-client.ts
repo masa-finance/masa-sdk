@@ -1,5 +1,8 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import {
+import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import axios from "axios";
+
+import { MasaBase } from "../../base/masa-base";
+import type {
   ChallengeResult,
   ChallengeResultWithCookie,
   GenerateCreditScoreResult,
@@ -9,6 +12,7 @@ import {
   IIdentity,
   ISession,
   LogoutResult,
+  MasaInterface,
   NetworkName,
   SessionUser,
   SoulNameMetadataStoreResult,
@@ -16,8 +20,6 @@ import {
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
-import { MasaBase } from "../../helpers/masa-base";
-import Masa from "../../masa";
 
 const headers = {
   "Content-Type": "application/json",
@@ -36,7 +38,7 @@ export class MasaClient extends MasaBase {
     apiUrl,
     cookie,
   }: {
-    masa: Masa;
+    masa: MasaInterface;
     apiUrl: string;
     cookie?: string;
   }) {

@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 
 export interface IIdentity {
   name: "Masa Soulbound Identity v1.0.0";

@@ -1,9 +1,12 @@
-import { MasaModuleBase } from "./masa-module-base";
-import { BaseResult, isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
-import { Messages, signTypedData } from "../../utils";
 import { Contract } from "ethers";
-import { Link, loadLinks } from "../../soul-linker";
+
+import { MasaModuleBase } from "../../base";
+import { Messages } from "../../collections";
+import type { BaseResult, PaymentMethod } from "../../interface";
+import type { Link } from "../../modules";
+import { loadLinks } from "../../modules";
+import { isNativeCurrency, signTypedData } from "../../utils";
 
 export type BreakLinkResult = BaseResult;
 
@@ -71,7 +74,7 @@ export class SoulLinker extends MasaModuleBase {
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
+        price = SoulLinker.addSlippage(price, slippage);
       }
     }
 
@@ -169,7 +172,7 @@ export class SoulLinker extends MasaModuleBase {
     let gasLimit: BigNumber = await estimateGas(...params, overrides);
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = SoulLinker.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );

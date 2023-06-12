@@ -1,20 +1,27 @@
-import {
+import type {
   SoulboundCreditScore,
-  SoulboundCreditScore__factory,
   SoulboundGreen,
-  SoulboundGreen__factory,
   SoulboundIdentity,
-  SoulboundIdentity__factory,
   SoulLinker,
-  SoulLinker__factory,
   SoulName,
-  SoulName__factory,
   SoulStore,
+} from "@masa-finance/masa-contracts-identity";
+import {
+  SoulboundCreditScore__factory,
+  SoulboundGreen__factory,
+  SoulboundIdentity__factory,
+  SoulLinker__factory,
+  SoulName__factory,
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { constants, providers } from "ethers";
-import { ContractInfo, IIdentityContracts, NetworkName } from "../interface";
-import { addresses } from "./addresses";
+
+import type {
+  ContractInfo,
+  IIdentityContracts,
+  NetworkName,
+} from "../interface";
+import { addresses } from "../networks";
 
 export interface LoadContractArgs {
   provider?: providers.Provider;
@@ -31,7 +38,7 @@ export const loadIdentityContracts = ({
     // or try to load from the browser
     new providers.Web3Provider(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error
       window.ethereum
     );
 

@@ -1,8 +1,14 @@
-import { isNativeCurrency, PaymentMethod } from "../../interface";
-import { ContractTransaction, TypedDataDomain } from "ethers";
-import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { BigNumber } from "@ethersproject/bignumber";
-import { MasaModuleBase } from "./masa-module-base";
+import { ContractTransaction, TypedDataDomain } from "ethers";
+
+import { MasaModuleBase } from "../../base";
+import { Messages } from "../../collections";
+import type { PaymentMethod } from "../../interface";
+import {
+  generateSignatureDomain,
+  isNativeCurrency,
+  signTypedData,
+} from "../../utils";
 
 export class SoulName extends MasaModuleBase {
   /**
@@ -137,7 +143,7 @@ export class SoulName extends MasaModuleBase {
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = this.addSlippage(
+      gasLimit = SoulName.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage
       );
@@ -204,7 +210,7 @@ export class SoulName extends MasaModuleBase {
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
-        price = this.addSlippage(price, slippage);
+        price = SoulName.addSlippage(price, slippage);
       }
     }
 
@@ -376,7 +382,7 @@ export class SoulName extends MasaModuleBase {
         let gasLimit: BigNumber = await estimateGas(soulNameData.tokenId);
 
         if (this.masa.config.network?.gasSlippagePercentage) {
-          gasLimit = this.addSlippage(
+          gasLimit = SoulName.addSlippage(
             gasLimit,
             this.masa.config.network.gasSlippagePercentage
           );
