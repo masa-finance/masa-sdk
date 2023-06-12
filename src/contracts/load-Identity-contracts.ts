@@ -1,15 +1,17 @@
-import {
+import type {
   SoulboundCreditScore,
-  SoulboundCreditScore__factory,
   SoulboundGreen,
-  SoulboundGreen__factory,
   SoulboundIdentity,
-  SoulboundIdentity__factory,
   SoulLinker,
-  SoulLinker__factory,
   SoulName,
-  SoulName__factory,
   SoulStore,
+} from "@masa-finance/masa-contracts-identity";
+import {
+  SoulboundCreditScore__factory,
+  SoulboundGreen__factory,
+  SoulboundIdentity__factory,
+  SoulLinker__factory,
+  SoulName__factory,
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { constants, providers } from "ethers";

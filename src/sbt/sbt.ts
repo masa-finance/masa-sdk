@@ -1,8 +1,6 @@
-import {
-  MasaSBT,
-  MasaSBT__factory,
-} from "@masa-finance/masa-contracts-identity";
-import { BigNumber } from "ethers";
+import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
+import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
 import { ContractFactory } from "../contracts";
 import { MasaBase, MasaLinkable } from "../interface";

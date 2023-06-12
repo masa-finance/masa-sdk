@@ -1,7 +1,5 @@
-import {
-  ReferenceSBTSelfSovereign,
-  ReferenceSBTSelfSovereign__factory,
-} from "@masa-finance/masa-contracts-identity";
+import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import { ReferenceSBTSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
 
 import { MasaSBTs, SBTWrapper } from "../sbt";
 import { addAuthority } from "./add-authority";

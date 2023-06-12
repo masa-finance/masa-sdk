@@ -1,10 +1,10 @@
-import { LogDescription } from "@ethersproject/abi";
-import { BigNumber } from "@ethersproject/bignumber";
-import {
+import type { LogDescription } from "@ethersproject/abi";
+import type { BigNumber } from "@ethersproject/bignumber";
+import type {
   MasaSBTSelfSovereign,
   ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
+import type { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 
 import type { PaymentMethod } from "../../../interface";
 import {

@@ -1,4 +1,4 @@
-import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
 import type { MasaInterface, PaymentMethod } from "../../interface";
 

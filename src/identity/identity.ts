@@ -1,4 +1,4 @@
-import { SoulboundIdentity } from "@masa-finance/masa-contracts-identity";
+import type { SoulboundIdentity } from "@masa-finance/masa-contracts-identity";
 
 import type { MasaInterface, PaymentMethod } from "../interface";
 import { MasaLinkable } from "../interface";

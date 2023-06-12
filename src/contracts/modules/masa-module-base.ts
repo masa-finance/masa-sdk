@@ -1,5 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import {
+import type {
   MasaSBT,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,

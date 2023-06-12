@@ -1,6 +1,6 @@
-import { LogDescription } from "@ethersproject/abi";
-import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
-import { BigNumber, PayableOverrides } from "ethers";
+import type { LogDescription } from "@ethersproject/abi";
+import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber, PayableOverrides } from "ethers";
 
 import type { PaymentMethod } from "../../../interface";
 import { Messages } from "../../../utils";

@@ -1,8 +1,6 @@
 import type { BigNumber } from "@ethersproject/bignumber";
-import {
-  MasaSBT,
-  MasaSBT__factory,
-} from "@masa-finance/masa-contracts-identity";
+import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
+import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 
 import type { PaymentMethod } from "../../../interface";
 import { ContractFactory } from "../contract-factory";

@@ -1,5 +1,5 @@
-import { SoulboundGreen } from "@masa-finance/masa-contracts-identity";
-import { BigNumber } from "ethers";
+import type { SoulboundGreen } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
 import type { MasaInterface, PaymentMethod } from "../interface";
 import { MasaLinkable } from "../interface";
