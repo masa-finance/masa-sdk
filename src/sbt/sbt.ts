@@ -5,8 +5,7 @@ import {
 import { BigNumber } from "ethers";
 
 import { ContractFactory } from "../contracts";
-import { MasaBase } from "../interface/masa-base";
-import { MasaLinkable } from "../interface/masa-linkable";
+import { MasaBase, MasaLinkable } from "../interface";
 import { burnSBT } from "./burn";
 import { listSBTs } from "./list";
 

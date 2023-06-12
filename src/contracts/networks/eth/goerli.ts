@@ -3,7 +3,7 @@ import { goerli as goerliAddresses } from "@masa-finance/masa-contracts-identity
 // token
 import { address as MASA } from "@masa-finance/masa-token/deployments/goerli/MasaToken.json";
 
-import { Addresses } from "../../../interface/addresses";
+import type { Addresses } from "../../../interface";
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,

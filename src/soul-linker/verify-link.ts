@@ -1,7 +1,6 @@
 import { BigNumber, Contract } from "ethers";
 
-import { BaseResult } from "../interface/base-result";
-import { MasaInterface } from "../interface/masa-interface";
+import type { BaseResult, MasaInterface } from "../interface";
 import { Link, loadLinks } from "./list-links";
 
 export type VerifyLinkResult = BaseResult & { verified?: boolean };

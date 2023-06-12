@@ -1,4 +1,4 @@
-import { Tokens } from "./tokens";
+import type { Tokens } from "./tokens";
 
 export interface Addresses {
   tokens?: Tokens;

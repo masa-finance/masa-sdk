@@ -23,8 +23,9 @@ import type {
 } from "../../interface";
 import { MasaBase } from "../../interface";
 import { isERC20Currency, isNativeCurrency, Messages } from "../../utils";
-import { ERC20, ERC20__factory } from "../stubs";
-import { ContractFactory } from "./contract-factory";
+import type { ERC20 } from "../stubs";
+import { ERC20__factory } from "../stubs";
+import type { ContractFactory } from "./contract-factory";
 
 export class MasaModuleBase extends MasaBase {
   constructor(masa: MasaInterface, protected instances: IIdentityContracts) {

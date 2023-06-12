@@ -1,4 +1,4 @@
-import { MasaBase } from "../interface/masa-base";
+import { MasaBase } from "../interface";
 import { checkLogin } from "./check-login";
 import { getSession } from "./get-session";
 import { login } from "./login";

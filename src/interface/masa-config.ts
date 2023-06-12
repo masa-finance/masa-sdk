@@ -1,7 +1,7 @@
-import { Signer } from "ethers";
+import type { Signer } from "ethers";
 
-import { Network } from "../utils";
-import { NetworkName } from "./network-name";
+import type { Network } from "../utils";
+import type { NetworkName } from "./network-name";
 
 export interface MasaConfig {
   readonly apiUrl: string;

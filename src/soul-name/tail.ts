@@ -1,8 +1,7 @@
 import { TransferEvent } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/SoulName";
 import { constants } from "ethers";
 
-import { SoulNameDetails } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface, SoulNameDetails } from "../interface";
 import { printSoulName } from "./helpers";
 import { loadSoulNameByTokenId } from "./load";
 
