@@ -1,9 +1,8 @@
-import Masa from "../masa";
-import { IdentityDetails } from "../interface";
-import { loadIdentity } from "./";
+import { IdentityDetails, MasaInterface } from "../interface";
+import { loadIdentity } from "./load";
 
 export const showIdentity = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<IdentityDetails | undefined> => {
   const identity = await loadIdentity(masa, address);

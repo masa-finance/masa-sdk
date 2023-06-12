@@ -1,8 +1,8 @@
-import Masa from "../masa";
+import { MasaInterface } from "../interface";
 import { calculateSoulNameLength } from "./helpers";
 
 export const validateSoulName = (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string,
   verbose?: boolean
 ): { isValid: boolean; length: number; message?: string } => {

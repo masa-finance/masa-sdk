@@ -1,20 +1,16 @@
 import {
-  MasaSBT as MasaSBTContract,
+  MasaSBT,
   MasaSBT__factory,
-  ReferenceSBTAuthority,
-  ReferenceSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
-import { MasaBase, MasaLinkable } from "../helpers";
+
 import { ContractFactory } from "../contracts";
-import { burnSBT, listSBTs } from "./";
-import Masa from "../masa";
+import { MasaBase, MasaLinkable } from "../interface";
+import { burnSBT } from "./burn";
+import { listSBTs } from "./list";
 
 export class SBTWrapper<
-  Contract extends
-    | ReferenceSBTAuthority
-    | ReferenceSBTSelfSovereign
-    | MasaSBTContract
+  Contract extends MasaSBT
 > extends MasaLinkable<Contract> {
   /**
    *
@@ -29,29 +25,19 @@ export class SBTWrapper<
   burn = (SBTId: BigNumber) => burnSBT(this.masa, this.contract, SBTId);
 }
 
-export class MasaSBT<
-  Contract extends
-    | ReferenceSBTAuthority
-    | ReferenceSBTSelfSovereign
-    | MasaSBTContract
-> extends MasaBase {
-  constructor(mass: Masa) {
-    super(mass);
-    this.connect.bind(this);
-  }
-
+export class MasaSBTs extends MasaBase {
   /**
    *
    * @param address
    * @param factory
    */
-  public async connect(
+  public connect = async (
     address: string,
     factory: ContractFactory = MasaSBT__factory
-  ) {
+  ) => {
     const { sbtContract } =
-      (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};
+      (await this.masa.contracts.sbt.connect(address, factory)) || {};
 
-    return new SBTWrapper<Contract>(this.masa, sbtContract);
-  }
+    return new SBTWrapper(this.masa, sbtContract);
+  };
 }

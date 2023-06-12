@@ -1,16 +1,17 @@
-import { constants, ContractFactory } from "ethers";
+import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import {
   abi,
   bytecode,
 } from "@masa-finance/masa-contracts-identity/artifacts/contracts/reference/ReferenceSBTSelfSovereign.sol/ReferenceSBTSelfSovereign.json";
-import Masa from "../../masa";
-import { Messages } from "../../utils";
 import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/reference/ReferenceSBTSelfSovereign";
-import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import { constants, ContractFactory } from "ethers";
+
+import { MasaInterface } from "../../interface";
+import { Messages } from "../../utils";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export const deploySSSBT = async (
-  masa: Masa,
+  masa: MasaInterface,
   name: string,
   symbol: string,
   baseTokenUri: string,

@@ -1,10 +1,11 @@
 import { BigNumber } from "ethers";
-import Masa from "../masa";
+
 import { unpackSessionId } from "../helpers";
+import { MasaInterface } from "../interface";
 import { signMessage, Templates } from "../utils";
 
 export const login = async (
-  masa: Masa
+  masa: MasaInterface
 ): Promise<
   | {
       address: string;

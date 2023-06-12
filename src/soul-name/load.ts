@@ -1,10 +1,10 @@
 import { BigNumber } from "ethers";
-import Masa from "../masa";
-import { ISoulName, SoulNameDetails } from "../interface";
+
+import { ISoulName, MasaInterface, SoulNameDetails } from "../interface";
 import { isBigNumber } from "../utils";
 
 export const loadSoulNameByTokenId = async (
-  masa: Masa,
+  masa: MasaInterface,
   tokenId: string | BigNumber
 ): Promise<SoulNameDetails | undefined> => {
   try {
@@ -44,7 +44,7 @@ export const loadSoulNameByTokenId = async (
 };
 
 export const loadSoulNameByName = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string
 ): Promise<SoulNameDetails | undefined> => {
   try {
@@ -61,7 +61,7 @@ export const loadSoulNameByName = async (
 };
 
 export const loadSoulNamesByNames = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulNames: string[]
 ): Promise<SoulNameDetails[]> => {
   return (
@@ -74,7 +74,7 @@ export const loadSoulNamesByNames = async (
 };
 
 export const loadSoulNames = async (
-  masa: Masa,
+  masa: MasaInterface,
   identityIdOrAddress: BigNumber | string
 ): Promise<string[]> => {
   let soulNames: string[] = [];
@@ -96,7 +96,7 @@ export const loadSoulNames = async (
 };
 
 export const loadSoulNameDetailsByAddress = async (
-  masa: Masa,
+  masa: MasaInterface,
   address: string
 ) => {
   return await loadSoulNamesByNames(masa, await loadSoulNames(masa, address));

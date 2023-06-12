@@ -1,7 +1,8 @@
-import Masa from "../masa";
-import { ISession } from "../interface";
+import { ISession, MasaInterface } from "../interface";
 
-export const getSession = async (masa: Masa): Promise<ISession | undefined> => {
+export const getSession = async (
+  masa: MasaInterface
+): Promise<ISession | undefined> => {
   const session = await masa.client.session.check();
   if (session) {
     console.log("User: ", session.user);

@@ -1,13 +1,13 @@
 import { BigNumber, Contract } from "ethers";
-import Masa from "../masa";
-import { BaseResult, IPassport } from "../interface";
+
 import { resolveIdentity } from "../identity";
+import { BaseResult, IPassport, MasaInterface } from "../interface";
 import { Messages } from "../utils";
 
 export type CreateLinkResult = BaseResult & { passport?: string };
 
 export const createLink = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: Contract,
   tokenId: BigNumber,
   readerIdentityId: BigNumber

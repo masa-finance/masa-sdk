@@ -1,20 +1,20 @@
 import { BigNumber } from "ethers";
-import { PaymentMethod } from "../interface";
-import { MasaBase } from "../helpers/masa-base";
+
+import { MasaBase, PaymentMethod } from "../interface";
+import { burnSoulName } from "./burn";
+import { createSoulName } from "./create";
+import { getSoulNameMetadataPrefix } from "./helpers";
+import { listSoulNames } from "./list";
 import {
-  burnSoulName,
-  createSoulName,
-  getSoulNameMetadataPrefix,
-  listSoulNames,
   loadSoulNameByName,
   loadSoulNameByTokenId,
   loadSoulNames,
-  resolveSoulName,
-  sendSoulName,
-  tailSoulNames,
-  validateSoulName,
-  verifyByName,
-} from "./";
+} from "./load";
+import { resolveSoulName } from "./resolve";
+import { sendSoulName } from "./send";
+import { tailSoulNames } from "./tail";
+import { validateSoulName } from "./validate";
+import { verifyByName } from "./verify";
 
 export class MasaSoulName extends MasaBase {
   /**

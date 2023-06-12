@@ -1,7 +1,7 @@
-import Masa from "../masa";
+import { MasaInterface } from "../interface";
 
 export const sendSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string,
   receiver: string
 ): Promise<boolean> => {

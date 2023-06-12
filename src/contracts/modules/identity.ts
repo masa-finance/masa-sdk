@@ -1,5 +1,6 @@
-import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { BigNumber, ContractTransaction, TypedDataDomain } from "ethers";
+
+import { isNativeCurrency, PaymentMethod } from "../../interface";
 import { generateSignatureDomain, Messages } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 

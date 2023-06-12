@@ -2,14 +2,12 @@ import {
   ReferenceSBTAuthority,
   ReferenceSBTAuthority__factory,
 } from "@masa-finance/masa-contracts-identity";
+
+import { MasaSBTs, SBTWrapper } from "../sbt";
 import { deployASBT } from "./deploy";
 import { mintASBT } from "./mint";
-import { MasaSBT, SBTWrapper } from "../sbt";
-import Masa from "../../masa";
 
-export class ASBTWrapper<
-  Contract extends ReferenceSBTAuthority
-> extends SBTWrapper<Contract> {
+export class ASBTWrapper extends SBTWrapper<ReferenceSBTAuthority> {
   /**
    *
    * @param receiver
@@ -17,15 +15,7 @@ export class ASBTWrapper<
   mint = (receiver: string) => mintASBT(this.masa, this.contract, receiver);
 }
 
-export class MasaASBT<
-  Contract extends ReferenceSBTAuthority
-> extends MasaSBT<Contract> {
-  constructor(masa: Masa) {
-    super(masa);
-
-    this.connect.bind(this);
-  }
-
+export class MasaASBT extends MasaSBTs {
   /**
    *
    * @param name
@@ -46,12 +36,12 @@ export class MasaASBT<
    *
    * @param address
    */
-  public async connect(address: string) {
-    const { contract } = await super.connect(
+  public connect = async (address: string) => {
+    const { sbtContract } = await this.masa.contracts.asbt.connect(
       address,
       ReferenceSBTAuthority__factory
     );
 
-    return new ASBTWrapper<Contract>(this.masa, contract);
-  }
+    return new ASBTWrapper(this.masa, sbtContract);
+  };
 }

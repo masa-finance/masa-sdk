@@ -1,15 +1,16 @@
 import { LogDescription } from "@ethersproject/abi";
-import Masa from "../masa";
+
 import {
   BaseResult,
   GenerateGreenResult,
+  MasaInterface,
   PaymentMethod,
   VerifyGreenResult,
 } from "../interface";
 import { Messages } from "../utils";
 
 export const generateGreen = async (
-  masa: Masa,
+  masa: MasaInterface,
   phoneNumber: string
 ): Promise<GenerateGreenResult> => {
   const result: GenerateGreenResult = {
@@ -52,7 +53,7 @@ export const generateGreen = async (
 };
 
 export const verifyGreen = async (
-  masa: Masa,
+  masa: MasaInterface,
   phoneNumber: string,
   code: string
 ): Promise<
@@ -108,7 +109,7 @@ export const verifyGreen = async (
 };
 
 export const createGreen = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod,
   phoneNumber: string,
   code: string
@@ -161,7 +162,7 @@ export const createGreen = async (
 };
 
 export const mintGreen = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod,
   authorityAddress: string,
   signatureDate: number,

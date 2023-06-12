@@ -1,12 +1,13 @@
-import { BigNumber } from "ethers";
-import Masa from "../masa";
-import { PaymentMethod } from "../interface";
-import { createCreditScore, listCreditScores, loadCreditScores } from "./";
-import { MasaLinkable } from "../helpers";
 import { SoulboundCreditScore } from "@masa-finance/masa-contracts-identity";
+import { BigNumber } from "ethers";
+
+import { MasaInterface, MasaLinkable, PaymentMethod } from "../interface";
+import { createCreditScore } from "./create";
+import { listCreditScores } from "./list";
+import { loadCreditScores } from "./load";
 
 export class MasaCreditScore extends MasaLinkable<SoulboundCreditScore> {
-  constructor(masa: Masa) {
+  constructor(masa: MasaInterface) {
     super(masa, masa.contracts.instances.SoulboundCreditScoreContract);
   }
 

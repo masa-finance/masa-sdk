@@ -1,7 +1,7 @@
-import { BigNumber, Contract } from "ethers";
 import { SoulLinker } from "@masa-finance/masa-contracts-identity";
-import Masa from "../masa";
-import { BaseResult } from "../interface";
+import { BigNumber, Contract } from "ethers";
+
+import { BaseResult, MasaInterface } from "../interface";
 import { Messages } from "../utils";
 
 export type Link = {
@@ -18,7 +18,7 @@ export type ListLinksResult = BaseResult & {
 };
 
 export const loadLinks = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: Contract,
   tokenId: BigNumber
 ): Promise<Link[]> => {
@@ -49,7 +49,7 @@ export const loadLinks = async (
 };
 
 export const listLinks = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: Contract,
   tokenId: BigNumber
 ): Promise<ListLinksResult> => {

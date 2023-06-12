@@ -1,7 +1,7 @@
-import Masa from "../masa";
+import { MasaInterface } from "../interface";
 
 export const burnSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string
 ): Promise<boolean> => {
   const extension = await masa.contracts.instances.SoulNameContract.extension();

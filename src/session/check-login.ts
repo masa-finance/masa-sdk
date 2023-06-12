@@ -1,6 +1,6 @@
-import Masa from "../masa";
+import { MasaInterface } from "../interface";
 
-export const checkLogin = async (masa: Masa): Promise<boolean> => {
+export const checkLogin = async (masa: MasaInterface): Promise<boolean> => {
   let loggedIn = false;
 
   const checkSessionResponse = await masa.client.session.check();

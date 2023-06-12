@@ -1,4 +1,5 @@
 import { Signer } from "ethers";
+
 import { MasaArgs } from "../interface";
 
 // special type for env config that makes wallet optional

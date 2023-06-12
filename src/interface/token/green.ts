@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+
 import { BaseResult } from "../masa";
 
 export interface IGreen {

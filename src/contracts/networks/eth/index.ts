@@ -1,3 +1,3 @@
 // eth
-export * from "./goerli";
 export * from "./ethereum";
+export * from "./goerli";

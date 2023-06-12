@@ -1,22 +1,4 @@
-import { MasaBase } from "../../helpers/masa-base";
-import {
-  IIdentityContracts,
-  isERC20Currency,
-  isNativeCurrency,
-  MasaConfig,
-  PaymentMethod,
-} from "../../interface";
 import { BigNumber } from "@ethersproject/bignumber";
-import {
-  constants,
-  ContractReceipt,
-  Signer,
-  TypedDataDomain,
-  TypedDataField,
-  utils,
-} from "ethers";
-import { ERC20, ERC20__factory } from "../stubs";
-import { Messages } from "../../utils";
 import {
   MasaSBT,
   MasaSBTAuthority,
@@ -24,18 +6,30 @@ import {
   SoulLinker,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
+import {
+  constants,
+  ContractReceipt,
+  TypedDataDomain,
+  TypedDataField,
+  utils,
+} from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
-import Masa from "../../masa";
 
-export class ContractFactory {
-  static connect: <Contract>(
-    address: string,
-    signerOrProvider: Signer
-  ) => Contract;
-}
+import {
+  IIdentityContracts,
+  isERC20Currency,
+  isNativeCurrency,
+  MasaBase,
+  MasaConfig,
+  MasaInterface,
+  PaymentMethod,
+} from "../../interface";
+import { Messages } from "../../utils";
+import { ERC20, ERC20__factory } from "../stubs";
+import { ContractFactory } from "./contract-factory";
 
 export class MasaModuleBase extends MasaBase {
-  constructor(masa: Masa, protected instances: IIdentityContracts) {
+  constructor(masa: MasaInterface, protected instances: IIdentityContracts) {
     super(masa);
   }
 

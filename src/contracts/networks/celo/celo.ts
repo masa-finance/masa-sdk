@@ -1,5 +1,6 @@
-import { Addresses } from "../../addresses";
 import { celo as celoAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
+
+import { Addresses } from "../../addresses";
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,

@@ -13,6 +13,7 @@ import {
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
 import { constants, providers } from "ethers";
+
 import { ContractInfo, IIdentityContracts, NetworkName } from "../interface";
 import { addresses } from "./addresses";
 

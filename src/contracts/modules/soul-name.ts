@@ -1,7 +1,8 @@
-import { isNativeCurrency, PaymentMethod } from "../../interface";
-import { ContractTransaction, TypedDataDomain } from "ethers";
-import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { BigNumber } from "@ethersproject/bignumber";
+import { ContractTransaction, TypedDataDomain } from "ethers";
+
+import { isNativeCurrency, PaymentMethod } from "../../interface";
+import { generateSignatureDomain, Messages, signTypedData } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class SoulName extends MasaModuleBase {

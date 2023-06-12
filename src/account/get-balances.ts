@@ -5,9 +5,9 @@ import {
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
 import { constants, utils } from "ethers";
+
 import { ERC20, ERC20__factory } from "../contracts";
-import Masa from "../masa";
-import { PaymentMethod } from "../interface";
+import { MasaInterface, PaymentMethod } from "../interface";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
@@ -28,7 +28,7 @@ type SBTContracts =
   | SoulboundGreen;
 
 export const getBalances = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<Balances> => {
   const addressToLoad: string =

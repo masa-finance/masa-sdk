@@ -1,14 +1,15 @@
-import { BigNumber } from "ethers";
 import {
   MasaSBT,
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import Masa from "../masa";
+import { BigNumber } from "ethers";
+
+import { MasaInterface } from "../interface";
 import { loadSBTs } from "./load";
 
 export const listSBTs = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
   address?: string
 ): Promise<

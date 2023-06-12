@@ -4,12 +4,13 @@ import {
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
-import Masa from "../masa";
+
 import { patchMetadataUrl } from "../helpers";
+import { MasaInterface } from "../interface";
 import { isBigNumber } from "../utils";
 
 export const loadSBTIDs = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
   sbtIDs: BigNumber[]
 ) => {
@@ -26,7 +27,7 @@ export const loadSBTIDs = async (
 };
 
 export const loadSBTs = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
   identityIdOrAddress: BigNumber | string
 ): Promise<

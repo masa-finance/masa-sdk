@@ -1,15 +1,14 @@
 import { BigNumber, Contract } from "ethers";
-import Masa from "../masa";
-import { PaymentMethod } from "../interface";
-import { MasaBase } from "../helpers";
+
+import { MasaBase, MasaInterface, PaymentMethod } from "../interface";
 import { createLink } from "./create-link";
 import { establishLinkFromPassport } from "./establish-link";
-import { verifyLink } from "./verify-link";
 import { listLinks } from "./list-links";
 import { queryLinkFromPassport } from "./query-link";
+import { verifyLink } from "./verify-link";
 
 export class MasaSoulLinker extends MasaBase {
-  constructor(masa: Masa, private contract: Contract) {
+  constructor(masa: MasaInterface, private contract: Contract) {
     super(masa);
   }
 

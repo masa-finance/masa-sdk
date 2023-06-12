@@ -1,11 +1,11 @@
 import { BigNumber } from "ethers";
-import Masa from "../masa";
+
 import { patchMetadataUrl } from "../helpers";
-import { GreenDetails, IGreen } from "../interface";
+import { GreenDetails, IGreen, MasaInterface } from "../interface";
 import { isBigNumber } from "../utils";
 
 export const loadGreenDetails = async (
-  masa: Masa,
+  masa: MasaInterface,
   greenIds: BigNumber[]
 ): Promise<GreenDetails[]> => {
   return (
@@ -37,7 +37,7 @@ export const loadGreenDetails = async (
 };
 
 export const loadGreens = async (
-  masa: Masa,
+  masa: MasaInterface,
   identityIdOrAddress: BigNumber | string
 ): Promise<GreenDetails[]> => {
   let greenIds: BigNumber[] = [];

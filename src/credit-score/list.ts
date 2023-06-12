@@ -1,10 +1,9 @@
-import Masa from "../masa";
+import { CreditScoreDetails, MasaInterface } from "../interface";
 import { Messages } from "../utils";
-import { CreditScoreDetails } from "../interface";
-import { loadCreditScores } from "./";
+import { loadCreditScores } from "./load";
 
 export const listCreditScores = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<CreditScoreDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
@@ -18,7 +17,7 @@ export const listCreditScores = async (
 };
 
 export const listCreditScoresAndPrint = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<CreditScoreDetails[]> => {
   const creditScores = await listCreditScores(masa, address);

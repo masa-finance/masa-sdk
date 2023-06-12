@@ -1,3 +1,4 @@
+import { TypedDataSigner } from "@ethersproject/abstract-signer";
 import {
   BaseContract,
   BigNumber,
@@ -7,8 +8,6 @@ import {
   TypedDataField,
   utils,
 } from "ethers";
-
-import { TypedDataSigner } from "@ethersproject/abstract-signer";
 
 /**
  *

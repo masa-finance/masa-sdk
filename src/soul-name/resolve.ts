@@ -1,4 +1,4 @@
-import Masa from "../masa";
+import { MasaInterface } from "../interface";
 
 /**
  *
@@ -6,7 +6,7 @@ import Masa from "../masa";
  * @param soulName
  */
 export const resolveSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string
 ): Promise<string | undefined> => {
   let owner;

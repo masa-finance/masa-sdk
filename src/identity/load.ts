@@ -1,12 +1,12 @@
 import { BigNumber } from "ethers";
-import Masa from "../masa";
-import { isBigNumber, Messages } from "../utils";
+
 import { patchMetadataUrl } from "../helpers";
-import { IdentityDetails, IIdentity } from "../interface";
+import { IdentityDetails, IIdentity, MasaInterface } from "../interface";
+import { isBigNumber, Messages } from "../utils";
 import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<{ identityId?: BigNumber; address: string }> => {
   address = address || (await masa.config.signer.getAddress());
@@ -33,7 +33,7 @@ export const loadIdentityByAddress = async (
 };
 
 export const loadIdentityDetails = async (
-  masa: Masa,
+  masa: MasaInterface,
   identityIdOrAddress: BigNumber | string
 ): Promise<IdentityDetails> => {
   const {
@@ -70,7 +70,7 @@ export const loadIdentityDetails = async (
 };
 
 export const loadIdentity = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<IdentityDetails | undefined> => {
   address = address || (await masa.config.signer.getAddress());

@@ -1,7 +1,6 @@
-import Masa from "../masa";
-import { SoulNameDetails } from "../interface";
-import { loadSoulNameDetailsByAddress } from "./load";
+import { MasaInterface, SoulNameDetails } from "../interface";
 import { printSoulName } from "./helpers";
+import { loadSoulNameDetailsByAddress } from "./load";
 
 /**
  * list soul names
@@ -10,7 +9,7 @@ import { printSoulName } from "./helpers";
  * @param address
  */
 export const listSoulNames = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<SoulNameDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
@@ -24,7 +23,7 @@ export const listSoulNames = async (
  * @param address
  */
 export const listSoulNamesAndPrint = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<SoulNameDetails[]> => {
   address = address || (await masa.config.signer.getAddress());

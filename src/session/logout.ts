@@ -1,8 +1,8 @@
-import Masa from "../masa";
+import { MasaInterface } from "../interface";
 import { Messages } from "../utils";
 
 export const logout = async (
-  masa: Masa
+  masa: MasaInterface
 ): Promise<
   | {
       status: string;

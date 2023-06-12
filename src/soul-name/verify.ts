@@ -1,5 +1,6 @@
 import { utils } from "ethers";
-import Masa from "../masa";
+
+import { MasaInterface } from "../interface";
 import { recoverAddress } from "../utils";
 
 const minters = [
@@ -16,7 +17,7 @@ const arAccounts = [
 ];
 
 export const verifyByName = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string
 ): Promise<{
   nameMatch: boolean;

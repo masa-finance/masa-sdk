@@ -1,6 +1,6 @@
 import GraphemeSplitter from "grapheme-splitter";
-import Masa from "../masa";
-import { SoulNameDetails } from "../interface";
+
+import { MasaInterface, SoulNameDetails } from "../interface";
 
 export const printSoulName = (
   soulName: SoulNameDetails,
@@ -42,7 +42,7 @@ export const calculateSoulNameLength = (soulName: string): number => {
  * try to evaluate the right prefix
  * @param masa
  */
-export const getSoulNameMetadataPrefix = (masa: Masa): string => {
+export const getSoulNameMetadataPrefix = (masa: MasaInterface): string => {
   // special handling for celo networks
   return masa.config.networkName === "ethereum" ||
     masa.config.networkName === "goerli"

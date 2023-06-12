@@ -1,10 +1,11 @@
-import { BigNumber } from "ethers";
 import { LogDescription } from "@ethersproject/abi";
-import Masa from "../masa";
+import { BigNumber } from "ethers";
+
 import {
   BaseResult,
   CreateSoulNameResult,
   isSoulNameMetadataStoreResult,
+  MasaInterface,
   PaymentMethod,
   SoulNameErrorCodes,
 } from "../interface";
@@ -14,7 +15,9 @@ import { Messages } from "../utils";
  * Identity only
  * @param masa
  */
-export const purchaseIdentity = async (masa: Masa): Promise<BaseResult> => {
+export const purchaseIdentity = async (
+  masa: MasaInterface
+): Promise<BaseResult> => {
   const result = {
     success: false,
     message: "Unknown Error",
@@ -56,7 +59,9 @@ export const purchaseIdentity = async (masa: Masa): Promise<BaseResult> => {
  *
  * @param masa
  */
-export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
+export const createIdentity = async (
+  masa: MasaInterface
+): Promise<BaseResult> => {
   const result = {
     success: false,
     message: "Unknown Error",
@@ -92,7 +97,7 @@ export const createIdentity = async (masa: Masa): Promise<BaseResult> => {
  * @param style
  */
 export const purchaseIdentityWithSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   soulName: string,
   soulNameLength: number,
   duration: number,
@@ -207,7 +212,7 @@ export const purchaseIdentityWithSoulName = async (
  * @param style
  */
 export const createIdentityWithSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod,
   soulName: string,
   duration: number,

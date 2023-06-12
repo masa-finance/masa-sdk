@@ -1,5 +1,6 @@
-import { Addresses } from "../../addresses";
 import { polygon as polygonAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
+
+import { Addresses } from "../../addresses";
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,

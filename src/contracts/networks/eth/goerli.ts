@@ -1,8 +1,9 @@
-import { Addresses } from "../../addresses";
 // identity
 import { goerli as goerliAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
 // token
 import { address as MASA } from "@masa-finance/masa-token/deployments/goerli/MasaToken.json";
+
+import { Addresses } from "../../addresses";
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,

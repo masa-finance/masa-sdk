@@ -1,5 +1,6 @@
-import { BigNumber, Signer } from "ethers";
 import { ApiConfig as ArweaveConfig } from "arweave/node/lib/api";
+import { BigNumber, Signer } from "ethers";
+
 import { Network } from "../utils";
 import { IIdentityContracts } from "./contracts";
 

@@ -1,8 +1,9 @@
 import { LogDescription } from "@ethersproject/abi";
-import Masa from "../masa";
+
 import {
   CreateSoulNameResult,
   isSoulNameMetadataStoreResult,
+  MasaInterface,
   PaymentMethod,
   SoulNameErrorCodes,
   SoulNameMetadataStoreResult,
@@ -11,7 +12,7 @@ import {
 import { Messages } from "../utils";
 
 const purchaseSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod,
   soulName: string,
   soulNameLength: number,
@@ -110,7 +111,7 @@ const purchaseSoulName = async (
 };
 
 export const createSoulName = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod,
   soulName: string,
   duration: number,

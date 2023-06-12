@@ -2,16 +2,14 @@ import {
   ReferenceSBTSelfSovereign,
   ReferenceSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
-import { deploySSSBT } from "./deploy";
-import { signSSSBT } from "./sign";
-import { mintSSSBT } from "./mint";
-import { MasaSBT, SBTWrapper } from "../sbt";
-import Masa from "../../masa";
-import { addAuthority } from "./add-authority";
 
-export class SSSBTWrapper<
-  Contract extends ReferenceSBTSelfSovereign
-> extends SBTWrapper<Contract> {
+import { MasaSBTs, SBTWrapper } from "../sbt";
+import { addAuthority } from "./add-authority";
+import { deploySSSBT } from "./deploy";
+import { mintSSSBT } from "./mint";
+import { signSSSBT } from "./sign";
+
+export class SSSBTWrapper extends SBTWrapper<ReferenceSBTSelfSovereign> {
   /**
    *
    * @param receiver
@@ -41,15 +39,7 @@ export class SSSBTWrapper<
     addAuthority(this.masa, this.contract, authorityAddress);
 }
 
-export class MasaSSSBT<
-  Contract extends ReferenceSBTSelfSovereign
-> extends MasaSBT<Contract> {
-  constructor(masa: Masa) {
-    super(masa);
-
-    this.connect.bind(this);
-  }
-
+export class MasaSSSBT extends MasaSBTs {
   /**
    *
    * @param name
@@ -81,12 +71,12 @@ export class MasaSSSBT<
    *
    * @param address
    */
-  public async connect(address: string) {
-    const { contract } = await super.connect(
+  public connect = async (address: string) => {
+    const { sbtContract } = await this.masa.contracts.sssbt.connect(
       address,
       ReferenceSBTSelfSovereign__factory
     );
 
-    return new SSSBTWrapper<Contract>(this.masa, contract);
-  }
+    return new SSSBTWrapper(this.masa, sbtContract);
+  };
 }

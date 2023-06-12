@@ -1,14 +1,19 @@
 import { BigNumber, Contract } from "ethers";
-import Masa from "../masa";
-import { BaseResult, IPassport, PaymentMethod } from "../interface";
+
 import { patchMetadataUrl } from "../helpers";
+import {
+  BaseResult,
+  IPassport,
+  MasaInterface,
+  PaymentMethod,
+} from "../interface";
 import { Messages } from "../utils";
 import { parsePassport } from "./parse-passport";
 
 export type QueryLinkResult = BaseResult;
 
 export const queryLinkFromPassport = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod,
   contract: Contract,
   passport: string
@@ -28,7 +33,7 @@ export const queryLinkFromPassport = async (
 };
 
 export const queryLink = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: Contract,
   paymentMethod: PaymentMethod,
   tokenId: BigNumber,

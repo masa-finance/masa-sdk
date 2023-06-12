@@ -1,12 +1,12 @@
 import { BigNumber, Contract } from "ethers";
-import Masa from "../masa";
-import { BaseResult } from "../interface";
+
+import { BaseResult, MasaInterface } from "../interface";
 import { Link, loadLinks } from "./list-links";
 
 export type VerifyLinkResult = BaseResult & { verified?: boolean };
 
 export const verifyLink = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: Contract,
   tokenId: BigNumber,
   readerIdentityId?: BigNumber

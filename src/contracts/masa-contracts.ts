@@ -1,22 +1,30 @@
-import { IIdentityContracts } from "../interface";
-import Masa from "../masa";
-import { loadIdentityContracts } from "./index";
+import { LogDescription } from "@ethersproject/abi";
+import { Log } from "@ethersproject/abstract-provider";
 import {
+  MasaSBT,
+  ReferenceSBTAuthority,
+  ReferenceSBTSelfSovereign,
+} from "@masa-finance/masa-contracts-identity";
+import { BaseContract } from "ethers";
+
+import { IIdentityContracts, MasaBase, MasaInterface } from "../interface";
+import { loadIdentityContracts } from "./load-Identity-contracts";
+import {
+  ASBT,
   CreditScore,
   Green,
   Identity,
   SBT,
   SoulLinker,
   SoulName,
+  SSSBT,
 } from "./modules";
-import { MasaBase } from "../helpers";
-import { Log } from "@ethersproject/abstract-provider";
-import { BaseContract } from "ethers";
-import { LogDescription } from "@ethersproject/abi";
 
 export class MasaContracts extends MasaBase {
   public instances: IIdentityContracts;
-  public sbt: SBT;
+  public sbt: SBT<MasaSBT>;
+  public sssbt: SSSBT<ReferenceSBTSelfSovereign>;
+  public asbt: ASBT<ReferenceSBTAuthority>;
   public soulLinker: SoulLinker;
   public soulName: SoulName;
   public creditScore: CreditScore;
@@ -24,7 +32,7 @@ export class MasaContracts extends MasaBase {
   public identity: Identity;
 
   public constructor(
-    masa: Masa,
+    masa: MasaInterface,
     contractOverrides?: Partial<IIdentityContracts>
   ) {
     super(masa);
@@ -38,6 +46,8 @@ export class MasaContracts extends MasaBase {
     };
 
     this.sbt = new SBT(this.masa, this.instances);
+    this.sssbt = new SSSBT(this.masa, this.instances);
+    this.asbt = new ASBT(this.masa, this.instances);
     this.soulLinker = new SoulLinker(this.masa, this.instances);
     this.soulName = new SoulName(this.masa, this.instances);
     this.identity = new Identity(this.masa, this.instances);

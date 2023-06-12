@@ -1,12 +1,12 @@
-import Masa from "../masa";
-import { SoulNameDetails } from "../interface";
-import { printSoulName } from "./helpers";
-import { constants } from "ethers";
-import { loadSoulNameByTokenId } from "./load";
 import { TransferEvent } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/SoulName";
+import { constants } from "ethers";
+
+import { MasaInterface, SoulNameDetails } from "../interface";
+import { printSoulName } from "./helpers";
+import { loadSoulNameByTokenId } from "./load";
 
 export const tailSoulNames = async (
-  masa: Masa,
+  masa: MasaInterface,
   limit: number = 5
 ): Promise<SoulNameDetails[]> => {
   const soulNameMintEventsFilter =
@@ -51,7 +51,7 @@ export const tailSoulNames = async (
 };
 
 export const tailSoulNamesAndPrint = async (
-  masa: Masa,
+  masa: MasaInterface,
   limit: number = 5
 ): Promise<SoulNameDetails[]> => {
   const soulNames = await tailSoulNames(masa, limit);

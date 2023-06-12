@@ -1,9 +1,8 @@
-import Masa from "../masa";
-import { GreenDetails } from "../interface";
-import { loadGreens } from "./";
+import { GreenDetails, MasaInterface } from "../interface";
+import { loadGreens } from "./load";
 
 export const listGreens = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<GreenDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
@@ -11,7 +10,7 @@ export const listGreens = async (
 };
 
 export const listGreensAndPrint = async (
-  masa: Masa,
+  masa: MasaInterface,
   address?: string
 ): Promise<GreenDetails[]> => {
   const greens: GreenDetails[] = await listGreens(masa, address);

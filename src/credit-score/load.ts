@@ -1,11 +1,11 @@
 import { BigNumber } from "ethers";
-import Masa from "../masa";
-import { CreditScoreDetails, ICreditScore } from "../interface";
+
 import { patchMetadataUrl } from "../helpers";
+import { CreditScoreDetails, ICreditScore, MasaInterface } from "../interface";
 import { isBigNumber } from "../utils";
 
 export const loadCreditScoreDetails = async (
-  masa: Masa,
+  masa: MasaInterface,
   creditScoreIds: BigNumber[]
 ): Promise<CreditScoreDetails[]> => {
   return (
@@ -37,7 +37,7 @@ export const loadCreditScoreDetails = async (
 };
 
 export const loadCreditScores = async (
-  masa: Masa,
+  masa: MasaInterface,
   identityIdOrAddress: BigNumber | string
 ): Promise<CreditScoreDetails[]> => {
   let creditScoreIds: BigNumber[] = [];

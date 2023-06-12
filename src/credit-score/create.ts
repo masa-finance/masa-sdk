@@ -1,9 +1,12 @@
-import Masa from "../masa";
-import { GenerateCreditScoreResult, PaymentMethod } from "../interface";
+import {
+  GenerateCreditScoreResult,
+  MasaInterface,
+  PaymentMethod,
+} from "../interface";
 import { Messages } from "../utils";
 
 export const createCreditScore = async (
-  masa: Masa,
+  masa: MasaInterface,
   paymentMethod: PaymentMethod
 ): Promise<GenerateCreditScoreResult> => {
   const result: GenerateCreditScoreResult = {

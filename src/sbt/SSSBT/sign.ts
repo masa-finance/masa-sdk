@@ -1,8 +1,9 @@
-import Masa from "../../masa";
 import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
+import { MasaInterface } from "../../interface";
+
 export const signSSSBT = async (
-  masa: Masa,
+  masa: MasaInterface,
   contract: ReferenceSBTSelfSovereign,
   receiver: string
 ) => {
@@ -38,9 +39,7 @@ export const signSSSBT = async (
     signatureDate,
   };
 
-  const { sign } = await masa.contracts.sbt.attach<ReferenceSBTSelfSovereign>(
-    contract
-  );
+  const { sign } = await masa.contracts.sssbt.attach(contract);
 
   // sign to create a signature
   const signResult = await sign("ReferenceSBTSelfSovereign", types, value);

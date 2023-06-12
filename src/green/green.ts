@@ -1,19 +1,13 @@
-import { BigNumber } from "ethers";
-import Masa from "../masa";
-import { PaymentMethod } from "../interface";
-import {
-  createGreen,
-  generateGreen,
-  listGreens,
-  loadGreens,
-  mintGreen,
-  verifyGreen,
-} from "./";
-import { MasaLinkable } from "../helpers";
 import { SoulboundGreen } from "@masa-finance/masa-contracts-identity";
+import { BigNumber } from "ethers";
+
+import { MasaInterface, MasaLinkable, PaymentMethod } from "../interface";
+import { createGreen, generateGreen, mintGreen, verifyGreen } from "./create";
+import { listGreens } from "./list";
+import { loadGreens } from "./load";
 
 export class MasaGreen extends MasaLinkable<SoulboundGreen> {
-  constructor(masa: Masa) {
+  constructor(masa: MasaInterface) {
     super(masa, masa.contracts.instances.SoulboundGreenContract);
   }
 

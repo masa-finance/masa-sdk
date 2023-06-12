@@ -1,5 +1,6 @@
-import Masa from "../masa";
 import { BigNumber } from "ethers";
+
+import { MasaInterface } from "../interface";
 
 /**
  * Resolves identity id into address
@@ -7,7 +8,7 @@ import { BigNumber } from "ethers";
  * @param identityId
  */
 export const resolveIdentity = async (
-  masa: Masa,
+  masa: MasaInterface,
   identityId: BigNumber
 ): Promise<string | undefined> => {
   let address;
@@ -28,7 +29,7 @@ export const resolveIdentity = async (
 };
 
 export const resolveReverseIdentity = async (
-  masa: Masa,
+  masa: MasaInterface,
   address: string
 ): Promise<BigNumber | undefined> => {
   let identityId;
