@@ -1,5 +1,10 @@
 export const unpackSessionId = (cookie?: string): string | undefined => {
-  if (!cookie) return;
+  let result = undefined;
 
-  return cookie?.split(";")[0].split("=")[1];
+  if (!cookie) {
+    return result;
+  }
+
+  result = cookie?.split(";")[0].split("=")[1];
+  return result;
 };
