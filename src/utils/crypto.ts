@@ -41,31 +41,6 @@ export const signMessage = async (
 
 /**
  *
- * @param contract
- * @param wallet
- * @param name
- * @param types
- * @param value
- */
-export const signTypedData = async (
-  contract: BaseContract,
-  wallet: Signer,
-  name: string,
-  types: Record<string, Array<TypedDataField>>,
-  value: Record<string, string | BigNumber | number>
-): Promise<{ signature: string; domain: TypedDataDomain }> => {
-  const domain = await generateSignatureDomain(wallet, name, contract.address);
-  const signature = await (wallet as Signer & TypedDataSigner)._signTypedData(
-    domain,
-    types,
-    value
-  );
-
-  return { signature, domain };
-};
-
-/**
- *
  * @param wallet
  * @param name
  * @param verifyingContract
@@ -87,6 +62,31 @@ export const generateSignatureDomain = async (
   };
 
   return domain;
+};
+
+/**
+ *
+ * @param contract
+ * @param wallet
+ * @param name
+ * @param types
+ * @param value
+ */
+export const signTypedData = async (
+  contract: BaseContract,
+  wallet: Signer,
+  name: string,
+  types: Record<string, Array<TypedDataField>>,
+  value: Record<string, string | BigNumber | number>
+): Promise<{ signature: string; domain: TypedDataDomain }> => {
+  const domain = await generateSignatureDomain(wallet, name, contract.address);
+  const signature = await (wallet as Signer & TypedDataSigner)._signTypedData(
+    domain,
+    types,
+    value
+  );
+
+  return { signature, domain };
 };
 
 /**
