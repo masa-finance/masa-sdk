@@ -1,4 +1,4 @@
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
 import { Messages } from "../utils";
 
 export const burnIdentity = async (masa: MasaInterface): Promise<boolean> => {

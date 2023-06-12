@@ -1,8 +1,8 @@
-import { SoulLinker } from "@masa-finance/masa-contracts-identity";
-import { BigNumber, Contract } from "ethers";
+import type { SoulLinker } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber, Contract } from "ethers";
 
-import { BaseResult } from "../interface/base-result";
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
+import { BaseResult } from "../interface";
 import { Messages } from "../utils";
 
 export type Link = {

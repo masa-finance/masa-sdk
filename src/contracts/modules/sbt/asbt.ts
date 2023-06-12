@@ -2,7 +2,7 @@ import { LogDescription } from "@ethersproject/abi";
 import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { BigNumber, PayableOverrides } from "ethers";
 
-import { PaymentMethod } from "../../../interface/payment-method";
+import type { PaymentMethod } from "../../../interface";
 import { Messages } from "../../../utils";
 import { SBT, SBTContractWrapper } from "./sbt";
 

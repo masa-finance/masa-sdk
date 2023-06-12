@@ -5,9 +5,9 @@ import {
 import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/reference/ReferenceSBTAuthority";
 import { constants, ContractFactory } from "ethers";
 
+import type { MasaInterface } from "../../interface";
 import { Messages } from "../../utils";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
-import { MasaInterface } from "../../interface/masa-interface";
 
 export const deployASBT = async (
   masa: MasaInterface,

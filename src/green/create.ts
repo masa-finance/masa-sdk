@@ -1,9 +1,12 @@
 import { LogDescription } from "@ethersproject/abi";
 
-import { GenerateGreenResult, VerifyGreenResult } from "../interface";
-import { BaseResult } from "../interface/base-result";
-import { MasaInterface } from "../interface/masa-interface";
-import { PaymentMethod } from "../interface/payment-method";
+import type {
+  BaseResult,
+  GenerateGreenResult,
+  MasaInterface,
+  PaymentMethod,
+  VerifyGreenResult,
+} from "../interface";
 import { Messages } from "../utils";
 
 export const generateGreen = async (

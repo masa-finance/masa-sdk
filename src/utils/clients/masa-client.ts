@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
-import {
+import type {
   ChallengeResult,
   ChallengeResultWithCookie,
   GenerateCreditScoreResult,
@@ -10,15 +10,15 @@ import {
   IIdentity,
   ISession,
   LogoutResult,
+  MasaInterface,
+  NetworkName,
   SessionUser,
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
-import { MasaBase } from "../../interface/masa-base";
-import { MasaInterface } from "../../interface/masa-interface";
-import { NetworkName } from "../../interface/network-name";
+import { MasaBase } from "../../interface";
 
 const headers = {
   "Content-Type": "application/json",

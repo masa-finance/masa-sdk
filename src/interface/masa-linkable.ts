@@ -2,7 +2,7 @@ import { Contract } from "ethers";
 
 import { MasaSoulLinker } from "../soul-linker";
 import { MasaBase } from "./masa-base";
-import { MasaInterface } from "./masa-interface";
+import type { MasaInterface } from "./masa-interface";
 
 export abstract class MasaLinkable<
   LinkContract extends Contract

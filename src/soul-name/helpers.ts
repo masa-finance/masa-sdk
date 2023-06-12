@@ -1,7 +1,6 @@
 import GraphemeSplitter from "grapheme-splitter";
 
-import { SoulNameDetails } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface, SoulNameDetails } from "../interface";
 
 export const printSoulName = (
   soulName: SoulNameDetails,

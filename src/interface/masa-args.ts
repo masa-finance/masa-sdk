@@ -1,9 +1,9 @@
 import { ApiConfig as ArweaveConfig } from "arweave/node/lib/api";
 import { Signer } from "ethers";
 
-import { IIdentityContracts } from "./contracts";
-import { EnvironmentName } from "./environment-name";
-import { NetworkName } from "./network-name";
+import type { IIdentityContracts } from "./contracts";
+import type { EnvironmentName } from "./environment-name";
+import type { NetworkName } from "./network-name";
 
 export interface MasaArgs {
   cookie?: string;

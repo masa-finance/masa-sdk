@@ -1,10 +1,10 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 import {
   MasaSBT,
   MasaSBT__factory,
 } from "@masa-finance/masa-contracts-identity";
 
-import { PaymentMethod } from "../../../interface/payment-method";
+import type { PaymentMethod } from "../../../interface";
 import { ContractFactory } from "../contract-factory";
 import { MasaModuleBase } from "../masa-module-base";
 

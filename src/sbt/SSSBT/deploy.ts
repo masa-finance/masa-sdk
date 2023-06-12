@@ -1,4 +1,4 @@
-import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import {
   abi,
   bytecode,
@@ -8,7 +8,7 @@ import { constants, ContractFactory } from "ethers";
 
 import { Messages } from "../../utils";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
-import { MasaInterface } from "../../interface/masa-interface";
+import type { MasaInterface } from "../../interface";
 
 export const deploySSSBT = async (
   masa: MasaInterface,

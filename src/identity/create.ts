@@ -1,10 +1,13 @@
 import { LogDescription } from "@ethersproject/abi";
 import { BigNumber } from "ethers";
 
-import { CreateSoulNameResult, SoulNameErrorCodes } from "../interface";
-import { BaseResult } from "../interface/base-result";
-import { MasaInterface } from "../interface/masa-interface";
-import { PaymentMethod } from "../interface/payment-method";
+import type {
+  BaseResult,
+  CreateSoulNameResult,
+  MasaInterface,
+  PaymentMethod,
+} from "../interface";
+import { SoulNameErrorCodes } from "../interface";
 import { isSoulNameMetadataStoreResult, Messages } from "../utils";
 
 /**

@@ -1,4 +1,4 @@
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
 
 export const checkLogin = async (masa: MasaInterface): Promise<boolean> => {
   let loggedIn = false;

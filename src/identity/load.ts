@@ -1,8 +1,7 @@
 import { BigNumber } from "ethers";
 
 import { patchMetadataUrl } from "../helpers";
-import { IdentityDetails, IIdentity } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { IdentityDetails, IIdentity, MasaInterface } from "../interface";
 import { isBigNumber, Messages } from "../utils";
 import { resolveReverseIdentity } from "./resolve";
 

@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
 
 /**
  * Resolves identity id into address

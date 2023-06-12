@@ -1,5 +1,4 @@
-import { GreenDetails } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { GreenDetails, MasaInterface } from "../interface";
 import { loadGreens } from "./load";
 
 export const listGreens = async (

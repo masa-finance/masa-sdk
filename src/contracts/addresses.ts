@@ -1,5 +1,4 @@
-import { Addresses } from "../interface/addresses";
-import { NetworkName } from "../interface/network-name";
+import type { Addresses, NetworkName } from "../interface";
 import {
   alfajores,
   basegoerli,

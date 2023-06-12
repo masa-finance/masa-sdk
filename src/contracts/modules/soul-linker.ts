@@ -1,8 +1,8 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "ethers";
 
-import { BaseResult } from "../../interface/base-result";
-import { PaymentMethod } from "../../interface/payment-method";
+import type { PaymentMethod } from "../../interface";
+import { BaseResult } from "../../interface";
 import { Link, loadLinks } from "../../soul-linker";
 import { isNativeCurrency, Messages, signTypedData } from "../../utils";
 import { MasaModuleBase } from "./masa-module-base";

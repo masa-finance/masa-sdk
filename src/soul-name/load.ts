@@ -1,7 +1,6 @@
 import { BigNumber } from "ethers";
 
-import { ISoulName, SoulNameDetails } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { ISoulName, MasaInterface, SoulNameDetails } from "../interface";
 import { isBigNumber } from "../utils";
 
 export const loadSoulNameByTokenId = async (

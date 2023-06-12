@@ -1,7 +1,6 @@
 import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import { MasaInterface } from "../../interface/masa-interface";
-import { PaymentMethod } from "../../interface/payment-method";
+import type { MasaInterface, PaymentMethod } from "../../interface";
 
 export const mintSSSBT = async (
   masa: MasaInterface,

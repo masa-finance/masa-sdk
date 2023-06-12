@@ -1,5 +1,4 @@
-import { ISession } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { ISession, MasaInterface } from "../interface";
 
 export const getSession = async (
   masa: MasaInterface

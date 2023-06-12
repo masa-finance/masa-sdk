@@ -1,6 +1,6 @@
 import { addresses } from "../contracts";
-import { Addresses } from "../interface/addresses";
-import { NetworkName } from "../interface/network-name";
+import type { NetworkName } from "../interface";
+import { Addresses } from "../interface";
 
 export interface Network {
   /**

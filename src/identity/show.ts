@@ -1,5 +1,5 @@
+import type { MasaInterface } from "../interface";
 import { IdentityDetails } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
 import { loadIdentity } from "./load";
 
 export const showIdentity = async (

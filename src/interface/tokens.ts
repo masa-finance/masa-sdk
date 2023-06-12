@@ -1,4 +1,4 @@
-import type { PaymentMethod } from "./payment-method";
+export type PaymentMethod = NativeCurrencies | ERC20Currencies;
 
 export const erc20Currencies = [
   // Masa

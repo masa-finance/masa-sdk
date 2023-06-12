@@ -1,5 +1,4 @@
-import { SoulNameDetails } from "../interface";
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface, SoulNameDetails } from "../interface";
 import { printSoulName } from "./helpers";
 import { loadSoulNameDetailsByAddress } from "./load";
 

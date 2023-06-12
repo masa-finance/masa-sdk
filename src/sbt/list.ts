@@ -5,7 +5,7 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
 import { loadSBTs } from "./load";
 
 export const listSBTs = async (

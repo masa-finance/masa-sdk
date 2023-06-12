@@ -1,7 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { ContractTransaction, TypedDataDomain } from "ethers";
 
-import { PaymentMethod } from "../../interface/payment-method";
+import type { PaymentMethod } from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,

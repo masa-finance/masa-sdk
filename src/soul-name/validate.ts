@@ -1,4 +1,4 @@
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
 import { calculateSoulNameLength } from "./helpers";
 
 export const validateSoulName = (

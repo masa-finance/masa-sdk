@@ -3,9 +3,9 @@ import {
   MasaSBTAuthority,
   MasaSBTSelfSovereign,
 } from "@masa-finance/masa-contracts-identity";
-import { BigNumber } from "ethers";
+import type { BigNumber } from "ethers";
 
-import { MasaInterface } from "../interface/masa-interface";
+import type { MasaInterface } from "../interface";
 import { Messages } from "../utils";
 
 export const burnSBT = async (
