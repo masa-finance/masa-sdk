@@ -116,7 +116,7 @@ export class MasaModuleBase extends MasaBase {
     let result;
 
     try {
-      result = this.masa.config.signer.provider?.getFeeData();
+      result = await this.masa.config.signer.provider?.getFeeData();
     } catch {
       console.warn("Unable to get network fee data!");
     }
