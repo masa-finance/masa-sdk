@@ -38,7 +38,7 @@ export const loadIdentityContracts = ({
     // or try to load from the browser
     new providers.Web3Provider(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error
       window.ethereum
     );
 
