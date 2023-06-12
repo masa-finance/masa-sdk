@@ -127,6 +127,8 @@ export class MasaClient extends MasaBase {
      * Get challenge
      */
     getChallenge: async (): Promise<ChallengeResultWithCookie | undefined> => {
+      let result;
+
       const getChallengeResponse = await this._middlewareClient
         .get<ChallengeResult>("/session/get-challenge")
         .catch((error: Error | AxiosError) => {
@@ -157,12 +159,14 @@ export class MasaClient extends MasaBase {
         }
 
         if (getChallengeResponseData) {
-          return {
+          result = {
             ...getChallengeResponseData,
             cookie,
           };
         }
       }
+
+      return result;
     },
 
     logout: async (): Promise<LogoutResult | undefined> => {
