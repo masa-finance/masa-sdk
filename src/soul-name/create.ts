@@ -2,12 +2,12 @@ import { LogDescription } from "@ethersproject/abi";
 
 import {
   CreateSoulNameResult,
-  PaymentMethod,
   SoulNameErrorCodes,
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
 } from "../interface";
 import { MasaInterface } from "../interface/masa-interface";
+import { PaymentMethod } from "../interface/payment-method";
 import { isSoulNameMetadataStoreResult, Messages } from "../utils";
 
 const purchaseSoulName = async (

@@ -4,7 +4,7 @@ import {
   MasaSBT__factory,
 } from "@masa-finance/masa-contracts-identity";
 
-import { PaymentMethod } from "../../../interface";
+import { PaymentMethod } from "../../../interface/payment-method";
 import { ContractFactory } from "../contract-factory";
 import { MasaModuleBase } from "../masa-module-base";
 

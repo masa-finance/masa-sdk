@@ -1,3 +1,5 @@
+import type { PaymentMethod } from "./payment-method";
+
 export const erc20Currencies = [
   // Masa
   "MASA",
@@ -23,7 +25,5 @@ export const nativeCurrencies = [
   "BNB",
 ] as const;
 export type NativeCurrencies = (typeof nativeCurrencies)[number];
-
-export type PaymentMethod = NativeCurrencies | ERC20Currencies;
 
 export type Tokens = Partial<{ [key in PaymentMethod]: string }>;

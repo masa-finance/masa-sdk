@@ -1,8 +1,8 @@
 import { SoulboundIdentity } from "@masa-finance/masa-contracts-identity";
 
-import { PaymentMethod } from "../interface";
 import { MasaInterface } from "../interface/masa-interface";
 import { MasaLinkable } from "../interface/masa-linkable";
+import { PaymentMethod } from "../interface/payment-method";
 import { burnIdentity } from "./burn";
 import { createIdentity, createIdentityWithSoulName } from "./create";
 import { loadIdentityByAddress } from "./load";

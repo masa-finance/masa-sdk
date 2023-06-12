@@ -6,9 +6,9 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { constants, utils } from "ethers";
 
-import { ERC20, ERC20__factory } from "../contracts";
-import { PaymentMethod } from "../interface";
+import { ERC20, ERC20__factory } from "../contracts/stubs/ERC20";
 import { MasaInterface } from "../interface/masa-interface";
+import { PaymentMethod } from "../interface/payment-method";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 

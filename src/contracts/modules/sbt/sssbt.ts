@@ -6,7 +6,7 @@ import {
 } from "@masa-finance/masa-contracts-identity";
 import { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 
-import { PaymentMethod } from "../../../interface";
+import { PaymentMethod } from "../../../interface/payment-method";
 import {
   generateSignatureDomain,
   Messages,

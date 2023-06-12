@@ -1,9 +1,10 @@
 import { BigNumber, Contract } from "ethers";
 
 import { patchMetadataUrl } from "../helpers";
-import { IPassport, PaymentMethod } from "../interface";
+import { IPassport } from "../interface";
 import { BaseResult } from "../interface/base-result";
 import { MasaInterface } from "../interface/masa-interface";
+import { PaymentMethod } from "../interface/payment-method";
 import { Messages } from "../utils";
 import { parsePassport } from "./parse-passport";
 
