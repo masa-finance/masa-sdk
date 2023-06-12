@@ -75,9 +75,11 @@ export const getBalances = async (
     contract: SBTContracts,
     addressToLoad: string
   ): Promise<number | undefined> => {
-    let result;
+    let result = undefined;
 
-    if (contract.address === constants.AddressZero) return result;
+    if (contract.address === constants.AddressZero) {
+      return result;
+    }
 
     try {
       result = (await contract.balanceOf(addressToLoad)).toNumber();

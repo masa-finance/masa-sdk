@@ -19,6 +19,8 @@ export const deploySSSBT = async (
   authorityAddress?: string,
   adminAddress?: string
 ): Promise<string | undefined> => {
+  let result = undefined;
+
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
   authorityAddress =
     authorityAddress || (await masa.config.signer.getAddress());
@@ -85,10 +87,12 @@ export const deploySSSBT = async (
       `SSSBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
     );
 
-    return address;
+    result = address;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("SSSBT deployment failed!", error.message);
     }
   }
+
+  return result;
 };
