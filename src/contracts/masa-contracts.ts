@@ -7,13 +7,19 @@ import type {
 } from "@masa-finance/masa-contracts-identity";
 import type { BaseContract } from "ethers";
 
-import { MasaBase } from "../base/masa-base";
+import { MasaBase } from "../base";
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
-import { CreditScore, Green, Identity, SoulLinker, SoulName } from "./modules";
-import { ASBT } from "./modules/sbt/ASBT";
-import { SBT } from "./modules/sbt/sbt";
-import { SSSBT } from "./modules/sbt/SSSBT";
+import {
+  ASBT,
+  CreditScore,
+  Green,
+  Identity,
+  SBT,
+  SoulLinker,
+  SoulName,
+  SSSBT,
+} from "./modules";
 
 export class MasaContracts extends MasaBase {
   public instances: IIdentityContracts;

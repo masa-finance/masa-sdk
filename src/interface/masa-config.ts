@@ -1,6 +1,6 @@
 import type { Signer } from "ethers";
 
-import type { Network } from "../utils";
+import type { Network } from "./network";
 import type { NetworkName } from "./network-name";
 
 export interface MasaConfig {

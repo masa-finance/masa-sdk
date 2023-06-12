@@ -1,11 +1,11 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "ethers";
 
-import { MasaModuleBase } from "../../base/masa-module-base";
+import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
 import type { BaseResult, PaymentMethod } from "../../interface";
-import type { Link } from "../../soul-linker";
-import { loadLinks } from "../../soul-linker";
+import type { Link } from "../../modules";
+import { loadLinks } from "../../modules";
 import { isNativeCurrency, signTypedData } from "../../utils";
 
 export type BreakLinkResult = BaseResult;

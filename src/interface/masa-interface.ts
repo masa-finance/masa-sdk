@@ -1,11 +1,15 @@
-import type { MasaAccount } from "../account";
 import type { MasaContracts } from "../contracts";
-import type { MasaCreditScore } from "../credit-score";
-import type { MasaGreen } from "../green";
-import type { MasaIdentity } from "../identity";
-import type { MasaASBT, MasaSBTs, MasaSSSBT } from "../sbt";
-import type { MasaSession } from "../session";
-import type { MasaSoulName } from "../soul-name";
+import type {
+  MasaAccount,
+  MasaASBT,
+  MasaCreditScore,
+  MasaGreen,
+  MasaIdentity,
+  MasaSBTs,
+  MasaSession,
+  MasaSoulName,
+  MasaSSSBT,
+} from "../modules";
 import type { MasaArweave, MasaClient } from "../utils";
 import type { MasaConfig } from "./masa-config";
 

@@ -21,7 +21,7 @@ import type {
   IIdentityContracts,
   NetworkName,
 } from "../interface";
-import { addresses } from "./addresses";
+import { addresses } from "../networks";
 
 export interface LoadContractArgs {
   provider?: providers.Provider;

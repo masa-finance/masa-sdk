@@ -1,22 +1,29 @@
-import { MasaAccount } from "./account";
+import { SupportedNetworks } from "./collections";
 import { MasaContracts } from "./contracts";
-import { MasaCreditScore } from "./credit-score";
-import { MasaGreen } from "./green";
-import { version } from "./helpers";
-import { MasaIdentity } from "./identity";
 import type { MasaArgs, MasaConfig, MasaInterface } from "./interface";
-import { MasaASBT, MasaSBTs, MasaSSSBT } from "./sbt";
-import { MasaSession } from "./session";
-import { MasaSoulName } from "./soul-name";
-import { MasaArweave, MasaClient, SupportedNetworks } from "./utils";
+import {
+  MasaAccount,
+  MasaASBT,
+  MasaCreditScore,
+  MasaGreen,
+  MasaIdentity,
+  MasaSBTs,
+  MasaSession,
+  MasaSoulName,
+  MasaSSSBT,
+  version,
+} from "./modules";
+import { MasaArweave, MasaClient } from "./utils";
 
 export class Masa implements MasaInterface {
+  // config
   readonly config: MasaConfig;
-
+  // clients
   readonly arweave: MasaArweave;
   readonly client: MasaClient;
-
+  // contracts
   readonly contracts: MasaContracts;
+  // modules
   readonly account: MasaAccount;
   readonly session: MasaSession;
   readonly identity: MasaIdentity;
