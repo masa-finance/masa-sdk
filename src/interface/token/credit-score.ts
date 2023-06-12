@@ -1,6 +1,6 @@
-import { BigNumber } from "ethers";
+import type { BigNumber } from "ethers";
 
-import { BaseResult } from "../base-result";
+import type { BaseResult } from "../base-result";
 
 export interface ICreditScore {
   name: "Masa Soulbound Credit Score v1.0.0";

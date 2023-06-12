@@ -1,6 +1,6 @@
 import Arweave from "arweave";
-import { Config } from "arweave/node/common";
-import { ApiConfig } from "arweave/node/lib/api";
+import type { Config } from "arweave/node/common";
+import type { ApiConfig } from "arweave/node/lib/api";
 import axios from "axios";
 
 import type { MasaConfig } from "../../interface";

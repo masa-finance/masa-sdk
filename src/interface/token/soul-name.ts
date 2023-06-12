@@ -1,6 +1,6 @@
-import { BigNumber } from "ethers";
+import type { BigNumber } from "ethers";
 
-import { BaseResult } from "../base-result";
+import type { BaseResult } from "../base-result";
 
 export interface Attribute {
   display_type?: string;

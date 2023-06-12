@@ -6,13 +6,8 @@ import type {
   SoulLinker,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
-import {
-  constants,
-  ContractReceipt,
-  TypedDataDomain,
-  TypedDataField,
-  utils,
-} from "ethers";
+import type { ContractReceipt, TypedDataDomain, TypedDataField } from "ethers";
+import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
 import type {
