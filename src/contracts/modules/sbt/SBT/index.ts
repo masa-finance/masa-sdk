@@ -1,2 +1,2 @@
-export * from "./sbt";
-export * from "./SBTContractWrapper";
+export * from "./sbt-contract";
+export * from "./sbt-contract-wrapper";

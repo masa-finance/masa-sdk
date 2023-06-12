@@ -2,7 +2,7 @@ import { ReferenceSBTSelfSovereign__factory } from "@masa-finance/masa-contracts
 
 import { MasaSBTs } from "../SBT";
 import { deploySSSBT } from "./deploy";
-import { SSSBTWrapper } from "./SSSBTWrapper";
+import { SSSBTWrapper } from "./sssbt-wrapper";
 
 export class MasaSSSBT extends MasaSBTs {
   /**

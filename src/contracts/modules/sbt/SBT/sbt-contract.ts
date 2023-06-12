@@ -5,35 +5,39 @@ import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 import { MasaModuleBase } from "../../../../base";
 import type { PaymentMethod } from "../../../../interface";
 import type { ContractFactory } from "../../contract-factory";
-import type { SBTContractWrapper } from "./SBTContractWrapper";
+import type { SBTContractWrapper } from "./sbt-contract-wrapper";
 
-export class SBT<Contract extends MasaSBT> extends MasaModuleBase {
-  protected wrapper = (
-    sbtContract: Contract
-  ): SBTContractWrapper<Contract> => ({
-    /**
-     * instance of the SBT that this factory instance uses
-     */
-    sbtContract,
+export class SBTContract<Contract extends MasaSBT> extends MasaModuleBase {
+  /**
+   *
+   * @param sbtContract
+   */
+  protected wrapper(sbtContract: Contract): SBTContractWrapper<Contract> {
+    return {
+      /**
+       * instance of the SBT that this factory instance uses
+       */
+      sbtContract,
 
-    /**
-     *
-     * @param paymentMethod
-     * @param slippage
-     */
-    getPrice: (
-      paymentMethod: PaymentMethod,
-      slippage: number | undefined = 250
-    ): Promise<{
-      paymentAddress: string;
-      price: BigNumber;
-      formattedPrice: string;
-      mintFee: BigNumber;
-      formattedMintFee: string;
-      protocolFee: BigNumber;
-      formattedProtocolFee: string;
-    }> => this.getMintPrice(paymentMethod, sbtContract, slippage),
-  });
+      /**
+       *
+       * @param paymentMethod
+       * @param slippage
+       */
+      getPrice: (
+        paymentMethod: PaymentMethod,
+        slippage: number | undefined = 250
+      ): Promise<{
+        paymentAddress: string;
+        price: BigNumber;
+        formattedPrice: string;
+        mintFee: BigNumber;
+        formattedMintFee: string;
+        protocolFee: BigNumber;
+        formattedProtocolFee: string;
+      }> => this.getMintPrice(paymentMethod, sbtContract, slippage),
+    };
+  }
 
   /**
    * loads an sbt instance and connects the contract functions to it
@@ -44,7 +48,7 @@ export class SBT<Contract extends MasaSBT> extends MasaModuleBase {
     address: string,
     factory: ContractFactory = MasaSBT__factory
   ): Promise<SBTContractWrapper<Contract>> => {
-    const sbtContract: Contract = await SBT.loadSBTContract(
+    const sbtContract: Contract = await SBTContract.loadSBTContract(
       this.masa.config,
       address,
       factory

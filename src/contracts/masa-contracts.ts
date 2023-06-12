@@ -11,14 +11,14 @@ import { MasaBase } from "../base";
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
 import {
-  ASBT,
+  ASBTContract,
   CreditScore,
   Green,
   Identity,
-  SBT,
+  SBTContract,
   SoulLinker,
   SoulName,
-  SSSBT,
+  SSSBTContract,
 } from "./modules";
 
 export class MasaContracts extends MasaBase {
@@ -29,9 +29,9 @@ export class MasaContracts extends MasaBase {
   /**
    * SBTs
    */
-  public sbt: SBT<MasaSBT>;
-  public sssbt: SSSBT<ReferenceSBTSelfSovereign>;
-  public asbt: ASBT<ReferenceSBTAuthority>;
+  public sbt: SBTContract<MasaSBT>;
+  public sssbt: SSSBTContract<ReferenceSBTSelfSovereign>;
+  public asbt: ASBTContract<ReferenceSBTAuthority>;
   /**
    * Soul Linker
    */
@@ -70,9 +70,9 @@ export class MasaContracts extends MasaBase {
     /**
      * SBTS
      */
-    this.sbt = new SBT(this.masa, this.instances);
-    this.sssbt = new SSSBT(this.masa, this.instances);
-    this.asbt = new ASBT(this.masa, this.instances);
+    this.sbt = new SBTContract(this.masa, this.instances);
+    this.sssbt = new SSSBTContract(this.masa, this.instances);
+    this.asbt = new ASBTContract(this.masa, this.instances);
     /**
      * Soul Linker
      */

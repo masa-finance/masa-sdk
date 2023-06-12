@@ -1,4 +1,4 @@
 export * from "./asbt";
-export * from "./ASBTWrapper";
+export * from "./asbt-wrapper";
 export * from "./deploy";
 export * from "./mint";
