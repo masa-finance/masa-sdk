@@ -1,8 +1,9 @@
 import type { BigNumber } from "ethers";
 
+import { Templates } from "../collections";
 import { unpackSessionId } from "../helpers";
 import type { MasaInterface } from "../interface";
-import { signMessage, Templates } from "../utils";
+import { signMessage } from "../utils";
 
 export const login = async (
   masa: MasaInterface

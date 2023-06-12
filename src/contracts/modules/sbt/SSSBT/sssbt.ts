@@ -3,12 +3,9 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import type { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 
+import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
-import {
-  generateSignatureDomain,
-  Messages,
-  signTypedData,
-} from "../../../../utils";
+import { generateSignatureDomain, signTypedData } from "../../../../utils";
 import { SBT } from "../sbt";
 import type { SSSBTContractWrapper } from "./SSSBTContractWrapper";
 

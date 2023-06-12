@@ -1,8 +1,9 @@
 import { BigNumber } from "ethers";
 
+import { Messages } from "../collections";
 import { patchMetadataUrl } from "../helpers";
 import type { IdentityDetails, IIdentity, MasaInterface } from "../interface";
-import { isBigNumber, Messages } from "../utils";
+import { isBigNumber } from "../utils";
 import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (

@@ -2,11 +2,11 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import { ContractTransaction, TypedDataDomain } from "ethers";
 
 import { MasaModuleBase } from "../../base/masa-module-base";
+import { Messages } from "../../collections";
 import type { PaymentMethod } from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
-  Messages,
   signTypedData,
 } from "../../utils";
 

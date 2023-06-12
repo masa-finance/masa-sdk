@@ -1,5 +1,5 @@
+import { Messages } from "../collections";
 import type { MasaInterface } from "../interface";
-import { Messages } from "../utils";
 
 export const logout = async (
   masa: MasaInterface

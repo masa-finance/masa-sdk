@@ -10,6 +10,7 @@ import type { ContractReceipt, TypedDataDomain, TypedDataField } from "ethers";
 import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
+import { Messages } from "../collections";
 import type { ContractFactory } from "../contracts";
 import type {
   IIdentityContracts,
@@ -19,7 +20,7 @@ import type {
 } from "../interface";
 import type { ERC20 } from "../stubs";
 import { ERC20__factory } from "../stubs";
-import { isERC20Currency, isNativeCurrency, Messages } from "../utils";
+import { isERC20Currency, isNativeCurrency } from "../utils";
 import { MasaBase } from "./masa-base";
 
 export class MasaModuleBase extends MasaBase {

@@ -1,6 +1,6 @@
 import { LogDescription } from "@ethersproject/abi";
 
-import { SoulNameErrorCodes } from "../collections";
+import { Messages, SoulNameErrorCodes } from "../collections";
 import type {
   CreateSoulNameResult,
   MasaInterface,
@@ -8,7 +8,7 @@ import type {
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
 } from "../interface";
-import { isSoulNameMetadataStoreResult, Messages } from "../utils";
+import { isSoulNameMetadataStoreResult } from "../utils";
 
 const purchaseSoulName = async (
   masa: MasaInterface,

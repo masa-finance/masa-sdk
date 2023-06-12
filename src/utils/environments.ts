@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import type { Signer } from "ethers";
 
 import type { MasaArgs } from "../interface";
 

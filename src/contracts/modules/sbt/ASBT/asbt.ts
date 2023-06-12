@@ -2,8 +2,8 @@ import type { LogDescription } from "@ethersproject/abi";
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber, PayableOverrides } from "ethers";
 
+import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
-import { Messages } from "../../../../utils";
 import { SBT } from "../sbt";
 import type { ASBTContractWrapper } from "./ASBTContractWrapper";
 

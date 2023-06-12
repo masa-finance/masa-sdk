@@ -1,5 +1,6 @@
 import { LogDescription } from "@ethersproject/abi";
 
+import { Messages } from "../collections";
 import type {
   BaseResult,
   GenerateGreenResult,
@@ -7,7 +8,6 @@ import type {
   PaymentMethod,
   VerifyGreenResult,
 } from "../interface";
-import { Messages } from "../utils";
 
 export const generateGreen = async (
   masa: MasaInterface,

@@ -1,6 +1,7 @@
 import type { Contract } from "ethers";
 import { BigNumber } from "ethers";
 
+import { Messages } from "../collections";
 import { patchMetadataUrl } from "../helpers";
 import type {
   BaseResult,
@@ -8,7 +9,6 @@ import type {
   MasaInterface,
   PaymentMethod,
 } from "../interface";
-import { Messages } from "../utils";
 import { parsePassport } from "./parse-passport";
 
 export type QueryLinkResult = BaseResult;

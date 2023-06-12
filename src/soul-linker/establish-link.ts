@@ -1,12 +1,12 @@
 import { BigNumber, Contract } from "ethers";
 
+import { Messages } from "../collections";
 import type {
   BaseResult,
   IPassport,
   MasaInterface,
   PaymentMethod,
 } from "../interface";
-import { Messages } from "../utils";
 import { parsePassport } from "./parse-passport";
 
 export type EstablishLinkResult = BaseResult;

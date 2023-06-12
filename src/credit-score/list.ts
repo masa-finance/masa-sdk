@@ -1,5 +1,5 @@
+import { Messages } from "../collections";
 import type { CreditScoreDetails, MasaInterface } from "../interface";
-import { Messages } from "../utils";
 import { loadCreditScores } from "./load";
 
 export const listCreditScores = async (

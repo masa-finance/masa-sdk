@@ -1,13 +1,13 @@
-import { TypedDataSigner } from "@ethersproject/abstract-signer";
-import {
+import type { TypedDataSigner } from "@ethersproject/abstract-signer";
+import type {
   BaseContract,
   BigNumber,
   BytesLike,
   Signer,
   TypedDataDomain,
   TypedDataField,
-  utils,
 } from "ethers";
+import { utils } from "ethers";
 
 /**
  *
