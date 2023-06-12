@@ -1,6 +1,6 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import { SBTWrapper } from "../SBTWrapper";
+import { SBTWrapper } from "../SBT";
 import { addAuthority } from "./add-authority";
 import { mintSSSBT } from "./mint";
 import { signSSSBT } from "./sign";

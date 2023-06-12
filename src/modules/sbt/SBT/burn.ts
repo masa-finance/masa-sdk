@@ -5,8 +5,8 @@ import type {
 } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { Messages } from "../../collections";
-import type { MasaInterface } from "../../interface";
+import { Messages } from "../../../collections";
+import type { MasaInterface } from "../../../interface";
 
 export const burnSBT = async (
   masa: MasaInterface,

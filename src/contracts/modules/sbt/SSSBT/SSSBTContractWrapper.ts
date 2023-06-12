@@ -3,7 +3,7 @@ import type { MasaSBTSelfSovereign } from "@masa-finance/masa-contracts-identity
 import type { TypedDataField } from "ethers";
 
 import type { PaymentMethod } from "../../../../interface";
-import { SBTContractWrapper } from "../SBTContractWrapper";
+import { SBTContractWrapper } from "../SBT";
 
 export interface SSSBTContractWrapper<Contract extends MasaSBTSelfSovereign>
   extends SBTContractWrapper<Contract> {

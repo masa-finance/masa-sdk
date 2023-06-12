@@ -2,9 +2,9 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaModuleBase } from "../../../base/masa-module-base";
-import type { PaymentMethod } from "../../../interface";
-import type { ContractFactory } from "../contract-factory";
+import { MasaModuleBase } from "../../../../base";
+import type { PaymentMethod } from "../../../../interface";
+import type { ContractFactory } from "../../contract-factory";
 import type { SBTContractWrapper } from "./SBTContractWrapper";
 
 export class SBT<Contract extends MasaSBT> extends MasaModuleBase {

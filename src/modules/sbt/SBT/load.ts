@@ -5,8 +5,8 @@ import type {
 } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 
-import type { MasaInterface } from "../../interface";
-import { isBigNumber, patchMetadataUrl } from "../../utils";
+import type { MasaInterface } from "../../../interface";
+import { isBigNumber, patchMetadataUrl } from "../../../utils";
 
 export const loadSBTIDs = async (
   masa: MasaInterface,

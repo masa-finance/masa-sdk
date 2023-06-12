@@ -1,6 +1,6 @@
 import { ReferenceSBTAuthority__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaSBTs } from "../sbt";
+import { MasaSBTs } from "../SBT";
 import { ASBTWrapper } from "./ASBTWrapper";
 import { deployASBT } from "./deploy";
 

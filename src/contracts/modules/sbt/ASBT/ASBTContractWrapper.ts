@@ -1,7 +1,7 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
 import type { PaymentMethod } from "../../../../interface";
-import type { SBTContractWrapper } from "../SBTContractWrapper";
+import type { SBTContractWrapper } from "../SBT";
 
 export interface ASBTContractWrapper<Contract extends ReferenceSBTAuthority>
   extends SBTContractWrapper<Contract> {

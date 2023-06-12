@@ -1,4 +1,4 @@
-import { BigNumber, Contract } from "ethers";
+import type { BigNumber, Contract } from "ethers";
 
 import { Messages } from "../../collections";
 import type { BaseResult, IPassport, MasaInterface } from "../../interface";

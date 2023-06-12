@@ -1,7 +1,7 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { MasaLinkable } from "../../base";
+import { MasaLinkable } from "../../../base";
 import { burnSBT } from "./burn";
 import { listSBTs } from "./list";
 

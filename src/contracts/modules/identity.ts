@@ -1,6 +1,6 @@
 import { BigNumber, ContractTransaction, TypedDataDomain } from "ethers";
 
-import { MasaModuleBase } from "../../base/masa-module-base";
+import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
 import type { PaymentMethod } from "../../interface";
 import { generateSignatureDomain, isNativeCurrency } from "../../utils";

@@ -1,6 +1,6 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
-import { SBTWrapper } from "../SBTWrapper";
+import { SBTWrapper } from "../SBT";
 import { mintASBT } from "./mint";
 
 export class ASBTWrapper extends SBTWrapper<ReferenceSBTAuthority> {

@@ -6,7 +6,7 @@ import type { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
 import { generateSignatureDomain, signTypedData } from "../../../../utils";
-import { SBT } from "../sbt";
+import { SBT } from "../SBT";
 import type { SSSBTContractWrapper } from "./SSSBTContractWrapper";
 
 export class SSSBT<

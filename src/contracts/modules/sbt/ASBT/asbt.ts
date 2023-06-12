@@ -4,7 +4,7 @@ import type { BigNumber, PayableOverrides } from "ethers";
 
 import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
-import { SBT } from "../sbt";
+import { SBT } from "../SBT";
 import type { ASBTContractWrapper } from "./ASBTContractWrapper";
 
 export class ASBT<

@@ -14,7 +14,7 @@ import { CreditScore } from "./modules/credit-score";
 import { Green } from "./modules/green";
 import { Identity } from "./modules/identity";
 import { ASBT } from "./modules/sbt/ASBT";
-import { SBT } from "./modules/sbt/sbt";
+import { SBT } from "./modules/sbt/SBT";
 import { SSSBT } from "./modules/sbt/SSSBT";
 import { SoulLinker } from "./modules/soul-linker";
 import { SoulName } from "./modules/soul-name";

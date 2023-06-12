@@ -1,7 +1,7 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 
-import type { PaymentMethod } from "../../../interface";
+import type { PaymentMethod } from "../../../../interface";
 
 export interface SBTContractWrapper<Contract extends MasaSBT> {
   sbtContract: Contract;
