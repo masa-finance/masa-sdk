@@ -196,11 +196,15 @@ export class SSSBTContract<
 
         const mintSSSBTOverrides: PayableOverrides = {
           value: isNativeCurrency(paymentMethod) ? price : undefined,
-          ...(feeData
+          ...(feeData && feeData.maxPriorityFeePerGas
             ? {
                 maxPriorityFeePerGas: BigNumber.from(
                   feeData.maxPriorityFeePerGas
                 ),
+              }
+            : undefined),
+          ...(feeData && feeData.maxFeePerGas
+            ? {
                 maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
               }
             : undefined),
