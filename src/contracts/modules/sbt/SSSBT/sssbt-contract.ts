@@ -117,13 +117,20 @@ export class SSSBTContract<
         );
 
         const { getPrice } = this.attach(sbtContract);
-        const priceInfo = await getPrice(paymentMethod, slippage);
+        const sssbtMintPriceInfo = await getPrice(paymentMethod, slippage);
 
         if (this.masa.config.verbose) {
-          console.info({ priceInfo });
+          console.dir(
+            {
+              sssbtMintPriceInfo,
+            },
+            {
+              depth: null,
+            }
+          );
         }
 
-        return priceInfo;
+        return sssbtMintPriceInfo;
       },
 
       /**
@@ -141,7 +148,7 @@ export class SSSBTContract<
         signatureDate: number,
         authorityAddress: string
       ) => {
-        const { getPrice, prepareMint } = this.attach(sbtContract);
+        const { prepareMint } = this.attach(sbtContract);
 
         const types = {
           Mint: [
@@ -162,7 +169,7 @@ export class SSSBTContract<
           signatureDate,
         };
 
-        const prepareMintResults = await prepareMint(
+        const { price, paymentAddress } = await prepareMint(
           paymentMethod,
           "ReferenceSBTSelfSovereign",
           types,
@@ -170,8 +177,6 @@ export class SSSBTContract<
           signature,
           authorityAddress
         );
-
-        const { price, paymentAddress } = await getPrice(paymentMethod);
 
         const mintSSSBTArguments: [
           string, // paymentMethod string
@@ -187,7 +192,7 @@ export class SSSBTContract<
           signature,
         ];
 
-        const feeData = await this.getNetworkParameters();
+        const feeData = await this.getNetworkFeeInformation();
 
         const mintSSSBTOverrides: PayableOverrides = {
           value: isNativeCurrency(paymentMethod) ? price : undefined,
@@ -202,7 +207,15 @@ export class SSSBTContract<
         };
 
         if (this.masa.config.verbose) {
-          console.info(mintSSSBTArguments, prepareMintResults);
+          console.dir(
+            {
+              mintSSSBTArguments,
+              mintSSSBTOverrides,
+            },
+            {
+              depth: null,
+            }
+          );
         }
 
         const {

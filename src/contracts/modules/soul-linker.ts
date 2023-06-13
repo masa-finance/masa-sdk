@@ -161,7 +161,7 @@ export class SoulLinker extends MasaModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkParameters();
+    const feeData = await this.getNetworkFeeInformation();
 
     const overrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,

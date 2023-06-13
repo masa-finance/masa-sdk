@@ -139,7 +139,7 @@ export class Green extends MasaModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkParameters();
+    const feeData = await this.getNetworkFeeInformation();
 
     const greenMintOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,

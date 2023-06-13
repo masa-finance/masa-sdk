@@ -126,7 +126,7 @@ export class SoulName extends MasaModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkParameters();
+    const feeData = await this.getNetworkFeeInformation();
 
     const purchaseNameOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,

@@ -101,7 +101,7 @@ export class CreditScore extends MasaModuleBase {
       price
     );
 
-    const feeData = await this.getNetworkParameters();
+    const feeData = await this.getNetworkFeeInformation();
 
     const creditScoreMintOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,

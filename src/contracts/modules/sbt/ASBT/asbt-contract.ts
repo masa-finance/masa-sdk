@@ -70,7 +70,7 @@ export class ASBTContract<
           string // receiver string
         ] = [paymentAddress, receiver];
 
-        const feeData = await this.getNetworkParameters();
+        const feeData = await this.getNetworkFeeInformation();
 
         const mintASBTOverrides: PayableOverrides = {
           value: isNativeCurrency(paymentMethod) ? price : undefined,

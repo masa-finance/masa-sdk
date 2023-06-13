@@ -112,13 +112,28 @@ export class MasaModuleBase extends MasaBase {
   /**
    *
    */
-  protected getNetworkParameters = async (): Promise<FeeData | undefined> => {
+  protected getNetworkFeeInformation = async (): Promise<
+    FeeData | undefined
+  > => {
     let result;
 
     try {
       result = await this.masa.config.signer.provider?.getFeeData();
-    } catch {
-      console.warn("Unable to get network fee data!");
+
+      if (this.masa.config.verbose) {
+        console.dir(
+          {
+            networkFeeInformation: result,
+          },
+          {
+            depth: null,
+          }
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.warn("Unable to get network fee data!", error.message);
+      }
     }
 
     return result;

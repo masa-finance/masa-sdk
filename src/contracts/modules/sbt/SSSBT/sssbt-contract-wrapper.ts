@@ -41,8 +41,13 @@ export interface SSSBTContractWrapper<Contract extends MasaSBTSelfSovereign>
     authorityAddress: string,
     slippage?: number
   ) => Promise<{
-    price: BigNumber;
     paymentAddress: string;
+    price: BigNumber;
+    formattedPrice: string;
+    mintFee: BigNumber;
+    formattedMintFee: string;
+    protocolFee: BigNumber;
+    formattedProtocolFee: string;
   }>;
 
   /**

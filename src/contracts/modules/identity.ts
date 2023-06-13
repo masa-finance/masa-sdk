@@ -114,7 +114,7 @@ export class Identity extends MasaModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkParameters();
+    const feeData = await this.getNetworkFeeInformation();
 
     const purchaseIdentityAndNameOverrides: PayableOverrides = {
       value: isNativeCurrency(paymentMethod) ? price : undefined,
