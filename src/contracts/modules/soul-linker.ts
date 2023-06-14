@@ -198,7 +198,13 @@ export class SoulLinker extends MasaModuleBase {
 
     const { wait, hash } = await addLink(...params, overridesWithGasLimit);
 
-    console.log(Messages.WaitingToFinalize(hash));
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        this.masa.config.network?.blockExplorerUrls?.[0]
+      )
+    );
+
     await wait();
 
     return true;
@@ -314,7 +320,13 @@ export class SoulLinker extends MasaModuleBase {
         link.signatureDate
       );
 
-      console.log(Messages.WaitingToFinalize(hash));
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0]
+        )
+      );
+
       await wait();
     }
 

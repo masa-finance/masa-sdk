@@ -352,7 +352,13 @@ export class SoulName extends MasaModuleBase {
           soulNameData.tokenId
         );
 
-        console.log(Messages.WaitingToFinalize(hash));
+        console.log(
+          Messages.WaitingToFinalize(
+            hash,
+            this.masa.config.network?.blockExplorerUrls?.[0]
+          )
+        );
+
         await wait();
 
         console.log(
@@ -409,7 +415,13 @@ export class SoulName extends MasaModuleBase {
           gasLimit,
         });
 
-        console.log(Messages.WaitingToFinalize(hash));
+        console.log(
+          Messages.WaitingToFinalize(
+            hash,
+            this.masa.config.network?.blockExplorerUrls?.[0]
+          )
+        );
+
         await wait();
 
         console.log(

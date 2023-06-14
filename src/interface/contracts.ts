@@ -19,3 +19,9 @@ export interface IIdentityContracts {
   SoulStoreContract: SoulStore & ContractInfo;
   SoulboundGreenContract: SoulboundGreen & ContractInfo;
 }
+
+export interface DeployResult<Tuple> {
+  address: string;
+  constructorArguments: (string | number | Tuple)[];
+  abiEncodedConstructorArguments: string;
+}

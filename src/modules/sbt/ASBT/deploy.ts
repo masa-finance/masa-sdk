@@ -6,7 +6,7 @@ import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typec
 import { constants, ContractFactory } from "ethers";
 
 import { Messages } from "../../../collections";
-import type { MasaInterface } from "../../../interface";
+import type { DeployResult, MasaInterface } from "../../../interface";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export const deployASBT = async (
@@ -16,20 +16,22 @@ export const deployASBT = async (
   baseTokenUri: string,
   limit: number = 1,
   adminAddress?: string
-): Promise<string | undefined> => {
-  let result;
+): Promise<DeployResult<PaymentParamsStruct> | undefined> => {
+  let result: DeployResult<PaymentParamsStruct> | undefined;
 
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
 
-  console.log(`Deploying ASBT to network '${masa.config.networkName}'`);
+  console.log(
+    `Deploying ASBT contract to network '${masa.config.networkName}'`
+  );
 
-  const factory: ContractFactory = new ContractFactory(
+  const contractFactory: ContractFactory = new ContractFactory(
     abi,
     bytecode,
     masa.config.signer
   );
 
-  const args: [
+  const deployASBTArguments: [
     string, // address admin
     string, // string name
     string, // string symbol
@@ -56,16 +58,29 @@ export const deployASBT = async (
     limit,
   ];
 
+  const abiEncodedDeployASBTArguments =
+    contractFactory.interface.encodeDeploy(deployASBTArguments);
   if (masa.config.verbose) {
-    console.info(...args);
+    console.dir(
+      {
+        deployASBTArguments,
+        abiEncodedDeployASBTArguments,
+      },
+      { depth: null }
+    );
   }
 
   try {
     const {
       deployTransaction: { wait, hash },
       address,
-    } = await factory.deploy(...args);
-    console.log(Messages.WaitingToFinalize(hash));
+    } = await contractFactory.deploy(...deployASBTArguments);
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        masa.config.network?.blockExplorerUrls?.[0]
+      )
+    );
 
     await wait();
 
@@ -73,7 +88,11 @@ export const deployASBT = async (
       `ASBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
     );
 
-    result = address;
+    result = {
+      address,
+      constructorArguments: deployASBTArguments,
+      abiEncodedConstructorArguments: abiEncodedDeployASBTArguments,
+    };
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("ASBT deployment failed!", error.message);

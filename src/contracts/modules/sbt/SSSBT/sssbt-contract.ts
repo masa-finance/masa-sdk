@@ -246,7 +246,12 @@ export class SSSBTContract<
           gasLimit,
         });
 
-        console.log(Messages.WaitingToFinalize(hash));
+        console.log(
+          Messages.WaitingToFinalize(
+            hash,
+            this.masa.config.network?.blockExplorerUrls?.[0]
+          )
+        );
 
         const { logs } = await wait();
 

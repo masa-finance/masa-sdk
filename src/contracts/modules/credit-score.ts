@@ -248,7 +248,13 @@ export class CreditScore extends MasaModuleBase {
         gasLimit,
       });
 
-      console.log(Messages.WaitingToFinalize(hash));
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0]
+        )
+      );
+
       await wait();
 
       console.log(`Burned Credit Score with ID '${creditScoreId}'!`);

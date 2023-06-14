@@ -261,7 +261,13 @@ export class Green extends MasaModuleBase {
         gasLimit,
       });
 
-      console.log(Messages.WaitingToFinalize(hash));
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0]
+        )
+      );
+
       await wait();
 
       console.log(`Burned Green with ID '${greenId}'!`);

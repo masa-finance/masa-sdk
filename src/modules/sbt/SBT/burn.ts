@@ -25,7 +25,13 @@ export const burnSBT = async (
 
     const { wait, hash } = await burn(SBTId, { gasLimit });
 
-    console.log(Messages.WaitingToFinalize(hash));
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        masa.config.network?.blockExplorerUrls?.[0]
+      )
+    );
+
     await wait();
 
     console.log(`Burned SBT with ID '${SBTId}'!`);

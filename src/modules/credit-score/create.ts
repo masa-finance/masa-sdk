@@ -57,7 +57,13 @@ export const createCreditScore = async (
             creditScoreResponse.signature
           );
 
-          console.log(Messages.WaitingToFinalize(hash));
+          console.log(
+            Messages.WaitingToFinalize(
+              hash,
+              masa.config.network?.blockExplorerUrls?.[0]
+            )
+          );
+
           const { transactionHash } = await wait();
 
           console.log("Updating Credit Score Record!");

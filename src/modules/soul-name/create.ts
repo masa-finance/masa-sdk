@@ -61,7 +61,13 @@ const purchaseSoulName = async (
           receiver
         );
 
-        console.log(Messages.WaitingToFinalize(hash));
+        console.log(
+          Messages.WaitingToFinalize(
+            hash,
+            masa.config.network?.blockExplorerUrls?.[0]
+          )
+        );
+
         const { logs } = await wait();
 
         const parsedLogs = masa.contracts.parseLogs(logs);

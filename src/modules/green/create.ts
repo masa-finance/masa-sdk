@@ -128,7 +128,12 @@ export const mintGreen = async (
     signature
   );
 
-  console.log(Messages.WaitingToFinalize(hash));
+  console.log(
+    Messages.WaitingToFinalize(
+      hash,
+      masa.config.network?.blockExplorerUrls?.[0]
+    )
+  );
 
   const { logs } = await wait();
 

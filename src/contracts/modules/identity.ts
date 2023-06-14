@@ -191,7 +191,13 @@ export class Identity extends MasaModuleBase {
 
       const { wait, hash } = await burn(identityId, { gasLimit });
 
-      console.log(Messages.WaitingToFinalize(hash));
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0]
+        )
+      );
+
       await wait();
 
       console.log(`Burned Identity with ID '${identityId}'!`);

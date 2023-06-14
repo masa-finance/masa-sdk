@@ -38,6 +38,10 @@ export interface Network {
    */
   blockExplorerUrls?: string[];
   /**
+   * set of block explorer api urls
+   */
+  blockExplorerApiUrls?: string[];
+  /**
    * Masa Curated known Addresses of Contracts like Business logic and tokens
    */
   addresses: Addresses;

@@ -13,6 +13,8 @@ const bsc: Network = {
     symbol: "BNB",
     decimals: 18,
   },
+  blockExplorerUrls: ["https://bscscan.com"],
+  blockExplorerApiUrls: ["https://api.bscscan.com/api"],
   addresses: addresses["bsc"] as Addresses,
 };
 const bsctest: Network = {
@@ -26,6 +28,8 @@ const bsctest: Network = {
     symbol: "tBNB",
     decimals: 18,
   },
+  blockExplorerUrls: ["https://testnet.bscscan.com"],
+  blockExplorerApiUrls: ["https://api-testnet.bscscan.com/api"],
   addresses: addresses["bsctest"] as Addresses,
 };
 
@@ -42,6 +46,7 @@ const celo: Network = {
     decimals: 18,
   },
   blockExplorerUrls: ["https://celoscan.io"],
+  blockExplorerApiUrls: ["https://api.celoscan.io/api"],
   addresses: addresses["celo"] as Addresses,
 };
 const alfajores: Network = {
@@ -56,6 +61,7 @@ const alfajores: Network = {
     decimals: 18,
   },
   blockExplorerUrls: ["https://alfajores.celoscan.io"],
+  blockExplorerApiUrls: ["https://api-alfajores.celoscan.io/api"],
   addresses: addresses["alfajores"] as Addresses,
 };
 
@@ -71,7 +77,8 @@ const polygon: Network = {
     decimals: 18,
   },
   rpcUrls: ["https://polygon-rpc.com"],
-  blockExplorerUrls: ["https://polygonscan.com/"],
+  blockExplorerUrls: ["https://polygonscan.com"],
+  blockExplorerApiUrls: ["https://api.polygonscan.com/api"],
   addresses: addresses["polygon"] as Addresses,
 };
 const mumbai: Network = {
@@ -85,7 +92,8 @@ const mumbai: Network = {
     decimals: 18,
   },
   rpcUrls: ["https://polygon-testnet.public.blastapi.io"],
-  blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+  blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+  blockExplorerApiUrls: ["https://api-mumbai.polygonscan.com/api"],
   addresses: addresses["mumbai"] as Addresses,
   gasSlippagePercentage: 5000,
 };
@@ -103,6 +111,7 @@ const ethereum: Network = {
   },
   rpcUrls: ["https://rpc.ankr.com/eth"],
   blockExplorerUrls: ["https://etherscan.io"],
+  blockExplorerApiUrls: ["https://api.etherscan.io/api"],
   addresses: addresses["ethereum"] as Addresses,
 };
 const goerli: Network = {
@@ -117,6 +126,7 @@ const goerli: Network = {
   },
   rpcUrls: ["https://rpc.ankr.com/eth_goerli"],
   blockExplorerUrls: ["https://goerli.etherscan.io"],
+  blockExplorerApiUrls: ["https://api-goerli.etherscan.io/api"],
   addresses: addresses["goerli"] as Addresses,
 };
 
@@ -133,6 +143,7 @@ const basegoerli: Network = {
   },
   rpcUrls: ["https://goerli.base.org"],
   blockExplorerUrls: ["https://goerli.basescan.org"],
+  blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
   addresses: addresses["basegoerli"] as Addresses,
 };
 

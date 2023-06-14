@@ -79,7 +79,12 @@ export class MasaModuleBase extends MasaBase {
           );
 
         if (this.masa.config.verbose) {
-          console.info(Messages.WaitingToFinalize(hash));
+          console.info(
+            Messages.WaitingToFinalize(
+              hash,
+              this.masa.config.network?.blockExplorerUrls?.[0]
+            )
+          );
         }
 
         contractReceipt = await wait();
