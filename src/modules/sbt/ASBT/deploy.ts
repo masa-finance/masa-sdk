@@ -25,6 +25,15 @@ export const deployASBT = async (
     `Deploying ASBT contract to network '${masa.config.networkName}'`
   );
 
+  if (
+    masa.contracts.instances.SoulboundIdentityContract.address ===
+      constants.AddressZero ||
+    !masa.contracts.instances.SoulboundIdentityContract.hasAddress
+  ) {
+    console.error("Identity contract is not deployed to this network!");
+    return result;
+  }
+
   const contractFactory: ContractFactory = new ContractFactory(
     abi,
     bytecode,

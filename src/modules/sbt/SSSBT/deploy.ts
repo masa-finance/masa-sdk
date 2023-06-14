@@ -20,14 +20,23 @@ export const deploySSSBT = async (
   adminAddress?: string
 ): Promise<DeployResult<PaymentParamsStruct> | undefined> => {
   let result: DeployResult<PaymentParamsStruct> | undefined;
+  const signerAddress = await masa.config.signer.getAddress();
 
-  adminAddress = adminAddress || (await masa.config.signer.getAddress());
-  authorityAddress =
-    authorityAddress || (await masa.config.signer.getAddress());
+  adminAddress = adminAddress || signerAddress;
+  authorityAddress = authorityAddress || signerAddress;
 
   console.log(
     `Deploying SSSBT contract to network '${masa.config.networkName}'`
   );
+
+  if (
+    masa.contracts.instances.SoulboundIdentityContract.address ===
+      constants.AddressZero ||
+    !masa.contracts.instances.SoulboundIdentityContract.hasAddress
+  ) {
+    console.error("Identity contract is not deployed to this network!");
+    return result;
+  }
 
   const contractFactory: ContractFactory = new ContractFactory(
     abi,
@@ -87,7 +96,7 @@ export const deploySSSBT = async (
 
     await wait();
 
-    {
+    if (adminAddress === signerAddress) {
       console.log(`Adding authority: ${authorityAddress}`);
       const { hash, wait } = await addAuthority(authorityAddress);
 
@@ -99,6 +108,12 @@ export const deploySSSBT = async (
       );
 
       await wait();
+    } else {
+      console.log(
+        `Authority: ${authorityAddress} could not be added because ${signerAddress} is not the admin!`
+      );
+
+      console.log(`Please add authority manually from ${adminAddress}`);
     }
 
     console.log(
