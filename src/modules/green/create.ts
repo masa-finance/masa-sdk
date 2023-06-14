@@ -24,26 +24,34 @@ export const generateGreen = async (
       return result;
     }
 
-    const balance =
-      await masa.contracts.instances.SoulboundGreenContract.balanceOf(
-        await masa.config.signer.getAddress()
-      );
+    try {
+      const balance =
+        await masa.contracts.instances.SoulboundGreenContract.balanceOf(
+          await masa.config.signer.getAddress()
+        );
 
-    if (balance.eq(0)) {
-      const greenGenerateResult = await masa.client.green.generate(phoneNumber);
+      if (balance.eq(0)) {
+        const greenGenerateResult = await masa.client.green.generate(
+          phoneNumber
+        );
 
-      if (masa.config.verbose) {
-        console.dir({ greenGenerateResult }, { depth: null });
+        if (masa.config.verbose) {
+          console.dir({ greenGenerateResult }, { depth: null });
+        }
+
+        return greenGenerateResult;
+      } else {
+        const message = "Masa Green already created!";
+        return {
+          success: false,
+          message,
+          status: "failed",
+        };
       }
-
-      return greenGenerateResult;
-    } else {
-      const message = "Masa Green already created!";
-      return {
-        success: false,
-        message,
-        status: "failed",
-      };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        result.message = error.message;
+      }
     }
   } else {
     result.message = Messages.NotLoggedIn();

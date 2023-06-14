@@ -41,8 +41,6 @@ export class ASBTContract<
        * @param receiver
        */
       mint: async (paymentMethod: PaymentMethod, receiver: string) => {
-        const { getPrice } = await this.masa.contracts.asbt.attach(sbtContract);
-
         // current limit for ASBT is 1 on the default installation
         let limit: number = 1;
 
@@ -54,14 +52,22 @@ export class ASBTContract<
           }
         }
 
-        const balance: BigNumber = await sbtContract.balanceOf(receiver);
+        try {
+          const balance: BigNumber = await sbtContract.balanceOf(receiver);
 
-        if (limit > 0 && balance.gte(limit)) {
-          console.error(
-            `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
-          );
-          return false;
+          if (limit > 0 && balance.gte(limit)) {
+            console.error(
+              `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
+            );
+            return false;
+          }
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.warn(error.message);
+          }
         }
+
+        const { getPrice } = await this.masa.contracts.asbt.attach(sbtContract);
 
         const { price, paymentAddress } = await getPrice(paymentMethod);
 

@@ -147,8 +147,32 @@ export class SSSBTContract<
         signature: string,
         signatureDate: number,
         authorityAddress: string
-      ) => {
-        const { prepareMint } = this.attach(sbtContract);
+      ): Promise<boolean> => {
+        // current limit for SSSBT is 1 on the default installation
+        let limit: number = 1;
+
+        try {
+          limit = (await sbtContract.maxSBTToMint()).toNumber();
+        } catch {
+          if (this.masa.config.verbose) {
+            console.info("Loading limit failed, falling back to 1!");
+          }
+        }
+
+        try {
+          const balance: BigNumber = await sbtContract.balanceOf(receiver);
+
+          if (limit > 0 && balance.gte(limit)) {
+            console.error(
+              `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`
+            );
+            return false;
+          }
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.warn(error.message);
+          }
+        }
 
         const types = {
           Mint: [
@@ -168,6 +192,8 @@ export class SSSBTContract<
           authorityAddress,
           signatureDate,
         };
+
+        const { prepareMint } = this.attach(sbtContract);
 
         const { price, paymentAddress } = await prepareMint(
           paymentMethod,
