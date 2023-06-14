@@ -1,6 +1,6 @@
 version = 1
 
-test_patterns = ["src/**"]
+exclude_patterns = ["webpack.*.js"]
 
 [[analyzers]]
 name = "javascript"
