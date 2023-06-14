@@ -9,14 +9,25 @@ import { Messages } from "../../../collections";
 import type { DeployResult, MasaInterface } from "../../../interface";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
-export const deployASBT = async (
-  masa: MasaInterface,
-  name: string,
-  symbol: string,
-  baseTokenUri: string,
-  limit: number = 1,
-  adminAddress?: string
-): Promise<DeployResult<PaymentParamsStruct> | undefined> => {
+export const deployASBT = async ({
+  masa,
+  name,
+  symbol,
+  baseTokenUri,
+  limit = 1,
+  adminAddress,
+  paymentOptions,
+}: {
+  masa: MasaInterface;
+  name: string;
+  symbol: string;
+  baseTokenUri: string;
+  limit?: number;
+  adminAddress?: string;
+  paymentOptions?: {
+    projectFeeReceiver: string;
+  };
+}): Promise<DeployResult<PaymentParamsStruct> | undefined> => {
   let result: DeployResult<PaymentParamsStruct> | undefined;
 
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
@@ -55,11 +66,17 @@ export const deployASBT = async (
     baseTokenUri,
     masa.contracts.instances.SoulboundIdentityContract.address,
     {
+      // get this from the sdk
       swapRouter: constants.AddressZero,
+      // get this from the sdk
       wrappedNativeToken: constants.AddressZero,
+      // get this from the sdk
       stableCoin: constants.AddressZero,
-      masaToken: constants.AddressZero,
-      projectFeeReceiver: constants.AddressZero,
+      masaToken:
+        masa.config.network?.addresses.tokens?.MASA || constants.AddressZero,
+      projectFeeReceiver:
+        paymentOptions?.projectFeeReceiver || constants.AddressZero,
+      // get this from the sdk
       protocolFeeReceiver: constants.AddressZero,
       protocolFeeAmount: 0,
       protocolFeePercent: 0,

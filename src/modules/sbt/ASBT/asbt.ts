@@ -13,13 +13,27 @@ export class MasaASBT extends MasaSBTs {
    * @param limit
    * @param adminAddress
    */
-  public deploy = (
-    name: string,
-    symbol: string,
-    baseTokenUri: string,
-    limit: number = 1,
-    adminAddress?: string
-  ) => deployASBT(this.masa, name, symbol, baseTokenUri, limit, adminAddress);
+  public deploy = ({
+    name,
+    symbol,
+    baseTokenUri,
+    limit = 1,
+    adminAddress,
+  }: {
+    name: string;
+    symbol: string;
+    baseTokenUri: string;
+    limit?: number;
+    adminAddress?: string;
+  }) =>
+    deployASBT({
+      masa: this.masa,
+      name,
+      symbol,
+      baseTokenUri,
+      limit,
+      adminAddress,
+    });
 
   /**
    *

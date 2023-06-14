@@ -14,23 +14,30 @@ export class MasaSSSBT extends MasaSBTs {
    * @param limit
    * @param adminAddress
    */
-  deploy = (
-    name: string,
-    symbol: string,
-    baseTokenUri: string,
-    limit: number = 1,
-    authorityAddress: string,
-    adminAddress?: string
-  ) =>
-    deploySSSBT(
-      this.masa,
+  deploy = ({
+    name,
+    symbol,
+    baseTokenUri,
+    limit = 1,
+    authorityAddress,
+    adminAddress,
+  }: {
+    name: string;
+    symbol: string;
+    baseTokenUri: string;
+    limit?: number;
+    authorityAddress: string;
+    adminAddress?: string;
+  }) =>
+    deploySSSBT({
+      masa: this.masa,
       name,
       symbol,
       baseTokenUri,
       limit,
       authorityAddress,
-      adminAddress
-    );
+      adminAddress,
+    });
 
   /**
    *
