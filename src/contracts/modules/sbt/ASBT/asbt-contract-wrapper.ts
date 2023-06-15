@@ -11,4 +11,14 @@ export interface ASBTContractWrapper<Contract extends ReferenceSBTAuthority>
    * @param receiver
    */
   mint: (paymentMethod: PaymentMethod, receiver: string) => Promise<boolean>;
+
+  /**
+   *
+   * @param paymentMethod
+   * @param receiver
+   */
+  bulkMint: (
+    paymentMethod: PaymentMethod,
+    receivers: string[]
+  ) => Promise<boolean[]>;
 }
