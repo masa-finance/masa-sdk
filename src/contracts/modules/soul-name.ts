@@ -150,7 +150,7 @@ export class SoulName extends MasaModuleBase {
     const {
       estimateGas: { purchaseName: estimateGas },
       purchaseName,
-    } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
+    } = this.instances.SoulStoreContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(

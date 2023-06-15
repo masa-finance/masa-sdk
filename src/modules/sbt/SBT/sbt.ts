@@ -5,15 +5,15 @@ import {
 
 import { MasaBase } from "../../../base/masa-base";
 import type { ContractFactory } from "../../../contracts";
-import { SBTWrapper } from "./sbt-wrapper";
+import { MasaSBTWrapper } from "./sbt-wrapper";
 
-export class MasaSBTs extends MasaBase {
+export class MasaSBTBase extends MasaBase {
   /**
    *
-   * @param sbtContract
+   * @param contract
    */
-  public attach = <Contract extends MasaSBT>(sbtContract: Contract) => {
-    return new SBTWrapper<Contract>(this.masa, sbtContract);
+  public attach = <Contract extends MasaSBT>(contract: Contract) => {
+    return new MasaSBTWrapper<Contract>(this.masa, contract);
   };
 
   /**
@@ -24,10 +24,12 @@ export class MasaSBTs extends MasaBase {
   public connect = async <Contract extends MasaSBT>(
     address: string,
     factory: ContractFactory = MasaSBT__factory
-  ) => {
-    const { sbtContract } =
-      (await this.masa.contracts.sbt.connect<Contract>(address, factory)) || {};
+  ): Promise<MasaSBTWrapper<Contract>> => {
+    const { contract } = await this.masa.contracts.sbt.connect<Contract>(
+      address,
+      factory
+    );
 
-    return this.attach<Contract>(sbtContract);
+    return this.attach<Contract>(contract);
   };
 }

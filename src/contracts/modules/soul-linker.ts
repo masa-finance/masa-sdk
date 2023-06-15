@@ -180,7 +180,7 @@ export class SoulLinker extends MasaModuleBase {
     const {
       estimateGas: { addLink: estimateGas },
       addLink,
-    } = this.instances.SoulLinkerContract.connect(this.masa.config.signer);
+    } = this.instances.SoulLinkerContract;
 
     let gasLimit: BigNumber = await estimateGas(...params, overrides);
 

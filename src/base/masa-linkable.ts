@@ -4,14 +4,9 @@ import type { MasaInterface } from "../interface";
 import { MasaSoulLinker } from "../modules/soul-linker/soul-linker";
 import { MasaBase } from "./masa-base";
 
-interface d {
-  readonly links: MasaSoulLinker;
-}
-
-export abstract class MasaLinkable<LinkContract extends Contract>
-  extends MasaBase
-  implements d
-{
+export abstract class MasaLinkable<
+  LinkContract extends Contract
+> extends MasaBase {
   public readonly links: MasaSoulLinker;
 
   public constructor(

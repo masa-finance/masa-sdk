@@ -33,7 +33,7 @@ export class SSSBTContractWrapper<
     const authorityAddress = await this.masa.config.signer.getAddress();
 
     const { signature, domain } = await signTypedData(
-      this.sbtContract,
+      this.contract,
       this.masa.config.signer,
       name,
       types,
@@ -42,7 +42,7 @@ export class SSSBTContractWrapper<
 
     await this.verify(
       "Signing SBT failed!",
-      this.sbtContract,
+      this.contract,
       domain,
       types,
       value,
@@ -83,12 +83,12 @@ export class SSSBTContractWrapper<
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       name,
-      this.sbtContract.address
+      this.contract.address
     );
 
     await this.verify(
       "Verifying SBT failed!",
-      this.sbtContract,
+      this.contract,
       domain,
       types,
       value,
@@ -131,7 +131,7 @@ export class SSSBTContractWrapper<
     let limit: number = 1;
 
     try {
-      limit = (await this.sbtContract.maxSBTToMint()).toNumber();
+      limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
         console.info("Loading limit failed, falling back to 1!");
@@ -139,7 +139,7 @@ export class SSSBTContractWrapper<
     }
 
     try {
-      const balance: BigNumber = await this.sbtContract.balanceOf(receiver);
+      const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
         console.error(
@@ -222,7 +222,7 @@ export class SSSBTContractWrapper<
       estimateGas: {
         "mint(address,address,address,uint256,bytes)": estimateGas,
       },
-    } = this.sbtContract;
+    } = this.contract;
 
     let gasLimit: BigNumber = await estimateGas(
       ...mintSSSBTArguments,
@@ -250,7 +250,7 @@ export class SSSBTContractWrapper<
 
     const { logs } = await wait();
 
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.sbtContract]);
+    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
 
     const mintEvent = parsedLogs.find(
       (log: LogDescription) => log.name === "Mint"

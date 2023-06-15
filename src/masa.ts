@@ -5,7 +5,7 @@ import { MasaAccount } from "./modules/account";
 import { MasaCreditScore } from "./modules/credit-score";
 import { MasaGreen } from "./modules/green";
 import { MasaIdentity } from "./modules/identity";
-import { MasaSBTs } from "./modules/sbt";
+import { MasaSBTBase } from "./modules/sbt";
 import { MasaASBT } from "./modules/sbt/ASBT";
 import { MasaSSSBT } from "./modules/sbt/SSSBT";
 import { MasaSession } from "./modules/session";
@@ -28,7 +28,7 @@ export class Masa implements MasaInterface {
   readonly soulName: MasaSoulName;
   readonly creditScore: MasaCreditScore;
   readonly green: MasaGreen;
-  readonly sbt: MasaSBTs;
+  readonly sbt: MasaSBTBase;
   readonly asbt: MasaASBT;
   readonly sssbt: MasaSSSBT;
 
@@ -80,7 +80,7 @@ export class Masa implements MasaInterface {
     // green
     this.green = new MasaGreen(this);
     // generic sbt handler
-    this.sbt = new MasaSBTs(this);
+    this.sbt = new MasaSBTBase(this);
     // ASBT handler
     this.asbt = new MasaASBT(this);
     // SSSBT Handler

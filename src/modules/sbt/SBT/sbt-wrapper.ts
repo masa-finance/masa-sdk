@@ -2,21 +2,161 @@ import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
 import { MasaLinkable } from "../../../base/masa-linkable";
-import { burnSBT } from "./burn";
-import { listSBTs } from "./list";
+import { Messages } from "../../../collections";
+import { isBigNumber, patchMetadataUrl } from "../../../utils";
 
-export class SBTWrapper<
+export class MasaSBTWrapper<
   Contract extends MasaSBT
 > extends MasaLinkable<Contract> {
   /**
    *
    * @param address
    */
-  list = (address?: string) => listSBTs(this.masa, this.contract, address);
+  list = async (address?: string) => {
+    address = address || (await this.masa.config.signer.getAddress());
+
+    const SBTs = await this.loadSBTs(address);
+
+    if (SBTs.length === 0) {
+      console.log(
+        `No SBTs found on contract '${await this.contract.name()}' (${
+          this.contract.address
+        })`
+      );
+    }
+
+    let i = 1;
+    for (const SBT of SBTs) {
+      console.log(`Token: ${i}`);
+      console.log(`Token ID: ${SBT.tokenId}`);
+      console.log(`Metadata: ${SBT.tokenUri}`);
+
+      i++;
+    }
+
+    return SBTs;
+  };
+
+  /**
+   *
+   * @param identityIdOrAddress
+   */
+  loadSBTs = async (
+    identityIdOrAddress: BigNumber | string
+  ): Promise<
+    {
+      tokenId: BigNumber;
+      tokenUri: string;
+    }[]
+  > => {
+    let SBTIDs: BigNumber[] = [];
+
+    try {
+      // do we have a soul linker here? use it!
+      if (this.masa.contracts.instances.SoulLinkerContract.hasAddress) {
+        const {
+          "getSBTConnections(address,address)": getSBTConnectionsByAddress,
+          "getSBTConnections(uint256,address)": getSBTConnectionsByIdentity,
+        } = this.masa.contracts.instances.SoulLinkerContract;
+
+        SBTIDs = await (isBigNumber(identityIdOrAddress)
+          ? getSBTConnectionsByIdentity(
+              identityIdOrAddress,
+              this.contract.address
+            )
+          : getSBTConnectionsByAddress(
+              identityIdOrAddress,
+              this.contract.address
+            ));
+      }
+      // no soul linker, lets try by identity or address
+      else {
+        let identityAddress: string;
+
+        if (isBigNumber(identityIdOrAddress)) {
+          identityAddress =
+            await this.masa.contracts.instances.SoulboundIdentityContract[
+              "ownerOf(uint256)"
+            ](identityIdOrAddress);
+        } else {
+          identityAddress = identityIdOrAddress as string;
+        }
+
+        const balance: number = (
+          await this.contract.balanceOf(identityAddress)
+        ).toNumber();
+
+        if (balance > 0) {
+          for (let i = 0; i < balance; i++) {
+            SBTIDs.push(
+              await this.contract.tokenOfOwnerByIndex(identityAddress, i)
+            );
+          }
+        }
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Loading SBTs failed! ${error.message}`);
+      }
+    }
+
+    return await this.loadSBTIDs(SBTIDs);
+  };
+
+  /**
+   *
+   * @param sbtIDs
+   */
+  loadSBTIDs = async (sbtIDs: BigNumber[]) => {
+    return await Promise.all(
+      sbtIDs.map(async (tokenId: BigNumber) => {
+        const tokenUri = patchMetadataUrl(
+          this.masa,
+          await this.contract.tokenURI(tokenId)
+        );
+
+        return {
+          tokenId,
+          tokenUri,
+        };
+      })
+    );
+  };
 
   /**
    *
    * @param SBTId
    */
-  burn = (SBTId: BigNumber) => burnSBT(this.masa, this.contract, SBTId);
+  burn = async (SBTId: BigNumber) => {
+    try {
+      console.log(`Burning SBT with ID '${SBTId}'!`);
+
+      const {
+        estimateGas: { burn: estimateGas },
+        burn,
+      } = this.contract;
+
+      const gasLimit: BigNumber = await estimateGas(SBTId);
+
+      const { wait, hash } = await burn(SBTId, { gasLimit });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0]
+        )
+      );
+
+      await wait();
+
+      console.log(`Burned SBT with ID '${SBTId}'!`);
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Burning SBT Failed! '${error.message}'`);
+      }
+    }
+
+    return false;
+  };
 }

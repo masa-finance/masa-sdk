@@ -5,7 +5,7 @@ import type {
   MasaCreditScore,
   MasaGreen,
   MasaIdentity,
-  MasaSBTs,
+  MasaSBTBase,
   MasaSession,
   MasaSoulName,
   MasaSSSBT,
@@ -24,7 +24,7 @@ export interface MasaInterface {
   readonly soulName: MasaSoulName;
   readonly creditScore: MasaCreditScore;
   readonly green: MasaGreen;
-  readonly sbt: MasaSBTs;
+  readonly sbt: MasaSBTBase;
   readonly asbt: MasaASBT;
   readonly sssbt: MasaSSSBT;
   readonly utils: {

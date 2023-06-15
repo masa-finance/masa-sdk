@@ -6,7 +6,7 @@ import {
 import { MasaBase } from "../../../base";
 import { ContractFactory } from "../../../contracts";
 import { deploySSSBT } from "./deploy";
-import { SSSBTWrapper } from "./sssbt-wrapper";
+import { MasaSSSBTWrapper } from "./sssbt-wrapper";
 
 export class MasaSSSBT extends MasaBase {
   /**
@@ -43,11 +43,16 @@ export class MasaSSSBT extends MasaBase {
       adminAddress,
     });
 
+  /**
+   *
+   * @param contract
+   */
   public attach = <Contract extends ReferenceSBTSelfSovereign>(
-    sbtContract: Contract
-  ) => {
-    return new SSSBTWrapper<Contract>(this.masa, sbtContract);
+    contract: Contract
+  ): MasaSSSBTWrapper<Contract> => {
+    return new MasaSSSBTWrapper<Contract>(this.masa, contract);
   };
+
   /**
    *
    * @param address
@@ -56,12 +61,12 @@ export class MasaSSSBT extends MasaBase {
   public connect = async <Contract extends ReferenceSBTSelfSovereign>(
     address: string,
     factory: ContractFactory = ReferenceSBTSelfSovereign__factory
-  ): Promise<SSSBTWrapper<Contract>> => {
-    const { sbtContract } = await this.masa.contracts.sssbt.connect<Contract>(
+  ): Promise<MasaSSSBTWrapper<Contract>> => {
+    const { contract } = await this.masa.contracts.sssbt.connect<Contract>(
       address,
       factory
     );
 
-    return this.attach<Contract>(sbtContract);
+    return this.attach<Contract>(contract);
   };
 }

@@ -1,38 +1,114 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import { SBTWrapper } from "../SBT";
-import { addAuthority } from "./add-authority";
-import { mintSSSBT } from "./mint";
-import { signSSSBT } from "./sign";
+import { PaymentMethod } from "../../../interface";
+import { MasaSBTWrapper } from "../SBT";
 
-export class SSSBTWrapper<
+export class MasaSSSBTWrapper<
   Contract extends ReferenceSBTSelfSovereign
-> extends SBTWrapper<Contract> {
+> extends MasaSBTWrapper<Contract> {
   /**
    *
    * @param receiver
    */
-  sign = (receiver: string) => signSSSBT(this.masa, this.contract, receiver);
+  sign = async (receiver: string) => {
+    let result:
+      | {
+          authorityAddress: string;
+          signatureDate: number;
+          signature: string;
+        }
+      | undefined;
+
+    const [name, symbol] = await Promise.all([
+      this.contract.name(),
+      this.contract.symbol(),
+    ]);
+
+    console.log(`Signing SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(`Contract Name: '${name}'`);
+    console.log(`Contract Symbol: '${symbol}'`);
+    console.log(`Contract Address: '${this.contract.address}'`);
+    console.log(`To receiver: '${receiver}'`);
+
+    const signatureDate = Date.now();
+
+    const types = {
+      Mint: [
+        { name: "to", type: "address" },
+        { name: "authorityAddress", type: "address" },
+        { name: "signatureDate", type: "uint256" },
+      ],
+    };
+
+    // fill the collection with data
+    const value: {
+      to: string;
+      authorityAddress: string;
+      signatureDate: number;
+    } = {
+      to: receiver,
+      authorityAddress: await this.masa.config.signer.getAddress(),
+      signatureDate,
+    };
+
+    const { sign } = await this.masa.contracts.sssbt.attach(this.contract);
+
+    // sign to create a signature
+    const signResult = await sign("ReferenceSBTSelfSovereign", types, value);
+
+    if (signResult) {
+      const { signature, authorityAddress } = signResult;
+      if (this.masa.config.verbose) {
+        console.info({
+          signature,
+          authorityAddress,
+          signatureDate,
+        });
+      }
+      result = {
+        authorityAddress,
+        signatureDate,
+        signature,
+      };
+    }
+
+    return result;
+  };
 
   /**
    *
    * @param authorityAddress
    * @param signatureDate
    * @param signature
+   * @param paymentMethod
    */
-  mint = (authorityAddress: string, signatureDate: number, signature: string) =>
-    mintSSSBT(
-      this.masa,
-      this.contract,
-      authorityAddress,
-      signatureDate,
-      signature
-    );
+  mint = async (
+    authorityAddress: string,
+    signatureDate: number,
+    signature: string,
+    paymentMethod: PaymentMethod = "ETH"
+  ): Promise<boolean> => {
+    const receiver = await this.masa.config.signer.getAddress();
 
-  /**
-   *
-   * @param authorityAddress
-   */
-  addAuthority = (authorityAddress: string) =>
-    addAuthority(this.masa, this.contract, authorityAddress);
+    const [name, symbol] = await Promise.all([
+      this.contract.name(),
+      this.contract.symbol(),
+    ]);
+
+    console.log(`Minting SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(`Contract Name: '${name}'`);
+    console.log(`Contract Symbol: '${symbol}'`);
+    console.log(`Contract Address: '${this.contract.address}'`);
+    console.log(`To receiver: '${receiver}'`);
+
+    const { mint } = await this.masa.contracts.sssbt.attach(this.contract);
+
+    return mint(
+      paymentMethod,
+      receiver,
+      signature,
+      signatureDate,
+      authorityAddress
+    );
+  };
 }

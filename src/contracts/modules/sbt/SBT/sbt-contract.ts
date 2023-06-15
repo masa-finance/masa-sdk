@@ -8,15 +8,15 @@ import { SBTContractWrapper } from "./sbt-contract-wrapper";
 export class SBTContract extends MasaModuleBase {
   /**
    *
-   * @param sbtContract
+   * @param contract
    */
   public attach = <Contract extends MasaSBT>(
-    sbtContract: Contract
+    contract: Contract
   ): SBTContractWrapper<Contract> => {
     return new SBTContractWrapper<Contract>(
       this.masa,
       this.instances,
-      sbtContract
+      contract
     );
   };
 
@@ -29,12 +29,11 @@ export class SBTContract extends MasaModuleBase {
     address: string,
     factory: ContractFactory = MasaSBT__factory
   ): Promise<SBTContractWrapper<Contract>> => {
-    const sbtContract: Contract = await SBTContract.loadSBTContract<Contract>(
-      this.masa.config,
+    const contract: Contract = await this.loadSBTContract<Contract>(
       address,
       factory
     );
 
-    return this.attach<Contract>(sbtContract);
+    return this.attach<Contract>(contract);
   };
 }

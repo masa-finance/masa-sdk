@@ -15,7 +15,6 @@ import { Messages } from "../collections";
 import type { ContractFactory } from "../contracts";
 import type {
   IIdentityContracts,
-  MasaConfig,
   MasaInterface,
   PaymentMethod,
 } from "../interface";
@@ -69,14 +68,12 @@ export class MasaModuleBase extends MasaBase {
           );
         }
 
-        const { wait, hash } = await contract
-          .connect(this.masa.config.signer)
-          .approve(
-            // spender
-            spenderAddress,
-            // amount
-            price
-          );
+        const { wait, hash } = await contract.approve(
+          // spender
+          spenderAddress,
+          // amount
+          price
+        );
 
         if (this.masa.config.verbose) {
           console.info(
@@ -333,16 +330,14 @@ export class MasaModuleBase extends MasaBase {
 
   /**
    *
-   * @param masaConfig
    * @param address
    * @param factory
    */
-  protected static loadSBTContract = async <Contract extends MasaSBT>(
-    masaConfig: MasaConfig,
+  protected loadSBTContract = async <Contract extends MasaSBT>(
     address: string,
     factory: ContractFactory
   ): Promise<Contract> => {
-    let error = `Smart contract '${address}' does not exist on network '${masaConfig.networkName}'!`;
+    let error = `Smart contract '${address}' does not exist on network '${this.masa.config.networkName}'!`;
 
     // address invalid, unable to load
     if (!utils.isAddress(address)) {
@@ -351,9 +346,8 @@ export class MasaModuleBase extends MasaBase {
       throw new Error(error);
     }
     // fetch code to see if the contract exists
-    const code: string | undefined = await masaConfig.signer.provider?.getCode(
-      address
-    );
+    const code: string | undefined =
+      await this.masa.config.signer.provider?.getCode(address);
 
     const contractExists: boolean = !!code && code !== "0x";
 
@@ -362,19 +356,19 @@ export class MasaModuleBase extends MasaBase {
       throw new Error(error);
     }
 
-    const sbtContract = (factory as typeof ContractFactory).connect<Contract>(
+    const contract = (factory as typeof ContractFactory).connect<Contract>(
       address,
-      masaConfig.signer
+      this.masa.config.signer
     );
 
     // failed to load, unable to load
-    if (!sbtContract) {
+    if (!contract) {
       console.error(error);
       throw new Error(error);
-    } else if (masaConfig.verbose) {
-      console.info(`Loaded contract with name: ${await sbtContract.name()}`);
+    } else if (this.masa.config.verbose) {
+      console.info(`Loaded contract with name: ${await contract.name()}`);
     }
 
-    return sbtContract;
+    return contract;
   };
 }

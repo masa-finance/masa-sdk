@@ -18,7 +18,7 @@ export class Identity extends MasaModuleBase {
     const {
       estimateGas: { purchaseIdentity: estimateGas },
       purchaseIdentity,
-    } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
+    } = this.instances.SoulStoreContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas();
@@ -141,7 +141,7 @@ export class Identity extends MasaModuleBase {
     const {
       estimateGas: { purchaseIdentityAndName: estimateGas },
       purchaseIdentityAndName,
-    } = this.instances.SoulStoreContract.connect(this.masa.config.signer);
+    } = this.instances.SoulStoreContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(

@@ -1,6 +1,5 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import { MasaSBT } from "@masa-finance/masa-contracts-identity";
-import { BaseContract } from "ethers";
 
 import { MasaModuleBase } from "../../../../base";
 import type {
@@ -10,12 +9,12 @@ import type {
 } from "../../../../interface";
 
 export class SBTContractWrapper<
-  Contract extends BaseContract
+  Contract extends MasaSBT
 > extends MasaModuleBase {
   constructor(
     masa: MasaInterface,
     instances: IIdentityContracts,
-    public readonly sbtContract: Contract
+    public readonly contract: Contract
   ) {
     super(masa, instances);
   }
@@ -36,10 +35,5 @@ export class SBTContractWrapper<
     formattedMintFee: string;
     protocolFee: BigNumber;
     formattedProtocolFee: string;
-  }> =>
-    this.getMintPrice(
-      paymentMethod,
-      this.sbtContract as unknown as MasaSBT,
-      slippage
-    );
+  }> => this.getMintPrice(paymentMethod, this.contract, slippage);
 }

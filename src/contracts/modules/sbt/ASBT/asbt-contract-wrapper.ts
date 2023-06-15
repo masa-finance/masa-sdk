@@ -24,7 +24,7 @@ export class ASBTContractWrapper<
     let limit: number = 1;
 
     try {
-      limit = (await this.sbtContract.maxSBTToMint()).toNumber();
+      limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
         console.info("Loading limit failed, falling back to 1!");
@@ -32,7 +32,7 @@ export class ASBTContractWrapper<
     }
 
     try {
-      const balance: BigNumber = await this.sbtContract.balanceOf(receiver);
+      const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
         console.error(
@@ -76,7 +76,7 @@ export class ASBTContractWrapper<
     const {
       "mint(address,address)": mint,
       estimateGas: { "mint(address,address)": estimateGas },
-    } = this.sbtContract;
+    } = this.contract;
 
     let gasLimit: BigNumber = await estimateGas(
       ...mintASBTArguments,
@@ -104,7 +104,7 @@ export class ASBTContractWrapper<
 
     const { logs } = await wait();
 
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.sbtContract]);
+    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
 
     const mintEvent = parsedLogs.find(
       (log: LogDescription) => log.name === "Mint"
@@ -137,7 +137,7 @@ export class ASBTContractWrapper<
     let limit: number = 1;
 
     try {
-      limit = (await this.sbtContract.maxSBTToMint()).toNumber();
+      limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
         console.info("Loading limit failed, falling back to 1!");
@@ -146,7 +146,7 @@ export class ASBTContractWrapper<
 
     for (const receiver of receivers) {
       try {
-        const balance: BigNumber = await this.sbtContract.balanceOf(receiver);
+        const balance: BigNumber = await this.contract.balanceOf(receiver);
 
         if (limit > 0 && balance.gte(limit)) {
           console.error(
@@ -191,7 +191,7 @@ export class ASBTContractWrapper<
     const {
       "mint(address,address[])": mint,
       estimateGas: { "mint(address,address[])": estimateGas },
-    } = this.sbtContract;
+    } = this.contract;
 
     let gasLimit: BigNumber = await estimateGas(
       ...mintASBTArguments,
@@ -219,7 +219,7 @@ export class ASBTContractWrapper<
 
     const { logs } = await wait();
 
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.sbtContract]);
+    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
 
     const mintEvent = parsedLogs.find(
       (log: LogDescription) => log.name === "Mint"
