@@ -1,11 +1,14 @@
-import { ReferenceSBTAuthority__factory } from "@masa-finance/masa-contracts-identity";
+import {
+  ReferenceSBTAuthority,
+  ReferenceSBTAuthority__factory,
+} from "@masa-finance/masa-contracts-identity";
 
+import { MasaBase } from "../../../base";
 import { ContractFactory } from "../../../contracts";
-import { MasaSBTs } from "../SBT";
 import { ASBTWrapper } from "./asbt-wrapper";
 import { deployASBT } from "./deploy";
 
-export class MasaASBT extends MasaSBTs {
+export class MasaASBT extends MasaBase {
   /**
    *
    * @param name
@@ -36,20 +39,26 @@ export class MasaASBT extends MasaSBTs {
       adminAddress,
     });
 
+  public attach = <Contract extends ReferenceSBTAuthority>(
+    sbtContract: Contract
+  ) => {
+    return new ASBTWrapper<Contract>(this.masa, sbtContract);
+  };
+
   /**
    *
    * @param address
    * @param factory
    */
-  public connect = async (
+  public connect = async <Contract extends ReferenceSBTAuthority>(
     address: string,
     factory: ContractFactory = ReferenceSBTAuthority__factory
   ) => {
-    const { sbtContract } = await this.masa.contracts.asbt.connect(
+    const { sbtContract } = await this.masa.contracts.asbt.connect<Contract>(
       address,
       factory
     );
 
-    return new ASBTWrapper(this.masa, sbtContract);
+    return this.attach(sbtContract);
   };
 }

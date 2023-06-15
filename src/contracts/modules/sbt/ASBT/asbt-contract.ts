@@ -1,273 +1,40 @@
-import type { LogDescription } from "@ethersproject/abi";
-import { BigNumber } from "@ethersproject/bignumber";
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
-import type { PayableOverrides } from "ethers";
+import { MasaSBTAuthority__factory } from "@masa-finance/masa-contracts-identity";
 
-import { Messages } from "../../../../collections";
-import type {
-  IIdentityContracts,
-  MasaInterface,
-  PaymentMethod,
-} from "../../../../interface";
-import { isNativeCurrency } from "../../../../utils";
-import { SBTContract } from "../SBT";
+import { MasaModuleBase } from "../../../../base";
+import { ContractFactory } from "../../contract-factory";
 import { ASBTContractWrapper } from "./asbt-contract-wrapper";
 
-export class ASBTContract<
-  Contract extends ReferenceSBTAuthority
-> extends SBTContract<Contract> {
-  /**
-   *
-   * @param masa
-   * @param instances
-   */
-  constructor(masa: MasaInterface, instances: IIdentityContracts) {
-    super(masa, instances);
-
-    this.attach.bind(this);
-  }
-
+export class ASBTContract extends MasaModuleBase {
   /**
    *
    * @param sbtContract
    */
-  public attach(sbtContract: Contract): ASBTContractWrapper<Contract> {
-    return {
-      ...super.attach(sbtContract),
+  public attach = <Contract extends ReferenceSBTAuthority>(
+    sbtContract: Contract
+  ): ASBTContractWrapper<Contract> => {
+    return new ASBTContractWrapper<Contract>(
+      this.masa,
+      this.instances,
+      sbtContract
+    );
+  };
 
-      /**
-       *
-       * @param paymentMethod
-       * @param receiver
-       */
-      mint: async (
-        paymentMethod: PaymentMethod,
-        receiver: string
-      ): Promise<boolean> => {
-        // current limit for ASBT is 1 on the default installation
-        let limit: number = 1;
+  /**
+   *
+   * @param address
+   * @param factory
+   */
+  public connect = async <Contract extends ReferenceSBTAuthority>(
+    address: string,
+    factory: ContractFactory = MasaSBTAuthority__factory
+  ): Promise<ASBTContractWrapper<Contract>> => {
+    const sbtContract: Contract = await ASBTContract.loadSBTContract<Contract>(
+      this.masa.config,
+      address,
+      factory
+    );
 
-        try {
-          limit = (await sbtContract.maxSBTToMint()).toNumber();
-        } catch {
-          if (this.masa.config.verbose) {
-            console.info("Loading limit failed, falling back to 1!");
-          }
-        }
-
-        try {
-          const balance: BigNumber = await sbtContract.balanceOf(receiver);
-
-          if (limit > 0 && balance.gte(limit)) {
-            console.error(
-              `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
-            );
-            return false;
-          }
-        } catch (error: unknown) {
-          if (error instanceof Error) {
-            console.warn(error.message);
-          }
-        }
-
-        const { getPrice } = await this.masa.contracts.asbt.attach(sbtContract);
-
-        const { price, paymentAddress } = await getPrice(paymentMethod);
-
-        const mintASBTArguments: [
-          string, // paymentAddress string
-          string // receiver string
-        ] = [paymentAddress, receiver];
-
-        const feeData = await this.getNetworkFeeInformation();
-
-        const mintASBTOverrides: PayableOverrides = {
-          value: isNativeCurrency(paymentMethod) ? price : undefined,
-          ...(feeData && feeData.maxPriorityFeePerGas
-            ? {
-                maxPriorityFeePerGas: BigNumber.from(
-                  feeData.maxPriorityFeePerGas
-                ),
-              }
-            : undefined),
-          ...(feeData && feeData.maxFeePerGas
-            ? {
-                maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-              }
-            : undefined),
-        };
-
-        if (this.masa.config.verbose) {
-          console.info(mintASBTArguments, mintASBTOverrides);
-        }
-
-        const {
-          "mint(address,address)": mint,
-          estimateGas: { "mint(address,address)": estimateGas },
-        } = sbtContract;
-
-        let gasLimit: BigNumber = await estimateGas(
-          ...mintASBTArguments,
-          mintASBTOverrides
-        );
-
-        if (this.masa.config.network?.gasSlippagePercentage) {
-          gasLimit = ASBTContract.addSlippage(
-            gasLimit,
-            this.masa.config.network.gasSlippagePercentage
-          );
-        }
-
-        const { wait, hash } = await mint(...mintASBTArguments, {
-          ...mintASBTOverrides,
-          gasLimit,
-        });
-
-        console.log(
-          Messages.WaitingToFinalize(
-            hash,
-            this.masa.config.network?.blockExplorerUrls?.[0]
-          )
-        );
-
-        const { logs } = await wait();
-
-        const parsedLogs = this.masa.contracts.parseLogs(logs, [sbtContract]);
-
-        const mintEvent = parsedLogs.find(
-          (log: LogDescription) => log.name === "Mint"
-        );
-
-        if (mintEvent) {
-          const { args } = mintEvent;
-          console.log(
-            `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
-          );
-
-          return true;
-        }
-
-        return false;
-      },
-
-      /**
-       *
-       * @param paymentMethod
-       * @param receivers
-       */
-      bulkMint: async (
-        paymentMethod: PaymentMethod,
-        receivers: string[]
-      ): Promise<boolean[]> => {
-        const result = [];
-
-        // current limit for ASBT is 1 on the default installation
-        let limit: number = 1;
-
-        try {
-          limit = (await sbtContract.maxSBTToMint()).toNumber();
-        } catch {
-          if (this.masa.config.verbose) {
-            console.info("Loading limit failed, falling back to 1!");
-          }
-        }
-
-        for (const receiver of receivers) {
-          try {
-            const balance: BigNumber = await sbtContract.balanceOf(receiver);
-
-            if (limit > 0 && balance.gte(limit)) {
-              console.error(
-                `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
-              );
-              result.push(false);
-            }
-          } catch (error: unknown) {
-            if (error instanceof Error) {
-              console.warn(error.message);
-            }
-          }
-        }
-
-        const { getPrice } = await this.masa.contracts.asbt.attach(sbtContract);
-
-        const { price, paymentAddress } = await getPrice(paymentMethod);
-
-        const mintASBTArguments: [
-          string, // paymentAddress string
-          string[] // receivers string[]
-        ] = [paymentAddress, receivers];
-
-        const feeData = await this.getNetworkFeeInformation();
-
-        const mintASBTOverrides: PayableOverrides = {
-          value: isNativeCurrency(paymentMethod) ? price : undefined,
-          ...(feeData && feeData.maxPriorityFeePerGas
-            ? {
-                maxPriorityFeePerGas: BigNumber.from(
-                  feeData.maxPriorityFeePerGas
-                ),
-              }
-            : undefined),
-          ...(feeData && feeData.maxFeePerGas
-            ? {
-                maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-              }
-            : undefined),
-        };
-
-        if (this.masa.config.verbose) {
-          console.info(mintASBTArguments, mintASBTOverrides);
-        }
-
-        const {
-          "mint(address,address[])": mint,
-          estimateGas: { "mint(address,address[])": estimateGas },
-        } = sbtContract;
-
-        let gasLimit: BigNumber = await estimateGas(
-          ...mintASBTArguments,
-          mintASBTOverrides
-        );
-
-        if (this.masa.config.network?.gasSlippagePercentage) {
-          gasLimit = ASBTContract.addSlippage(
-            gasLimit,
-            this.masa.config.network.gasSlippagePercentage
-          );
-        }
-
-        const { wait, hash } = await mint(...mintASBTArguments, {
-          ...mintASBTOverrides,
-          gasLimit,
-        });
-
-        console.log(
-          Messages.WaitingToFinalize(
-            hash,
-            this.masa.config.network?.blockExplorerUrls?.[0]
-          )
-        );
-
-        const { logs } = await wait();
-
-        const parsedLogs = this.masa.contracts.parseLogs(logs, [sbtContract]);
-
-        const mintEvent = parsedLogs.find(
-          (log: LogDescription) => log.name === "Mint"
-        );
-
-        if (mintEvent) {
-          const { args } = mintEvent;
-          console.log(
-            `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
-          );
-
-          result.push(true);
-        }
-
-        return result;
-      },
-    };
-  }
+    return this.attach<Contract>(sbtContract);
+  };
 }

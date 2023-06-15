@@ -1,8 +1,4 @@
-import type {
-  MasaSBT,
-  MasaSBTAuthority,
-  MasaSBTSelfSovereign,
-} from "@masa-finance/masa-contracts-identity";
+import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
 import { Messages } from "../../../collections";
@@ -10,7 +6,7 @@ import type { MasaInterface } from "../../../interface";
 
 export const burnSBT = async (
   masa: MasaInterface,
-  contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
+  contract: MasaSBT,
   SBTId: BigNumber
 ): Promise<boolean> => {
   try {

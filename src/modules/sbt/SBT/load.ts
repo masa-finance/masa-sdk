@@ -1,16 +1,12 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import type {
-  MasaSBT,
-  MasaSBTAuthority,
-  MasaSBTSelfSovereign,
-} from "@masa-finance/masa-contracts-identity";
+import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 
 import type { MasaInterface } from "../../../interface";
 import { isBigNumber, patchMetadataUrl } from "../../../utils";
 
 export const loadSBTIDs = async (
   masa: MasaInterface,
-  contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
+  contract: MasaSBT,
   sbtIDs: BigNumber[]
 ) => {
   return await Promise.all(
@@ -27,7 +23,7 @@ export const loadSBTIDs = async (
 
 export const loadSBTs = async (
   masa: MasaInterface,
-  contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
+  contract: MasaSBT,
   identityIdOrAddress: BigNumber | string
 ): Promise<
   {

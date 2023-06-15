@@ -5,7 +5,9 @@ import { addAuthority } from "./add-authority";
 import { mintSSSBT } from "./mint";
 import { signSSSBT } from "./sign";
 
-export class SSSBTWrapper extends SBTWrapper<ReferenceSBTSelfSovereign> {
+export class SSSBTWrapper<
+  Contract extends ReferenceSBTSelfSovereign
+> extends SBTWrapper<Contract> {
   /**
    *
    * @param receiver

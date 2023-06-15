@@ -1,59 +1,40 @@
-import type { BigNumber } from "@ethersproject/bignumber";
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 
 import { MasaModuleBase } from "../../../../base";
-import type { PaymentMethod } from "../../../../interface";
 import type { ContractFactory } from "../../contract-factory";
-import type { SBTContractWrapper } from "./sbt-contract-wrapper";
+import { SBTContractWrapper } from "./sbt-contract-wrapper";
 
-export class SBTContract<Contract extends MasaSBT> extends MasaModuleBase {
+export class SBTContract extends MasaModuleBase {
   /**
    *
    * @param sbtContract
    */
-  public attach(sbtContract: Contract): SBTContractWrapper<Contract> {
-    return {
-      /**
-       * instance of the SBT that this factory instance uses
-       */
-      sbtContract,
-
-      /**
-       *
-       * @param paymentMethod
-       * @param slippage
-       */
-      getPrice: (
-        paymentMethod: PaymentMethod,
-        slippage: number | undefined = 250
-      ): Promise<{
-        paymentAddress: string;
-        price: BigNumber;
-        formattedPrice: string;
-        mintFee: BigNumber;
-        formattedMintFee: string;
-        protocolFee: BigNumber;
-        formattedProtocolFee: string;
-      }> => this.getMintPrice(paymentMethod, sbtContract, slippage),
-    };
-  }
+  public attach = <Contract extends MasaSBT>(
+    sbtContract: Contract
+  ): SBTContractWrapper<Contract> => {
+    return new SBTContractWrapper<Contract>(
+      this.masa,
+      this.instances,
+      sbtContract
+    );
+  };
 
   /**
    * loads an sbt instance and connects the contract functions to it
    * @param address
    * @param factory
    */
-  public connect = async (
+  public connect = async <Contract extends MasaSBT>(
     address: string,
     factory: ContractFactory = MasaSBT__factory
   ): Promise<SBTContractWrapper<Contract>> => {
-    const sbtContract: Contract = await SBTContract.loadSBTContract(
+    const sbtContract: Contract = await SBTContract.loadSBTContract<Contract>(
       this.masa.config,
       address,
       factory
     );
 
-    return this.attach(sbtContract);
+    return this.attach<Contract>(sbtContract);
   };
 }

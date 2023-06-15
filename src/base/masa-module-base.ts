@@ -268,7 +268,7 @@ export class MasaModuleBase extends MasaBase {
    */
   protected getMintPrice = async (
     paymentMethod: PaymentMethod,
-    contract: MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT,
+    contract: MasaSBT,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
     slippage: number | undefined = 250
   ): Promise<{
@@ -337,9 +337,7 @@ export class MasaModuleBase extends MasaBase {
    * @param address
    * @param factory
    */
-  protected static loadSBTContract = async <
-    Contract extends MasaSBTSelfSovereign | MasaSBTAuthority | MasaSBT
-  >(
+  protected static loadSBTContract = async <Contract extends MasaSBT>(
     masaConfig: MasaConfig,
     address: string,
     factory: ContractFactory

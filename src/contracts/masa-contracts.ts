@@ -1,10 +1,5 @@
 import type { LogDescription } from "@ethersproject/abi";
 import type { Log } from "@ethersproject/abstract-provider";
-import type {
-  MasaSBT,
-  ReferenceSBTAuthority,
-  ReferenceSBTSelfSovereign,
-} from "@masa-finance/masa-contracts-identity";
 import type { BaseContract } from "ethers";
 
 import { MasaBase } from "../base";
@@ -29,9 +24,9 @@ export class MasaContracts extends MasaBase {
   /**
    * SBTs
    */
-  public sbt: SBTContract<MasaSBT>;
-  public sssbt: SSSBTContract<ReferenceSBTSelfSovereign>;
-  public asbt: ASBTContract<ReferenceSBTAuthority>;
+  public sbt: SBTContract;
+  public sssbt: SSSBTContract;
+  public asbt: ASBTContract;
   /**
    * Soul Linker
    */
