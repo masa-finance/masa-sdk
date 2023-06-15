@@ -5,7 +5,7 @@ import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
 import { Messages } from "../../../../collections";
-import type { PaymentMethod } from "../../../../interface";
+import type { PaymentMethod, PriceInformation } from "../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -71,15 +71,7 @@ export class SSSBTContractWrapper<
     signature: string,
     authorityAddress: string,
     slippage: number | undefined = 250
-  ): Promise<{
-    paymentAddress: string;
-    price: BigNumber;
-    formattedPrice: string;
-    mintFee: BigNumber;
-    formattedMintFee: string;
-    protocolFee: BigNumber;
-    formattedProtocolFee: string;
-  }> => {
+  ): Promise<PriceInformation> => {
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       name,

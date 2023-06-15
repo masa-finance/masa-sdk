@@ -17,6 +17,7 @@ import type {
   IIdentityContracts,
   MasaInterface,
   PaymentMethod,
+  PriceInformation,
 } from "../interface";
 import type { ERC20 } from "../stubs";
 import { ERC20__factory } from "../stubs";
@@ -268,15 +269,7 @@ export class MasaModuleBase extends MasaBase {
     contract: MasaSBT,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
     slippage: number | undefined = 250
-  ): Promise<{
-    paymentAddress: string;
-    price: BigNumber;
-    formattedPrice: string;
-    mintFee: BigNumber;
-    formattedMintFee: string;
-    protocolFee: BigNumber;
-    formattedProtocolFee: string;
-  }> => {
+  ): Promise<PriceInformation> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     let mintFee: BigNumber | undefined,

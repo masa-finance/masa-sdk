@@ -4,11 +4,17 @@ import { Messages } from "../../collections";
 import type {
   BaseResult,
   GenerateGreenResult,
+  GreenBaseResult,
   MasaInterface,
   PaymentMethod,
   VerifyGreenResult,
 } from "../../interface";
 
+/**
+ *
+ * @param masa
+ * @param phoneNumber
+ */
 export const generateGreen = async (
   masa: MasaInterface,
   phoneNumber: string
@@ -60,27 +66,18 @@ export const generateGreen = async (
   return result;
 };
 
+/**
+ *
+ * @param masa
+ * @param phoneNumber
+ * @param code
+ */
 export const verifyGreen = async (
   masa: MasaInterface,
   phoneNumber: string,
   code: string
-): Promise<
-  | (BaseResult & {
-      status?: string;
-      signature?: string;
-      signatureDate?: number;
-      authorityAddress?: string;
-      errorCode?: number;
-    })
-  | undefined
-> => {
-  const result: BaseResult & {
-    status?: string;
-    signature?: string;
-    signatureDate?: number;
-    authorityAddress?: string;
-    errorCode?: number;
-  } = {
+): Promise<VerifyGreenResult | undefined> => {
+  const result: VerifyGreenResult = {
     success: false,
     message: "Unknown Verify Error",
   };
@@ -116,6 +113,14 @@ export const verifyGreen = async (
   return result;
 };
 
+/**
+ *
+ * @param masa
+ * @param paymentMethod
+ * @param authorityAddress
+ * @param signatureDate
+ * @param signature
+ */
 export const mintGreen = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
@@ -173,19 +178,30 @@ export const mintGreen = async (
   return result;
 };
 
+/**
+ *
+ * @param masa
+ * @param paymentMethod
+ * @param phoneNumber
+ * @param code
+ */
 export const createGreen = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
   phoneNumber: string,
   code: string
-): Promise<VerifyGreenResult> => {
-  const result: VerifyGreenResult = {
+): Promise<GreenBaseResult> => {
+  const result: GreenBaseResult = {
     success: false,
     message: "Unknown Create Error",
   };
 
   // verify
-  const verifyGreenResult = await verifyGreen(masa, phoneNumber, code);
+  const verifyGreenResult: VerifyGreenResult | undefined = await verifyGreen(
+    masa,
+    phoneNumber,
+    code
+  );
 
   if (masa.config.verbose) {
     console.log({ verifyGreenResult });

@@ -7,6 +7,7 @@ export * from "./masa-config";
 export * from "./masa-interface";
 export * from "./network";
 export * from "./network-name";
+export * from "./price-information";
 export * from "./session";
 export * from "./token";
 export * from "./tokens";

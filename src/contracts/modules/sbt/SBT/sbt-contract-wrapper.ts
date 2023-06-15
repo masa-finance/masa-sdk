@@ -1,4 +1,3 @@
-import type { BigNumber } from "@ethersproject/bignumber";
 import { MasaSBT } from "@masa-finance/masa-contracts-identity";
 
 import { MasaModuleBase } from "../../../../base";
@@ -6,6 +5,7 @@ import type {
   IIdentityContracts,
   MasaInterface,
   PaymentMethod,
+  PriceInformation,
 } from "../../../../interface";
 
 export class SBTContractWrapper<
@@ -27,13 +27,6 @@ export class SBTContractWrapper<
   getPrice = (
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
-  ): Promise<{
-    paymentAddress: string;
-    price: BigNumber;
-    formattedPrice: string;
-    mintFee: BigNumber;
-    formattedMintFee: string;
-    protocolFee: BigNumber;
-    formattedProtocolFee: string;
-  }> => this.getMintPrice(paymentMethod, this.contract, slippage);
+  ): Promise<PriceInformation> =>
+    this.getMintPrice(paymentMethod, this.contract, slippage);
 }

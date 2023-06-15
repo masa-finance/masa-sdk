@@ -7,7 +7,7 @@ import type {
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
-import type { PaymentMethod } from "../../interface";
+import type { PaymentMethod, PriceInformation } from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -34,15 +34,14 @@ export class Green extends MasaModuleBase {
   getPrice = async (
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
-  ): Promise<{
-    price: BigNumber;
-    paymentAddress: string;
-    formattedPrice: string;
-    mintTransactionEstimatedGas: BigNumber;
-    mintTransactionFee: BigNumber;
-    formattedMintTransactionFee: string;
-  }> => {
-    const { paymentAddress, price, formattedPrice } = await this.getMintPrice(
+  ): Promise<
+    PriceInformation & {
+      mintTransactionEstimatedGas: BigNumber;
+      mintTransactionFee: BigNumber;
+      formattedMintTransactionFee: string;
+    }
+  > => {
+    const priceInformation = await this.getMintPrice(
       paymentMethod,
       this.instances.SoulboundGreenContract,
       slippage
@@ -55,14 +54,12 @@ export class Green extends MasaModuleBase {
     const mintTransactionFee = gasPrice.mul(mintTransactionEstimatedGas);
 
     const formattedMintTransactionFee: string = await this.formatPrice(
-      paymentAddress,
+      priceInformation.paymentAddress,
       mintTransactionFee
     );
 
     return {
-      price,
-      paymentAddress,
-      formattedPrice,
+      ...priceInformation,
       mintTransactionEstimatedGas,
       mintTransactionFee,
       formattedMintTransactionFee,

@@ -7,7 +7,7 @@ import type {
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
-import type { PaymentMethod } from "../../interface";
+import type { PaymentMethod, PriceInformation } from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -185,15 +185,7 @@ export class SoulName extends MasaModuleBase {
     duration: number = 1,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
     slippage: number | undefined = 250
-  ): Promise<{
-    paymentAddress: string;
-    price: BigNumber;
-    formattedPrice: string;
-    mintFee: BigNumber;
-    formattedMintFee: string;
-    protocolFee: BigNumber;
-    formattedProtocolFee: string;
-  }> => {
+  ): Promise<PriceInformation> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     let mintFee: BigNumber | undefined,

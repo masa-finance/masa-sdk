@@ -3,7 +3,11 @@ import type { Contract, PayableOverrides } from "ethers";
 
 import { MasaModuleBase } from "../../base";
 import { Messages } from "../../collections";
-import type { BaseResult, PaymentMethod } from "../../interface";
+import type {
+  BaseResult,
+  PaymentMethod,
+  PriceInformation,
+} from "../../interface";
 import type { Link } from "../../modules";
 import { loadLinks } from "../../modules";
 import { isNativeCurrency, signTypedData } from "../../utils";
@@ -35,15 +39,7 @@ export class SoulLinker extends MasaModuleBase {
     tokenAddress: string,
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
-  ): Promise<{
-    paymentAddress: string;
-    price: BigNumber;
-    formattedPrice: string;
-    mintFee: BigNumber;
-    formattedMintFee: string;
-    protocolFee: BigNumber;
-    formattedProtocolFee: string;
-  }> => {
+  ): Promise<PriceInformation> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
     let mintFee: BigNumber | undefined,

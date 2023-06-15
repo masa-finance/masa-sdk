@@ -19,7 +19,7 @@ export interface GreenDetails {
   metadata?: IGreen;
 }
 
-interface GreenBaseResult extends BaseResult {
+export interface GreenBaseResult extends BaseResult {
   status?: string;
   errorCode?: number;
 }
