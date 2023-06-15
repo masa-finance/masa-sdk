@@ -11,7 +11,7 @@ import { MasaSSSBT } from "./modules/sbt/SSSBT";
 import { MasaSession } from "./modules/session";
 import { MasaSoulName } from "./modules/soul-name";
 import { version } from "./modules/version";
-import { MasaArweave, MasaClient } from "./utils";
+import { getNetworkNameByChainId, MasaArweave, MasaClient } from "./utils";
 
 export class Masa implements MasaInterface {
   // config
@@ -89,5 +89,16 @@ export class Masa implements MasaInterface {
 
   utils = {
     version,
+  };
+
+  public static create = async (args: MasaArgs) => {
+    const network = await args.signer.provider?.getNetwork();
+
+    return new Masa({
+      ...args,
+      networkName: network
+        ? getNetworkNameByChainId(network.chainId)
+        : "ethereum",
+    });
   };
 }

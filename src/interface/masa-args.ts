@@ -6,12 +6,12 @@ import type { EnvironmentName } from "./environment-name";
 import type { NetworkName } from "./network-name";
 
 export interface MasaArgs {
-  cookie?: string;
-  signer: Signer;
-  apiUrl?: string;
-  environment?: EnvironmentName;
-  networkName?: NetworkName;
-  verbose?: boolean;
-  arweave?: ArweaveConfig;
-  contractOverrides?: Partial<IIdentityContracts>;
+  readonly signer: Signer;
+  readonly cookie?: string;
+  readonly apiUrl?: string;
+  readonly environment?: EnvironmentName;
+  readonly networkName?: NetworkName;
+  readonly verbose?: boolean;
+  readonly arweave?: ArweaveConfig;
+  readonly contractOverrides?: Partial<IIdentityContracts>;
 }

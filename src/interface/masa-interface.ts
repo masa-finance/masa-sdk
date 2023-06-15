@@ -14,20 +14,20 @@ import type { MasaArweave, MasaClient } from "../utils";
 import type { MasaConfig } from "./masa-config";
 
 export interface MasaInterface {
-  config: MasaConfig;
-  arweave: MasaArweave;
-  client: MasaClient;
-  contracts: MasaContracts;
-  account: MasaAccount;
-  session: MasaSession;
-  identity: MasaIdentity;
-  soulName: MasaSoulName;
-  creditScore: MasaCreditScore;
-  green: MasaGreen;
-  sbt: MasaSBTs;
-  asbt: MasaASBT;
-  sssbt: MasaSSSBT;
-  utils: {
-    version: () => { sdkVersion: string; contractsVersion: string };
+  readonly config: MasaConfig;
+  readonly arweave: MasaArweave;
+  readonly client: MasaClient;
+  readonly contracts: MasaContracts;
+  readonly account: MasaAccount;
+  readonly session: MasaSession;
+  readonly identity: MasaIdentity;
+  readonly soulName: MasaSoulName;
+  readonly creditScore: MasaCreditScore;
+  readonly green: MasaGreen;
+  readonly sbt: MasaSBTs;
+  readonly asbt: MasaASBT;
+  readonly sssbt: MasaSSSBT;
+  readonly utils: {
+    readonly version: () => { sdkVersion: string; contractsVersion: string };
   };
 }
