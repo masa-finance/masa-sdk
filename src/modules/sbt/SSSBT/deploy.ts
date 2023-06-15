@@ -46,8 +46,7 @@ export const deploySSSBT = async ({
       constants.AddressZero ||
     !masa.contracts.instances.SoulboundIdentityContract.hasAddress
   ) {
-    console.error("Identity contract is not deployed to this network!");
-    return result;
+    console.warn("Identity contract is not deployed to this network!");
   }
 
   const contractFactory: ContractFactory = new ContractFactory(
@@ -69,7 +68,8 @@ export const deploySSSBT = async ({
     name,
     symbol,
     baseTokenUri,
-    masa.contracts.instances.SoulboundIdentityContract.address,
+    masa.contracts.instances.SoulboundIdentityContract.address ||
+      constants.AddressZero,
     {
       // get this from the sdk
       swapRouter: constants.AddressZero,
@@ -115,7 +115,7 @@ export const deploySSSBT = async ({
     await wait();
 
     if (adminAddress === signerAddress) {
-      console.log(`Adding authority: ${authorityAddress}`);
+      console.log(`Adding authority: '${authorityAddress}' to '${address}'`);
       const { hash, wait } = await addAuthority(authorityAddress);
 
       console.log(
