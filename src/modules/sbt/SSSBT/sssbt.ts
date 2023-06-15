@@ -1,5 +1,6 @@
 import { ReferenceSBTSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
 
+import { ContractFactory } from "../../../contracts";
 import { MasaSBTs } from "../SBT";
 import { deploySSSBT } from "./deploy";
 import { SSSBTWrapper } from "./sssbt-wrapper";
@@ -42,11 +43,15 @@ export class MasaSSSBT extends MasaSBTs {
   /**
    *
    * @param address
+   * @param factory
    */
-  public connect = async (address: string): Promise<SSSBTWrapper> => {
+  public connect = async (
+    address: string,
+    factory: ContractFactory = ReferenceSBTSelfSovereign__factory
+  ): Promise<SSSBTWrapper> => {
     const { sbtContract } = await this.masa.contracts.sssbt.connect(
       address,
-      ReferenceSBTSelfSovereign__factory
+      factory
     );
 
     return new SSSBTWrapper(this.masa, sbtContract);
