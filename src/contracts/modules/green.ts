@@ -5,7 +5,7 @@ import type {
   TypedDataDomain,
 } from "ethers";
 
-import { MasaModuleBase } from "../../base";
+import { MasaSBTModuleBase } from "../../base";
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
 import {
@@ -14,11 +14,11 @@ import {
   signTypedData,
 } from "../../utils";
 
-export class Green extends MasaModuleBase {
+export class Green extends MasaSBTModuleBase {
   /**
    *
    */
-  types = {
+  public readonly types = {
     MintGreen: [
       { name: "to", type: "address" },
       { name: "authorityAddress", type: "address" },
@@ -31,7 +31,7 @@ export class Green extends MasaModuleBase {
    * @param paymentMethod
    * @param slippage
    */
-  getPrice = async (
+  public getPrice = async (
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
   ): Promise<
@@ -75,7 +75,7 @@ export class Green extends MasaModuleBase {
    * @param signature
    * @param slippage
    */
-  mint = async (
+  public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
     authorityAddress: string,
@@ -187,7 +187,7 @@ export class Green extends MasaModuleBase {
    * Signs a masa green
    * @param receiver
    */
-  sign = async (
+  public sign = async (
     receiver: string
   ): Promise<
     | {
@@ -235,7 +235,7 @@ export class Green extends MasaModuleBase {
    *
    * @param greenId
    */
-  burn = async (greenId: BigNumber): Promise<boolean> => {
+  public burn = async (greenId: BigNumber): Promise<boolean> => {
     try {
       console.log(`Burning Green with ID '${greenId}'!`);
 

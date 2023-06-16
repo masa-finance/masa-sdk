@@ -18,7 +18,7 @@ export class SoulLinker extends MasaModuleBase {
   /**
    *
    */
-  types = {
+  public readonly types = {
     Link: [
       { name: "readerIdentityId", type: "uint256" },
       { name: "ownerIdentityId", type: "uint256" },
@@ -35,7 +35,7 @@ export class SoulLinker extends MasaModuleBase {
    * @param paymentMethod
    * @param slippage
    */
-  getPrice = async (
+  public getPrice = async (
     tokenAddress: string,
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
@@ -101,6 +101,7 @@ export class SoulLinker extends MasaModuleBase {
       formattedProtocolFee,
     };
   };
+
   /**
    * Adds a link to the soullinker
    * @param tokenAddress
@@ -113,7 +114,7 @@ export class SoulLinker extends MasaModuleBase {
    * @param signature
    * @param slippage
    */
-  addLink = async (
+  public addLink = async (
     tokenAddress: string,
     paymentMethod: PaymentMethod,
     readerIdentityId: BigNumber,
@@ -215,7 +216,7 @@ export class SoulLinker extends MasaModuleBase {
    * @param signatureDate
    * @param expirationOffset
    */
-  signLink = async (
+  public signLink = async (
     readerIdentityId: BigNumber,
     ownerIdentityId: BigNumber,
     tokenAddress: string,
@@ -270,7 +271,7 @@ export class SoulLinker extends MasaModuleBase {
    * @param tokenId
    * @param readerIdentityId
    */
-  breakLink = async (
+  public breakLink = async (
     contract: Contract,
     tokenId: BigNumber,
     readerIdentityId: BigNumber

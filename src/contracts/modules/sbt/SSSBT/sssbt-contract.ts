@@ -1,11 +1,11 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import { MasaSBTSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaModuleBase } from "../../../../base";
+import { MasaSBTModuleBase } from "../../../../base";
 import type { ContractFactory } from "../../contract-factory";
 import { SSSBTContractWrapper } from "./sssbt-contract-wrapper";
 
-export class SSSBTContract extends MasaModuleBase {
+export class SSSBTContract extends MasaSBTModuleBase {
   /**
    *
    * @param contract

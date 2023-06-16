@@ -1,11 +1,11 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { MasaSBT__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaModuleBase } from "../../../../base";
+import { MasaSBTModuleBase } from "../../../../base";
 import type { ContractFactory } from "../../contract-factory";
 import { SBTContractWrapper } from "./sbt-contract-wrapper";
 
-export class SBTContract extends MasaModuleBase {
+export class SBTContract extends MasaSBTModuleBase {
   /**
    *
    * @param contract

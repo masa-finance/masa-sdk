@@ -16,7 +16,7 @@ export class ASBTContractWrapper<
    * @param paymentMethod
    * @param receiver
    */
-  mint = async (
+  public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string
   ): Promise<boolean> => {
@@ -127,7 +127,7 @@ export class ASBTContractWrapper<
    * @param paymentMethod
    * @param receivers
    */
-  bulkMint = async (
+  public bulkMint = async (
     paymentMethod: PaymentMethod,
     receivers: string[]
   ): Promise<boolean[]> => {

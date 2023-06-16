@@ -18,7 +18,7 @@ export class SoulName extends MasaModuleBase {
   /**
    *
    */
-  types = {
+  public readonly types = {
     MintSoulName: [
       { name: "to", type: "address" },
       { name: "name", type: "string" },
@@ -32,7 +32,7 @@ export class SoulName extends MasaModuleBase {
    * Check if a soul name is available
    * @param soulName
    */
-  isAvailable = async (soulName: string): Promise<boolean> => {
+  public isAvailable = async (soulName: string): Promise<boolean> => {
     let available = false;
     if (soulName && soulName.length > 0) {
       available = await this.instances.SoulNameContract.isAvailable(soulName);
@@ -51,7 +51,7 @@ export class SoulName extends MasaModuleBase {
    * @param signature
    * @param receiver
    */
-  purchase = async (
+  public purchase = async (
     paymentMethod: PaymentMethod,
     name: string,
     nameLength: number,
@@ -179,7 +179,7 @@ export class SoulName extends MasaModuleBase {
    * @param duration
    * @param slippage
    */
-  getPrice = async (
+  public getPrice = async (
     paymentMethod: PaymentMethod,
     nameLength: number,
     duration: number = 1,
@@ -250,7 +250,7 @@ export class SoulName extends MasaModuleBase {
    * Returns detailed information for a soul name
    * @param soulName
    */
-  getSoulnameData = async (
+  public getSoulnameData = async (
     soulName: string
   ): Promise<{ exists: boolean; tokenId: BigNumber }> => {
     return await this.instances.SoulNameContract.nameData(
@@ -266,7 +266,7 @@ export class SoulName extends MasaModuleBase {
    * @param metadataUrl
    * @param receiver
    */
-  sign = async (
+  public sign = async (
     soulName: string,
     soulNameLength: number,
     duration: number,
@@ -321,7 +321,10 @@ export class SoulName extends MasaModuleBase {
    * @param soulName
    * @param receiver
    */
-  transfer = async (soulName: string, receiver: string): Promise<boolean> => {
+  public transfer = async (
+    soulName: string,
+    receiver: string
+  ): Promise<boolean> => {
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
       this.masa.contracts.instances.SoulNameContract.extension(),
@@ -374,7 +377,7 @@ export class SoulName extends MasaModuleBase {
    *
    * @param soulName
    */
-  burn = async (soulName: string): Promise<boolean> => {
+  public burn = async (soulName: string): Promise<boolean> => {
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
       this.masa.contracts.instances.SoulNameContract.extension(),

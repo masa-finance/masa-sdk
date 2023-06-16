@@ -12,7 +12,7 @@ export class MasaSBTWrapper<
    *
    * @param address
    */
-  list = async (address?: string) => {
+  public list = async (address?: string) => {
     address = address || (await this.masa.config.signer.getAddress());
 
     const SBTs = await this.loadSBTs(address);
@@ -41,7 +41,7 @@ export class MasaSBTWrapper<
    *
    * @param identityIdOrAddress
    */
-  loadSBTs = async (
+  protected loadSBTs = async (
     identityIdOrAddress: BigNumber | string
   ): Promise<
     {
@@ -107,7 +107,7 @@ export class MasaSBTWrapper<
    *
    * @param sbtIDs
    */
-  loadSBTIDs = async (sbtIDs: BigNumber[]) => {
+  protected loadSBTIDs = async (sbtIDs: BigNumber[]) => {
     return await Promise.all(
       sbtIDs.map(async (tokenId: BigNumber) => {
         const tokenUri = patchMetadataUrl(
@@ -127,7 +127,7 @@ export class MasaSBTWrapper<
    *
    * @param SBTId
    */
-  burn = async (SBTId: BigNumber) => {
+  public burn = async (SBTId: BigNumber) => {
     try {
       console.log(`Burning SBT with ID '${SBTId}'!`);
 

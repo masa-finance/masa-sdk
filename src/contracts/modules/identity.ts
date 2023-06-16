@@ -5,16 +5,16 @@ import {
   TypedDataDomain,
 } from "ethers";
 
-import { MasaModuleBase } from "../../base";
+import { MasaSBTModuleBase } from "../../base";
 import { Messages } from "../../collections";
 import type { PaymentMethod } from "../../interface";
 import { generateSignatureDomain, isNativeCurrency } from "../../utils";
 
-export class Identity extends MasaModuleBase {
+export class Identity extends MasaSBTModuleBase {
   /**
    * purchase only identity
    */
-  purchase = async (): Promise<ContractTransaction> => {
+  public purchase = async (): Promise<ContractTransaction> => {
     const {
       estimateGas: { purchaseIdentity: estimateGas },
       purchaseIdentity,
@@ -43,7 +43,7 @@ export class Identity extends MasaModuleBase {
    * @param authorityAddress
    * @param signature
    */
-  purchaseIdentityAndName = async (
+  public purchaseIdentityAndName = async (
     paymentMethod: PaymentMethod,
     name: string,
     nameLength: number,
@@ -167,7 +167,7 @@ export class Identity extends MasaModuleBase {
    *
    * @param identityId
    */
-  burn = async (identityId: BigNumber): Promise<boolean> => {
+  public burn = async (identityId: BigNumber): Promise<boolean> => {
     let success = false;
 
     console.log(`Burning Identity with ID '${identityId}'!`);

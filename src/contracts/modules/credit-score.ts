@@ -5,7 +5,7 @@ import type {
   TypedDataDomain,
 } from "ethers";
 
-import { MasaModuleBase } from "../../base";
+import { MasaSBTModuleBase } from "../../base";
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
 import {
@@ -14,11 +14,11 @@ import {
   signTypedData,
 } from "../../utils";
 
-export class CreditScore extends MasaModuleBase {
+export class CreditScore extends MasaSBTModuleBase {
   /**
    *
    */
-  types = {
+  public readonly types = {
     MintCreditScore: [
       { name: "identityId", type: "uint256" },
       { name: "authorityAddress", type: "address" },
@@ -31,7 +31,7 @@ export class CreditScore extends MasaModuleBase {
    * @param paymentMethod
    * @param slippage
    */
-  getPrice = async (
+  public getPrice = async (
     paymentMethod: PaymentMethod,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
     slippage: number | undefined = 250
@@ -52,7 +52,7 @@ export class CreditScore extends MasaModuleBase {
    * @param signature
    * @param slippage
    */
-  mint = async (
+  public mint = async (
     paymentMethod: PaymentMethod,
     identityId: BigNumber,
     authorityAddress: string,
@@ -173,7 +173,7 @@ export class CreditScore extends MasaModuleBase {
    * Signs a credit score
    * @param identityId
    */
-  sign = async (
+  public sign = async (
     identityId: BigNumber
   ): Promise<
     | {
@@ -221,7 +221,7 @@ export class CreditScore extends MasaModuleBase {
    *
    * @param creditScoreId
    */
-  burn = async (creditScoreId: BigNumber): Promise<boolean> => {
+  public burn = async (creditScoreId: BigNumber): Promise<boolean> => {
     console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
 
     try {

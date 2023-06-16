@@ -1,6 +1,6 @@
 import { MasaSBT } from "@masa-finance/masa-contracts-identity";
 
-import { MasaModuleBase } from "../../../../base";
+import { MasaSBTModuleBase } from "../../../../base";
 import type {
   IIdentityContracts,
   MasaInterface,
@@ -10,7 +10,7 @@ import type {
 
 export class SBTContractWrapper<
   Contract extends MasaSBT
-> extends MasaModuleBase {
+> extends MasaSBTModuleBase {
   constructor(
     masa: MasaInterface,
     instances: IIdentityContracts,
@@ -24,7 +24,7 @@ export class SBTContractWrapper<
    * @param paymentMethod
    * @param slippage
    */
-  getPrice = (
+  public getPrice = (
     paymentMethod: PaymentMethod,
     slippage: number | undefined = 250
   ): Promise<PriceInformation> =>

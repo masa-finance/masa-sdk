@@ -22,7 +22,7 @@ export class SSSBTContractWrapper<
    * @param types
    * @param value
    */
-  sign = async (
+  public sign = async (
     name: string,
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number>
@@ -63,7 +63,7 @@ export class SSSBTContractWrapper<
    * @param authorityAddress
    * @param slippage
    */
-  prepareMint = async (
+  public prepareMint = async (
     paymentMethod: PaymentMethod,
     name: string,
     types: Record<string, Array<TypedDataField>>,
@@ -112,7 +112,7 @@ export class SSSBTContractWrapper<
    * @param signatureDate
    * @param authorityAddress
    */
-  mint = async (
+  public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
     signature: string,
