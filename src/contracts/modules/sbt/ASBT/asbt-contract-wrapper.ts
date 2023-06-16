@@ -6,7 +6,7 @@ import { PayableOverrides } from "ethers";
 import { Messages } from "../../../../collections";
 import type { PaymentMethod } from "../../../../interface";
 import { isNativeCurrency } from "../../../../utils";
-import { SBTContractWrapper } from "../SBT";
+import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class ASBTContractWrapper<
   Contract extends ReferenceSBTAuthority
