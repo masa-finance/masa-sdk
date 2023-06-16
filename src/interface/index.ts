@@ -1,5 +1,6 @@
 export * from "./addresses";
 export * from "./base-result";
+export * from "./contract-factory";
 export * from "./contracts";
 export * from "./environment-name";
 export * from "./masa-args";

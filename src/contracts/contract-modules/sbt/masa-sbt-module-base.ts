@@ -3,7 +3,7 @@ import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { utils } from "ethers";
 
 import type { PaymentMethod, PriceInformation } from "../../../interface";
-import { ContractFactory } from "../../../interface/contract-factory";
+import type { ContractFactory } from "../../../interface/contract-factory";
 import { isNativeCurrency } from "../../../utils";
 import { MasaModuleBase } from "../masa-module-base";
 
