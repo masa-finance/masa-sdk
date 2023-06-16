@@ -3,8 +3,8 @@ import {
   ReferenceSBTSelfSovereign__factory,
 } from "@masa-finance/masa-contracts-identity";
 
-import { MasaBase } from "../../../base";
-import { ContractFactory } from "../../../contracts";
+import { MasaBase } from "../../../base/masa-base";
+import { ContractFactory } from "../../../contracts/modules/contract-factory";
 import { deploySSSBT } from "./deploy";
 import { MasaSSSBTWrapper } from "./sssbt-wrapper";
 
