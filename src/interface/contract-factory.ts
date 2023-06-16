@@ -1,6 +1,6 @@
 import type { Signer } from "ethers";
 
-export class ContractFactory {
+export abstract class ContractFactory {
   static connect: <Contract>(
     address: string,
     signerOrProvider: Signer
