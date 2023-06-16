@@ -5,16 +5,14 @@ import type { BaseContract } from "ethers";
 import { MasaBase } from "../base";
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
-import {
-  ASBTContract,
-  CreditScore,
-  Green,
-  Identity,
-  SBTContract,
-  SoulLinker,
-  SoulName,
-  SSSBTContract,
-} from "./modules";
+import { CreditScore } from "./modules/credit-score";
+import { Green } from "./modules/green";
+import { Identity } from "./modules/identity";
+import { ASBTContract } from "./modules/sbt/ASBT";
+import { SBTContract } from "./modules/sbt/SBT/sbt-contract";
+import { SSSBTContract } from "./modules/sbt/SSSBT/sssbt-contract";
+import { SoulLinker } from "./modules/soul-linker";
+import { SoulName } from "./modules/soul-name";
 
 export class MasaContracts extends MasaBase {
   /**
