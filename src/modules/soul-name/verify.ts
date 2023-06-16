@@ -102,9 +102,9 @@ export const verifyByName = async (
             soulNameInstance.metadata.imageHashSignature
           );
 
-          result.imageSignatureMatch =
-            !!recoveredImageAddress &&
-            minters.indexOf(recoveredImageAddress) > -1;
+          result.imageSignatureMatch = Boolean(
+            recoveredImageAddress && minters.indexOf(recoveredImageAddress) > -1
+          );
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -126,9 +126,10 @@ export const verifyByName = async (
         soulNameInstance.metadata.signature
       );
 
-      result.metadataSignatureMatch =
-        !!recoveredMetadataAddress &&
-        minters.indexOf(recoveredMetadataAddress) > -1;
+      result.metadataSignatureMatch = Boolean(
+        recoveredMetadataAddress &&
+          minters.indexOf(recoveredMetadataAddress) > -1
+      );
     }
   } else {
     console.error(`Soul Name '${soulName}' not found!`);
