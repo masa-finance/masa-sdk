@@ -11,7 +11,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../../../utils";
-import { SBTContractWrapper } from "../SBT";
+import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class SSSBTContractWrapper<
   Contract extends ReferenceSBTSelfSovereign

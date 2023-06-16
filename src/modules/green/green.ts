@@ -1,7 +1,7 @@
 import type { SoulboundGreen } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { MasaLinkable } from "../../base";
+import { MasaLinkable } from "../../base/masa-linkable";
 import type { MasaInterface, PaymentMethod } from "../../interface";
 import { createGreen, generateGreen, mintGreen, verifyGreen } from "./create";
 import { listGreens } from "./list";

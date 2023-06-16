@@ -1,4 +1,3 @@
-export * from "./base";
 export * from "./collections";
 export * from "./contracts";
 export * from "./interface";
