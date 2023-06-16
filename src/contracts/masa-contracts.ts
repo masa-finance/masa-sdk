@@ -2,7 +2,7 @@ import type { LogDescription } from "@ethersproject/abi";
 import type { Log } from "@ethersproject/abstract-provider";
 import type { BaseContract } from "ethers";
 
-import { MasaBase } from "../base";
+import { MasaBase } from "../base/masa-base";
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { loadIdentityContracts } from "./load-Identity-contracts";
 import { CreditScore } from "./modules/credit-score";
