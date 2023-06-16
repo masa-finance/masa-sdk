@@ -5,7 +5,7 @@ import type {
   TypedDataDomain,
 } from "ethers";
 
-import { MasaSBTModuleBase } from "../../base";
+import { MasaSBTModuleBase } from "../../base/masa-sbt-module-base";
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
 import {

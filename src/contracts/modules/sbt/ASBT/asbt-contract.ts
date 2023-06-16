@@ -1,7 +1,7 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { MasaSBTAuthority__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaSBTModuleBase } from "../../../../base";
+import { MasaSBTModuleBase } from "../../../../base/masa-sbt-module-base";
 import { ContractFactory } from "../../contract-factory";
 import { ASBTContractWrapper } from "./asbt-contract-wrapper";
 

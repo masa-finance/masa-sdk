@@ -1,7 +1,7 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import { MasaSBTSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
 
-import { MasaSBTModuleBase } from "../../../../base";
+import { MasaSBTModuleBase } from "../../../../base/masa-sbt-module-base";
 import type { ContractFactory } from "../../contract-factory";
 import { SSSBTContractWrapper } from "./sssbt-contract-wrapper";
 
