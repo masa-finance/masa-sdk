@@ -3,7 +3,7 @@ export const nativeCurrencies = [
   "ETH",
   // celo
   "CELO",
-  // matic
+  // polygon
   "MATIC",
   // binance smart chain
   "BNB",
