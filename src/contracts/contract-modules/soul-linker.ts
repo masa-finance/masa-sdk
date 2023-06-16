@@ -1,7 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract, PayableOverrides } from "ethers";
 
-import { MasaModuleBase } from "../../base/masa-module-base";
 import { Messages } from "../../collections";
 import type {
   BaseResult,
@@ -11,6 +10,7 @@ import type {
 import type { Link } from "../../modules";
 import { loadLinks } from "../../modules";
 import { isNativeCurrency, signTypedData } from "../../utils";
+import { MasaModuleBase } from "./masa-module-base";
 
 export type BreakLinkResult = BaseResult;
 

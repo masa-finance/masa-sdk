@@ -1,4 +1,4 @@
-import { MasaBase } from "../../base/masa-base";
+import { MasaBase } from "../../masa-base";
 import { checkLogin } from "./check-login";
 import { getSession } from "./get-session";
 import { login } from "./login";

@@ -1,7 +1,6 @@
 import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axios from "axios";
 
-import { MasaBase } from "../../base/masa-base";
 import type {
   ChallengeResult,
   ChallengeResultWithCookie,
@@ -20,6 +19,7 @@ import type {
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
+import { MasaBase } from "../../masa-base";
 
 const headers = {
   "Content-Type": "application/json",

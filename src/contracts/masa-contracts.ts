@@ -2,17 +2,17 @@ import type { LogDescription } from "@ethersproject/abi";
 import type { Log } from "@ethersproject/abstract-provider";
 import type { BaseContract } from "ethers";
 
-import { MasaBase } from "../base/masa-base";
 import type { IIdentityContracts, MasaInterface } from "../interface";
+import { MasaBase } from "../masa-base";
+import { CreditScore } from "./contract-modules/credit-score";
+import { Green } from "./contract-modules/green";
+import { Identity } from "./contract-modules/identity";
+import { ASBTContract } from "./contract-modules/sbt/ASBT";
+import { SBTContract } from "./contract-modules/sbt/SBT/sbt-contract";
+import { SSSBTContract } from "./contract-modules/sbt/SSSBT/sssbt-contract";
+import { SoulLinker } from "./contract-modules/soul-linker";
+import { SoulName } from "./contract-modules/soul-name";
 import { loadIdentityContracts } from "./load-Identity-contracts";
-import { CreditScore } from "./modules/credit-score";
-import { Green } from "./modules/green";
-import { Identity } from "./modules/identity";
-import { ASBTContract } from "./modules/sbt/ASBT";
-import { SBTContract } from "./modules/sbt/SBT/sbt-contract";
-import { SSSBTContract } from "./modules/sbt/SSSBT/sssbt-contract";
-import { SoulLinker } from "./modules/soul-linker";
-import { SoulName } from "./modules/soul-name";
 
 export class MasaContracts extends MasaBase {
   /**

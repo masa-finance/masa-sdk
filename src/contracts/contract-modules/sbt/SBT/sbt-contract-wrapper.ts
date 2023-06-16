@@ -1,12 +1,12 @@
 import { MasaSBT } from "@masa-finance/masa-contracts-identity";
 
-import { MasaSBTModuleBase } from "../../../../base/masa-sbt-module-base";
 import type {
   IIdentityContracts,
   MasaInterface,
   PaymentMethod,
   PriceInformation,
 } from "../../../../interface";
+import { MasaSBTModuleBase } from "../masa-sbt-module-base";
 
 export class SBTContractWrapper<
   Contract extends MasaSBT

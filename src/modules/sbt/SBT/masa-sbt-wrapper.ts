@@ -1,9 +1,9 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { MasaLinkable } from "../../../base/masa-linkable";
 import { Messages } from "../../../collections";
 import { isBigNumber, patchMetadataUrl } from "../../../utils";
+import { MasaLinkable } from "../../masa-linkable";
 
 export class MasaSBTWrapper<
   Contract extends MasaSBT

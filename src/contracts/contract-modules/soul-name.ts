@@ -5,7 +5,6 @@ import type {
   TypedDataDomain,
 } from "ethers";
 
-import { MasaModuleBase } from "../../base/masa-module-base";
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
 import {
@@ -13,6 +12,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../utils";
+import { MasaModuleBase } from "./masa-module-base";
 
 export class SoulName extends MasaModuleBase {
   /**

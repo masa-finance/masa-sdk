@@ -1,7 +1,7 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 
-import { MasaBase } from "../../base/masa-base";
 import type { PaymentMethod } from "../../interface";
+import { MasaBase } from "../../masa-base";
 import { burnSoulName } from "./burn";
 import { createSoulName } from "./create";
 import { getSoulNameMetadataPrefix } from "./helpers";

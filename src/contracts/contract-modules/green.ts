@@ -5,7 +5,6 @@ import type {
   TypedDataDomain,
 } from "ethers";
 
-import { MasaSBTModuleBase } from "../../base/masa-sbt-module-base";
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
 import {
@@ -13,6 +12,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../utils";
+import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class Green extends MasaSBTModuleBase {
   /**

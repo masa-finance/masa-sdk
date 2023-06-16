@@ -1,7 +1,7 @@
 import type { BigNumber, Contract } from "ethers";
 
-import { MasaBase } from "../../base/masa-base";
 import type { MasaInterface, PaymentMethod } from "../../interface";
+import { MasaBase } from "../../masa-base";
 import { createLink } from "./create-link";
 import { establishLinkFromPassport } from "./establish-link";
 import { listLinks } from "./list-links";

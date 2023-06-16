@@ -2,10 +2,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { utils } from "ethers";
 
-import { ContractFactory } from "../contracts/modules/contract-factory";
-import type { PaymentMethod, PriceInformation } from "../interface";
-import { isNativeCurrency } from "../utils";
-import { MasaModuleBase } from "./masa-module-base";
+import type { PaymentMethod, PriceInformation } from "../../../interface";
+import { ContractFactory } from "../../../interface/contract-factory";
+import { isNativeCurrency } from "../../../utils";
+import { MasaModuleBase } from "../masa-module-base";
 
 export abstract class MasaSBTModuleBase extends MasaModuleBase {
   /**

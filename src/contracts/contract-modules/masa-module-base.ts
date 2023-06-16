@@ -16,16 +16,16 @@ import type {
 import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
-import { Messages } from "../collections";
+import { Messages } from "../../collections";
 import type {
   IIdentityContracts,
   MasaInterface,
   PaymentMethod,
-} from "../interface";
-import type { ERC20 } from "../stubs";
-import { ERC20__factory } from "../stubs";
-import { isERC20Currency, isNativeCurrency } from "../utils";
-import { MasaBase } from "./masa-base";
+} from "../../interface";
+import { MasaBase } from "../../masa-base";
+import type { ERC20 } from "../../stubs";
+import { ERC20__factory } from "../../stubs";
+import { isERC20Currency, isNativeCurrency } from "../../utils";
 
 export abstract class MasaModuleBase extends MasaBase {
   constructor(masa: MasaInterface, protected instances: IIdentityContracts) {
