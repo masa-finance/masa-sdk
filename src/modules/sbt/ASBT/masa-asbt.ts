@@ -5,8 +5,8 @@ import {
 
 import { MasaBase } from "../../../base/masa-base";
 import { ContractFactory } from "../../../contracts/modules/contract-factory";
-import { MasaASBTWrapper } from "./asbt-wrapper";
 import { deployASBT } from "./deploy";
+import { MasaASBTWrapper } from "./masa-asbt-wrapper";
 
 export class MasaASBT extends MasaBase {
   /**

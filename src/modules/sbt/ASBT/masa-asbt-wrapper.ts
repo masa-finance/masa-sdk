@@ -1,7 +1,7 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
-import { PaymentMethod } from "../../../interface";
-import { MasaSBTWrapper } from "../SBT";
+import type { PaymentMethod } from "../../../interface";
+import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaASBTWrapper<
   Contract extends ReferenceSBTAuthority

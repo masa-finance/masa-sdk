@@ -5,7 +5,7 @@ import {
 
 import { MasaBase } from "../../../base/masa-base";
 import type { ContractFactory } from "../../../contracts/modules/contract-factory";
-import { MasaSBTWrapper } from "./sbt-wrapper";
+import { MasaSBTWrapper } from "./masa-sbt-wrapper";
 
 export class MasaSBTBase extends MasaBase {
   /**
