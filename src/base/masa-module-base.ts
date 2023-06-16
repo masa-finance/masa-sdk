@@ -27,7 +27,7 @@ import { ERC20__factory } from "../stubs";
 import { isERC20Currency, isNativeCurrency } from "../utils";
 import { MasaBase } from "./masa-base";
 
-export class MasaModuleBase extends MasaBase {
+export abstract class MasaModuleBase extends MasaBase {
   constructor(masa: MasaInterface, protected instances: IIdentityContracts) {
     super(masa);
   }

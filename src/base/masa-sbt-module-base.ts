@@ -7,7 +7,7 @@ import type { PaymentMethod, PriceInformation } from "../interface";
 import { isNativeCurrency } from "../utils";
 import { MasaModuleBase } from "./masa-module-base";
 
-export class MasaSBTModuleBase extends MasaModuleBase {
+export abstract class MasaSBTModuleBase extends MasaModuleBase {
   /**
    *
    * @param paymentMethod
