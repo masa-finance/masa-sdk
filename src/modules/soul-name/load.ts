@@ -80,8 +80,8 @@ export const loadSoulNamesByNames = async (
     await Promise.all(
       soulNames.map((soulName: string) => loadSoulNameByName(masa, soulName))
     )
-  ).filter(
-    (soulName: SoulNameDetails | undefined) => !!soulName
+  ).filter((soulName: SoulNameDetails | undefined) =>
+    Boolean(soulName)
   ) as SoulNameDetails[];
 };
 

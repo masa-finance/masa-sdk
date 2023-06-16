@@ -33,7 +33,7 @@ export const loadCreditScoreDetails = async (
         };
       })
     )
-  ).filter((creditScore: CreditScoreDetails) => !!creditScore.metadata);
+  ).filter((creditScore: CreditScoreDetails) => Boolean(creditScore.metadata));
 };
 
 export const loadCreditScores = async (

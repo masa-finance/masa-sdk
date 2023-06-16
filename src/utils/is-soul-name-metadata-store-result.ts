@@ -6,5 +6,5 @@ import type {
 export const isSoulNameMetadataStoreResult = (
   result: SoulNameResultBase
 ): result is SoulNameMetadataStoreResult => {
-  return !!(result as SoulNameMetadataStoreResult).authorityAddress;
+  return Boolean((result as SoulNameMetadataStoreResult).authorityAddress);
 };

@@ -32,7 +32,7 @@ export const loadGreenDetails = async (
         };
       })
     )
-  ).filter((green: GreenDetails) => !!green.metadata);
+  ).filter((green: GreenDetails) => Boolean(green.metadata));
 };
 
 export const loadGreens = async (

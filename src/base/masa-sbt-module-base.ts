@@ -92,7 +92,7 @@ export class MasaSBTModuleBase extends MasaModuleBase {
     const code: string | undefined =
       await this.masa.config.signer.provider?.getCode(address);
 
-    const contractExists: boolean = !!code && code !== "0x";
+    const contractExists: boolean = Boolean(code) && code !== "0x";
 
     // no code exists, unable to load
     if (!contractExists) {

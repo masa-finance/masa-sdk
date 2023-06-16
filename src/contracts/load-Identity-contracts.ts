@@ -47,8 +47,9 @@ export const loadIdentityContracts = ({
       addresses[networkName]?.SoulboundIdentityAddress || constants.AddressZero,
       loadedProvider
     );
-  SoulboundIdentityContract.hasAddress =
-    !!addresses[networkName]?.SoulboundIdentityAddress;
+  SoulboundIdentityContract.hasAddress = Boolean(
+    addresses[networkName]?.SoulboundIdentityAddress
+  );
 
   const SoulboundCreditScoreContract: SoulboundCreditScore & ContractInfo =
     SoulboundCreditScore__factory.connect(
@@ -56,28 +57,35 @@ export const loadIdentityContracts = ({
         constants.AddressZero,
       loadedProvider
     );
-  SoulboundCreditScoreContract.hasAddress =
-    !!addresses[networkName]?.SoulboundCreditScoreAddress;
+  SoulboundCreditScoreContract.hasAddress = Boolean(
+    addresses[networkName]?.SoulboundCreditScoreAddress
+  );
 
   const SoulNameContract: SoulName & ContractInfo = SoulName__factory.connect(
     addresses[networkName]?.SoulNameAddress || constants.AddressZero,
     loadedProvider
   );
-  SoulNameContract.hasAddress = !!addresses[networkName]?.SoulNameAddress;
+  SoulNameContract.hasAddress = Boolean(
+    addresses[networkName]?.SoulNameAddress
+  );
 
   const SoulLinkerContract: SoulLinker & ContractInfo =
     SoulLinker__factory.connect(
       addresses[networkName]?.SoulLinkerAddress || constants.AddressZero,
       loadedProvider
     );
-  SoulLinkerContract.hasAddress = !!addresses[networkName]?.SoulLinkerAddress;
+  SoulLinkerContract.hasAddress = Boolean(
+    addresses[networkName]?.SoulLinkerAddress
+  );
 
   const SoulStoreContract: SoulStore & ContractInfo =
     SoulStore__factory.connect(
       addresses[networkName]?.SoulStoreAddress || constants.AddressZero,
       loadedProvider
     );
-  SoulStoreContract.hasAddress = !!addresses[networkName]?.SoulStoreAddress;
+  SoulStoreContract.hasAddress = Boolean(
+    addresses[networkName]?.SoulStoreAddress
+  );
 
   const SoulboundGreenContract: SoulboundGreen & ContractInfo =
     SoulboundGreen__factory.connect(
@@ -85,8 +93,9 @@ export const loadIdentityContracts = ({
       addresses[networkName]?.SoulboundGreenAddress || constants.AddressZero,
       loadedProvider
     );
-  SoulboundGreenContract.hasAddress =
-    !!addresses[networkName]?.SoulboundGreenAddress;
+  SoulboundGreenContract.hasAddress = Boolean(
+    addresses[networkName]?.SoulboundGreenAddress
+  );
 
   return {
     SoulboundIdentityContract,

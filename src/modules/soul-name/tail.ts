@@ -45,7 +45,9 @@ export const tailSoulNames = async (
           loadSoulNameByTokenId(masa, soulNameMintEvent.args.tokenId)
         )
     )
-  ).filter((soulNameDetail: SoulNameDetails | undefined) => !!soulNameDetail);
+  ).filter((soulNameDetail: SoulNameDetails | undefined) =>
+    Boolean(soulNameDetail)
+  );
 
   return soulNames as SoulNameDetails[];
 };

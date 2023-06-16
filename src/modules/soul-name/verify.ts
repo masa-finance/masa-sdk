@@ -57,7 +57,7 @@ export const verifyByName = async (
           metadataTxData.owner
         );
         result.metadataOwnerIsMasaAccount =
-          !!metadataOwner && arAccounts.indexOf(metadataOwner) > -1;
+          Boolean(metadataOwner) && arAccounts.indexOf(metadataOwner) > -1;
       } catch {
         console.error(
           "Failed to load metadata transaction!",
@@ -78,7 +78,7 @@ export const verifyByName = async (
           imageTxData.owner
         );
         result.imageOwnerIsMasaAccount =
-          !!imageDataOwner && arAccounts.indexOf(imageDataOwner) > -1;
+          Boolean(imageDataOwner) && arAccounts.indexOf(imageDataOwner) > -1;
       } catch {
         console.error("Failed to load image transaction!", imageTxId);
       }
