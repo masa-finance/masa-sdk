@@ -53,21 +53,9 @@ export class ASBTContractWrapper<
       string // receiver string
     ] = [paymentAddress, receiver];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const mintASBTOverrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const mintASBTOverrides: PayableOverrides = await this.createOverrides(
+      isNativeCurrency(paymentMethod) ? price : undefined
+    );
 
     if (this.masa.config.verbose) {
       console.info(mintASBTArguments, mintASBTOverrides);
@@ -168,21 +156,9 @@ export class ASBTContractWrapper<
       string[] // receivers string[]
     ] = [paymentAddress, receivers];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const mintASBTOverrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const mintASBTOverrides: PayableOverrides = await this.createOverrides(
+      isNativeCurrency(paymentMethod) ? price : undefined
+    );
 
     if (this.masa.config.verbose) {
       console.info(mintASBTArguments, mintASBTOverrides);

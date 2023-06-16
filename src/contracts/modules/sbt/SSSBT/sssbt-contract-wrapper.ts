@@ -181,21 +181,9 @@ export class SSSBTContractWrapper<
       string // signature string
     ] = [paymentAddress, receiver, authorityAddress, signatureDate, signature];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const mintSSSBTOverrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const mintSSSBTOverrides: PayableOverrides = await this.createOverrides(
+      isNativeCurrency(paymentMethod) ? price : undefined
+    );
 
     if (this.masa.config.verbose) {
       console.dir(

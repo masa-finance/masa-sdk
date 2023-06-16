@@ -7,7 +7,12 @@ import type {
   SoulLinker,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
-import type { ContractReceipt, TypedDataDomain, TypedDataField } from "ethers";
+import type {
+  ContractReceipt,
+  PayableOverrides,
+  TypedDataDomain,
+  TypedDataField,
+} from "ethers";
 import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
@@ -108,6 +113,30 @@ export class MasaModuleBase extends MasaBase {
     }
 
     return paymentAddress;
+  };
+
+  /**
+   *
+   * @param value
+   */
+  protected createOverrides = async (
+    value?: BigNumber
+  ): Promise<PayableOverrides> => {
+    const feeData: FeeData | undefined = await this.getNetworkFeeInformation();
+
+    return {
+      value,
+      ...(feeData?.maxPriorityFeePerGas
+        ? {
+            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
+          }
+        : undefined),
+      ...(feeData?.maxFeePerGas
+        ? {
+            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
+          }
+        : undefined),
+    };
   };
 
   /**

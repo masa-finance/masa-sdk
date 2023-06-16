@@ -126,21 +126,9 @@ export class SoulName extends MasaModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const purchaseNameOverrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const purchaseNameOverrides: PayableOverrides = await this.createOverrides(
+      isNativeCurrency(paymentMethod) ? price : undefined
+    );
 
     if (this.masa.config.verbose) {
       console.log({ purchaseNameParameters, purchaseNameOverrides });

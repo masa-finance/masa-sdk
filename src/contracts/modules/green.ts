@@ -136,21 +136,9 @@ export class Green extends MasaSBTModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const greenMintOverrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const greenMintOverrides: PayableOverrides = await this.createOverrides(
+      isNativeCurrency(paymentMethod) ? price : undefined
+    );
 
     if (this.masa.config.verbose) {
       console.log({ greenMintParameters, greenMintOverrides });

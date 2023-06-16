@@ -114,21 +114,10 @@ export class Identity extends MasaSBTModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const purchaseIdentityAndNameOverrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const purchaseIdentityAndNameOverrides: PayableOverrides =
+      await this.createOverrides(
+        isNativeCurrency(paymentMethod) ? price : undefined
+      );
 
     if (this.masa.config.verbose) {
       console.log({

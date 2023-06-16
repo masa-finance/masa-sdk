@@ -158,28 +158,16 @@ export class SoulLinker extends MasaModuleBase {
       signature,
     ];
 
-    const feeData = await this.getNetworkFeeInformation();
-
-    const overrides: PayableOverrides = {
-      value: isNativeCurrency(paymentMethod) ? price : undefined,
-      ...(feeData && feeData.maxPriorityFeePerGas
-        ? {
-            maxPriorityFeePerGas: BigNumber.from(feeData.maxPriorityFeePerGas),
-          }
-        : undefined),
-      ...(feeData && feeData.maxFeePerGas
-        ? {
-            maxFeePerGas: BigNumber.from(feeData.maxFeePerGas),
-          }
-        : undefined),
-    };
+    const addLinkOverrides: PayableOverrides = await this.createOverrides(
+      isNativeCurrency(paymentMethod) ? price : undefined
+    );
 
     const {
       estimateGas: { addLink: estimateGas },
       addLink,
     } = this.instances.SoulLinkerContract;
 
-    let gasLimit: BigNumber = await estimateGas(...params, overrides);
+    let gasLimit: BigNumber = await estimateGas(...params, addLinkOverrides);
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = SoulLinker.addSlippage(
@@ -188,12 +176,15 @@ export class SoulLinker extends MasaModuleBase {
       );
     }
 
-    const overridesWithGasLimit = {
-      ...overrides,
+    const addLinkOverridesWithGasLimit = {
+      ...addLinkOverrides,
       gasLimit,
     };
 
-    const { wait, hash } = await addLink(...params, overridesWithGasLimit);
+    const { wait, hash } = await addLink(
+      ...params,
+      addLinkOverridesWithGasLimit
+    );
 
     console.log(
       Messages.WaitingToFinalize(
