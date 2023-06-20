@@ -54,7 +54,7 @@ export class MasaContracts extends MasaBase {
 
     this.instances = {
       ...loadIdentityContracts({
-        provider: this.masa.config.signer.provider,
+        signer: this.masa.config.signer,
         networkName: this.masa.config.networkName,
       }),
       ...contractOverrides,
