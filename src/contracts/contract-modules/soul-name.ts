@@ -324,10 +324,7 @@ export class SoulName extends MasaModuleBase {
       );
 
       try {
-        const { transferFrom } =
-          this.masa.contracts.instances.SoulNameContract.connect(
-            this.masa.config.signer
-          );
+        const { transferFrom } = this.masa.contracts.instances.SoulNameContract;
 
         const { wait, hash } = await transferFrom(
           this.masa.config.signer.getAddress(),
@@ -380,9 +377,7 @@ export class SoulName extends MasaModuleBase {
         const {
           estimateGas: { burn: estimateGas },
           burn,
-        } = this.masa.contracts.instances.SoulNameContract.connect(
-          this.masa.config.signer
-        );
+        } = this.masa.contracts.instances.SoulNameContract;
 
         // estimate gas
         let gasLimit: BigNumber = await estimateGas(soulNameData.tokenId);

@@ -150,9 +150,7 @@ export class Green extends MasaSBTModuleBase {
         "mint(address,address,address,uint256,bytes)": estimateGas,
       },
       "mint(address,address,address,uint256,bytes)": mint,
-    } = await this.instances.SoulboundGreenContract.connect(
-      this.masa.config.signer
-    );
+    } = await this.instances.SoulboundGreenContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -230,9 +228,7 @@ export class Green extends MasaSBTModuleBase {
       const {
         estimateGas: { burn: estimateGas },
         burn,
-      } = this.masa.contracts.instances.SoulboundGreenContract.connect(
-        this.masa.config.signer
-      );
+      } = this.masa.contracts.instances.SoulboundGreenContract;
 
       let gasLimit: BigNumber = await estimateGas(greenId);
 

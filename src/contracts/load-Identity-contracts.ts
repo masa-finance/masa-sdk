@@ -22,12 +22,12 @@ import { addresses } from "../networks";
 
 export interface LoadContractArgs {
   signer: Signer;
-  networkName: NetworkName;
+  networkName?: NetworkName;
 }
 
 export const loadIdentityContracts = ({
   signer,
-  networkName,
+  networkName = "ethereum",
 }: LoadContractArgs): IIdentityContracts => {
   const SoulboundIdentityContract: SoulboundIdentity & ContractInfo =
     SoulboundIdentity__factory.connect(

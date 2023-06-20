@@ -295,10 +295,7 @@ export class SoulLinker extends MasaModuleBase {
     for (const link of filteredLinks) {
       console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
 
-      const { revokeLink } =
-        this.masa.contracts.instances.SoulLinkerContract.connect(
-          this.masa.config.signer
-        );
+      const { revokeLink } = this.masa.contracts.instances.SoulLinkerContract;
 
       const { wait, hash } = await revokeLink(
         readerIdentityId,

@@ -164,9 +164,7 @@ export class Identity extends MasaSBTModuleBase {
       const {
         estimateGas: { burn: estimateGas },
         burn,
-      } = this.masa.contracts.instances.SoulboundIdentityContract.connect(
-        this.masa.config.signer
-      );
+      } = this.masa.contracts.instances.SoulboundIdentityContract;
 
       // estimate gas
       let gasLimit: BigNumber = await estimateGas(identityId);

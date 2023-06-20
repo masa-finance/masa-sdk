@@ -122,9 +122,7 @@ export class CreditScore extends MasaSBTModuleBase {
         "mint(address,uint256,address,uint256,bytes)": estimateGas,
       },
       "mint(address,uint256,address,uint256,bytes)": mint,
-    } = await this.instances.SoulboundCreditScoreContract.connect(
-      this.masa.config.signer
-    );
+    } = await this.instances.SoulboundCreditScoreContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -217,9 +215,7 @@ export class CreditScore extends MasaSBTModuleBase {
       const {
         estimateGas: { burn: estimateGas },
         burn,
-      } = this.masa.contracts.instances.SoulboundCreditScoreContract.connect(
-        this.masa.config.signer
-      );
+      } = this.masa.contracts.instances.SoulboundCreditScoreContract;
 
       let gasLimit: BigNumber = await estimateGas(creditScoreId);
       if (this.masa.config.network?.gasSlippagePercentage) {
