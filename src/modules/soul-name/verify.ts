@@ -4,15 +4,15 @@ import type { MasaInterface } from "../../interface";
 import { recoverAddress } from "../../utils";
 
 const minters = [
-  // goerli service account
+  // testnets service account
   "0x3c8D9f130970358b7E8cbc1DbD0a1EbA6EBE368F",
-  // mainnet service account
+  // mainnets service account
   "0x5b45dAA4645F79a419811dc0657FA1b2695c6Ab7",
 ];
 const arAccounts = [
-  // testnet image creator account
+  // testnets image creator account
   "8sHnZwikWp6x2wWC7PoACl_froaXS6ECBkpjFLUeN_U",
-  // mainnet image creator account
+  // mainnets image creator account
   "xDKpdiZ7H9n_SsdX_CMpkybMGIdin5AUciM00mQgxRE",
 ];
 
