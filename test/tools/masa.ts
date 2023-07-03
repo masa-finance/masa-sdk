@@ -1,11 +1,14 @@
-import { ethers } from "ethers";
+import { constants, providers, VoidSigner } from "ethers";
 
-import { Masa } from "../../src";
+import { Masa, NetworkName, SupportedNetworks } from "../../src";
 
-const provider = new ethers.providers.JsonRpcProvider(
-  "your blockchain rpc endpoint"
-);
+export const getTestMasa = (networkName: NetworkName) => {
+  const provider = new providers.JsonRpcProvider(
+    SupportedNetworks[networkName].rpcUrls[0]
+  );
 
-export const testMasa = new Masa({
-  signer: provider.getSigner(),
-});
+  return new Masa({
+    signer: new VoidSigner(constants.AddressZero, provider),
+    networkName,
+  });
+};
