@@ -10,7 +10,7 @@ import { loadSoulNameDetailsByAddress } from "./load";
  */
 export const listSoulNames = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<SoulNameDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
   return await loadSoulNameDetailsByAddress(masa, address);
@@ -24,7 +24,7 @@ export const listSoulNames = async (
  */
 export const listSoulNamesAndPrint = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<SoulNameDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
   const soulNames = await listSoulNames(masa, address);

@@ -5,7 +5,7 @@ import type { MasaInterface } from "../../interface";
 import { signMessage, unpackSessionId } from "../../utils";
 
 export const login = async (
-  masa: MasaInterface
+  masa: MasaInterface,
 ): Promise<
   | {
       address: string;
@@ -26,7 +26,7 @@ export const login = async (
       // sign
       const msg = Templates.loginTemplate(
         challengeData.challenge,
-        challengeData.expires
+        challengeData.expires,
       );
 
       const address = await masa.config.signer.getAddress();
@@ -43,7 +43,7 @@ export const login = async (
         const checkSignatureResponse = await masa.client.session.checkSignature(
           address,
           signature,
-          challengeData.cookie
+          challengeData.cookie,
         );
 
         if (checkSignatureResponse) {
@@ -53,7 +53,7 @@ export const login = async (
           if (masa.config.verbose) {
             console.log(`User ID: '${checkSignatureResponse.userId}'`);
             console.log(
-              `Session ID: '${unpackSessionId(challengeData.cookie)}'`
+              `Session ID: '${unpackSessionId(challengeData.cookie)}'`,
             );
           }
 

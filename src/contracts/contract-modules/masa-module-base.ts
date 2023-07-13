@@ -28,7 +28,10 @@ import { ERC20__factory } from "../../stubs";
 import { isERC20Currency, isNativeCurrency } from "../../utils";
 
 export abstract class MasaModuleBase extends MasaBase {
-  constructor(masa: MasaInterface, protected instances: IIdentityContracts) {
+  constructor(
+    masa: MasaInterface,
+    protected instances: IIdentityContracts,
+  ) {
     super(masa);
   }
 
@@ -44,14 +47,14 @@ export abstract class MasaModuleBase extends MasaBase {
     paymentAddress: string,
     paymentMethod: PaymentMethod,
     spenderAddress: string,
-    price: BigNumber
+    price: BigNumber,
   ): Promise<ContractReceipt | undefined> => {
     let contractReceipt;
 
     if (isERC20Currency(paymentMethod)) {
       const contract: ERC20 = ERC20__factory.connect(
         paymentAddress,
-        this.masa.config.signer
+        this.masa.config.signer,
       );
 
       // get current allowance
@@ -59,7 +62,7 @@ export abstract class MasaModuleBase extends MasaBase {
         // owner
         await this.masa.config.signer.getAddress(),
         // spender
-        spenderAddress
+        spenderAddress,
       );
 
       // is price greater the allowance?
@@ -68,7 +71,7 @@ export abstract class MasaModuleBase extends MasaBase {
 
         if (this.masa.config.verbose) {
           console.info(
-            `Creating allowance for ${spenderAddress}: ${price.toString()}`
+            `Creating allowance for ${spenderAddress}: ${price.toString()}`,
           );
         }
 
@@ -76,15 +79,15 @@ export abstract class MasaModuleBase extends MasaBase {
           // spender
           spenderAddress,
           // amount
-          price
+          price,
         );
 
         if (this.masa.config.verbose) {
           console.info(
             Messages.WaitingToFinalize(
               hash,
-              this.masa.config.network?.blockExplorerUrls?.[0]
-            )
+              this.masa.config.network?.blockExplorerUrls?.[0],
+            ),
           );
         }
 
@@ -107,7 +110,7 @@ export abstract class MasaModuleBase extends MasaBase {
 
     if (!paymentAddress) {
       console.error(
-        `Payment address not found for payment method: ${paymentMethod} falling back to native currency!`
+        `Payment address not found for payment method: ${paymentMethod} falling back to native currency!`,
       );
       paymentAddress = constants.AddressZero;
     }
@@ -120,7 +123,7 @@ export abstract class MasaModuleBase extends MasaBase {
    * @param value
    */
   protected createOverrides = async (
-    value?: BigNumber
+    value?: BigNumber,
   ): Promise<PayableOverrides> => {
     const feeData: FeeData | undefined = await this.getNetworkFeeInformation();
 
@@ -157,7 +160,7 @@ export abstract class MasaModuleBase extends MasaBase {
           },
           {
             depth: null,
-          }
+          },
         );
       }
     } catch (error: unknown) {
@@ -179,7 +182,7 @@ export abstract class MasaModuleBase extends MasaBase {
     if (paymentAddress !== constants.AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         paymentAddress,
-        this.masa.config.signer
+        this.masa.config.signer,
       );
       decimals = await contract.decimals();
     }
@@ -219,7 +222,7 @@ export abstract class MasaModuleBase extends MasaBase {
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number>,
     signature: string,
-    authorityAddress: string
+    authorityAddress: string,
   ) => {
     if (this.masa.config.verbose) {
       console.log({
@@ -237,7 +240,7 @@ export abstract class MasaModuleBase extends MasaBase {
         | MasaSBTSelfSovereign
         | MasaSBTAuthority
         | SoulStore
-        | SoulLinker
+        | SoulLinker,
     ): contract is MasaSBTSelfSovereign => {
       return (contract as MasaSBTSelfSovereign).authorities !== undefined;
     };
@@ -263,7 +266,7 @@ export abstract class MasaModuleBase extends MasaBase {
 
       try {
         recoveredAddressIsAuthority = await contract.authorities(
-          recoveredAddress
+          recoveredAddress,
         );
       } catch (error) {
         if (error instanceof Error)
@@ -279,7 +282,7 @@ export abstract class MasaModuleBase extends MasaBase {
       // we check that the recovered address is within the authorities
       if (!recoveredAddressIsAuthority) {
         throw new Error(
-          `${errorMessage}: Authority '${recoveredAddress}' not allowed!`
+          `${errorMessage}: Authority '${recoveredAddress}' not allowed!`,
         );
       }
     }

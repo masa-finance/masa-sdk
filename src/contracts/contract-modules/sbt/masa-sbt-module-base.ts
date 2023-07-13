@@ -18,7 +18,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
     paymentMethod: PaymentMethod,
     contract: MasaSBT,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<PriceInformation> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
@@ -57,7 +57,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
     // protocol fee
     const formattedProtocolFee = await this.formatPrice(
       paymentAddress,
-      protocolFee
+      protocolFee,
     );
 
     return {
@@ -78,7 +78,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
    */
   protected loadSBTContract = async <Contract extends MasaSBT>(
     address: string,
-    factory: ContractFactory
+    factory: ContractFactory,
   ): Promise<Contract> => {
     let error = `Smart contract '${address}' does not exist on network '${this.masa.config.networkName}'!`;
 
@@ -101,7 +101,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
 
     const contract = (factory as typeof ContractFactory).connect<Contract>(
       address,
-      this.masa.config.signer
+      this.masa.config.signer,
     );
 
     // failed to load, unable to load

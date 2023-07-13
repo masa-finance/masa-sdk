@@ -14,7 +14,7 @@ import {
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class SSSBTContractWrapper<
-  Contract extends ReferenceSBTSelfSovereign
+  Contract extends ReferenceSBTSelfSovereign,
 > extends SBTContractWrapper<Contract> {
   /**
    * Signs an SBT based on its address
@@ -25,7 +25,7 @@ export class SSSBTContractWrapper<
   public sign = async (
     name: string,
     types: Record<string, Array<TypedDataField>>,
-    value: Record<string, string | BigNumber | number>
+    value: Record<string, string | BigNumber | number>,
   ): Promise<{
     signature: string;
     authorityAddress: string;
@@ -37,7 +37,7 @@ export class SSSBTContractWrapper<
       this.masa.config.signer,
       name,
       types,
-      value
+      value,
     );
 
     await this.verify(
@@ -47,7 +47,7 @@ export class SSSBTContractWrapper<
       types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     return { signature, authorityAddress };
@@ -70,12 +70,12 @@ export class SSSBTContractWrapper<
     value: Record<string, string | BigNumber | number>,
     signature: string,
     authorityAddress: string,
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<PriceInformation> => {
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       name,
-      this.contract.address
+      this.contract.address,
     );
 
     await this.verify(
@@ -85,7 +85,7 @@ export class SSSBTContractWrapper<
       types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     const sssbtMintPriceInfo = await this.getPrice(paymentMethod, slippage);
@@ -97,7 +97,7 @@ export class SSSBTContractWrapper<
         },
         {
           depth: null,
-        }
+        },
       );
     }
 
@@ -117,7 +117,7 @@ export class SSSBTContractWrapper<
     receiver: string,
     signature: string,
     signatureDate: number,
-    authorityAddress: string
+    authorityAddress: string,
   ): Promise<boolean> => {
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -135,7 +135,7 @@ export class SSSBTContractWrapper<
 
       if (limit > 0 && balance.gte(limit)) {
         console.error(
-          `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`
+          `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
         );
         return false;
       }
@@ -170,7 +170,7 @@ export class SSSBTContractWrapper<
       types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     const mintSSSBTArguments: [
@@ -178,11 +178,11 @@ export class SSSBTContractWrapper<
       string, // to string
       string, // authorityAddress string
       number, // authorityAddress number
-      string // signature string
+      string, // signature string
     ] = [paymentAddress, receiver, authorityAddress, signatureDate, signature];
 
     const mintSSSBTOverrides: PayableOverrides = await this.createOverrides(
-      isNativeCurrency(paymentMethod) ? price : undefined
+      isNativeCurrency(paymentMethod) ? price : undefined,
     );
 
     if (this.masa.config.verbose) {
@@ -193,7 +193,7 @@ export class SSSBTContractWrapper<
         },
         {
           depth: null,
-        }
+        },
       );
     }
 
@@ -206,13 +206,13 @@ export class SSSBTContractWrapper<
 
     let gasLimit: BigNumber = await estimateGas(
       ...mintSSSBTArguments,
-      mintSSSBTOverrides
+      mintSSSBTOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = SSSBTContractWrapper.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -224,8 +224,8 @@ export class SSSBTContractWrapper<
     console.log(
       Messages.WaitingToFinalize(
         hash,
-        this.masa.config.network?.blockExplorerUrls?.[0]
-      )
+        this.masa.config.network?.blockExplorerUrls?.[0],
+      ),
     );
 
     const { logs } = await wait();
@@ -233,13 +233,13 @@ export class SSSBTContractWrapper<
     const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
 
     const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint"
+      (log: LogDescription) => log.name === "Mint",
     );
 
     if (mintEvent) {
       const { args } = mintEvent;
       console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
+        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
       );
 
       return true;

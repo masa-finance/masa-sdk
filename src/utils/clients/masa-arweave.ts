@@ -6,13 +6,16 @@ import axios from "axios";
 import type { MasaConfig } from "../../interface";
 
 export class MasaArweave extends Arweave {
-  constructor(config: ApiConfig, private masaConfig: MasaConfig) {
+  constructor(
+    config: ApiConfig,
+    private masaConfig: MasaConfig,
+  ) {
     super({ ...config, logging: masaConfig.verbose });
   }
 
   async loadTransactionData(
     txId: string,
-    isString: boolean = true
+    isString: boolean = true,
   ): Promise<object | Uint8Array | undefined> {
     let data;
 
@@ -29,7 +32,7 @@ export class MasaArweave extends Arweave {
               }
             : {
                 decode: true,
-              }
+              },
         );
 
         data = isString
@@ -48,7 +51,7 @@ export class MasaArweave extends Arweave {
 
       if (this.masaConfig.verbose) {
         console.error(
-          `Failed to load arweave tx id: ${txId} getting ${url} instead`
+          `Failed to load arweave tx id: ${txId} getting ${url} instead`,
         );
       }
 
@@ -58,7 +61,7 @@ export class MasaArweave extends Arweave {
           ? {}
           : {
               responseType: "arraybuffer",
-            }
+            },
       );
 
       if (dataResponse) {

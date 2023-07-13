@@ -6,7 +6,7 @@ export const Templates = {
    */
   loginTemplate: (
     challenge: string,
-    expires: string
+    expires: string,
   ) => `Welcome to 🌽Masa Finance!
 
 Login with your soulbound web3 identity to unleash the power of DeFi.

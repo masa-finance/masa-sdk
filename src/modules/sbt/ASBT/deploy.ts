@@ -33,7 +33,7 @@ export const deployASBT = async ({
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
 
   console.log(
-    `Deploying ASBT contract to network '${masa.config.networkName}'`
+    `Deploying ASBT contract to network '${masa.config.networkName}'`,
   );
 
   if (
@@ -47,7 +47,7 @@ export const deployASBT = async ({
   const contractFactory: ContractFactory = new ContractFactory(
     abi,
     bytecode,
-    masa.config.signer
+    masa.config.signer,
   );
 
   const deployASBTArguments: [
@@ -57,7 +57,7 @@ export const deployASBT = async ({
     string, // string baseTokenURI
     string, // address soulboundIdentity
     PaymentParamsStruct, // PaymentParams paymentParams,
-    number // number _maxSBTToMint
+    number, // number _maxSBTToMint
   ] = [
     adminAddress,
     name,
@@ -92,7 +92,7 @@ export const deployASBT = async ({
         deployASBTArguments,
         abiEncodedDeployASBTArguments,
       },
-      { depth: null }
+      { depth: null },
     );
   }
 
@@ -104,14 +104,14 @@ export const deployASBT = async ({
     console.log(
       Messages.WaitingToFinalize(
         hash,
-        masa.config.network?.blockExplorerUrls?.[0]
-      )
+        masa.config.network?.blockExplorerUrls?.[0],
+      ),
     );
 
     await wait();
 
     console.log(
-      `ASBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
+      `ASBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`,
     );
 
     result = {

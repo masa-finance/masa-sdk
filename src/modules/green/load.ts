@@ -5,7 +5,7 @@ import { isBigNumber, patchMetadataUrl } from "../../utils";
 
 export const loadGreenDetails = async (
   masa: MasaInterface,
-  greenIds: BigNumber[]
+  greenIds: BigNumber[],
 ): Promise<GreenDetails[]> => {
   return (
     await Promise.all(
@@ -13,8 +13,8 @@ export const loadGreenDetails = async (
         const tokenUri = patchMetadataUrl(
           masa,
           await masa.contracts.instances.SoulboundGreenContract.tokenURI(
-            tokenId
-          )
+            tokenId,
+          ),
         );
 
         if (masa.config.verbose) {
@@ -30,14 +30,14 @@ export const loadGreenDetails = async (
           tokenUri,
           metadata,
         };
-      })
+      }),
     )
   ).filter((green: GreenDetails) => Boolean(green.metadata));
 };
 
 export const loadGreens = async (
   masa: MasaInterface,
-  identityIdOrAddress: BigNumber | string
+  identityIdOrAddress: BigNumber | string,
 ): Promise<GreenDetails[]> => {
   let greenIds: BigNumber[] = [];
 
@@ -52,11 +52,11 @@ export const loadGreens = async (
       greenIds = await (isBigNumber(identityIdOrAddress)
         ? getSBTConnectionsByIdentity(
             identityIdOrAddress,
-            masa.contracts.instances.SoulboundGreenContract.address
+            masa.contracts.instances.SoulboundGreenContract.address,
           )
         : getSBTConnectionsByAddress(
             identityIdOrAddress,
-            masa.contracts.instances.SoulboundGreenContract.address
+            masa.contracts.instances.SoulboundGreenContract.address,
           ));
     }
     // no soul linker, lets try by identity or address
@@ -74,7 +74,7 @@ export const loadGreens = async (
 
       const balance: number = (
         await masa.contracts.instances.SoulboundGreenContract.balanceOf(
-          identityAddress
+          identityAddress,
         )
       ).toNumber();
 
@@ -83,8 +83,8 @@ export const loadGreens = async (
           greenIds.push(
             await masa.contracts.instances.SoulboundGreenContract.tokenOfOwnerByIndex(
               identityAddress,
-              i
-            )
+              i,
+            ),
           );
         }
       }

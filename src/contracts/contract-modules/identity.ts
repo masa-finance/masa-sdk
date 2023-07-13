@@ -26,7 +26,7 @@ export class Identity extends MasaSBTModuleBase {
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = Identity.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -50,12 +50,12 @@ export class Identity extends MasaSBTModuleBase {
     duration: number = 1,
     metadataURL: string,
     authorityAddress: string,
-    signature: string
+    signature: string,
   ): Promise<ContractTransaction> => {
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       "SoulStore",
-      this.instances.SoulStoreContract.address
+      this.instances.SoulStoreContract.address,
     );
 
     const value: {
@@ -79,21 +79,21 @@ export class Identity extends MasaSBTModuleBase {
       this.masa.contracts.soulName.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     const { price, paymentAddress } =
       await this.masa.contracts.soulName.getPrice(
         paymentMethod,
         nameLength,
-        duration
+        duration,
       );
 
     await this.checkOrGiveAllowance(
       paymentAddress,
       paymentMethod,
       this.instances.SoulStoreContract.address,
-      price
+      price,
     );
 
     const purchaseIdentityAndNameParameters: [
@@ -103,7 +103,7 @@ export class Identity extends MasaSBTModuleBase {
       number, // yearsPeriod: PromiseOrValue<BigNumberish>
       string, // tokenURI: PromiseOrValue<string>
       string, // authorityAddress: PromiseOrValue<string>
-      string // signature: PromiseOrValue<BytesLike>
+      string, // signature: PromiseOrValue<BytesLike>
     ] = [
       paymentAddress,
       name,
@@ -116,7 +116,7 @@ export class Identity extends MasaSBTModuleBase {
 
     const purchaseIdentityAndNameOverrides: PayableOverrides =
       await this.createOverrides(
-        isNativeCurrency(paymentMethod) ? price : undefined
+        isNativeCurrency(paymentMethod) ? price : undefined,
       );
 
     if (this.masa.config.verbose) {
@@ -135,13 +135,13 @@ export class Identity extends MasaSBTModuleBase {
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
       ...purchaseIdentityAndNameParameters,
-      purchaseIdentityAndNameOverrides
+      purchaseIdentityAndNameOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = Identity.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -172,7 +172,7 @@ export class Identity extends MasaSBTModuleBase {
       if (this.masa.config.network?.gasSlippagePercentage) {
         gasLimit = Identity.addSlippage(
           gasLimit,
-          this.masa.config.network.gasSlippagePercentage
+          this.masa.config.network.gasSlippagePercentage,
         );
       }
 
@@ -181,8 +181,8 @@ export class Identity extends MasaSBTModuleBase {
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();

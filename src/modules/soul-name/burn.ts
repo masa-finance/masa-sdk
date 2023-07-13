@@ -2,7 +2,7 @@ import type { MasaInterface } from "../../interface";
 
 export const burnSoulName = async (
   masa: MasaInterface,
-  soulName: string
+  soulName: string,
 ): Promise<boolean> => {
   const extension = await masa.contracts.instances.SoulNameContract.extension();
 

@@ -32,56 +32,56 @@ export const loadIdentityContracts = ({
   const SoulboundIdentityContract: SoulboundIdentity & ContractInfo =
     SoulboundIdentity__factory.connect(
       addresses[networkName]?.SoulboundIdentityAddress || constants.AddressZero,
-      signer
+      signer,
     );
   SoulboundIdentityContract.hasAddress = Boolean(
-    addresses[networkName]?.SoulboundIdentityAddress
+    addresses[networkName]?.SoulboundIdentityAddress,
   );
 
   const SoulboundCreditScoreContract: SoulboundCreditScore & ContractInfo =
     SoulboundCreditScore__factory.connect(
       addresses[networkName]?.SoulboundCreditScoreAddress ||
         constants.AddressZero,
-      signer
+      signer,
     );
   SoulboundCreditScoreContract.hasAddress = Boolean(
-    addresses[networkName]?.SoulboundCreditScoreAddress
+    addresses[networkName]?.SoulboundCreditScoreAddress,
   );
 
   const SoulNameContract: SoulName & ContractInfo = SoulName__factory.connect(
     addresses[networkName]?.SoulNameAddress || constants.AddressZero,
-    signer
+    signer,
   );
   SoulNameContract.hasAddress = Boolean(
-    addresses[networkName]?.SoulNameAddress
+    addresses[networkName]?.SoulNameAddress,
   );
 
   const SoulLinkerContract: SoulLinker & ContractInfo =
     SoulLinker__factory.connect(
       addresses[networkName]?.SoulLinkerAddress || constants.AddressZero,
-      signer
+      signer,
     );
   SoulLinkerContract.hasAddress = Boolean(
-    addresses[networkName]?.SoulLinkerAddress
+    addresses[networkName]?.SoulLinkerAddress,
   );
 
   const SoulStoreContract: SoulStore & ContractInfo =
     SoulStore__factory.connect(
       addresses[networkName]?.SoulStoreAddress || constants.AddressZero,
-      signer
+      signer,
     );
   SoulStoreContract.hasAddress = Boolean(
-    addresses[networkName]?.SoulStoreAddress
+    addresses[networkName]?.SoulStoreAddress,
   );
 
   const SoulboundGreenContract: SoulboundGreen & ContractInfo =
     SoulboundGreen__factory.connect(
       // this might be empty
       addresses[networkName]?.SoulboundGreenAddress || constants.AddressZero,
-      signer
+      signer,
     );
   SoulboundGreenContract.hasAddress = Boolean(
-    addresses[networkName]?.SoulboundGreenAddress
+    addresses[networkName]?.SoulboundGreenAddress,
   );
 
   return {

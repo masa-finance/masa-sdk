@@ -5,13 +5,13 @@ import { MasaBase } from "../masa-base";
 import { MasaSoulLinker } from "../modules/soul-linker/soul-linker";
 
 export abstract class MasaLinkable<
-  LinkContract extends Contract
+  LinkContract extends Contract,
 > extends MasaBase {
   public readonly links: MasaSoulLinker;
 
   public constructor(
     masa: MasaInterface,
-    public readonly contract: LinkContract
+    public readonly contract: LinkContract,
   ) {
     super(masa);
 

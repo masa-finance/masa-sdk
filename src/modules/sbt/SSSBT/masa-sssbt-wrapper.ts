@@ -4,7 +4,7 @@ import type { PaymentMethod } from "../../../interface";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaSSSBTWrapper<
-  Contract extends ReferenceSBTSelfSovereign
+  Contract extends ReferenceSBTSelfSovereign,
 > extends MasaSBTWrapper<Contract> {
   /**
    *
@@ -86,7 +86,7 @@ export class MasaSSSBTWrapper<
     authorityAddress: string,
     signatureDate: number,
     signature: string,
-    paymentMethod: PaymentMethod = "ETH"
+    paymentMethod: PaymentMethod = "ETH",
   ): Promise<boolean> => {
     const receiver = await this.masa.config.signer.getAddress();
 
@@ -108,7 +108,7 @@ export class MasaSSSBTWrapper<
       receiver,
       signature,
       signatureDate,
-      authorityAddress
+      authorityAddress,
     );
   };
 }

@@ -17,7 +17,7 @@ import type {
  */
 export const generateGreen = async (
   masa: MasaInterface,
-  phoneNumber: string
+  phoneNumber: string,
 ): Promise<GenerateGreenResult> => {
   const result: GenerateGreenResult = {
     success: false,
@@ -33,12 +33,12 @@ export const generateGreen = async (
     try {
       const balance =
         await masa.contracts.instances.SoulboundGreenContract.balanceOf(
-          await masa.config.signer.getAddress()
+          await masa.config.signer.getAddress(),
         );
 
       if (balance.eq(0)) {
         const greenGenerateResult = await masa.client.green.generate(
-          phoneNumber
+          phoneNumber,
         );
 
         if (masa.config.verbose) {
@@ -75,7 +75,7 @@ export const generateGreen = async (
 export const verifyGreen = async (
   masa: MasaInterface,
   phoneNumber: string,
-  code: string
+  code: string,
 ): Promise<VerifyGreenResult | undefined> => {
   const result: VerifyGreenResult = {
     success: false,
@@ -126,7 +126,7 @@ export const mintGreen = async (
   paymentMethod: PaymentMethod,
   authorityAddress: string,
   signatureDate: number,
-  signature: string
+  signature: string,
 ): Promise<BaseResult> => {
   const result = {
     success: false,
@@ -138,14 +138,14 @@ export const mintGreen = async (
     await masa.config.signer.getAddress(),
     authorityAddress,
     signatureDate,
-    signature
+    signature,
   );
 
   console.log(
     Messages.WaitingToFinalize(
       hash,
-      masa.config.network?.blockExplorerUrls?.[0]
-    )
+      masa.config.network?.blockExplorerUrls?.[0],
+    ),
   );
 
   const { logs } = await wait();
@@ -155,7 +155,7 @@ export const mintGreen = async (
   let tokenId: string | undefined;
 
   const greenMintEvent = parsedLogs.find(
-    (event: LogDescription) => event.name === "Mint"
+    (event: LogDescription) => event.name === "Mint",
   );
 
   if (greenMintEvent) {
@@ -189,7 +189,7 @@ export const createGreen = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
   phoneNumber: string,
-  code: string
+  code: string,
 ): Promise<GreenBaseResult> => {
   const result: GreenBaseResult = {
     success: false,
@@ -200,7 +200,7 @@ export const createGreen = async (
   const verifyGreenResult: VerifyGreenResult | undefined = await verifyGreen(
     masa,
     phoneNumber,
-    code
+    code,
   );
 
   if (masa.config.verbose) {
@@ -222,7 +222,7 @@ export const createGreen = async (
         paymentMethod,
         verifyGreenResult.authorityAddress,
         verifyGreenResult.signatureDate,
-        verifyGreenResult.signature
+        verifyGreenResult.signature,
       );
 
       if (masa.config.verbose) {

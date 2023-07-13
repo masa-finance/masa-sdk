@@ -38,7 +38,7 @@ export class SoulLinker extends MasaModuleBase {
   public getPrice = async (
     tokenAddress: string,
     paymentMethod: PaymentMethod,
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<PriceInformation> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
@@ -50,7 +50,7 @@ export class SoulLinker extends MasaModuleBase {
       const fees =
         await this.instances.SoulLinkerContract.getPriceForAddLinkWithProtocolFee(
           paymentAddress,
-          tokenAddress
+          tokenAddress,
         );
       mintFee = fees.price;
       protocolFee = fees.protocolFee;
@@ -62,7 +62,7 @@ export class SoulLinker extends MasaModuleBase {
       // fallback to classical price calculation
       mintFee = await this.instances.SoulLinkerContract.getPriceForAddLink(
         paymentAddress,
-        tokenAddress
+        tokenAddress,
       );
     }
 
@@ -88,7 +88,7 @@ export class SoulLinker extends MasaModuleBase {
     // protocol fee
     const formattedProtocolFee = await this.formatPrice(
       paymentAddress,
-      protocolFee
+      protocolFee,
     );
 
     return {
@@ -123,19 +123,19 @@ export class SoulLinker extends MasaModuleBase {
     signatureDate: number,
     expirationDate: number,
     signature: string,
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<boolean> => {
     const { price, paymentAddress } = await this.getPrice(
       tokenAddress,
       paymentMethod,
-      slippage
+      slippage,
     );
 
     await this.checkOrGiveAllowance(
       paymentAddress,
       paymentMethod,
       this.instances.SoulLinkerContract.address,
-      price
+      price,
     );
 
     const params: [
@@ -146,7 +146,7 @@ export class SoulLinker extends MasaModuleBase {
       BigNumber, // tokenId
       number, // signatureDate
       number, // expirationDate
-      string // signature
+      string, // signature
     ] = [
       paymentAddress,
       readerIdentityId,
@@ -159,7 +159,7 @@ export class SoulLinker extends MasaModuleBase {
     ];
 
     const addLinkOverrides: PayableOverrides = await this.createOverrides(
-      isNativeCurrency(paymentMethod) ? price : undefined
+      isNativeCurrency(paymentMethod) ? price : undefined,
     );
 
     const {
@@ -172,7 +172,7 @@ export class SoulLinker extends MasaModuleBase {
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = SoulLinker.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -183,14 +183,14 @@ export class SoulLinker extends MasaModuleBase {
 
     const { wait, hash } = await addLink(
       ...params,
-      addLinkOverridesWithGasLimit
+      addLinkOverridesWithGasLimit,
     );
 
     console.log(
       Messages.WaitingToFinalize(
         hash,
-        this.masa.config.network?.blockExplorerUrls?.[0]
-      )
+        this.masa.config.network?.blockExplorerUrls?.[0],
+      ),
     );
 
     await wait();
@@ -215,7 +215,7 @@ export class SoulLinker extends MasaModuleBase {
     // now
     signatureDate: number = Math.floor(Date.now() / 1000),
     // default to 15 minutes
-    expirationOffset: number = 60 * 15
+    expirationOffset: number = 60 * 15,
   ) => {
     const expirationDate = signatureDate + expirationOffset;
 
@@ -240,7 +240,7 @@ export class SoulLinker extends MasaModuleBase {
       this.masa.config.signer,
       "SoulLinker",
       this.types,
-      value
+      value,
     );
 
     await this.verify(
@@ -250,7 +250,7 @@ export class SoulLinker extends MasaModuleBase {
       this.types,
       value,
       signature,
-      await this.masa.config.signer.getAddress()
+      await this.masa.config.signer.getAddress(),
     );
 
     return { signature, signatureDate, expirationDate };
@@ -265,7 +265,7 @@ export class SoulLinker extends MasaModuleBase {
   public breakLink = async (
     contract: Contract,
     tokenId: BigNumber,
-    readerIdentityId: BigNumber
+    readerIdentityId: BigNumber,
   ): Promise<BreakLinkResult> => {
     const result: BreakLinkResult = {
       success: false,
@@ -287,7 +287,7 @@ export class SoulLinker extends MasaModuleBase {
       (link: Link) =>
         link.readerIdentityId.toString() === readerIdentityId.toString() &&
         link.exists &&
-        !link.isRevoked
+        !link.isRevoked,
     );
 
     console.log({ filteredLinks });
@@ -302,14 +302,14 @@ export class SoulLinker extends MasaModuleBase {
         identityId,
         contract.address,
         tokenId,
-        link.signatureDate
+        link.signatureDate,
       );
 
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();

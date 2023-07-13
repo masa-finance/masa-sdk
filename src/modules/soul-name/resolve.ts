@@ -7,7 +7,7 @@ import type { MasaInterface } from "../../interface";
  */
 export const resolveSoulName = async (
   masa: MasaInterface,
-  soulName: string
+  soulName: string,
 ): Promise<string | undefined> => {
   let owner;
 
@@ -16,7 +16,7 @@ export const resolveSoulName = async (
       await masa.contracts.instances.SoulNameContract.extension();
     const cleansedSoulname = soulName.replace(extension, "");
     const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
-      cleansedSoulname
+      cleansedSoulname,
     );
     owner = masa.contracts.instances.SoulNameContract.ownerOf(tokenId);
   } catch (error) {

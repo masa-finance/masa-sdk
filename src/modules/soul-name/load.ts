@@ -9,7 +9,7 @@ import { isBigNumber } from "../../utils";
 
 export const loadSoulNameByTokenId = async (
   masa: MasaInterface,
-  tokenId: string | BigNumber
+  tokenId: string | BigNumber,
 ): Promise<SoulNameDetails | undefined> => {
   let result;
 
@@ -30,7 +30,7 @@ export const loadSoulNameByTokenId = async (
     ]);
 
     const metadata = (await masa.arweave.loadTransactionData(
-      tokenUri.replace("ar://", "").replace("https://arweave.net/", "")
+      tokenUri.replace("ar://", "").replace("https://arweave.net/", ""),
     )) as ISoulName;
 
     result = {
@@ -43,7 +43,7 @@ export const loadSoulNameByTokenId = async (
     if (error instanceof Error) {
       console.error(
         `Failed to load Soul Name with TokenID ${tokenId.toString()}`,
-        error.message
+        error.message,
       );
     }
   }
@@ -53,13 +53,13 @@ export const loadSoulNameByTokenId = async (
 
 export const loadSoulNameByName = async (
   masa: MasaInterface,
-  soulName: string
+  soulName: string,
 ): Promise<SoulNameDetails | undefined> => {
   let result;
 
   try {
     const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
-      soulName
+      soulName,
     );
 
     result = await loadSoulNameByTokenId(masa, tokenId);
@@ -74,20 +74,20 @@ export const loadSoulNameByName = async (
 
 export const loadSoulNamesByNames = async (
   masa: MasaInterface,
-  soulNames: string[]
+  soulNames: string[],
 ): Promise<SoulNameDetails[]> => {
   return (
     await Promise.all(
-      soulNames.map((soulName: string) => loadSoulNameByName(masa, soulName))
+      soulNames.map((soulName: string) => loadSoulNameByName(masa, soulName)),
     )
   ).filter((soulName: SoulNameDetails | undefined) =>
-    Boolean(soulName)
+    Boolean(soulName),
   ) as SoulNameDetails[];
 };
 
 export const loadSoulNames = async (
   masa: MasaInterface,
-  identityIdOrAddress: BigNumber | string
+  identityIdOrAddress: BigNumber | string,
 ): Promise<string[]> => {
   let soulNames: string[] = [];
 
@@ -109,7 +109,7 @@ export const loadSoulNames = async (
 
 export const loadSoulNameDetailsByAddress = async (
   masa: MasaInterface,
-  address: string
+  address: string,
 ) => {
   return await loadSoulNamesByNames(masa, await loadSoulNames(masa, address));
 };

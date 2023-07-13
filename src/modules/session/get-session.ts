@@ -1,7 +1,7 @@
 import type { ISession, MasaInterface } from "../../interface";
 
 export const getSession = async (
-  masa: MasaInterface
+  masa: MasaInterface,
 ): Promise<ISession | undefined> => {
   const session = await masa.client.session.check();
 

@@ -3,7 +3,7 @@ import type { Network, NetworkName } from "../interface";
 
 export const getNetworkNameByChainId = (chainId: number): NetworkName => {
   const network: Network | undefined = Object.values(SupportedNetworks).find(
-    (network: Network) => network.chainId === chainId
+    (network: Network) => network.chainId === chainId,
   );
 
   if (!network) {

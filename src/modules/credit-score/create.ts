@@ -7,7 +7,7 @@ import type {
 
 export const createCreditScore = async (
   masa: MasaInterface,
-  paymentMethod: PaymentMethod
+  paymentMethod: PaymentMethod,
 ): Promise<GenerateCreditScoreResult> => {
   const result: GenerateCreditScoreResult = {
     success: false,
@@ -30,7 +30,7 @@ export const createCreditScore = async (
 
     const balance =
       await masa.contracts.instances.SoulboundCreditScoreContract.balanceOf(
-        address
+        address,
       );
 
     if (balance.toNumber() > 0) {
@@ -54,14 +54,14 @@ export const createCreditScore = async (
             identityId,
             creditScoreResponse.authorityAddress,
             creditScoreResponse.signatureDate,
-            creditScoreResponse.signature
+            creditScoreResponse.signature,
           );
 
           console.log(
             Messages.WaitingToFinalize(
               hash,
-              masa.config.network?.blockExplorerUrls?.[0]
-            )
+              masa.config.network?.blockExplorerUrls?.[0],
+            ),
           );
 
           const { transactionHash } = await wait();

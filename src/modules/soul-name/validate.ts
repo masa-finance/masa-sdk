@@ -4,7 +4,7 @@ import { calculateSoulNameLength } from "./helpers";
 export const validateSoulName = (
   masa: MasaInterface,
   soulName: string,
-  verbose?: boolean
+  verbose?: boolean,
 ): { isValid: boolean; length: number; message?: string } => {
   const result: { isValid: boolean; length: number; message?: string } = {
     isValid: false,

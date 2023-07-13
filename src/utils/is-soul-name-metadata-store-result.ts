@@ -4,7 +4,7 @@ import type {
 } from "../interface";
 
 export const isSoulNameMetadataStoreResult = (
-  result: SoulNameResultBase
+  result: SoulNameResultBase,
 ): result is SoulNameMetadataStoreResult => {
   return Boolean((result as SoulNameMetadataStoreResult).authorityAddress);
 };

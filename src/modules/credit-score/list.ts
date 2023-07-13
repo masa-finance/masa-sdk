@@ -4,7 +4,7 @@ import { loadCreditScores } from "./load";
 
 export const listCreditScores = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<CreditScoreDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
 
@@ -18,7 +18,7 @@ export const listCreditScores = async (
 
 export const listCreditScoresAndPrint = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<CreditScoreDetails[]> => {
   const creditScores = await listCreditScores(masa, address);
 
@@ -33,12 +33,12 @@ export const listCreditScoresAndPrint = async (
     i++;
     if (creditScore.metadata && masa.config.verbose) {
       console.info(
-        `Metadata: ${JSON.stringify(creditScore.metadata, null, 2)}`
+        `Metadata: ${JSON.stringify(creditScore.metadata, null, 2)}`,
       );
     }
 
     console.log(
-      `Score: ${creditScore.metadata?.properties.value || "Unknown"}`
+      `Score: ${creditScore.metadata?.properties.value || "Unknown"}`,
     );
   }
 

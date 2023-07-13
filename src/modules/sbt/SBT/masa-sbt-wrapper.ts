@@ -6,7 +6,7 @@ import { isBigNumber, patchMetadataUrl } from "../../../utils";
 import { MasaLinkable } from "../../masa-linkable";
 
 export class MasaSBTWrapper<
-  Contract extends MasaSBT
+  Contract extends MasaSBT,
 > extends MasaLinkable<Contract> {
   /**
    *
@@ -21,7 +21,7 @@ export class MasaSBTWrapper<
       console.log(
         `No SBTs found on contract '${await this.contract.name()}' (${
           this.contract.address
-        })`
+        })`,
       );
     }
 
@@ -42,7 +42,7 @@ export class MasaSBTWrapper<
    * @param identityIdOrAddress
    */
   protected loadSBTs = async (
-    identityIdOrAddress: BigNumber | string
+    identityIdOrAddress: BigNumber | string,
   ): Promise<
     {
       tokenId: BigNumber;
@@ -62,11 +62,11 @@ export class MasaSBTWrapper<
         SBTIDs = await (isBigNumber(identityIdOrAddress)
           ? getSBTConnectionsByIdentity(
               identityIdOrAddress,
-              this.contract.address
+              this.contract.address,
             )
           : getSBTConnectionsByAddress(
               identityIdOrAddress,
-              this.contract.address
+              this.contract.address,
             ));
       }
       // no soul linker, lets try by identity or address
@@ -89,7 +89,7 @@ export class MasaSBTWrapper<
         if (balance > 0) {
           for (let i = 0; i < balance; i++) {
             SBTIDs.push(
-              await this.contract.tokenOfOwnerByIndex(identityAddress, i)
+              await this.contract.tokenOfOwnerByIndex(identityAddress, i),
             );
           }
         }
@@ -112,14 +112,14 @@ export class MasaSBTWrapper<
       sbtIDs.map(async (tokenId: BigNumber) => {
         const tokenUri = patchMetadataUrl(
           this.masa,
-          await this.contract.tokenURI(tokenId)
+          await this.contract.tokenURI(tokenId),
         );
 
         return {
           tokenId,
           tokenUri,
         };
-      })
+      }),
     );
   };
 
@@ -143,8 +143,8 @@ export class MasaSBTWrapper<
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();

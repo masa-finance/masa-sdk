@@ -11,12 +11,12 @@ export class SBTContract extends MasaSBTModuleBase {
    * @param contract
    */
   public attach = <Contract extends MasaSBT>(
-    contract: Contract
+    contract: Contract,
   ): SBTContractWrapper<Contract> => {
     return new SBTContractWrapper<Contract>(
       this.masa,
       this.instances,
-      contract
+      contract,
     );
   };
 
@@ -27,11 +27,11 @@ export class SBTContract extends MasaSBTModuleBase {
    */
   public connect = async <Contract extends MasaSBT>(
     address: string,
-    factory: ContractFactory = MasaSBT__factory
+    factory: ContractFactory = MasaSBT__factory,
   ): Promise<SBTContractWrapper<Contract>> => {
     const contract: Contract = await this.loadSBTContract<Contract>(
       address,
-      factory
+      factory,
     );
 
     return this.attach<Contract>(contract);

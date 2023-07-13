@@ -33,7 +33,7 @@ export class Green extends MasaSBTModuleBase {
    */
   public getPrice = async (
     paymentMethod: PaymentMethod,
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<
     PriceInformation & {
       mintTransactionEstimatedGas: BigNumber;
@@ -44,7 +44,7 @@ export class Green extends MasaSBTModuleBase {
     const priceInformation = await this.getMintPrice(
       paymentMethod,
       this.instances.SoulboundGreenContract,
-      slippage
+      slippage,
     );
 
     const gasPrice = await this.masa.config.signer.getGasPrice();
@@ -55,7 +55,7 @@ export class Green extends MasaSBTModuleBase {
 
     const formattedMintTransactionFee: string = await this.formatPrice(
       priceInformation.paymentAddress,
-      mintTransactionFee
+      mintTransactionFee,
     );
 
     return {
@@ -81,7 +81,7 @@ export class Green extends MasaSBTModuleBase {
     authorityAddress: string,
     signatureDate: number,
     signature: string,
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<ContractTransaction> => {
     const value: {
       to: string;
@@ -96,7 +96,7 @@ export class Green extends MasaSBTModuleBase {
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       "SoulboundGreen",
-      this.instances.SoulboundGreenContract.address
+      this.instances.SoulboundGreenContract.address,
     );
 
     await this.verify(
@@ -106,7 +106,7 @@ export class Green extends MasaSBTModuleBase {
       this.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     const { paymentAddress, price, formattedPrice, mintTransactionFee } =
@@ -125,7 +125,7 @@ export class Green extends MasaSBTModuleBase {
       paymentAddress,
       paymentMethod,
       this.instances.SoulboundGreenContract.address,
-      price
+      price,
     );
 
     const greenMintParameters: [string, string, string, number, string] = [
@@ -137,7 +137,7 @@ export class Green extends MasaSBTModuleBase {
     ];
 
     const greenMintOverrides: PayableOverrides = await this.createOverrides(
-      isNativeCurrency(paymentMethod) ? price : undefined
+      isNativeCurrency(paymentMethod) ? price : undefined,
     );
 
     if (this.masa.config.verbose) {
@@ -155,13 +155,13 @@ export class Green extends MasaSBTModuleBase {
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
       ...greenMintParameters,
-      greenMintOverrides
+      greenMintOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = Green.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -174,7 +174,7 @@ export class Green extends MasaSBTModuleBase {
    * @param receiver
    */
   public sign = async (
-    receiver: string
+    receiver: string,
   ): Promise<
     | {
         signature: string;
@@ -201,7 +201,7 @@ export class Green extends MasaSBTModuleBase {
       this.masa.config.signer,
       "SoulboundGreen",
       this.types,
-      value
+      value,
     );
 
     await this.verify(
@@ -211,7 +211,7 @@ export class Green extends MasaSBTModuleBase {
       this.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     return { signature, signatureDate, authorityAddress };
@@ -235,7 +235,7 @@ export class Green extends MasaSBTModuleBase {
       if (this.masa.config.network?.gasSlippagePercentage) {
         gasLimit = Green.addSlippage(
           gasLimit,
-          this.masa.config.network.gasSlippagePercentage
+          this.masa.config.network.gasSlippagePercentage,
         );
       }
       const { wait, hash } = await burn(greenId, {
@@ -245,8 +245,8 @@ export class Green extends MasaSBTModuleBase {
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();

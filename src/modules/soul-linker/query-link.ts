@@ -21,7 +21,7 @@ export const queryLink = async (
   readerIdentityId: BigNumber,
   signature: string,
   signatureDate: number,
-  expirationDate: number
+  expirationDate: number,
 ): Promise<QueryLinkResult> => {
   const result: QueryLinkResult = {
     success: false,
@@ -42,7 +42,7 @@ export const queryLink = async (
 
   let ownerAddress;
   const { identityId: ownerIdentityId } = await masa.identity.load(
-    (ownerAddress = await contract.ownerOf(tokenId))
+    (ownerAddress = await contract.ownerOf(tokenId)),
   );
 
   if (!ownerIdentityId) {
@@ -53,7 +53,7 @@ export const queryLink = async (
   console.log(
     `Querying link for '${await contract.name()}' (${
       contract.address
-    }) ID: ${tokenId.toString()}`
+    }) ID: ${tokenId.toString()}`,
   );
   console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
   console.log(`to Identity ${readerIdentityId.toString()} (${address})\n`);
@@ -66,7 +66,7 @@ export const queryLink = async (
     tokenId,
     signatureDate,
     expirationDate,
-    signature
+    signature,
   );
 
   console.log("tx hash for middleware", txHash);
@@ -86,7 +86,7 @@ export const queryLinkFromPassport = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
   contract: Contract,
-  passport: string
+  passport: string,
 ) => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
@@ -98,6 +98,6 @@ export const queryLinkFromPassport = async (
     BigNumber.from(unpackedPassport.readerIdentityId),
     unpackedPassport.signature,
     unpackedPassport.signatureDate,
-    unpackedPassport.expirationDate
+    unpackedPassport.expirationDate,
   );
 };

@@ -3,7 +3,7 @@ import { loadIdentity } from "./load";
 
 export const showIdentity = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<IdentityDetails | undefined> => {
   const identity = await loadIdentity(masa, address);
 

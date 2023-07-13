@@ -17,7 +17,7 @@ const purchaseSoulName = async (
   soulNameLength: number,
   duration: number,
   receiver?: string,
-  style?: string
+  style?: string,
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -40,7 +40,7 @@ const purchaseSoulName = async (
       `${soulName}${extension}`,
       receiver,
       duration,
-      style
+      style,
     );
 
     if (storeMetadataResponse) {
@@ -58,14 +58,14 @@ const purchaseSoulName = async (
           soulNameMetadataUrl,
           storeMetadataResponse.authorityAddress,
           storeMetadataResponse.signature,
-          receiver
+          receiver,
         );
 
         console.log(
           Messages.WaitingToFinalize(
             hash,
-            masa.config.network?.blockExplorerUrls?.[0]
-          )
+            masa.config.network?.blockExplorerUrls?.[0],
+          ),
         );
 
         const { logs } = await wait();
@@ -76,7 +76,7 @@ const purchaseSoulName = async (
           let tokenId: string | undefined;
 
           const soulnameTransferEvent = parsedLogs.find(
-            (event: LogDescription) => event.name === "Transfer"
+            (event: LogDescription) => event.name === "Transfer",
           );
 
           if (soulnameTransferEvent) {
@@ -121,7 +121,7 @@ export const createSoulName = async (
   soulName: string,
   duration: number,
   receiver?: string,
-  style?: string
+  style?: string,
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -167,7 +167,7 @@ export const createSoulName = async (
       length,
       duration,
       receiver,
-      style
+      style,
     );
   } else {
     result.message = Messages.NotLoggedIn();

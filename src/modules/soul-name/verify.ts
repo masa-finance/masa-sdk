@@ -18,7 +18,7 @@ const arAccounts = [
 
 export const verifyByName = async (
   masa: MasaInterface,
-  soulName: string
+  soulName: string,
 ): Promise<{
   nameMatch: boolean;
   imageOwnerIsMasaAccount: boolean;
@@ -51,17 +51,17 @@ export const verifyByName = async (
     if (soulNameMetadataTxId) {
       try {
         const metadataTxData = await masa.arweave.transactions.get(
-          soulNameMetadataTxId
+          soulNameMetadataTxId,
         );
         const metadataOwner = await masa.arweave.wallets.ownerToAddress(
-          metadataTxData.owner
+          metadataTxData.owner,
         );
         result.metadataOwnerIsMasaAccount =
           Boolean(metadataOwner) && arAccounts.indexOf(metadataOwner) > -1;
       } catch {
         console.error(
           "Failed to load metadata transaction!",
-          soulNameMetadataTxId
+          soulNameMetadataTxId,
         );
       }
     }
@@ -75,7 +75,7 @@ export const verifyByName = async (
         // check if image data was deployed to arweave by masa
         const imageTxData = await masa.arweave.transactions.get(imageTxId);
         const imageDataOwner = await masa.arweave.wallets.ownerToAddress(
-          imageTxData.owner
+          imageTxData.owner,
         );
         result.imageOwnerIsMasaAccount =
           Boolean(imageDataOwner) && arAccounts.indexOf(imageDataOwner) > -1;
@@ -86,7 +86,7 @@ export const verifyByName = async (
       try {
         const imageData = (await masa.arweave.loadTransactionData(
           imageTxId,
-          false
+          false,
         )) as Uint8Array;
 
         const imageHash = utils.keccak256(imageData);
@@ -99,11 +99,12 @@ export const verifyByName = async (
         if (soulNameInstance.metadata?.imageHashSignature) {
           const recoveredImageAddress = recoverAddress(
             imageHash,
-            soulNameInstance.metadata.imageHashSignature
+            soulNameInstance.metadata.imageHashSignature,
           );
 
           result.imageSignatureMatch = Boolean(
-            recoveredImageAddress && minters.indexOf(recoveredImageAddress) > -1
+            recoveredImageAddress &&
+              minters.indexOf(recoveredImageAddress) > -1,
           );
         }
       } catch (error: unknown) {
@@ -123,12 +124,12 @@ export const verifyByName = async (
 
       const recoveredMetadataAddress = recoverAddress(
         JSON.stringify(metadata, null, 2),
-        soulNameInstance.metadata.signature
+        soulNameInstance.metadata.signature,
       );
 
       result.metadataSignatureMatch = Boolean(
         recoveredMetadataAddress &&
-          minters.indexOf(recoveredMetadataAddress) > -1
+          minters.indexOf(recoveredMetadataAddress) > -1,
       );
     }
   } else {

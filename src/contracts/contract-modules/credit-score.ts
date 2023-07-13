@@ -34,12 +34,12 @@ export class CreditScore extends MasaSBTModuleBase {
   public getPrice = async (
     paymentMethod: PaymentMethod,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<PriceInformation> => {
     return await this.getMintPrice(
       paymentMethod,
       this.instances.SoulboundCreditScoreContract,
-      slippage
+      slippage,
     );
   };
 
@@ -58,7 +58,7 @@ export class CreditScore extends MasaSBTModuleBase {
     authorityAddress: string,
     signatureDate: number,
     signature: string,
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<ContractTransaction> => {
     const value: {
       identityId: BigNumber;
@@ -72,7 +72,7 @@ export class CreditScore extends MasaSBTModuleBase {
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       "SoulboundCreditScore",
-      this.instances.SoulboundCreditScoreContract.address
+      this.instances.SoulboundCreditScoreContract.address,
     );
 
     await this.verify(
@@ -82,24 +82,24 @@ export class CreditScore extends MasaSBTModuleBase {
       this.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     const { price, paymentAddress } = await this.getPrice(
       paymentMethod,
-      slippage
+      slippage,
     );
 
     await this.checkOrGiveAllowance(
       paymentAddress,
       paymentMethod,
       this.instances.SoulboundCreditScoreContract.address,
-      price
+      price,
     );
 
     const creditScoreMintOverrides: PayableOverrides =
       await this.createOverrides(
-        isNativeCurrency(paymentMethod) ? price : undefined
+        isNativeCurrency(paymentMethod) ? price : undefined,
       );
 
     const creditScoreMintParametersIdentity: [
@@ -107,7 +107,7 @@ export class CreditScore extends MasaSBTModuleBase {
       BigNumber,
       string,
       number,
-      string
+      string,
     ] = [
       paymentAddress,
       identityId,
@@ -127,13 +127,13 @@ export class CreditScore extends MasaSBTModuleBase {
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
       ...creditScoreMintParametersIdentity,
-      creditScoreMintOverrides
+      creditScoreMintOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = CreditScore.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -152,7 +152,7 @@ export class CreditScore extends MasaSBTModuleBase {
     // execute
     return mint(
       ...creditScoreMintParametersIdentity,
-      creditScoreMintOverridesWithGasLimit
+      creditScoreMintOverridesWithGasLimit,
     );
   };
 
@@ -161,7 +161,7 @@ export class CreditScore extends MasaSBTModuleBase {
    * @param identityId
    */
   public sign = async (
-    identityId: BigNumber
+    identityId: BigNumber,
   ): Promise<
     | {
         signature: string;
@@ -188,7 +188,7 @@ export class CreditScore extends MasaSBTModuleBase {
       this.masa.config.signer,
       "SoulboundCreditScore",
       this.types,
-      value
+      value,
     );
 
     await this.verify(
@@ -198,7 +198,7 @@ export class CreditScore extends MasaSBTModuleBase {
       this.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     return { signature, signatureDate, authorityAddress };
@@ -221,7 +221,7 @@ export class CreditScore extends MasaSBTModuleBase {
       if (this.masa.config.network?.gasSlippagePercentage) {
         gasLimit = CreditScore.addSlippage(
           gasLimit,
-          this.masa.config.network.gasSlippagePercentage
+          this.masa.config.network.gasSlippagePercentage,
         );
       }
 
@@ -232,8 +232,8 @@ export class CreditScore extends MasaSBTModuleBase {
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();

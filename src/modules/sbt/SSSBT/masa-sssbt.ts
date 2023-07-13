@@ -46,7 +46,7 @@ export class MasaSSSBT extends MasaBase {
    * @param contract
    */
   public attach = <Contract extends ReferenceSBTSelfSovereign>(
-    contract: Contract
+    contract: Contract,
   ): MasaSSSBTWrapper<Contract> => {
     return new MasaSSSBTWrapper<Contract>(this.masa, contract);
   };
@@ -58,11 +58,11 @@ export class MasaSSSBT extends MasaBase {
    */
   public connect = async <Contract extends ReferenceSBTSelfSovereign>(
     address: string,
-    factory: ContractFactory = ReferenceSBTSelfSovereign__factory
+    factory: ContractFactory = ReferenceSBTSelfSovereign__factory,
   ): Promise<MasaSSSBTWrapper<Contract>> => {
     const { contract } = await this.masa.contracts.sssbt.connect<Contract>(
       address,
-      factory
+      factory,
     );
 
     return this.attach<Contract>(contract);

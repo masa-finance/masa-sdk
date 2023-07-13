@@ -4,7 +4,7 @@ import type { PaymentMethod } from "../../../interface";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaASBTWrapper<
-  Contract extends ReferenceSBTAuthority
+  Contract extends ReferenceSBTAuthority,
 > extends MasaSBTWrapper<Contract> {
   /**
    *
@@ -35,7 +35,7 @@ export class MasaASBTWrapper<
    */
   bulkMint = async (
     receivers: string[],
-    paymentMethod: PaymentMethod = "ETH"
+    paymentMethod: PaymentMethod = "ETH",
   ) => {
     const [name, symbol] = await Promise.all([
       this.contract.name(),

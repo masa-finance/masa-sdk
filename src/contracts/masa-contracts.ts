@@ -48,7 +48,7 @@ export class MasaContracts extends MasaBase {
 
   public constructor(
     masa: MasaInterface,
-    contractOverrides?: Partial<IIdentityContracts>
+    contractOverrides?: Partial<IIdentityContracts>,
   ) {
     super(masa);
 
@@ -95,7 +95,7 @@ export class MasaContracts extends MasaBase {
    */
   public parseLogs = (
     logs: Log[],
-    additionalContracts: BaseContract[] = []
+    additionalContracts: BaseContract[] = [],
   ): LogDescription[] => {
     const parsedLogs: LogDescription[] = [];
 
@@ -107,7 +107,7 @@ export class MasaContracts extends MasaBase {
         ...logs
           .filter(
             (log: Log) =>
-              log.address.toLowerCase() === contract.address.toLowerCase()
+              log.address.toLowerCase() === contract.address.toLowerCase(),
           )
           .map((log: Log) => {
             let result;
@@ -121,7 +121,7 @@ export class MasaContracts extends MasaBase {
             }
 
             return result;
-          })
+          }),
       );
     }
 

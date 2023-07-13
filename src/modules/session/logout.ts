@@ -2,7 +2,7 @@ import { Messages } from "../../collections";
 import type { MasaInterface } from "../../interface";
 
 export const logout = async (
-  masa: MasaInterface
+  masa: MasaInterface,
 ): Promise<
   | {
       status: string;

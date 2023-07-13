@@ -69,7 +69,7 @@ export class MasaClient extends MasaBase {
     checkSignature: async (
       address: string,
       signature: string,
-      cookie?: string
+      cookie?: string,
     ): Promise<SessionUser | undefined> => {
       let result;
 
@@ -92,7 +92,7 @@ export class MasaClient extends MasaBase {
             headers: {
               cookie: cookieToUse ? [cookieToUse] : undefined,
             },
-          }
+          },
         )
         .catch((error: Error | AxiosError) => {
           console.error("Check signature failed!", error.message);
@@ -172,7 +172,7 @@ export class MasaClient extends MasaBase {
     logout: async (): Promise<LogoutResult | undefined> => {
       const logoutResult = await this.post<undefined, LogoutResult>(
         "/session/logout",
-        undefined
+        undefined,
       );
       delete this._cookie;
       return logoutResult;
@@ -187,7 +187,7 @@ export class MasaClient extends MasaBase {
      */
     get: async (
       uri: string,
-      additionalHeaders?: Record<string, string>
+      additionalHeaders?: Record<string, string>,
     ): Promise<IIdentity | ICreditScore | IGreen | undefined> => {
       const headers = {
         cookie: this.cookie ? [this.cookie] : undefined,
@@ -214,7 +214,7 @@ export class MasaClient extends MasaBase {
           },
           {
             depth: null,
-          }
+          },
         );
       }
 
@@ -234,7 +234,7 @@ export class MasaClient extends MasaBase {
       soulName: string,
       receiver: string,
       duration: number,
-      style?: string
+      style?: string,
     ): Promise<
       SoulNameMetadataStoreResult | SoulNameResultBase | undefined
     > => {
@@ -293,7 +293,7 @@ export class MasaClient extends MasaBase {
 
     verify: async (
       phoneNumber: string,
-      code: string
+      code: string,
     ): Promise<VerifyGreenResult | undefined> => {
       const result = {
         success: false,
@@ -364,7 +364,7 @@ export class MasaClient extends MasaBase {
      * @param transactionHash
      */
     update: async (
-      transactionHash: string
+      transactionHash: string,
     ): Promise<UpdateCreditScoreResult | undefined> => {
       const result = {
         success: false,
@@ -399,7 +399,7 @@ export class MasaClient extends MasaBase {
   post = async <Payload, Result>(
     endpoint: string,
     data: Payload,
-    silent: boolean = false
+    silent: boolean = false,
   ): Promise<Result | undefined> => {
     if (this.masa.config.verbose) {
       console.log(`Posting '${JSON.stringify(data)}' to '${endpoint}'`);
@@ -435,7 +435,7 @@ export class MasaClient extends MasaBase {
   patch = async <Payload, Result>(
     endpoint: string,
     data: Payload,
-    silent: boolean = false
+    silent: boolean = false,
   ): Promise<Result | undefined> => {
     if (this.masa.config.verbose) {
       console.log(`Patching '${JSON.stringify(data)}' to '${endpoint}'`);
@@ -470,7 +470,7 @@ export class MasaClient extends MasaBase {
 
   get = async <Result>(
     endpoint: string,
-    silent: boolean = false
+    silent: boolean = false,
   ): Promise<Result | undefined> => {
     if (this.masa.config.verbose) {
       console.log(`Getting '${endpoint}'`);
@@ -501,7 +501,7 @@ export class MasaClient extends MasaBase {
         },
         {
           depth: null,
-        }
+        },
       );
     }
 

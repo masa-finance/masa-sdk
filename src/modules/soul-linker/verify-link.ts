@@ -9,7 +9,7 @@ export const verifyLink = async (
   masa: MasaInterface,
   contract: Contract,
   tokenId: BigNumber,
-  readerIdentityId?: BigNumber
+  readerIdentityId?: BigNumber,
 ): Promise<VerifyLinkResult> => {
   const result: VerifyLinkResult = {
     success: false,
@@ -46,7 +46,7 @@ export const verifyLink = async (
   let ownerAddress;
   try {
     const { identityId: ownerIdentityId } = await masa.identity.load(
-      (ownerAddress = await contract.ownerOf(tokenId))
+      (ownerAddress = await contract.ownerOf(tokenId)),
     );
 
     if (!ownerIdentityId) {
@@ -57,17 +57,17 @@ export const verifyLink = async (
     console.log(
       `Verifying link for '${await contract.name()}' (${
         contract.address
-      }) ID: ${tokenId.toString()}`
+      }) ID: ${tokenId.toString()}`,
     );
     console.log(
       `from Identity ${ownerIdentityId.toString()} (${ownerAddress}) ${
         ownerIdentityId.toString() === identityId?.toString() ? "You" : ""
-      }`
+      }`,
     );
     console.log(
       `to Identity ${readerIdentityId.toString()} (${readerAddress}) ${
         readerIdentityId.toString() === identityId?.toString() ? "You" : ""
-      }\n`
+      }\n`,
     );
 
     if (readerIdentityId.toString() === ownerIdentityId.toString()) {
@@ -77,7 +77,7 @@ export const verifyLink = async (
     }
 
     const links = (await loadLinks(masa, contract, tokenId)).filter(
-      (link: Link) => link.exists
+      (link: Link) => link.exists,
     );
 
     result.verified = false;
@@ -89,7 +89,7 @@ export const verifyLink = async (
             ownerIdentityId,
             contract.address,
             tokenId,
-            link.signatureDate
+            link.signatureDate,
           );
 
         if (result.verified) {

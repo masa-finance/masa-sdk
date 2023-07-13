@@ -37,14 +37,14 @@ export class MasaGreen extends MasaLinkable<SoulboundGreen> {
     paymentMethod: PaymentMethod = "ETH",
     authorityAddress: string,
     signatureDate: number,
-    signature: string
+    signature: string,
   ) =>
     mintGreen(
       this.masa,
       paymentMethod,
       authorityAddress,
       signatureDate,
-      signature
+      signature,
     );
 
   /**
@@ -56,7 +56,7 @@ export class MasaGreen extends MasaLinkable<SoulboundGreen> {
   create = (
     paymentMethod: PaymentMethod = "ETH",
     phoneNumber: string,
-    code: string
+    code: string,
   ) => createGreen(this.masa, paymentMethod, phoneNumber, code);
 
   /**

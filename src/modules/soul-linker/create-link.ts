@@ -10,7 +10,7 @@ export const createLink = async (
   masa: MasaInterface,
   contract: Contract,
   tokenId: BigNumber,
-  readerIdentityId: BigNumber
+  readerIdentityId: BigNumber,
 ): Promise<CreateLinkResult> => {
   const result: CreateLinkResult = {
     success: false,
@@ -34,11 +34,11 @@ export const createLink = async (
   console.log(
     `Creating link for '${await contract.name()}' (${
       contract.address
-    }) ID: ${tokenId.toString()}`
+    }) ID: ${tokenId.toString()}`,
   );
   console.log(`from Identity ${identityId.toString()} (${address})`);
   console.log(
-    `to Identity ${readerIdentityId.toString()} (${receiverAddress})\n`
+    `to Identity ${readerIdentityId.toString()} (${receiverAddress})\n`,
   );
 
   const now = Date.now();
@@ -51,12 +51,12 @@ export const createLink = async (
       tokenId,
       Math.floor(now / 1000),
       // 1 day
-      24 * 60 * 60
+      24 * 60 * 60,
     );
 
   console.log(`Signature Date: ${currentDate.toUTCString()}`);
   console.log(
-    `Expiration Date: ${new Date(expirationDate * 1000).toUTCString()}`
+    `Expiration Date: ${new Date(expirationDate * 1000).toUTCString()}`,
   );
 
   const passport: IPassport = {

@@ -38,7 +38,7 @@ export const deploySSSBT = async ({
   authorityAddress = authorityAddress || signerAddress;
 
   console.log(
-    `Deploying SSSBT contract to network '${masa.config.networkName}'`
+    `Deploying SSSBT contract to network '${masa.config.networkName}'`,
   );
 
   if (
@@ -52,7 +52,7 @@ export const deploySSSBT = async ({
   const contractFactory: ContractFactory = new ContractFactory(
     abi,
     bytecode,
-    masa.config.signer
+    masa.config.signer,
   );
 
   const deploySSSBTArguments: [
@@ -62,7 +62,7 @@ export const deploySSSBT = async ({
     string, // string baseTokenURI
     string, // address soulboundIdentity
     PaymentParamsStruct, // PaymentParams paymentParams
-    number
+    number,
   ] = [
     adminAddress,
     name,
@@ -97,7 +97,7 @@ export const deploySSSBT = async ({
         deploySSSBTArguments,
         abiEncodedDeploySSSBTArguments,
       },
-      { depth: null }
+      { depth: null },
     );
   }
 
@@ -107,7 +107,7 @@ export const deploySSSBT = async ({
       deployTransaction: { wait, hash },
       address,
     } = (await contractFactory.deploy(
-      ...deploySSSBTArguments
+      ...deploySSSBTArguments,
     )) as ReferenceSBTSelfSovereign;
 
     console.log(Messages.WaitingToFinalize(hash));
@@ -121,21 +121,21 @@ export const deploySSSBT = async ({
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          masa.config.network?.blockExplorerUrls?.[0]
-        )
+          masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();
     } else {
       console.log(
-        `Authority: ${authorityAddress} could not be added because ${signerAddress} is not the admin!`
+        `Authority: ${authorityAddress} could not be added because ${signerAddress} is not the admin!`,
       );
 
       console.log(`Please add authority manually from ${adminAddress}`);
     }
 
     console.log(
-      `SSSBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`
+      `SSSBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`,
     );
 
     result = {

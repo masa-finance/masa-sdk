@@ -11,7 +11,7 @@ import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<{ identityId?: BigNumber; address: string }> => {
   address = address || (await masa.config.signer.getAddress());
   let identityId;
@@ -19,7 +19,7 @@ export const loadIdentityByAddress = async (
   try {
     const balance =
       await masa.contracts.instances.SoulboundIdentityContract.balanceOf(
-        address
+        address,
       );
 
     if (balance.toNumber() > 0) {
@@ -38,7 +38,7 @@ export const loadIdentityByAddress = async (
 
 export const loadIdentityDetails = async (
   masa: MasaInterface,
-  identityIdOrAddress: BigNumber | string
+  identityIdOrAddress: BigNumber | string,
 ): Promise<IdentityDetails> => {
   const {
     "tokenURI(address)": tokenURIByAddress,
@@ -47,7 +47,7 @@ export const loadIdentityDetails = async (
 
   const identityId = !isBigNumber(identityIdOrAddress)
     ? await masa.contracts.instances.SoulboundIdentityContract.tokenOfOwner(
-        identityIdOrAddress
+        identityIdOrAddress,
       )
     : identityIdOrAddress;
 
@@ -55,7 +55,7 @@ export const loadIdentityDetails = async (
     masa,
     await (isBigNumber(identityIdOrAddress)
       ? tokenURIByIdentity(identityIdOrAddress)
-      : tokenURIByAddress(identityIdOrAddress))
+      : tokenURIByAddress(identityIdOrAddress)),
   );
 
   if (masa.config.verbose) {
@@ -75,7 +75,7 @@ export const loadIdentityDetails = async (
 
 export const loadIdentity = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<IdentityDetails | undefined> => {
   let result;
 

@@ -19,7 +19,7 @@ export const establishLink = async (
   readerIdentityId: BigNumber,
   signature: string,
   signatureDate: number,
-  expirationDate: number
+  expirationDate: number,
 ): Promise<EstablishLinkResult> => {
   const result: EstablishLinkResult = {
     success: false,
@@ -40,7 +40,7 @@ export const establishLink = async (
 
   let ownerAddress;
   const { identityId: ownerIdentityId } = await masa.identity.load(
-    (ownerAddress = await contract.ownerOf(tokenId))
+    (ownerAddress = await contract.ownerOf(tokenId)),
   );
 
   if (!ownerIdentityId) {
@@ -51,7 +51,7 @@ export const establishLink = async (
   console.log(
     `Establishing link for '${await contract.name()}' (${
       contract.address
-    }) ID: ${tokenId.toString()}`
+    }) ID: ${tokenId.toString()}`,
   );
   console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
   console.log(`to Identity ${identityId.toString()} (${address})\n`);
@@ -64,7 +64,7 @@ export const establishLink = async (
     BigNumber.from(tokenId),
     signatureDate,
     expirationDate,
-    signature
+    signature,
   );
 
   result.success = true;
@@ -76,7 +76,7 @@ export const establishLinkFromPassport = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
   contract: Contract,
-  passport: string
+  passport: string,
 ) => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
@@ -88,6 +88,6 @@ export const establishLinkFromPassport = async (
     BigNumber.from(unpackedPassport.readerIdentityId),
     unpackedPassport.signature,
     unpackedPassport.signatureDate,
-    unpackedPassport.expirationDate
+    unpackedPassport.expirationDate,
   );
 };

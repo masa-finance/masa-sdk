@@ -38,7 +38,7 @@ describe("Soul Name", () => {
         it("\u{200d}.soul should be invalid!", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{200d}"
+            "\u{200d}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -137,7 +137,7 @@ describe("Soul Name", () => {
         it("#\u{FE0F}\u{20E3}.soul should be invalid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "#\u{FE0F}\u{20E3}"
+            "#\u{FE0F}\u{20E3}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -180,7 +180,7 @@ describe("Soul Name", () => {
         it("🎢rollercoaster🎢🎢.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "🎢rollercoaster🎢🎢"
+            "🎢rollercoaster🎢🎢",
           );
           assert(isValid === valid, message);
           assert(length === 16, length.toString());
@@ -225,7 +225,7 @@ describe("Soul Name", () => {
         it("\u{2764}\u{2764}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{2764}\u{2764}"
+            "\u{2764}\u{2764}",
           );
           assert(isValid === valid, message);
           assert(length === 2, length.toString());
@@ -234,7 +234,7 @@ describe("Soul Name", () => {
         it("\u{2764}\u{fe00}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{2764}\u{fe00}"
+            "\u{2764}\u{fe00}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -243,7 +243,7 @@ describe("Soul Name", () => {
         it("\u{2764}\u{fe05}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{2764}\u{fe05}"
+            "\u{2764}\u{fe05}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -252,7 +252,7 @@ describe("Soul Name", () => {
         it("\u{2764}\u{fe0f}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{2764}\u{fe0f}"
+            "\u{2764}\u{fe0f}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -261,7 +261,7 @@ describe("Soul Name", () => {
         it("\u{2764}\u{fe0f}1.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{2764}\u{fe0f}1"
+            "\u{2764}\u{fe0f}1",
           );
           assert(isValid === valid, message);
           assert(length === 2, length.toString());
@@ -288,7 +288,7 @@ describe("Soul Name", () => {
         it("2\u{FE0F}\u{20E3}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "2\u{FE0F}\u{20E3}"
+            "2\u{FE0F}\u{20E3}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -297,7 +297,7 @@ describe("Soul Name", () => {
         it("9\u{FE0F}\u{20E3}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "9\u{FE0F}\u{20E3}"
+            "9\u{FE0F}\u{20E3}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -306,7 +306,7 @@ describe("Soul Name", () => {
         it("\u{20E3}.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "\u{20E3}"
+            "\u{20E3}",
           );
           assert(isValid === valid, message);
           assert(length === 1, length.toString());
@@ -321,7 +321,7 @@ describe("Soul Name", () => {
         it("💀💀💀💀💀.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "💀💀💀💀💀"
+            "💀💀💀💀💀",
           );
 
           assert(isValid === valid, message);
@@ -331,7 +331,7 @@ describe("Soul Name", () => {
         it("💀💀💀11one💀💀.soul should be valid", () => {
           const { isValid, message, length } = validateSoulName(
             masa,
-            "💀💀💀11one💀💀"
+            "💀💀💀11one💀💀",
           );
           assert(isValid === valid, message);
           assert(length === 10);

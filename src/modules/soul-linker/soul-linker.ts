@@ -9,7 +9,10 @@ import { queryLinkFromPassport } from "./query-link";
 import { verifyLink } from "./verify-link";
 
 export class MasaSoulLinker extends MasaBase {
-  constructor(masa: MasaInterface, private contract: Contract) {
+  constructor(
+    masa: MasaInterface,
+    private contract: Contract,
+  ) {
     super(masa);
   }
 
@@ -20,7 +23,7 @@ export class MasaSoulLinker extends MasaBase {
       this.masa,
       paymentMethod,
       this.contract,
-      passport
+      passport,
     );
   verify = (tokenId: BigNumber, readerIdentityId?: BigNumber) =>
     verifyLink(this.masa, this.contract, tokenId, readerIdentityId);
@@ -29,7 +32,7 @@ export class MasaSoulLinker extends MasaBase {
     this.masa.contracts.soulLinker.breakLink(
       this.contract,
       tokenId,
-      readerIdentityId
+      readerIdentityId,
     );
   query = (paymentMethod: PaymentMethod, passport: string) =>
     queryLinkFromPassport(this.masa, paymentMethod, this.contract, passport);

@@ -17,14 +17,14 @@ export class MasaIdentity extends MasaLinkable<SoulboundIdentity> {
     paymentMethod: PaymentMethod,
     soulName: string,
     duration: number,
-    style?: string
+    style?: string,
   ) =>
     createIdentityWithSoulName(
       this.masa,
       paymentMethod,
       soulName,
       duration,
-      style
+      style,
     );
   load = (address?: string) => loadIdentityByAddress(this.masa, address);
   burn = () => burnIdentity(this.masa);

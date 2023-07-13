@@ -3,7 +3,7 @@ import type { MasaInterface } from "../../interface";
 export const sendSoulName = async (
   masa: MasaInterface,
   soulName: string,
-  receiver: string
+  receiver: string,
 ): Promise<boolean> => {
   const extension = await masa.contracts.instances.SoulNameContract.extension();
 

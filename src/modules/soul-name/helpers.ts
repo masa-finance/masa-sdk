@@ -5,7 +5,7 @@ import type { MasaInterface, SoulNameDetails } from "../../interface";
 export const printSoulName = (
   soulName: SoulNameDetails,
   index?: number,
-  verbose: boolean = false
+  verbose: boolean = false,
 ): void => {
   console.log("\n");
 
@@ -18,7 +18,7 @@ export const printSoulName = (
   console.log(`Extension: '${soulName.tokenDetails.extension}'`);
   console.log(`Owner Address: '${soulName.owner}'`);
   console.log(
-    `Owner Identity ID: '${soulName.tokenDetails.identityId.toNumber()}'`
+    `Owner Identity ID: '${soulName.tokenDetails.identityId.toNumber()}'`,
   );
   console.log(`Active: ${soulName.tokenDetails.active}`);
   console.log(`Metadata URL: '${soulName.tokenUri}'`);
@@ -29,8 +29,8 @@ export const printSoulName = (
 
   console.log(
     `Expiry Date: ${new Date(
-      soulName.tokenDetails.expirationDate.toNumber() * 1000
-    ).toUTCString()}`
+      soulName.tokenDetails.expirationDate.toNumber() * 1000,
+    ).toUTCString()}`,
   );
 };
 

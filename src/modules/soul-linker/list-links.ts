@@ -20,14 +20,14 @@ export type ListLinksResult = BaseResult & {
 export const loadLinks = async (
   masa: MasaInterface,
   contract: Contract,
-  tokenId: BigNumber
+  tokenId: BigNumber,
 ): Promise<Link[]> => {
   const result = [];
 
   const links: SoulLinker.LinkKeyStructOutput[] =
     await masa.contracts.instances.SoulLinkerContract.getLinks(
       contract.address,
-      tokenId
+      tokenId,
     );
 
   for (const link of links) {
@@ -36,7 +36,7 @@ export const loadLinks = async (
         contract.address,
         tokenId,
         link.readerIdentityId,
-        link.signatureDate
+        link.signatureDate,
       );
 
     result.push({
@@ -51,7 +51,7 @@ export const loadLinks = async (
 export const listLinks = async (
   masa: MasaInterface,
   contract: Contract,
-  tokenId: BigNumber
+  tokenId: BigNumber,
 ): Promise<ListLinksResult> => {
   const result: ListLinksResult = {
     success: false,
@@ -69,7 +69,7 @@ export const listLinks = async (
   console.log(
     `Listing links for '${await contract.name()}' (${
       contract.address
-    }) ID: ${tokenId.toString()}`
+    }) ID: ${tokenId.toString()}`,
   );
 
   try {
@@ -89,31 +89,31 @@ export const listLinks = async (
       linkDetail.ownerIdentityId.toString(),
       linkDetail.ownerIdentityId.toString() === identityId.toString()
         ? "(you)"
-        : ""
+        : "",
     );
     console.log(
       "Reader Identity",
       linkDetail.readerIdentityId.toString(),
       linkDetail.readerIdentityId.toString() === identityId.toString()
         ? "(you)"
-        : ""
+        : "",
     );
     console.log(
       "Signature Date",
       new Date(linkDetail.signatureDate.toNumber() * 1000).toUTCString(),
-      linkDetail.signatureDate.toNumber()
+      linkDetail.signatureDate.toNumber(),
     );
     console.log(
       "Expiration Date",
       new Date(linkDetail.expirationDate.toNumber() * 1000).toUTCString(),
-      linkDetail.expirationDate.toNumber()
+      linkDetail.expirationDate.toNumber(),
     );
     console.log(
       `Link expired?: ${
         new Date() > new Date(linkDetail.expirationDate.toNumber() * 1000)
           ? "Yes"
           : "No"
-      }`
+      }`,
     );
     console.log(`Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
     console.log(`Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);

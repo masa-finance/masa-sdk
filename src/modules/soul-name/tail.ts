@@ -7,11 +7,11 @@ import { loadSoulNameByTokenId } from "./load";
 
 export const tailSoulNames = async (
   masa: MasaInterface,
-  limit: number = 5
+  limit: number = 5,
 ): Promise<SoulNameDetails[]> => {
   const soulNameMintEventsFilter =
     masa.contracts.instances.SoulNameContract.filters.Transfer(
-      constants.AddressZero
+      constants.AddressZero,
     );
 
   const { number } =
@@ -31,8 +31,8 @@ export const tailSoulNames = async (
       ...(await masa.contracts.instances.SoulNameContract.queryFilter(
         soulNameMintEventsFilter,
         fromBlock,
-        toBlock
-      ))
+        toBlock,
+      )),
     );
     x++;
   } while (soulNameMintEvents.length <= limit);
@@ -42,11 +42,11 @@ export const tailSoulNames = async (
       soulNameMintEvents
         .slice(soulNameMintEvents.length - limit)
         .map((soulNameMintEvent: TransferEvent) =>
-          loadSoulNameByTokenId(masa, soulNameMintEvent.args.tokenId)
-        )
+          loadSoulNameByTokenId(masa, soulNameMintEvent.args.tokenId),
+        ),
     )
   ).filter((soulNameDetail: SoulNameDetails | undefined) =>
-    Boolean(soulNameDetail)
+    Boolean(soulNameDetail),
   );
 
   return soulNames as SoulNameDetails[];
@@ -54,7 +54,7 @@ export const tailSoulNames = async (
 
 export const tailSoulNamesAndPrint = async (
   masa: MasaInterface,
-  limit: number = 5
+  limit: number = 5,
 ): Promise<SoulNameDetails[]> => {
   const soulNames = await tailSoulNames(masa, limit);
 

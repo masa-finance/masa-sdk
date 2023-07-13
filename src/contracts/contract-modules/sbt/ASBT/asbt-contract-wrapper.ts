@@ -9,7 +9,7 @@ import { isNativeCurrency } from "../../../../utils";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class ASBTContractWrapper<
-  Contract extends ReferenceSBTAuthority
+  Contract extends ReferenceSBTAuthority,
 > extends SBTContractWrapper<Contract> {
   /**
    *
@@ -18,7 +18,7 @@ export class ASBTContractWrapper<
    */
   public mint = async (
     paymentMethod: PaymentMethod,
-    receiver: string
+    receiver: string,
   ): Promise<boolean> => {
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
@@ -36,7 +36,7 @@ export class ASBTContractWrapper<
 
       if (limit > 0 && balance.gte(limit)) {
         console.error(
-          `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
+          `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
         );
         return false;
       }
@@ -50,11 +50,11 @@ export class ASBTContractWrapper<
 
     const mintASBTArguments: [
       string, // paymentAddress string
-      string // receiver string
+      string, // receiver string
     ] = [paymentAddress, receiver];
 
     const mintASBTOverrides: PayableOverrides = await this.createOverrides(
-      isNativeCurrency(paymentMethod) ? price : undefined
+      isNativeCurrency(paymentMethod) ? price : undefined,
     );
 
     if (this.masa.config.verbose) {
@@ -68,13 +68,13 @@ export class ASBTContractWrapper<
 
     let gasLimit: BigNumber = await estimateGas(
       ...mintASBTArguments,
-      mintASBTOverrides
+      mintASBTOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = ASBTContractWrapper.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -86,8 +86,8 @@ export class ASBTContractWrapper<
     console.log(
       Messages.WaitingToFinalize(
         hash,
-        this.masa.config.network?.blockExplorerUrls?.[0]
-      )
+        this.masa.config.network?.blockExplorerUrls?.[0],
+      ),
     );
 
     const { logs } = await wait();
@@ -95,13 +95,13 @@ export class ASBTContractWrapper<
     const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
 
     const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint"
+      (log: LogDescription) => log.name === "Mint",
     );
 
     if (mintEvent) {
       const { args } = mintEvent;
       console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
+        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
       );
 
       return true;
@@ -117,7 +117,7 @@ export class ASBTContractWrapper<
    */
   public bulkMint = async (
     paymentMethod: PaymentMethod,
-    receivers: string[]
+    receivers: string[],
   ): Promise<boolean[]> => {
     const result = [];
 
@@ -138,7 +138,7 @@ export class ASBTContractWrapper<
 
         if (limit > 0 && balance.gte(limit)) {
           console.error(
-            `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`
+            `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
           );
           result.push(false);
         }
@@ -153,11 +153,11 @@ export class ASBTContractWrapper<
 
     const mintASBTArguments: [
       string, // paymentAddress string
-      string[] // receivers string[]
+      string[], // receivers string[]
     ] = [paymentAddress, receivers];
 
     const mintASBTOverrides: PayableOverrides = await this.createOverrides(
-      isNativeCurrency(paymentMethod) ? price : undefined
+      isNativeCurrency(paymentMethod) ? price : undefined,
     );
 
     if (this.masa.config.verbose) {
@@ -171,13 +171,13 @@ export class ASBTContractWrapper<
 
     let gasLimit: BigNumber = await estimateGas(
       ...mintASBTArguments,
-      mintASBTOverrides
+      mintASBTOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = ASBTContractWrapper.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -189,8 +189,8 @@ export class ASBTContractWrapper<
     console.log(
       Messages.WaitingToFinalize(
         hash,
-        this.masa.config.network?.blockExplorerUrls?.[0]
-      )
+        this.masa.config.network?.blockExplorerUrls?.[0],
+      ),
     );
 
     const { logs } = await wait();
@@ -198,13 +198,13 @@ export class ASBTContractWrapper<
     const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
 
     const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint"
+      (log: LogDescription) => log.name === "Mint",
     );
 
     if (mintEvent) {
       const { args } = mintEvent;
       console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`
+        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
       );
 
       result.push(true);

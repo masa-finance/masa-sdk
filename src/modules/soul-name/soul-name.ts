@@ -70,7 +70,7 @@ export class MasaSoulName extends MasaBase {
     soulName: string,
     duration: number,
     receiver?: string,
-    style?: string
+    style?: string,
   ) =>
     createSoulName(
       this.masa,
@@ -78,7 +78,7 @@ export class MasaSoulName extends MasaBase {
       soulName,
       duration,
       receiver,
-      style
+      style,
     );
 
   /**

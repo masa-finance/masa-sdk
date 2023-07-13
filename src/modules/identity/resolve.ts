@@ -9,7 +9,7 @@ import type { MasaInterface } from "../../interface";
  */
 export const resolveIdentity = async (
   masa: MasaInterface,
-  identityId: BigNumber
+  identityId: BigNumber,
 ): Promise<string | undefined> => {
   let address;
 
@@ -30,14 +30,14 @@ export const resolveIdentity = async (
 
 export const resolveReverseIdentity = async (
   masa: MasaInterface,
-  address: string
+  address: string,
 ): Promise<BigNumber | undefined> => {
   let identityId;
 
   try {
     identityId =
       await masa.contracts.instances.SoulboundIdentityContract.tokenOfOwner(
-        address
+        address,
       );
   } catch {
     // ignore

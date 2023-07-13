@@ -3,7 +3,7 @@ import { loadGreens } from "./load";
 
 export const listGreens = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<GreenDetails[]> => {
   address = address || (await masa.config.signer.getAddress());
   return loadGreens(masa, address);
@@ -11,7 +11,7 @@ export const listGreens = async (
 
 export const listGreensAndPrint = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<GreenDetails[]> => {
   const greens: GreenDetails[] = await listGreens(masa, address);
 

@@ -24,7 +24,7 @@ const hashData = (data: BytesLike) => utils.keccak256(data);
 export const signMessage = async (
   msg: string,
   wallet: Signer,
-  doHash: boolean = false
+  doHash: boolean = false,
 ): Promise<string | undefined> => {
   let signature;
 
@@ -50,7 +50,7 @@ export const generateSignatureDomain = async (
   wallet: Signer,
   name: string,
   verifyingContract: string,
-  version: string = "1.0.0"
+  version: string = "1.0.0",
 ): Promise<TypedDataDomain> => {
   const chainId = (await wallet.provider?.getNetwork())?.chainId;
 
@@ -77,13 +77,13 @@ export const signTypedData = async (
   wallet: Signer,
   name: string,
   types: Record<string, Array<TypedDataField>>,
-  value: Record<string, string | BigNumber | number>
+  value: Record<string, string | BigNumber | number>,
 ): Promise<{ signature: string; domain: TypedDataDomain }> => {
   const domain = await generateSignatureDomain(wallet, name, contract.address);
   const signature = await (wallet as Signer & TypedDataSigner)._signTypedData(
     domain,
     types,
-    value
+    value,
   );
 
   return { signature, domain };
@@ -98,7 +98,7 @@ export const signTypedData = async (
 export const recoverAddress = (
   msg: string,
   signature: string,
-  doHash: boolean = false
+  doHash: boolean = false,
 ): string | undefined => {
   let recovered;
 
@@ -107,7 +107,7 @@ export const recoverAddress = (
     const hash = doHash ? hashData(data) : data;
     recovered = utils.recoverAddress(
       utils.arrayify(utils.hashMessage(utils.arrayify(hash))),
-      signature
+      signature,
     );
   } catch (err) {
     console.error("Address recovery failed!", err);

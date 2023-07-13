@@ -23,11 +23,11 @@ export class MasaSBTBase extends MasaBase {
    */
   public connect = async <Contract extends MasaSBT>(
     address: string,
-    factory: ContractFactory = MasaSBT__factory
+    factory: ContractFactory = MasaSBT__factory,
   ): Promise<MasaSBTWrapper<Contract>> => {
     const { contract } = await this.masa.contracts.sbt.connect<Contract>(
       address,
-      factory
+      factory,
     );
 
     return this.attach<Contract>(contract);

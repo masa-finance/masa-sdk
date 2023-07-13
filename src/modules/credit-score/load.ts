@@ -6,7 +6,7 @@ import { isBigNumber, patchMetadataUrl } from "../../utils";
 
 export const loadCreditScoreDetails = async (
   masa: MasaInterface,
-  creditScoreIds: BigNumber[]
+  creditScoreIds: BigNumber[],
 ): Promise<CreditScoreDetails[]> => {
   return (
     await Promise.all(
@@ -14,8 +14,8 @@ export const loadCreditScoreDetails = async (
         const tokenUri = patchMetadataUrl(
           masa,
           await masa.contracts.instances.SoulboundCreditScoreContract.tokenURI(
-            tokenId
-          )
+            tokenId,
+          ),
         );
 
         if (masa.config.verbose) {
@@ -31,14 +31,14 @@ export const loadCreditScoreDetails = async (
           tokenUri,
           metadata,
         };
-      })
+      }),
     )
   ).filter((creditScore: CreditScoreDetails) => Boolean(creditScore.metadata));
 };
 
 export const loadCreditScores = async (
   masa: MasaInterface,
-  identityIdOrAddress: BigNumber | string
+  identityIdOrAddress: BigNumber | string,
 ): Promise<CreditScoreDetails[]> => {
   let creditScoreIds: BigNumber[] = [];
 
@@ -53,11 +53,11 @@ export const loadCreditScores = async (
       creditScoreIds = await (isBigNumber(identityIdOrAddress)
         ? getSBTConnectionsByIdentity(
             identityIdOrAddress,
-            masa.contracts.instances.SoulboundCreditScoreContract.address
+            masa.contracts.instances.SoulboundCreditScoreContract.address,
           )
         : getSBTConnectionsByAddress(
             identityIdOrAddress,
-            masa.contracts.instances.SoulboundCreditScoreContract.address
+            masa.contracts.instances.SoulboundCreditScoreContract.address,
           ));
     }
     // no soul linker, lets try by identity or address
@@ -75,7 +75,7 @@ export const loadCreditScores = async (
 
       const balance: number = (
         await masa.contracts.instances.SoulboundCreditScoreContract.balanceOf(
-          identityAddress
+          identityAddress,
         )
       ).toNumber();
 
@@ -84,8 +84,8 @@ export const loadCreditScores = async (
           creditScoreIds.push(
             await masa.contracts.instances.SoulboundCreditScoreContract.tokenOfOwnerByIndex(
               identityAddress,
-              i
-            )
+              i,
+            ),
           );
         }
       }

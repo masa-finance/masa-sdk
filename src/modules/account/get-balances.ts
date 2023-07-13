@@ -30,14 +30,14 @@ type SBTContracts =
 
 export const getBalances = async (
   masa: MasaInterface,
-  address?: string
+  address?: string,
 ): Promise<Balances> => {
   const addressToLoad: string =
     address || (await masa.config.signer.getAddress());
 
   const loadERC20Balance = async (
     userAddress: string,
-    tokenAddress?: string
+    tokenAddress?: string,
   ): Promise<number | undefined> => {
     let result;
 
@@ -49,7 +49,7 @@ export const getBalances = async (
       try {
         const contract: ERC20 = ERC20__factory.connect(
           tokenAddress,
-          masa.config.signer.provider
+          masa.config.signer.provider,
         );
 
         const [balance, decimals] = await Promise.all([
@@ -61,7 +61,7 @@ export const getBalances = async (
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(
-            `Token: ${tokenAddress} Wallet Address: ${addressToLoad} ${error.message}`
+            `Token: ${tokenAddress} Wallet Address: ${addressToLoad} ${error.message}`,
           );
         }
       }
@@ -72,7 +72,7 @@ export const getBalances = async (
 
   const loadSBTContractBalance = async (
     contract: SBTContracts,
-    addressToLoad: string
+    addressToLoad: string,
   ): Promise<number | undefined> => {
     let result;
 
@@ -85,8 +85,8 @@ export const getBalances = async (
             `Contract: ${await contract
               .name()
               .catch(
-                () => contract.address
-              )} Wallet Address: ${addressToLoad} ${error.message}`
+                () => contract.address,
+              )} Wallet Address: ${addressToLoad} ${error.message}`,
           );
         }
       }
@@ -102,11 +102,11 @@ export const getBalances = async (
     ERC20Balances = await paymentMethods.reduce(
       async (
         accumulatedBalances: Promise<Partial<Balances>>,
-        symbol: string
+        symbol: string,
       ): Promise<Balances> => {
         const balance = await loadERC20Balance(
           addressToLoad,
-          masa.config.network?.addresses?.tokens?.[symbol as PaymentMethod]
+          masa.config.network?.addresses?.tokens?.[symbol as PaymentMethod],
         );
 
         const accumulated = await accumulatedBalances;
@@ -114,12 +114,12 @@ export const getBalances = async (
           ? { ...accumulated, [symbol]: balance }
           : { ...accumulated };
       },
-      Promise.resolve({})
+      Promise.resolve({}),
     );
   }
 
   const nativeBalance = await masa.config.signer.provider?.getBalance(
-    addressToLoad
+    addressToLoad,
   );
 
   const Native: number | undefined = nativeBalance
@@ -138,11 +138,11 @@ export const getBalances = async (
   const SBTBalances: Balances = await Object.keys(SBTContractBalances).reduce(
     async (
       accumulatedBalances: Promise<Partial<Balances>>,
-      symbol: string
+      symbol: string,
     ): Promise<Balances> => {
       const balance = await loadSBTContractBalance(
         SBTContractBalances[symbol as SBTContractNames],
-        addressToLoad
+        addressToLoad,
       );
       const accumulated = await accumulatedBalances;
 
@@ -150,7 +150,7 @@ export const getBalances = async (
         ? { ...accumulated, [symbol]: balance }
         : { ...accumulated };
     },
-    Promise.resolve({})
+    Promise.resolve({}),
   );
 
   return {
