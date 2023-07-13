@@ -301,7 +301,7 @@ type ERC20ConstructorParams =
   | ConstructorParameters<typeof ContractFactory>;
 
 const isSuperArgs = (
-  xs: ERC20ConstructorParams
+  xs: ERC20ConstructorParams,
 ): xs is ConstructorParameters<typeof ContractFactory> => xs.length > 1;
 
 export class ERC20__factory extends ContractFactory {
@@ -316,14 +316,14 @@ export class ERC20__factory extends ContractFactory {
   override deploy(
     name_: PromiseOrValue<string>,
     symbol_: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ERC20> {
     return super.deploy(name_, symbol_, overrides || {}) as Promise<ERC20>;
   }
   override getDeployTransaction(
     name_: PromiseOrValue<string>,
     symbol_: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): TransactionRequest {
     return super.getDeployTransaction(name_, symbol_, overrides || {});
   }
