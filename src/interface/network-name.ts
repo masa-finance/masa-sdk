@@ -12,6 +12,7 @@ export type NetworkName =
   | "bsctest" // testnet
   | "bsc" // mainnet
   // base
-  | "basegoerli"
+  | "basegoerli" // testnet
+  | "base" // mainnet
   // fallback for unknown networks
   | "unknown";

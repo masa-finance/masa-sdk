@@ -131,6 +131,25 @@ const goerli: Network = {
 };
 
 // base
+const base: Network = {
+  networkName: "base",
+  chainName: "Base Mainnet",
+  chainNameShort: "Base",
+  chainId: 8453,
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: [
+    // temp rpc url
+    "https://developer-access-mainnet.base.org",
+    "https://mainnet.base.org",
+  ],
+  blockExplorerUrls: ["https://basescan.org"],
+  blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
+  addresses: addresses["base"] as Addresses,
+};
 const basegoerli: Network = {
   networkName: "basegoerli",
   chainName: "Base Goerli Testnet",
@@ -163,5 +182,6 @@ export const SupportedNetworks: Partial<{
   celo,
   alfajores,
   // base
+  base,
   basegoerli,
 };
