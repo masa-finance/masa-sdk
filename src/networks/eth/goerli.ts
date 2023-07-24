@@ -17,7 +17,7 @@ const {
 export const goerli: Addresses = {
   tokens: {
     MASA,
-    USDC: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
+    USDC: "0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C",
   },
   SoulboundIdentityAddress,
   SoulNameAddress,
