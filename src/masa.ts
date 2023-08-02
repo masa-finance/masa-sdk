@@ -1,6 +1,11 @@
 import { SupportedNetworks } from "./collections";
 import { MasaContracts } from "./contracts";
-import type { MasaArgs, MasaConfig, MasaInterface } from "./interface";
+import type {
+  MasaArgs,
+  MasaConfig,
+  MasaInterface,
+  NetworkName,
+} from "./interface";
 import { MasaAccount } from "./modules/account";
 import { MasaCreditScore } from "./modules/credit-score";
 import { MasaGreen } from "./modules/green";
@@ -93,12 +98,20 @@ export class Masa implements MasaInterface {
 
   public static create = async (args: MasaArgs) => {
     const network = await args.signer.provider?.getNetwork();
+    let networkName: NetworkName = network
+      ? getNetworkNameByChainId(network.chainId)
+      : "ethereum";
+
+    if (network?.name === "homestead") {
+      networkName = "ethereum";
+    } else if (network?.name === "celo-alfajores") {
+      networkName = "alfajores";
+    }
 
     return new Masa({
       ...args,
-      networkName: network
-        ? getNetworkNameByChainId(network.chainId)
-        : "ethereum",
+      networkName: networkName as NetworkName,
+      // network ? getNetworkNameByChainId(network.chainId) : "ethereum",
     });
   };
 }
