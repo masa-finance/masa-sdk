@@ -50,7 +50,7 @@ const purchaseSoulName = async (
         }`;
         console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-        const { wait, hash } = await masa.contracts.soulName.purchase(
+        const { wait, hash, price } = await masa.contracts.soulName.purchase(
           paymentMethod,
           soulName,
           soulNameLength,
@@ -96,6 +96,7 @@ const purchaseSoulName = async (
               errorCode: SoulNameErrorCodes.NoError,
               tokenId,
               soulName,
+              price
             };
           }
         }
