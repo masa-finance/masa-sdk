@@ -47,7 +47,7 @@ export interface SoulNameResultBase extends BaseResult {
 
 export interface CreateSoulNameResult extends SoulNameResultBase {
   soulName?: string;
-  price?: BigNumber;
+  metadata?: any;
 }
 
 export interface SoulNameMetadataStoreResult extends SoulNameResultBase {
