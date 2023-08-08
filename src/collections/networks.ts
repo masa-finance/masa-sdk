@@ -130,7 +130,7 @@ const goerli: Network = {
   addresses: addresses["goerli"] as Addresses,
 };
 
-// base
+// base mainnet
 const base: Network = {
   networkName: "base",
   chainName: "Base Mainnet",
@@ -141,11 +141,7 @@ const base: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: [
-    // temp rpc url
-    "https://developer-access-mainnet.base.org",
-    "https://mainnet.base.org",
-  ],
+  rpcUrls: ["https://rpc.ankr.com/base"],
   blockExplorerUrls: ["https://basescan.org"],
   blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
   addresses: addresses["base"] as Addresses,
@@ -160,7 +156,7 @@ const basegoerli: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://goerli.base.org"],
+  rpcUrls: ["https://rpc.ankr.com/base_goerli"],
   blockExplorerUrls: ["https://goerli.basescan.org"],
   blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
   addresses: addresses["basegoerli"] as Addresses,
