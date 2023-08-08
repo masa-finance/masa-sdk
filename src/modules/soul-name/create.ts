@@ -94,7 +94,7 @@ const purchaseSoulName = async (
           if (tokenId) {
 
             const metadata = {
-              price, 
+              ...purchaseInformation,
               paymentMethod
             }
             return {
