@@ -61,7 +61,7 @@ const purchaseSoulName = async (
           receiver,
         );
 
-        const { wait, hash, price } = purchaseInformation;
+        const { wait, hash } = purchaseInformation;
 
         console.log(
           Messages.WaitingToFinalize(
