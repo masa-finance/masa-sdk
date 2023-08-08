@@ -143,7 +143,7 @@ const base: Network = {
   },
   rpcUrls: ["https://rpc.ankr.com/base"],
   blockExplorerUrls: ["https://basescan.org"],
-  blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
+  blockExplorerApiUrls: ["https://api.basescan.org/api"],
   addresses: addresses["base"] as Addresses,
 };
 const basegoerli: Network = {
