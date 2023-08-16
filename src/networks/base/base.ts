@@ -6,10 +6,12 @@ const {
   SoulboundIdentity: SoulboundIdentityAddress,
   SoulName: SoulNameAddress,
   SoulStore: SoulStoreAddress,
+  SoulboundGreen: SoulboundGreenAddress,
 } = baseAddresses;
 
 export const base: Addresses = {
   SoulboundIdentityAddress,
   SoulNameAddress,
   SoulStoreAddress,
+  SoulboundGreenAddress,
 };
