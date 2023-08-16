@@ -80,6 +80,7 @@ export const deployASBT = async ({
       protocolFeeReceiver: constants.AddressZero,
       protocolFeeAmount: 0,
       protocolFeePercent: 0,
+      protocolFeePercentSub: 0,
     },
     limit,
   ];
