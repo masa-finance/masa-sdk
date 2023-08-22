@@ -58,9 +58,8 @@ export const loadSoulNameByName = async (
   let result;
 
   try {
-    const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
-      soulName,
-    );
+    const tokenId =
+      await masa.contracts.instances.SoulNameContract.getTokenId(soulName);
 
     result = await loadSoulNameByTokenId(masa, tokenId);
   } catch (error: unknown) {

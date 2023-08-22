@@ -37,9 +37,8 @@ export const generateGreen = async (
         );
 
       if (balance.eq(0)) {
-        const greenGenerateResult = await masa.client.green.generate(
-          phoneNumber,
-        );
+        const greenGenerateResult =
+          await masa.client.green.generate(phoneNumber);
 
         if (masa.config.verbose) {
           console.dir({ greenGenerateResult }, { depth: null });

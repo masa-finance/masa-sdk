@@ -15,9 +15,10 @@ export const resolveSoulName = async (
     const extension =
       await masa.contracts.instances.SoulNameContract.extension();
     const cleansedSoulname = soulName.replace(extension, "");
-    const tokenId = await masa.contracts.instances.SoulNameContract.getTokenId(
-      cleansedSoulname,
-    );
+    const tokenId =
+      await masa.contracts.instances.SoulNameContract.getTokenId(
+        cleansedSoulname,
+      );
     owner = masa.contracts.instances.SoulNameContract.ownerOf(tokenId);
   } catch (error) {
     if (error instanceof Error && masa.config.verbose) {

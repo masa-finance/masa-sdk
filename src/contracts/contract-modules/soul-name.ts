@@ -59,14 +59,14 @@ export class SoulName extends MasaModuleBase {
     metadataURL: string,
     authorityAddress: string,
     signature: string,
-    receiver?: string
+    receiver?: string,
   ): Promise<ContractTransaction & { price: BigNumber }> => {
     const to = receiver || (await this.masa.config.signer.getAddress());
 
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       "SoulStore",
-      this.instances.SoulStoreContract.address
+      this.instances.SoulStoreContract.address,
     );
 
     const value: {
@@ -90,20 +90,20 @@ export class SoulName extends MasaModuleBase {
       this.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     const { price, paymentAddress } = await this.getPrice(
       paymentMethod,
       nameLength,
-      duration
+      duration,
     );
 
     await this.checkOrGiveAllowance(
       paymentAddress,
       paymentMethod,
       this.instances.SoulStoreContract.address,
-      price
+      price,
     );
 
     const purchaseNameParameters: [
@@ -114,7 +114,7 @@ export class SoulName extends MasaModuleBase {
       number, // yearsPeriod: PromiseOrValue<BigNumberish>
       string, // tokenURI: PromiseOrValue<string>
       string, // authorityAddress: PromiseOrValue<string>
-      string // signature: PromiseOrValue<BytesLike>
+      string, // signature: PromiseOrValue<BytesLike>
     ] = [
       paymentAddress,
       to,
@@ -127,7 +127,7 @@ export class SoulName extends MasaModuleBase {
     ];
 
     const purchaseNameOverrides: PayableOverrides = await this.createOverrides(
-      isNativeCurrency(paymentMethod) ? price : undefined
+      isNativeCurrency(paymentMethod) ? price : undefined,
     );
 
     if (this.masa.config.verbose) {
@@ -143,13 +143,13 @@ export class SoulName extends MasaModuleBase {
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
       ...purchaseNameParameters,
-      purchaseNameOverrides
+      purchaseNameOverrides,
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
       gasLimit = SoulName.addSlippage(
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
@@ -174,7 +174,7 @@ export class SoulName extends MasaModuleBase {
     nameLength: number,
     duration: number = 1,
     // slippage in bps where 10000 is 100%. 250 would be 2,5%
-    slippage: number | undefined = 250
+    slippage: number | undefined = 250,
   ): Promise<PriceInformation> => {
     const paymentAddress = this.getPaymentAddress(paymentMethod);
 
@@ -187,7 +187,7 @@ export class SoulName extends MasaModuleBase {
         await this.instances.SoulStoreContract.getPriceForMintingNameWithProtocolFee(
           paymentAddress,
           nameLength,
-          duration
+          duration,
         );
       mintFee = fees.price;
       protocolFee = fees.protocolFee;
@@ -200,7 +200,7 @@ export class SoulName extends MasaModuleBase {
       mintFee = await this.instances.SoulStoreContract.getPriceForMintingName(
         paymentAddress,
         nameLength,
-        duration
+        duration,
       );
     }
 
@@ -222,7 +222,7 @@ export class SoulName extends MasaModuleBase {
     // protocol fee
     const formattedProtocolFee = await this.formatPrice(
       paymentAddress,
-      protocolFee
+      protocolFee,
     );
 
     return {
@@ -241,10 +241,10 @@ export class SoulName extends MasaModuleBase {
    * @param soulName
    */
   public getSoulnameData = async (
-    soulName: string
+    soulName: string,
   ): Promise<{ exists: boolean; tokenId: BigNumber }> => {
     return await this.instances.SoulNameContract.nameData(
-      soulName.toLowerCase()
+      soulName.toLowerCase(),
     );
   };
 
@@ -261,7 +261,7 @@ export class SoulName extends MasaModuleBase {
     soulNameLength: number,
     duration: number,
     metadataUrl: string,
-    receiver: string
+    receiver: string,
   ): Promise<
     | {
         signature: string;
@@ -288,7 +288,7 @@ export class SoulName extends MasaModuleBase {
       this.masa.config.signer,
       "SoulStore",
       this.types,
-      value
+      value,
     );
 
     const authorityAddress = await this.masa.config.signer.getAddress();
@@ -300,7 +300,7 @@ export class SoulName extends MasaModuleBase {
       this.types,
       value,
       signature,
-      authorityAddress
+      authorityAddress,
     );
 
     return { signature, authorityAddress };
@@ -313,7 +313,7 @@ export class SoulName extends MasaModuleBase {
    */
   public transfer = async (
     soulName: string,
-    receiver: string
+    receiver: string,
   ): Promise<boolean> => {
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
@@ -322,7 +322,7 @@ export class SoulName extends MasaModuleBase {
 
     if (soulNameData.exists) {
       console.log(
-        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`
+        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
       );
 
       try {
@@ -331,20 +331,20 @@ export class SoulName extends MasaModuleBase {
         const { wait, hash } = await transferFrom(
           this.masa.config.signer.getAddress(),
           receiver,
-          soulNameData.tokenId
+          soulNameData.tokenId,
         );
 
         console.log(
           Messages.WaitingToFinalize(
             hash,
-            this.masa.config.network?.blockExplorerUrls?.[0]
-          )
+            this.masa.config.network?.blockExplorerUrls?.[0],
+          ),
         );
 
         await wait();
 
         console.log(
-          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`
+          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
         );
 
         return true;
@@ -372,7 +372,7 @@ export class SoulName extends MasaModuleBase {
 
     if (soulNameData.exists) {
       console.log(
-        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`
+        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`,
       );
 
       try {
@@ -387,7 +387,7 @@ export class SoulName extends MasaModuleBase {
         if (this.masa.config.network?.gasSlippagePercentage) {
           gasLimit = SoulName.addSlippage(
             gasLimit,
-            this.masa.config.network.gasSlippagePercentage
+            this.masa.config.network.gasSlippagePercentage,
           );
         }
 
@@ -398,21 +398,21 @@ export class SoulName extends MasaModuleBase {
         console.log(
           Messages.WaitingToFinalize(
             hash,
-            this.masa.config.network?.blockExplorerUrls?.[0]
-          )
+            this.masa.config.network?.blockExplorerUrls?.[0],
+          ),
         );
 
         await wait();
 
         console.log(
-          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`
+          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
         );
 
         return true;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(
-            `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`
+            `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`,
           );
         }
       }

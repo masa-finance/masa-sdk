@@ -265,9 +265,8 @@ export abstract class MasaModuleBase extends MasaBase {
       let recoveredAddressIsAuthority = false;
 
       try {
-        recoveredAddressIsAuthority = await contract.authorities(
-          recoveredAddress,
-        );
+        recoveredAddressIsAuthority =
+          await contract.authorities(recoveredAddress);
       } catch (error) {
         if (error instanceof Error)
           console.error(`Retrieving authorities failed! ${error.message}.`);

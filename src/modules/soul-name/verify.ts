@@ -50,9 +50,8 @@ export const verifyByName = async (
 
     if (soulNameMetadataTxId) {
       try {
-        const metadataTxData = await masa.arweave.transactions.get(
-          soulNameMetadataTxId,
-        );
+        const metadataTxData =
+          await masa.arweave.transactions.get(soulNameMetadataTxId);
         const metadataOwner = await masa.arweave.wallets.ownerToAddress(
           metadataTxData.owner,
         );

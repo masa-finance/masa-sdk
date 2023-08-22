@@ -118,9 +118,8 @@ export const getBalances = async (
     );
   }
 
-  const nativeBalance = await masa.config.signer.provider?.getBalance(
-    addressToLoad,
-  );
+  const nativeBalance =
+    await masa.config.signer.provider?.getBalance(addressToLoad);
 
   const Native: number | undefined = nativeBalance
     ? parseFloat(utils.formatEther(nativeBalance))

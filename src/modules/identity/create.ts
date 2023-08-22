@@ -15,7 +15,7 @@ import { isSoulNameMetadataStoreResult } from "../../utils";
  * @param masa
  */
 export const purchaseIdentity = async (
-  masa: MasaInterface
+  masa: MasaInterface,
 ): Promise<BaseResult> => {
   const result = {
     success: false,
@@ -31,7 +31,7 @@ export const purchaseIdentity = async (
   let tokenId: string | undefined;
 
   const identityMintEvent = parsedLogs.find(
-    (event: LogDescription) => event.name === "Mint"
+    (event: LogDescription) => event.name === "Mint",
   );
 
   if (identityMintEvent) {
@@ -59,7 +59,7 @@ export const purchaseIdentity = async (
  * @param masa
  */
 export const createIdentity = async (
-  masa: MasaInterface
+  masa: MasaInterface,
 ): Promise<BaseResult> => {
   const result = {
     success: false,
@@ -101,7 +101,7 @@ export const purchaseIdentityWithSoulName = async (
   soulNameLength: number,
   duration: number,
   paymentMethod: PaymentMethod,
-  style?: string
+  style?: string,
 ): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
@@ -119,7 +119,7 @@ export const purchaseIdentityWithSoulName = async (
       `${soulName}${extension}`,
       await masa.config.signer.getAddress(),
       duration,
-      style
+      style,
     );
 
     if (storeMetadataResponse) {
@@ -137,15 +137,15 @@ export const purchaseIdentityWithSoulName = async (
             duration,
             soulNameMetadataUrl,
             storeMetadataResponse.authorityAddress,
-            storeMetadataResponse.signature
+            storeMetadataResponse.signature,
           );
         const { wait, hash } = purchaseInformation;
 
         console.log(
           Messages.WaitingToFinalize(
             hash,
-            masa.config.network?.blockExplorerUrls?.[0]
-          )
+            masa.config.network?.blockExplorerUrls?.[0],
+          ),
         );
 
         const { logs } = await wait();
@@ -156,7 +156,7 @@ export const purchaseIdentityWithSoulName = async (
           let identityId: string | undefined, tokenId: string | undefined;
 
           const identityMintEvent = parsedLogs.find(
-            (event: LogDescription) => event.name === "Mint"
+            (event: LogDescription) => event.name === "Mint",
           );
 
           if (identityMintEvent) {
@@ -169,7 +169,7 @@ export const purchaseIdentityWithSoulName = async (
           }
 
           const soulnameTransferEvent = parsedLogs.find(
-            (event: LogDescription) => event.name === "Transfer"
+            (event: LogDescription) => event.name === "Transfer",
           );
 
           if (soulnameTransferEvent) {
@@ -183,11 +183,10 @@ export const purchaseIdentityWithSoulName = async (
           }
 
           if (identityId && tokenId) {
-
-             const metadata = {
+            const metadata = {
               ...purchaseInformation,
-              paymentMethod
-            }
+              paymentMethod,
+            };
             return {
               success: true,
               errorCode: SoulNameErrorCodes.NoError,
@@ -195,7 +194,7 @@ export const purchaseIdentityWithSoulName = async (
               tokenId,
               identityId,
               soulName,
-              metadata
+              metadata,
             };
           }
         }
@@ -228,7 +227,7 @@ export const createIdentityWithSoulName = async (
   paymentMethod: PaymentMethod,
   soulName: string,
   duration: number,
-  style?: string
+  style?: string,
 ): Promise<
   {
     identityId?: string | BigNumber;
@@ -282,7 +281,7 @@ export const createIdentityWithSoulName = async (
       length,
       duration,
       paymentMethod,
-      style
+      style,
     );
   } else {
     result.message = Messages.NotLoggedIn();
