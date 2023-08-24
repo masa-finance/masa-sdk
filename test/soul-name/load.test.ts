@@ -14,7 +14,7 @@ describe("Soul Name", () => {
   describe("load", () => {
     it("should load a soul name properly", async () => {
       const soulnameDetails = await masa.soulName.loadSoulNameByTokenId("0");
-      assert.equal(soulnameDetails.metadata.name, "h34d.soul");
+      assert.equal(soulnameDetails?.metadata.name, "h34d.soul");
     }).timeout(5000);
   });
 });
