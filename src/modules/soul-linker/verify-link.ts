@@ -97,13 +97,13 @@ export const verifyLink = async (
           result.success = true;
           break;
         }
-      } catch (error: any) {
-        switch (error.errorName) {
+      } catch (error: unknown) {
+        switch ((error as { errorName: string }).errorName) {
           case "ValidPeriodExpired":
             result.message = "Link expired!";
             break;
           default:
-            console.error(error.errorName);
+            console.error((error as { errorName: string }).errorName);
         }
       }
     }
