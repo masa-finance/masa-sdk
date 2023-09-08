@@ -11,6 +11,9 @@ export type NetworkName =
   // BSC
   | "bsctest" // testnet
   | "bsc" // mainnet
+  // OP BNB
+  | "opbnbtest" // testnet
+  | "opbnb" // mainnet
   // base
   | "basegoerli" // testnet
   | "base" // mainnet

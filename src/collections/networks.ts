@@ -33,6 +33,36 @@ const bsctest: Network = {
   addresses: addresses["bsctest"] as Addresses,
 };
 
+// op bnb
+const opbnb: Network = {
+  networkName: "opbnb",
+  chainName: "opBNB Mainnet",
+  chainNameShort: "opBNB",
+  chainId: 204,
+  rpcUrls: ["https://opbnb-mainnet-rpc.bnbchain.org"],
+  nativeCurrency: {
+    name: "BNB",
+    symbol: "BNB",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://mainnet.opbnbscan.com"],
+  addresses: addresses["opbnb"] as Addresses,
+};
+const opbnbtest: Network = {
+  networkName: "opbnbtest",
+  chainName: "opBNB Testnet",
+  chainNameShort: "opBNB Test",
+  chainId: 5611,
+  rpcUrls: ["https://opbnb-testnet-rpc.bnbchain.org"],
+  nativeCurrency: {
+    name: "tBNB",
+    symbol: "tBNB",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://opbnbscan.com"],
+  addresses: addresses["opbnbtest"] as Addresses,
+};
+
 // celo
 const celo: Network = {
   networkName: "celo",
@@ -171,6 +201,9 @@ export const SupportedNetworks: Partial<{
   // BSC
   bsc,
   bsctest,
+  // op bnb
+  opbnb,
+  opbnbtest,
   // Polygon
   polygon,
   mumbai,
