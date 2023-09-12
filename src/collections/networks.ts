@@ -45,7 +45,7 @@ const opbnb: Network = {
     symbol: "BNB",
     decimals: 18,
   },
-  blockExplorerUrls: ["https://mainnet.opbnbscan.com"],
+  blockExplorerUrls: ["https://opbnbscan.com"],
   addresses: addresses["opbnb"] as Addresses,
 };
 const opbnbtest: Network = {
@@ -59,7 +59,7 @@ const opbnbtest: Network = {
     symbol: "tBNB",
     decimals: 18,
   },
-  blockExplorerUrls: ["https://opbnbscan.com"],
+  blockExplorerUrls: ["https://testnet.opbnbscan.com"],
   addresses: addresses["opbnbtest"] as Addresses,
 };
 
