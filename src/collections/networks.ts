@@ -6,6 +6,7 @@ const bsc: Network = {
   networkName: "bsc",
   chainName: "Binance Smart Chain",
   chainNameShort: "BSC",
+  isTestnet: false,
   chainId: 56,
   rpcUrls: ["https://endpoints.omniatech.io/v1/bsc/mainnet/public"],
   nativeCurrency: {
@@ -21,6 +22,7 @@ const bsctest: Network = {
   networkName: "bsctest",
   chainName: "Binance Smart Chain Testnet",
   chainNameShort: "BSC Testnet",
+  isTestnet: true,
   chainId: 97,
   rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
   nativeCurrency: {
@@ -38,6 +40,7 @@ const opbnb: Network = {
   networkName: "opbnb",
   chainName: "opBNB Mainnet",
   chainNameShort: "opBNB",
+  isTestnet: false,
   chainId: 204,
   rpcUrls: ["https://opbnb-mainnet-rpc.bnbchain.org"],
   nativeCurrency: {
@@ -52,6 +55,7 @@ const opbnbtest: Network = {
   networkName: "opbnbtest",
   chainName: "opBNB Testnet",
   chainNameShort: "opBNB Test",
+  isTestnet: true,
   chainId: 5611,
   rpcUrls: ["https://opbnb-testnet-rpc.bnbchain.org"],
   nativeCurrency: {
@@ -68,6 +72,7 @@ const celo: Network = {
   networkName: "celo",
   chainName: "Celo Mainnet",
   chainNameShort: "Celo",
+  isTestnet: false,
   chainId: 42220,
   rpcUrls: ["https://forno.celo.org"],
   nativeCurrency: {
@@ -83,6 +88,7 @@ const alfajores: Network = {
   networkName: "alfajores",
   chainName: "Alfajores Network",
   chainNameShort: "Alfajores",
+  isTestnet: true,
   chainId: 44787,
   rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
   nativeCurrency: {
@@ -100,6 +106,7 @@ const polygon: Network = {
   networkName: "polygon",
   chainName: "Polygon Mainnet",
   chainNameShort: "Polygon",
+  isTestnet: false,
   chainId: 137,
   nativeCurrency: {
     name: "MATIC",
@@ -115,6 +122,7 @@ const mumbai: Network = {
   networkName: "mumbai",
   chainName: "Mumbai Testnet",
   chainNameShort: "Mumbai",
+  isTestnet: true,
   chainId: 80001,
   nativeCurrency: {
     name: "tMATIC",
@@ -133,6 +141,7 @@ const ethereum: Network = {
   networkName: "ethereum",
   chainName: "Ethereum Mainnet",
   chainNameShort: "Ethereum",
+  isTestnet: false,
   chainId: 1,
   nativeCurrency: {
     name: "ETH",
@@ -148,6 +157,7 @@ const goerli: Network = {
   networkName: "goerli",
   chainName: "Goerli Testnet",
   chainNameShort: "Goerli",
+  isTestnet: true,
   chainId: 5,
   nativeCurrency: {
     name: "ETH",
@@ -165,6 +175,7 @@ const base: Network = {
   networkName: "base",
   chainName: "Base Mainnet",
   chainNameShort: "Base",
+  isTestnet: false,
   chainId: 8453,
   nativeCurrency: {
     name: "ETH",
@@ -180,6 +191,7 @@ const basegoerli: Network = {
   networkName: "basegoerli",
   chainName: "Base Goerli Testnet",
   chainNameShort: "Base Goerli",
+  isTestnet: true,
   chainId: 84531,
   nativeCurrency: {
     name: "ETH",

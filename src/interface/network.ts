@@ -21,6 +21,10 @@ export interface Network {
    */
   chainId: number;
   /**
+   * is this network a test network or not?
+   */
+  isTestnet: boolean;
+  /**
    * The list of available rpc urls, required for adding the network
    * to the wallet
    */
