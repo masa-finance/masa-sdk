@@ -8,7 +8,7 @@ const bsc: Network = {
   chainNameShort: "BSC",
   isTestnet: false,
   chainId: 56,
-  rpcUrls: ["https://endpoints.omniatech.io/v1/bsc/mainnet/public"],
+  rpcUrls: ["https://binance.llamarpc.com"],
   nativeCurrency: {
     name: "BNB",
     symbol: "BNB",
