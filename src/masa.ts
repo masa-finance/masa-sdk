@@ -44,6 +44,7 @@ export class Masa implements MasaInterface {
       protocol: "https",
     },
     contractOverrides,
+    skipLoadingContracts = false,
     verbose = false,
   }: MasaArgs) {
     // build config
@@ -67,7 +68,11 @@ export class Masa implements MasaInterface {
     this.arweave = new MasaArweave(arweave, this.config);
 
     // masa contracts wrapper
-    this.contracts = new MasaContracts(this, contractOverrides);
+    this.contracts = new MasaContracts({
+      masa: this,
+      contractOverrides,
+      skipLoadingContracts,
+    });
     // account + session
     this.account = new MasaAccount(this);
     this.session = new MasaSession(this);

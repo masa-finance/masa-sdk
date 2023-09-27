@@ -7,11 +7,12 @@ import type { NetworkName } from "./network-name";
 
 export interface MasaArgs {
   readonly signer: Signer;
+  readonly networkName?: NetworkName;
   readonly cookie?: string;
   readonly apiUrl?: string;
   readonly environment?: EnvironmentName;
-  readonly networkName?: NetworkName;
-  readonly verbose?: boolean;
   readonly arweave?: ArweaveConfig;
   readonly contractOverrides?: Partial<IIdentityContracts>;
+  readonly skipLoadingContracts?: boolean;
+  readonly verbose?: boolean;
 }

@@ -46,16 +46,22 @@ export class MasaContracts extends MasaBase {
    */
   public identity: Identity;
 
-  public constructor(
-    masa: MasaInterface,
-    contractOverrides?: Partial<IIdentityContracts>,
-  ) {
+  public constructor({
+    masa,
+    contractOverrides,
+    skipLoadingContracts = false,
+  }: {
+    masa: MasaInterface;
+    contractOverrides?: Partial<IIdentityContracts>;
+    skipLoadingContracts?: boolean;
+  }) {
     super(masa);
 
     this.instances = {
       ...loadIdentityContracts({
         signer: this.masa.config.signer,
         networkName: this.masa.config.networkName,
+        skipLoadingContracts,
       }),
       ...contractOverrides,
     };

@@ -6,7 +6,11 @@ import type {
 } from "@masa-finance/masa-contracts-identity";
 import { constants, utils } from "ethers";
 
-import type { MasaInterface, PaymentMethod } from "../../interface";
+import type {
+  ContractInfo,
+  MasaInterface,
+  PaymentMethod,
+} from "../../interface";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
 
@@ -71,12 +75,12 @@ export const getBalances = async (
   };
 
   const loadSBTContractBalance = async (
-    contract: SBTContracts,
+    contract: SBTContracts & ContractInfo,
     addressToLoad: string,
   ): Promise<number | undefined> => {
     let result;
 
-    if (contract.address !== constants.AddressZero) {
+    if (contract.hasAddress) {
       try {
         result = (await contract.balanceOf(addressToLoad)).toNumber();
       } catch (error: unknown) {
@@ -126,7 +130,7 @@ export const getBalances = async (
     : undefined;
 
   const SBTContractBalances: {
-    [key in SBTContractNames]: SBTContracts;
+    [key in SBTContractNames]: SBTContracts & ContractInfo;
   } = {
     Identity: masa.contracts.instances.SoulboundIdentityContract,
     SoulName: masa.contracts.instances.SoulNameContract,
