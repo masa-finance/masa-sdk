@@ -55,6 +55,7 @@ export class Masa implements MasaInterface {
       network: SupportedNetworks[networkName],
       signer,
       verbose,
+      skipLoadingContracts,
     };
 
     // masa client
@@ -71,7 +72,6 @@ export class Masa implements MasaInterface {
     this.contracts = new MasaContracts({
       masa: this,
       contractOverrides,
-      skipLoadingContracts,
     });
     // account + session
     this.account = new MasaAccount(this);

@@ -49,11 +49,9 @@ export class MasaContracts extends MasaBase {
   public constructor({
     masa,
     contractOverrides,
-    skipLoadingContracts = false,
   }: {
     masa: MasaInterface;
     contractOverrides?: Partial<IIdentityContracts>;
-    skipLoadingContracts?: boolean;
   }) {
     super(masa);
 
@@ -61,7 +59,7 @@ export class MasaContracts extends MasaBase {
       ...loadIdentityContracts({
         signer: this.masa.config.signer,
         networkName: this.masa.config.networkName,
-        skipLoadingContracts,
+        skipLoadingContracts: this.masa.config.skipLoadingContracts,
       }),
       ...contractOverrides,
     };
