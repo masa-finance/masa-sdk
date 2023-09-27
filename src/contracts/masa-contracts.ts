@@ -59,7 +59,6 @@ export class MasaContracts extends MasaBase {
       ...loadIdentityContracts({
         signer: this.masa.config.signer,
         networkName: this.masa.config.networkName,
-        skipLoadingContracts: this.masa.config.skipLoadingContracts,
       }),
       ...contractOverrides,
     };

@@ -44,7 +44,6 @@ export class Masa implements MasaInterface {
       protocol: "https",
     },
     contractOverrides,
-    skipLoadingContracts = false,
     verbose = false,
   }: MasaArgs) {
     // build config
@@ -55,7 +54,6 @@ export class Masa implements MasaInterface {
       network: SupportedNetworks[networkName],
       signer,
       verbose,
-      skipLoadingContracts,
     };
 
     // masa client
@@ -96,11 +94,11 @@ export class Masa implements MasaInterface {
     version,
   };
 
-  public static create = async (args: MasaArgs) => {
-    const network = await args.signer.provider?.getNetwork();
+  public static create = async (masaArgs: MasaArgs) => {
+    const network = await masaArgs.signer.provider?.getNetwork();
 
     return new Masa({
-      ...args,
+      ...masaArgs,
       networkName: network
         ? getNetworkNameByChainId(network.chainId)
         : "ethereum",

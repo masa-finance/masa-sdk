@@ -10,5 +10,4 @@ export interface MasaConfig {
   readonly network?: Network;
   readonly signer: Signer;
   readonly verbose: boolean;
-  readonly skipLoadingContracts: boolean;
 }

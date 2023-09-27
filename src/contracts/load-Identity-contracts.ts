@@ -23,38 +23,33 @@ import { addresses } from "../networks";
 export interface LoadIdentityContractsArgs {
   signer: Signer;
   networkName?: NetworkName;
-  skipLoadingContracts?: boolean;
 }
 
 const loadContract = <T extends BaseContract & ContractInfo>({
-  factory,
   address,
+  factory,
   signer,
-  skipLoadingContracts,
 }: {
-  factory: ContractFactory;
   address?: string;
+  factory: ContractFactory;
   signer: Signer;
-  skipLoadingContracts?: boolean;
 }): T => {
-  const addr = skipLoadingContracts
-    ? constants.AddressZero
-    : address ?? constants.AddressZero;
+  const addr = address ?? constants.AddressZero;
 
   let contract: T = factory.attach(addr) as T;
 
-  contract.hasAddress = Boolean(addr) && addr !== constants.AddressZero;
+  contract.hasAddress = addr !== constants.AddressZero;
 
   if (contract.hasAddress) {
     contract = { ...contract, ...contract.connect(signer) } as T;
   }
+
   return contract;
 };
 
 export const loadIdentityContracts = ({
   signer,
   networkName = "ethereum",
-  skipLoadingContracts,
 }: LoadIdentityContractsArgs): IIdentityContracts => {
   // Identity
   const SoulboundIdentityContract = loadContract<
@@ -63,7 +58,6 @@ export const loadIdentityContracts = ({
     factory: new SoulboundIdentity__factory(),
     address: addresses[networkName]?.SoulboundIdentityAddress,
     signer,
-    skipLoadingContracts,
   });
 
   // Credit Score
@@ -73,7 +67,6 @@ export const loadIdentityContracts = ({
     factory: new SoulboundCreditScore__factory(),
     address: addresses[networkName]?.SoulboundCreditScoreAddress,
     signer,
-    skipLoadingContracts,
   });
 
   // Soul Name
@@ -81,7 +74,6 @@ export const loadIdentityContracts = ({
     factory: new SoulName__factory(),
     address: addresses[networkName]?.SoulNameAddress,
     signer,
-    skipLoadingContracts,
   });
 
   // Soul Linker
@@ -89,7 +81,6 @@ export const loadIdentityContracts = ({
     factory: new SoulLinker__factory(),
     address: addresses[networkName]?.SoulLinkerAddress,
     signer,
-    skipLoadingContracts,
   });
 
   // Soul Store
@@ -97,7 +88,6 @@ export const loadIdentityContracts = ({
     factory: new SoulStore__factory(),
     address: addresses[networkName]?.SoulStoreAddress,
     signer,
-    skipLoadingContracts,
   });
 
   // Green
@@ -105,7 +95,6 @@ export const loadIdentityContracts = ({
     factory: new SoulboundGreen__factory(),
     address: addresses[networkName]?.SoulboundGreenAddress,
     signer,
-    skipLoadingContracts,
   });
 
   return {

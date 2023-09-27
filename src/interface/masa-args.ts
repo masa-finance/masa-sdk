@@ -13,6 +13,5 @@ export interface MasaArgs {
   readonly environment?: EnvironmentName;
   readonly arweave?: ArweaveConfig;
   readonly contractOverrides?: Partial<IIdentityContracts>;
-  readonly skipLoadingContracts?: boolean;
   readonly verbose?: boolean;
 }
