@@ -1,11 +1,34 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
-import { utils } from "ethers";
+import { Signer, utils } from "ethers";
 
 import type { PaymentMethod, PriceInformation } from "../../../interface";
 import type { ContractFactory } from "../../../interface/contract-factory";
 import { isNativeCurrency } from "../../../utils";
 import { MasaModuleBase } from "../masa-module-base";
+
+const checkExists = async (
+  address: string,
+  signer: Signer,
+): Promise<boolean> => {
+  const storage = await signer.provider?.getStorageAt(address, 0);
+
+  // check if storage is 0x0 at position 0, this is the case most of the cases
+  if (
+    storage ===
+    "0x0000000000000000000000000000000000000000000000000000000000000000"
+  ) {
+    // if the storage is empty, check if there is no code for this contract,
+    // if so we can be sure it does not exist
+    const code = await signer.provider?.getCode(address);
+    if (code === "0x0") {
+      // no contract in the blockchain dude
+      return false;
+    }
+  }
+
+  return true;
+};
 
 export abstract class MasaSBTModuleBase extends MasaModuleBase {
   /**
@@ -88,11 +111,11 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
       console.error(error);
       throw new Error(error);
     }
-    // fetch code to see if the contract exists
-    const code: string | undefined =
-      await this.masa.config.signer.provider?.getCode(address);
 
-    const contractExists: boolean = Boolean(code) && code !== "0x";
+    const contractExists: boolean = await checkExists(
+      address,
+      this.masa.config.signer,
+    );
 
     // no code exists, unable to load
     if (!contractExists) {
