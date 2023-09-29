@@ -11,6 +11,7 @@ import {
   loadSoulNameByTokenId,
   loadSoulNames,
 } from "./load";
+import { renewSoulName } from "./renew";
 import { resolveSoulName } from "./resolve";
 import { sendSoulName } from "./send";
 import { tailSoulNames } from "./tail";
@@ -86,6 +87,14 @@ export class MasaSoulName extends MasaBase {
    * @param soulName
    */
   burn = (soulName: string) => burnSoulName(this.masa, soulName);
+
+  /**
+   *
+   * @param soulName
+   * @param years
+   */
+  renew = (soulName: string, years: number) =>
+    renewSoulName(this.masa, soulName, years);
 
   /**
    *
