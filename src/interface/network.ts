@@ -28,7 +28,7 @@ export interface Network {
    * The list of available rpc urls, required for adding the network
    * to the wallet
    */
-  rpcUrls: string[];
+  rpcUrls: (string | undefined)[];
   /**
    * Information about the native currency
    */

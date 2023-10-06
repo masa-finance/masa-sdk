@@ -8,7 +8,16 @@ const bsc: Network = {
   chainNameShort: "BSC",
   isTestnet: false,
   chainId: 56,
-  rpcUrls: ["https://binance.llamarpc.com"],
+  rpcUrls: [
+    // default https
+    "https://binance.llamarpc.com",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://bsc.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   nativeCurrency: {
     name: "BNB",
     symbol: "BNB",
@@ -24,7 +33,16 @@ const bsctest: Network = {
   chainNameShort: "BSC Testnet",
   isTestnet: true,
   chainId: 97,
-  rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
+  rpcUrls: [
+    // default https
+    "https://data-seed-prebsc-1-s1.binance.org:8545",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://bsc-testnet.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   nativeCurrency: {
     name: "tBNB",
     symbol: "tBNB",
@@ -42,7 +60,16 @@ const opbnb: Network = {
   chainNameShort: "opBNB",
   isTestnet: false,
   chainId: 204,
-  rpcUrls: ["https://opbnb-mainnet-rpc.bnbchain.org"],
+  rpcUrls: [
+    // default https
+    "https://opbnb-mainnet-rpc.bnbchain.org",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://opbnb.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   nativeCurrency: {
     name: "BNB",
     symbol: "BNB",
@@ -57,7 +84,16 @@ const opbnbtest: Network = {
   chainNameShort: "opBNB Test",
   isTestnet: true,
   chainId: 5611,
-  rpcUrls: ["https://opbnb-testnet-rpc.bnbchain.org"],
+  rpcUrls: [
+    // default https
+    "https://opbnb-testnet-rpc.bnbchain.org",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
   nativeCurrency: {
     name: "tBNB",
     symbol: "tBNB",
@@ -74,7 +110,16 @@ const celo: Network = {
   chainNameShort: "Celo",
   isTestnet: false,
   chainId: 42220,
-  rpcUrls: ["https://forno.celo.org"],
+  rpcUrls: [
+    // default https
+    "https://forno.celo.org",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://forno.celo.org/ws",
+    // alternative wss
+    undefined,
+  ],
   nativeCurrency: {
     name: "CELO",
     symbol: "CELO",
@@ -90,7 +135,16 @@ const alfajores: Network = {
   chainNameShort: "Alfajores",
   isTestnet: true,
   chainId: 44787,
-  rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
+  rpcUrls: [
+    // default https
+    "https://alfajores-forno.celo-testnet.org",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://alfajores-forno.celo-testnet.org/ws",
+    // alternative wss
+    undefined,
+  ],
   nativeCurrency: {
     name: "CELO",
     symbol: "CELO",
@@ -113,7 +167,16 @@ const polygon: Network = {
     symbol: "MATIC", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://polygon-rpc.com"],
+  rpcUrls: [
+    // default https
+    "https://polygon-rpc.com",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://polygon-bor.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   blockExplorerUrls: ["https://polygonscan.com"],
   blockExplorerApiUrls: ["https://api.polygonscan.com/api"],
   addresses: addresses["polygon"] as Addresses,
@@ -129,7 +192,16 @@ const mumbai: Network = {
     symbol: "tMATIC", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://polygon-testnet.public.blastapi.io"],
+  rpcUrls: [
+    // default https
+    "https://polygon-testnet.public.blastapi.io",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
   blockExplorerUrls: ["https://mumbai.polygonscan.com"],
   blockExplorerApiUrls: ["https://api-mumbai.polygonscan.com/api"],
   addresses: addresses["mumbai"] as Addresses,
@@ -148,7 +220,16 @@ const ethereum: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.ankr.com/eth"],
+  rpcUrls: [
+    // default https
+    "https://rpc.ankr.com/eth",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://ethereum.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   blockExplorerUrls: ["https://etherscan.io"],
   blockExplorerApiUrls: ["https://api.etherscan.io/api"],
   addresses: addresses["ethereum"] as Addresses,
@@ -164,7 +245,16 @@ const goerli: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.ankr.com/eth_goerli"],
+  rpcUrls: [
+    // default https
+    "https://rpc.ankr.com/eth_goerli",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://ethereum-goerli.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   blockExplorerUrls: ["https://goerli.etherscan.io"],
   blockExplorerApiUrls: ["https://api-goerli.etherscan.io/api"],
   addresses: addresses["goerli"] as Addresses,
@@ -182,7 +272,16 @@ const base: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.ankr.com/base"],
+  rpcUrls: [
+    // default https
+    "https://rpc.ankr.com/base",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://base.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   blockExplorerUrls: ["https://basescan.org"],
   blockExplorerApiUrls: ["https://api.basescan.org/api"],
   addresses: addresses["base"] as Addresses,
@@ -198,7 +297,16 @@ const basegoerli: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.ankr.com/base_goerli"],
+  rpcUrls: [
+    // default https
+    "https://rpc.ankr.com/base_goerli",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://base-goerli.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
   blockExplorerUrls: ["https://goerli.basescan.org"],
   blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
   addresses: addresses["basegoerli"] as Addresses,
