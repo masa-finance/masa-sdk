@@ -107,7 +107,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
 
     // address invalid, unable to load
     if (!utils.isAddress(address)) {
-      error = `Address '${address}' is not valid!`;
+      error = `SBT Address '${address}' is not valid!`;
       console.error(error);
       throw new Error(error);
     }
