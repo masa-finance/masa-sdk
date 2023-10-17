@@ -312,6 +312,56 @@ const basegoerli: Network = {
   addresses: addresses["basegoerli"] as Addresses,
 };
 
+// scroll mainnet
+const scroll: Network = {
+  networkName: "scroll",
+  chainName: "Scroll Mainnet",
+  chainNameShort: "Scroll",
+  isTestnet: false,
+  chainId: 534352,
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: [
+    // default https
+    "https://rpc.scroll.io",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  blockExplorerUrls: ["https://scrollscan.com/"],
+  addresses: addresses["scroll"] as Addresses,
+};
+const scrollsepolia: Network = {
+  networkName: "scrollsepolia",
+  chainName: "Scroll Sepolia Testnet",
+  chainNameShort: "Scroll Sepolia",
+  isTestnet: true,
+  chainId: 534351,
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: [
+    // default https
+    "https://sepolia-rpc.scroll.io",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  blockExplorerUrls: ["https://sepolia.scrollscan.com"],
+  addresses: addresses["scrollsepolia"] as Addresses,
+};
+
 export const SupportedNetworks: Partial<{
   [key in NetworkName]: Network;
 }> = {
@@ -333,4 +383,7 @@ export const SupportedNetworks: Partial<{
   // base
   base,
   basegoerli,
+  // scroll
+  scroll,
+  scrollsepolia,
 };
