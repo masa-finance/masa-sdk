@@ -5,6 +5,7 @@ import { alfajores, celo } from "./celo";
 import { ethereum, goerli } from "./eth";
 import { opbnb, opbnbtest } from "./opbnb";
 import { mumbai, polygon } from "./polygon";
+import { scroll, scrollsepolia } from "./scroll";
 
 export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // eth
@@ -25,4 +26,7 @@ export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // base
   base,
   basegoerli,
+  // scroll
+  scroll,
+  scrollsepolia,
 };
