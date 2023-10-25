@@ -274,7 +274,7 @@ const base: Network = {
   },
   rpcUrls: [
     // default https
-    "https://rpc.ankr.com/base",
+    "https://mainnet.base.org",
     // alternative https
     undefined,
     // default wss
@@ -299,7 +299,7 @@ const basegoerli: Network = {
   },
   rpcUrls: [
     // default https
-    "https://rpc.ankr.com/base_goerli",
+    "https://goerli.base.org",
     // alternative https
     undefined,
     // default wss
