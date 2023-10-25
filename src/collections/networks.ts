@@ -334,7 +334,7 @@ const scroll: Network = {
     // alternative wss
     undefined,
   ],
-  blockExplorerUrls: ["https://scrollscan.com/"],
+  blockExplorerUrls: ["https://scrollscan.com"],
   addresses: addresses["scroll"] as Addresses,
 };
 const scrollsepolia: Network = {
