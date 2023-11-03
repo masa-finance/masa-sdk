@@ -329,7 +329,7 @@ export class SoulName extends MasaModuleBase {
         const { transferFrom } = this.masa.contracts.instances.SoulNameContract;
 
         const { wait, hash } = await transferFrom(
-          this.masa.config.signer.getAddress(),
+          await this.masa.config.signer.getAddress(),
           receiver,
           soulNameData.tokenId,
         );
