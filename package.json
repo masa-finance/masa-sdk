@@ -46,8 +46,8 @@
   "devDependencies": {
     "@types/chai": "^4.3.6",
     "@types/mocha": "^10.0.1",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
     "chai": "^4.3.7",
     "circular-dependency-plugin": "^5.2.2",
     "cross-env": "^7.0.3",
@@ -59,7 +59,7 @@
     "terser-webpack-plugin": "^5.3.6",
     "ts-mocha": "^10.0.0",
     "typedoc": "^0.25.1",
-    "typedoc-plugin-markdown": "^3.15.2",
+    "typedoc-plugin-markdown": "^3.17.0",
     "webpack": "^5.84.0",
     "webpack-cli": "^5.0.1"
   }
