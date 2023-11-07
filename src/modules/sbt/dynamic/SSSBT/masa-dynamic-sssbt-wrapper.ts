@@ -1,16 +1,22 @@
-import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import type { ReferenceSBTDynamicSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import type { PaymentMethod } from "../../../interface";
-import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
+import type { PaymentMethod } from "../../../../interface";
+import { MasaDynamicSBTWrapper } from "../masa-dynamic-sbt-wrapper";
 
-export class MasaSSSBTWrapper<
-  Contract extends ReferenceSBTSelfSovereign,
-> extends MasaSBTWrapper<Contract> {
+export class MasaDynamicSSSBTWrapper<
+  Contract extends ReferenceSBTDynamicSelfSovereign,
+> extends MasaDynamicSBTWrapper<Contract> {
   /**
    *
    * @param receiver
+   * @param state
+   * @param stateValue
    */
-  sign = async (receiver: string) => {
+  public signState = async (
+    receiver: string,
+    state: string,
+    stateValue: boolean,
+  ) => {
     let result:
       | {
           authorityAddress: string;
@@ -24,7 +30,7 @@ export class MasaSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Signing SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(`Signing Dynamic SSSBT on: '${this.masa.config.networkName}'`);
     console.log(`Contract Name: '${name}'`);
     console.log(`Contract Symbol: '${symbol}'`);
     console.log(`Contract Address: '${this.contract.address}'`);
@@ -34,19 +40,29 @@ export class MasaSSSBTWrapper<
 
     // fill the collection with data
     const value: {
-      to: string;
+      account: string;
+      state: string;
+      value: boolean;
       authorityAddress: string;
       signatureDate: number;
     } = {
-      to: receiver,
+      account: receiver,
+      state,
+      value: stateValue,
       authorityAddress: await this.masa.config.signer.getAddress(),
       signatureDate,
     };
 
-    const { sign, types } = this.masa.contracts.sssbt.attach(this.contract);
+    const { signState, types } = this.masa.contracts["dynamic-sssbt"].attach(
+      this.contract,
+    );
 
     // sign to create a signature
-    const signResult = await sign("ReferenceSBTSelfSovereign", types, value);
+    const signResult = await signState(
+      "ReferenceSBTSelfSovereign",
+      types,
+      value,
+    );
 
     if (signResult) {
       const { signature, authorityAddress } = signResult;
@@ -69,15 +85,9 @@ export class MasaSSSBTWrapper<
 
   /**
    *
-   * @param authorityAddress
-   * @param signatureDate
-   * @param signature
    * @param paymentMethod
    */
-  mint = async (
-    authorityAddress: string,
-    signatureDate: number,
-    signature: string,
+  public mint = async (
     paymentMethod: PaymentMethod = "ETH",
   ): Promise<boolean> => {
     const receiver = await this.masa.config.signer.getAddress();
@@ -87,20 +97,14 @@ export class MasaSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Minting SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(`Minting Dynamic SSSBT on: '${this.masa.config.networkName}'`);
     console.log(`Contract Name: '${name}'`);
     console.log(`Contract Symbol: '${symbol}'`);
     console.log(`Contract Address: '${this.contract.address}'`);
     console.log(`To receiver: '${receiver}'`);
 
-    const { mint } = this.masa.contracts.sssbt.attach(this.contract);
+    const { mint } = this.masa.contracts["dynamic-sssbt"].attach(this.contract);
 
-    return mint(
-      paymentMethod,
-      receiver,
-      signature,
-      signatureDate,
-      authorityAddress,
-    );
+    return mint(paymentMethod, receiver);
   };
 }

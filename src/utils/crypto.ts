@@ -77,7 +77,7 @@ export const signTypedData = async (
   wallet: Signer,
   name: string,
   types: Record<string, Array<TypedDataField>>,
-  value: Record<string, string | BigNumber | number>,
+  value: Record<string, string | BigNumber | number | boolean>,
 ): Promise<{ signature: string; domain: TypedDataDomain }> => {
   const domain = await generateSignatureDomain(wallet, name, contract.address);
   const signature = await (wallet as Signer & TypedDataSigner)._signTypedData(

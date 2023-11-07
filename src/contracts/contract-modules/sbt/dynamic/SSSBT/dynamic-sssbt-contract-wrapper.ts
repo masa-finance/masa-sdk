@@ -1,24 +1,26 @@
 import { LogDescription } from "@ethersproject/abi";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import { ReferenceSBTDynamicSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
-import { Messages } from "../../../../collections";
-import type { PaymentMethod, PriceInformation } from "../../../../interface";
+import { Messages } from "../../../../../collections";
+import type { PaymentMethod } from "../../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
   signTypedData,
-} from "../../../../utils";
-import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
+} from "../../../../../utils";
+import { DynamicSBTContractWrapper } from "../dynamic-sbt-contract-wrapper";
 
-export class SSSBTContractWrapper<
-  Contract extends ReferenceSBTSelfSovereign,
-> extends SBTContractWrapper<Contract> {
+export class DynamicSSSBTContractWrapper<
+  Contract extends ReferenceSBTDynamicSelfSovereign,
+> extends DynamicSBTContractWrapper<Contract> {
   public readonly types = {
-    Mint: [
-      { name: "to", type: "address" },
+    SetState: [
+      { name: "account", type: "address" },
+      { name: "state", type: "string" },
+      { name: "value", type: "bool" },
       { name: "authorityAddress", type: "address" },
       { name: "signatureDate", type: "uint256" },
     ],
@@ -30,10 +32,10 @@ export class SSSBTContractWrapper<
    * @param types
    * @param value
    */
-  public sign = async (
+  public signState = async (
     name: string,
     types: Record<string, Array<TypedDataField>>,
-    value: Record<string, string | BigNumber | number>,
+    value: Record<string, string | BigNumber | number | boolean>,
   ): Promise<{
     signature: string;
     authorityAddress: string;
@@ -49,7 +51,7 @@ export class SSSBTContractWrapper<
     );
 
     await this.verify(
-      "Signing SBT failed!",
+      "Signing Dynamic SBT failed!",
       this.contract,
       domain,
       types,
@@ -63,23 +65,19 @@ export class SSSBTContractWrapper<
 
   /**
    *
-   * @param paymentMethod
    * @param name
    * @param types
    * @param value
    * @param signature
    * @param authorityAddress
-   * @param slippage
    */
-  protected prepareMint = async (
-    paymentMethod: PaymentMethod,
+  protected prepareSetState = async (
     name: string,
     types: Record<string, Array<TypedDataField>>,
-    value: Record<string, string | BigNumber | number>,
+    value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
-    slippage: number | undefined = 250,
-  ): Promise<PriceInformation> => {
+  ): Promise<boolean> => {
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       name,
@@ -87,7 +85,7 @@ export class SSSBTContractWrapper<
     );
 
     await this.verify(
-      "Verifying SBT failed!",
+      "Verifying Dynamic SBT failed!",
       this.contract,
       domain,
       types,
@@ -96,36 +94,110 @@ export class SSSBTContractWrapper<
       authorityAddress,
     );
 
-    const sssbtMintPriceInfo = await this.getPrice(paymentMethod, slippage);
+    return true;
+  };
 
-    if (this.masa.config.verbose) {
-      console.dir(
-        {
-          sssbtMintPriceInfo,
-        },
-        {
-          depth: null,
-        },
+  /**
+   *
+   * @param receiver
+   * @param state
+   * @param stateValue
+   * @param signature
+   * @param signatureDate
+   * @param authorityAddress
+   */
+  public setState = async (
+    receiver: string,
+    state: string,
+    stateValue: boolean,
+    signature: string,
+    signatureDate: number,
+    authorityAddress: string,
+  ): Promise<boolean> => {
+    const value: {
+      account: string;
+      state: string;
+      value: boolean;
+      authorityAddress: string;
+      signatureDate: number;
+    } = {
+      account: receiver,
+      state,
+      value: stateValue,
+      authorityAddress,
+      signatureDate,
+    };
+
+    const {
+      "setState(address,string,bool,address,uint256,bytes)": setState,
+      estimateGas: {
+        "setState(address,string,bool,address,uint256,bytes)": estimateGas,
+      },
+    } = this.contract;
+
+    this.prepareSetState(
+      "adsasdads",
+      this.types,
+      value,
+      signature,
+      authorityAddress,
+    );
+
+    const dynamicSSSBTSetStateArguments: [
+      account: string,
+      state: string,
+      value: boolean,
+      authorityAddress: string,
+      signatureDate: number,
+      signature: string,
+    ] = [
+      receiver,
+      state,
+      stateValue,
+      authorityAddress,
+      signatureDate,
+      signature,
+    ];
+
+    const mintSSSBTOverrides: PayableOverrides = await this.createOverrides();
+
+    let gasLimit: BigNumber = await estimateGas(
+      ...dynamicSSSBTSetStateArguments,
+      mintSSSBTOverrides,
+    );
+
+    if (this.masa.config.network?.gasSlippagePercentage) {
+      gasLimit = DynamicSSSBTContractWrapper.addSlippage(
+        gasLimit,
+        this.masa.config.network.gasSlippagePercentage,
       );
     }
 
-    return sssbtMintPriceInfo;
+    const { wait, hash } = await setState(...dynamicSSSBTSetStateArguments, {
+      ...mintSSSBTOverrides,
+      gasLimit,
+    });
+
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        this.masa.config.network?.blockExplorerUrls?.[0],
+      ),
+    );
+
+    await wait();
+
+    return true;
   };
 
   /**
    *
    * @param paymentMethod
    * @param receiver
-   * @param signature
-   * @param signatureDate
-   * @param authorityAddress
    */
   public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
-    signature: string,
-    signatureDate: number,
-    authorityAddress: string,
   ): Promise<boolean> => {
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -153,33 +225,11 @@ export class SSSBTContractWrapper<
       }
     }
 
-    // fill the collection with data
-    const value: {
-      to: string;
-      authorityAddress: string;
-      signatureDate: number;
-    } = {
-      to: receiver,
-      authorityAddress,
-      signatureDate,
-    };
-
-    const { price, paymentAddress } = await this.prepareMint(
-      paymentMethod,
-      "ReferenceSBTSelfSovereign",
-      this.types,
-      value,
-      signature,
-      authorityAddress,
-    );
+    const { price, paymentAddress } = await this.getPrice(paymentMethod);
 
     const mintSSSBTArguments: [
       string, // paymentMethod string
-      string, // to string
-      string, // authorityAddress string
-      number, // authorityAddress number
-      string, // signature string
-    ] = [paymentAddress, receiver, authorityAddress, signatureDate, signature];
+    ] = [paymentAddress];
 
     const mintSSSBTOverrides: PayableOverrides = await this.createOverrides(
       isNativeCurrency(paymentMethod) ? price : undefined,
@@ -198,10 +248,8 @@ export class SSSBTContractWrapper<
     }
 
     const {
-      "mint(address,address,address,uint256,bytes)": mint,
-      estimateGas: {
-        "mint(address,address,address,uint256,bytes)": estimateGas,
-      },
+      "mint(address)": mint,
+      estimateGas: { "mint(address)": estimateGas },
     } = this.contract;
 
     let gasLimit: BigNumber = await estimateGas(
@@ -210,7 +258,7 @@ export class SSSBTContractWrapper<
     );
 
     if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = SSSBTContractWrapper.addSlippage(
+      gasLimit = DynamicSSSBTContractWrapper.addSlippage(
         gasLimit,
         this.masa.config.network.gasSlippagePercentage,
       );
