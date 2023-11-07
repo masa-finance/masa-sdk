@@ -1,16 +1,20 @@
 import { SupportedNetworks } from "./collections";
 import { MasaContracts } from "./contracts";
 import type { MasaArgs, MasaConfig, MasaInterface } from "./interface";
-import { MasaAccount } from "./modules/account";
-import { MasaCreditScore } from "./modules/credit-score";
-import { MasaGreen } from "./modules/green";
-import { MasaIdentity } from "./modules/identity";
-import { MasaSBTBase } from "./modules/sbt";
-import { MasaASBT } from "./modules/sbt/ASBT";
-import { MasaSSSBT } from "./modules/sbt/SSSBT";
-import { MasaSession } from "./modules/session";
-import { MasaSoulName } from "./modules/soul-name";
-import { version } from "./modules/version";
+import {
+  MasaAccount,
+  MasaASBT,
+  MasaCreditScore,
+  MasaDynamicSBTBase,
+  MasaDynamicSSSBT,
+  MasaGreen,
+  MasaIdentity,
+  MasaSBTBase,
+  MasaSession,
+  MasaSoulName,
+  MasaSSSBT,
+  version,
+} from "./modules";
 import { getNetworkNameByChainId, MasaArweave, MasaClient } from "./utils";
 
 export class Masa implements MasaInterface {
@@ -28,9 +32,13 @@ export class Masa implements MasaInterface {
   readonly soulName: MasaSoulName;
   readonly creditScore: MasaCreditScore;
   readonly green: MasaGreen;
+  // SBTs
   readonly sbt: MasaSBTBase;
   readonly asbt: MasaASBT;
   readonly sssbt: MasaSSSBT;
+  // Dynamic SBTs
+  readonly ["dynamic-sbt"]: MasaDynamicSBTBase;
+  readonly ["dynamic-sssbt"]: MasaDynamicSSSBT;
 
   public constructor({
     cookie,
@@ -88,6 +96,9 @@ export class Masa implements MasaInterface {
     this.asbt = new MasaASBT(this);
     // SSSBT Handler
     this.sssbt = new MasaSSSBT(this);
+    // dynamic sbt
+    this["dynamic-sbt"] = new MasaDynamicSBTBase(this);
+    this["dynamic-sssbt"] = new MasaDynamicSSSBT(this);
   }
 
   utils = {
