@@ -92,17 +92,12 @@ const purchaseSoulName = async (
           }
 
           if (tokenId) {
-            const metadata = {
-              ...purchaseInformation,
-              paymentMethod,
-            };
             return {
               success: true,
               message: "",
               errorCode: SoulNameErrorCodes.NoError,
               tokenId,
               soulName,
-              metadata,
             };
           }
         }

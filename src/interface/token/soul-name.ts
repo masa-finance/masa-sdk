@@ -1,8 +1,7 @@
-import type { BigNumber, ContractTransaction } from "ethers";
+import type { BigNumber } from "ethers";
 
 import { SoulNameErrorCodes } from "../../collections";
 import type { BaseResult } from "../base-result";
-import { PaymentMethod } from "../tokens";
 
 export interface Attribute {
   display_type?: string;
@@ -48,11 +47,6 @@ export interface SoulNameResultBase extends BaseResult {
 
 export interface CreateSoulNameResult extends SoulNameResultBase {
   soulName?: string;
-  // todo, remove this. It does not belong here
-  metadata?: ContractTransaction & {
-    price?: BigNumber;
-    paymentMethod: PaymentMethod;
-  };
 }
 
 export interface SoulNameMetadataStoreResult extends SoulNameResultBase {
