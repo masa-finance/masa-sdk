@@ -183,10 +183,6 @@ export const purchaseIdentityWithSoulName = async (
           }
 
           if (identityId && tokenId) {
-            const metadata = {
-              ...purchaseInformation,
-              paymentMethod,
-            };
             return {
               success: true,
               errorCode: SoulNameErrorCodes.NoError,
@@ -194,7 +190,6 @@ export const purchaseIdentityWithSoulName = async (
               tokenId,
               identityId,
               soulName,
-              metadata,
             };
           }
         }

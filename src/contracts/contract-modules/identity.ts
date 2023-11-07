@@ -146,7 +146,7 @@ export class Identity extends MasaSBTModuleBase {
     }
 
     // execute tx
-    return await purchaseIdentityAndName(...purchaseIdentityAndNameParameters, {
+    return purchaseIdentityAndName(...purchaseIdentityAndNameParameters, {
       ...purchaseIdentityAndNameOverrides,
       gasLimit,
     });

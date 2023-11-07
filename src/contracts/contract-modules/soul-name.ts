@@ -61,7 +61,7 @@ export class SoulName extends MasaModuleBase {
     authorityAddress: string,
     signature: string,
     receiver?: string,
-  ): Promise<ContractTransaction & { price: BigNumber }> => {
+  ): Promise<ContractTransaction> => {
     const to = receiver || (await this.masa.config.signer.getAddress());
 
     const domain: TypedDataDomain = await generateSignatureDomain(
@@ -155,12 +155,10 @@ export class SoulName extends MasaModuleBase {
     }
 
     // execute
-    const execution = await purchaseName(...purchaseNameParameters, {
+    return purchaseName(...purchaseNameParameters, {
       ...purchaseNameOverrides,
       gasLimit,
     });
-
-    return { ...execution, price };
   };
 
   /**
