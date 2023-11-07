@@ -1,5 +1,5 @@
-import type { ReferenceSBTDynamicSelfSovereign } from "@masa-finance/masa-contracts-identity";
-import { ReferenceSBTDynamicSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
+import type { MasaDynamicSSSBT as MasaDynamicSSSBTContract } from "@masa-finance/masa-contracts-identity";
+import { MasaDynamicSSSBT__factory } from "@masa-finance/masa-contracts-identity";
 
 import type { ContractFactory } from "../../../../interface/contract-factory";
 import { MasaBase } from "../../../../masa-base";
@@ -10,7 +10,7 @@ export class MasaDynamicSSSBT extends MasaBase {
    *
    * @param contract
    */
-  public attach = <Contract extends ReferenceSBTDynamicSelfSovereign>(
+  public attach = <Contract extends MasaDynamicSSSBTContract>(
     contract: Contract,
   ): MasaDynamicSSSBTWrapper<Contract> => {
     return new MasaDynamicSSSBTWrapper<Contract>(this.masa, contract);
@@ -21,9 +21,9 @@ export class MasaDynamicSSSBT extends MasaBase {
    * @param address
    * @param factory
    */
-  public connect = async <Contract extends ReferenceSBTDynamicSelfSovereign>(
+  public connect = async <Contract extends MasaDynamicSSSBTContract>(
     address: string,
-    factory: ContractFactory = ReferenceSBTDynamicSelfSovereign__factory,
+    factory: ContractFactory = MasaDynamicSSSBT__factory,
   ): Promise<MasaDynamicSSSBTWrapper<Contract>> => {
     const { contract } = await this.masa.contracts[
       "dynamic-sssbt"

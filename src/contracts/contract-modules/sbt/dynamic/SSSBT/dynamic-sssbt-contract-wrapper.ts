@@ -1,6 +1,6 @@
 import { LogDescription } from "@ethersproject/abi";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ReferenceSBTDynamicSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import { MasaDynamicSSSBT } from "@masa-finance/masa-contracts-identity";
 import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
@@ -14,7 +14,7 @@ import {
 import { DynamicSBTContractWrapper } from "../dynamic-sbt-contract-wrapper";
 
 export class DynamicSSSBTContractWrapper<
-  Contract extends ReferenceSBTDynamicSelfSovereign,
+  Contract extends MasaDynamicSSSBT,
 > extends DynamicSBTContractWrapper<Contract> {
   public readonly types: Record<string, Array<TypedDataField>> = {
     SetState: [

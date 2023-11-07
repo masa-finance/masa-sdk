@@ -1,10 +1,10 @@
-import type { ReferenceSBTDynamicSelfSovereign } from "@masa-finance/masa-contracts-identity";
+import type { MasaDynamicSSSBT } from "@masa-finance/masa-contracts-identity";
 
 import type { PaymentMethod } from "../../../../interface";
 import { MasaDynamicSBTWrapper } from "../masa-dynamic-sbt-wrapper";
 
 export class MasaDynamicSSSBTWrapper<
-  Contract extends ReferenceSBTDynamicSelfSovereign,
+  Contract extends MasaDynamicSSSBT,
 > extends MasaDynamicSBTWrapper<Contract> {
   /**
    *
@@ -16,7 +16,14 @@ export class MasaDynamicSSSBTWrapper<
     receiver: string,
     state: string,
     stateValue: boolean,
-  ) => {
+  ): Promise<
+    | {
+        authorityAddress: string;
+        signatureDate: number;
+        signature: string;
+      }
+    | undefined
+  > => {
     let result:
       | {
           authorityAddress: string;
