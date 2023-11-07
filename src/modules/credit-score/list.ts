@@ -38,7 +38,7 @@ export const listCreditScoresAndPrint = async (
     }
 
     console.log(
-      `Score: ${creditScore.metadata?.properties.value || "Unknown"}`,
+      `Score: ${creditScore.metadata?.properties.value ?? "Unknown"}`,
     );
   }
 
