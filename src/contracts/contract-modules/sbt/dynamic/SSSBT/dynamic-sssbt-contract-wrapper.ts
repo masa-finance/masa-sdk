@@ -16,7 +16,7 @@ import { DynamicSBTContractWrapper } from "../dynamic-sbt-contract-wrapper";
 export class DynamicSSSBTContractWrapper<
   Contract extends ReferenceSBTDynamicSelfSovereign,
 > extends DynamicSBTContractWrapper<Contract> {
-  public readonly types = {
+  public readonly types: Record<string, Array<TypedDataField>> = {
     SetState: [
       { name: "account", type: "address" },
       { name: "state", type: "string" },

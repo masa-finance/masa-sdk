@@ -4,6 +4,7 @@ import type {
   PayableOverrides,
   TypedDataDomain,
 } from "ethers";
+import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
@@ -18,7 +19,7 @@ export class CreditScore extends MasaSBTModuleBase {
   /**
    *
    */
-  public readonly types = {
+  public readonly types: Record<string, Array<TypedDataField>> = {
     MintCreditScore: [
       { name: "identityId", type: "uint256" },
       { name: "authorityAddress", type: "address" },

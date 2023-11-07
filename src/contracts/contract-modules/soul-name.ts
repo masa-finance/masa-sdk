@@ -4,6 +4,7 @@ import type {
   PayableOverrides,
   TypedDataDomain,
 } from "ethers";
+import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
@@ -18,7 +19,7 @@ export class SoulName extends MasaModuleBase {
   /**
    *
    */
-  public readonly types = {
+  public readonly types: Record<string, Array<TypedDataField>> = {
     MintSoulName: [
       { name: "to", type: "address" },
       { name: "name", type: "string" },

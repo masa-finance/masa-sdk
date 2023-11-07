@@ -1,5 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract, PayableOverrides } from "ethers";
+import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type {
@@ -18,7 +19,7 @@ export class SoulLinker extends MasaModuleBase {
   /**
    *
    */
-  public readonly types = {
+  public readonly types: Record<string, Array<TypedDataField>> = {
     Link: [
       { name: "readerIdentityId", type: "uint256" },
       { name: "ownerIdentityId", type: "uint256" },
