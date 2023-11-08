@@ -114,4 +114,46 @@ export class MasaDynamicSSSBTWrapper<
 
     return mint(paymentMethod, receiver);
   };
+
+  /**
+   *
+   * @param state
+   * @param stateValue
+   * @param signature
+   * @param signatureDate
+   * @param authorityAddress
+   */
+  public setState = async (
+    state: string,
+    stateValue: boolean,
+    signature: string,
+    signatureDate: number,
+    authorityAddress: string,
+  ): Promise<boolean> => {
+    const receiver = await this.masa.config.signer.getAddress();
+
+    const [name, symbol] = await Promise.all([
+      this.contract.name(),
+      this.contract.symbol(),
+    ]);
+
+    console.log(`Minting Dynamic SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(`Contract Name: '${name}'`);
+    console.log(`Contract Symbol: '${symbol}'`);
+    console.log(`Contract Address: '${this.contract.address}'`);
+    console.log(`To receiver: '${receiver}'`);
+
+    const { setState } = this.masa.contracts["dynamic-sssbt"].attach(
+      this.contract,
+    );
+
+    return setState(
+      receiver,
+      state,
+      stateValue,
+      signature,
+      signatureDate,
+      authorityAddress,
+    );
+  };
 }
