@@ -151,7 +151,7 @@ export class Green extends MasaSBTModuleBase {
         "mint(address,address,address,uint256,bytes)": estimateGas,
       },
       "mint(address,address,address,uint256,bytes)": mint,
-    } = await this.instances.SoulboundGreenContract;
+    } = this.instances.SoulboundGreenContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -197,13 +197,13 @@ export class Green extends MasaSBTModuleBase {
       signatureDate,
     };
 
-    const { signature, domain } = await signTypedData(
-      this.instances.SoulboundGreenContract,
-      this.masa.config.signer,
-      "SoulboundGreen",
-      this.types,
+    const { signature, domain } = await signTypedData({
+      contract: this.instances.SoulboundGreenContract,
+      signer: this.masa.config.signer,
+      name: "SoulboundGreen",
+      types: this.types,
       value,
-    );
+    });
 
     await this.verify(
       "Signing green failed!",

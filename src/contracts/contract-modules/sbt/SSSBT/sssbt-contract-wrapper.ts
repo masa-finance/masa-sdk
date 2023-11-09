@@ -40,13 +40,13 @@ export class SSSBTContractWrapper<
   }> => {
     const authorityAddress = await this.masa.config.signer.getAddress();
 
-    const { signature, domain } = await signTypedData(
-      this.contract,
-      this.masa.config.signer,
+    const { signature, domain } = await signTypedData({
+      contract: this.contract,
+      signer: this.masa.config.signer,
       name,
       types,
       value,
-    );
+    });
 
     await this.verify(
       "Signing SBT failed!",

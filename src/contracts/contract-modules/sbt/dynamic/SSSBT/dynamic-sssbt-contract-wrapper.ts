@@ -28,12 +28,10 @@ export class DynamicSSSBTContractWrapper<
 
   /**
    * Signs an SBT based on its address
-   * @param name
    * @param types
    * @param value
    */
   public signState = async (
-    name: string,
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number | boolean>,
   ): Promise<{
@@ -42,13 +40,12 @@ export class DynamicSSSBTContractWrapper<
   }> => {
     const authorityAddress = await this.masa.config.signer.getAddress();
 
-    const { signature, domain } = await signTypedData(
-      this.contract,
-      this.masa.config.signer,
-      name,
+    const { signature, domain } = await signTypedData({
+      contract: this.contract,
+      signer: this.masa.config.signer,
       types,
       value,
-    );
+    });
 
     await this.verify(
       "Signing Dynamic SBT failed!",
@@ -65,23 +62,25 @@ export class DynamicSSSBTContractWrapper<
 
   /**
    *
-   * @param name
    * @param types
    * @param value
    * @param signature
    * @param authorityAddress
    */
   protected prepareSetState = async (
-    name: string,
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
   ): Promise<boolean> => {
+    const { name, version, verifyingContract } =
+      await this.contract.eip712Domain();
+
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       name,
-      this.contract.address,
+      verifyingContract,
+      version,
     );
 
     await this.verify(
@@ -135,13 +134,7 @@ export class DynamicSSSBTContractWrapper<
       },
     } = this.contract;
 
-    this.prepareSetState(
-      "adsasdads",
-      this.types,
-      value,
-      signature,
-      authorityAddress,
-    );
+    await this.prepareSetState(this.types, value, signature, authorityAddress);
 
     const dynamicSSSBTSetStateArguments: [
       account: string,

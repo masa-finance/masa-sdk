@@ -236,13 +236,13 @@ export class SoulLinker extends MasaModuleBase {
       expirationDate,
     };
 
-    const { signature, domain } = await signTypedData(
-      this.instances.SoulLinkerContract,
-      this.masa.config.signer,
-      "SoulLinker",
-      this.types,
+    const { signature, domain } = await signTypedData({
+      contract: this.instances.SoulLinkerContract,
+      signer: this.masa.config.signer,
+      name: "SoulLinker",
+      types: this.types,
       value,
-    );
+    });
 
     await this.verify(
       "Signing SBT failed!",

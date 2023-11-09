@@ -65,11 +65,7 @@ export class MasaDynamicSSSBTWrapper<
     );
 
     // sign to create a signature
-    const signResult = await signState(
-      "ReferenceSBTSelfSovereign",
-      types,
-      value,
-    );
+    const signResult = await signState(types, value);
 
     if (signResult) {
       const { signature, authorityAddress } = signResult;
