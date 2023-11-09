@@ -113,6 +113,26 @@ export class DynamicSSSBTContractWrapper<
     signatureDate: number,
     authorityAddress: string,
   ): Promise<boolean> => {
+    const [possibleStates, stateAlreadySet, name] = await Promise.all([
+      this.contract.getBeforeMintStates(),
+      this.contract.beforeMintState(receiver, state),
+      this.contract.name(),
+    ]);
+
+    if (stateAlreadySet) {
+      console.error(`State '${state}' already set on ${name} for ${receiver}`);
+      return false;
+    }
+
+    if (
+      !possibleStates
+        .map((state: string) => state.toLowerCase())
+        .includes(state.toLowerCase())
+    ) {
+      console.error(`State '${state}' unknown to contract ${name}`);
+      return false;
+    }
+
     const value: {
       account: string;
       state: string;
@@ -222,7 +242,8 @@ export class DynamicSSSBTContractWrapper<
 
     const mintSSSBTArguments: [
       string, // paymentMethod string
-    ] = [paymentAddress];
+      string, // receiver string
+    ] = [paymentAddress, receiver];
 
     const mintSSSBTOverrides: PayableOverrides = await this.createOverrides(
       isNativeCurrency(paymentMethod) ? price : undefined,
@@ -241,20 +262,31 @@ export class DynamicSSSBTContractWrapper<
     }
 
     const {
-      "mint(address)": mint,
-      estimateGas: { "mint(address)": estimateGas },
+      "mint(address,address)": mint,
+      estimateGas: { "mint(address,address)": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...mintSSSBTArguments,
-      mintSSSBTOverrides,
-    );
+    let gasLimit: BigNumber | undefined;
 
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = DynamicSSSBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
+    try {
+      gasLimit = await estimateGas(...mintSSSBTArguments, mintSSSBTOverrides);
+
+      if (this.masa.config.network?.gasSlippagePercentage) {
+        gasLimit = DynamicSSSBTContractWrapper.addSlippage(
+          gasLimit,
+          this.masa.config.network.gasSlippagePercentage,
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Estimate gas failed! ${error.message}`);
+      }
+
+      gasLimit = BigNumber.from(250_000);
+      if (!this.masa.config.force) {
+        // don't throw if we force this
+        throw error;
+      }
     }
 
     const { wait, hash } = await mint(...mintSSSBTArguments, {

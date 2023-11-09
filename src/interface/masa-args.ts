@@ -14,4 +14,5 @@ export interface MasaArgs {
   readonly arweave?: ArweaveConfig;
   readonly contractOverrides?: Partial<IIdentityContracts>;
   readonly verbose?: boolean;
+  readonly force?: boolean;
 }

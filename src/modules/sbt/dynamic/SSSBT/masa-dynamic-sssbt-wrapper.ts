@@ -37,11 +37,13 @@ export class MasaDynamicSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Signing Dynamic SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(
+      `Signing Set State for Dynamic SSSBT on: '${this.masa.config.networkName}'`,
+    );
     console.log(`Contract Name: '${name}'`);
     console.log(`Contract Symbol: '${symbol}'`);
     console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`State: '${state}': '${stateValue}'`);
+    console.log(`State: '${state}': ${stateValue}`);
     console.log(`To receiver: '${receiver}'`);
 
     const signatureDate = Date.now();
@@ -64,6 +66,25 @@ export class MasaDynamicSSSBTWrapper<
     const { signSetState, types } = this.masa.contracts["dynamic-sssbt"].attach(
       this.contract,
     );
+
+    const [possibleStates, stateAlreadySet] = await Promise.all([
+      this.contract.getBeforeMintStates(),
+      this.contract.beforeMintState(receiver, state),
+    ]);
+
+    if (stateAlreadySet) {
+      console.error(`State '${state}' already set on ${name} for ${receiver}`);
+      return;
+    }
+
+    if (
+      !possibleStates
+        .map((state: string) => state.toLowerCase())
+        .includes(state.toLowerCase())
+    ) {
+      console.error(`State '${state}' unknown to contract ${name}`);
+      return;
+    }
 
     // sign to create a signature
     const signResult = await signSetState(types, value);
@@ -134,10 +155,13 @@ export class MasaDynamicSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Minting Dynamic SSSBT on: '${this.masa.config.networkName}'`);
+    console.log(
+      `Setting State for Dynamic SSSBT on: '${this.masa.config.networkName}'`,
+    );
     console.log(`Contract Name: '${name}'`);
     console.log(`Contract Symbol: '${symbol}'`);
     console.log(`Contract Address: '${this.contract.address}'`);
+    console.log(`State: '${state}': ${stateValue}`);
     console.log(`To receiver: '${receiver}'`);
 
     const { setState } = this.masa.contracts["dynamic-sssbt"].attach(
