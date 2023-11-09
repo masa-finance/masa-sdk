@@ -31,7 +31,7 @@ export class DynamicSSSBTContractWrapper<
    * @param types
    * @param value
    */
-  public signState = async (
+  public signSetState = async (
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number | boolean>,
   ): Promise<{

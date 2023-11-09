@@ -12,7 +12,7 @@ export class MasaDynamicSSSBTWrapper<
    * @param state
    * @param stateValue
    */
-  public signState = async (
+  public signSetState = async (
     receiver: string,
     state: string,
     stateValue: boolean,
@@ -41,6 +41,7 @@ export class MasaDynamicSSSBTWrapper<
     console.log(`Contract Name: '${name}'`);
     console.log(`Contract Symbol: '${symbol}'`);
     console.log(`Contract Address: '${this.contract.address}'`);
+    console.log(`State: '${state}': '${stateValue}'`);
     console.log(`To receiver: '${receiver}'`);
 
     const signatureDate = Date.now();
@@ -60,12 +61,12 @@ export class MasaDynamicSSSBTWrapper<
       signatureDate,
     };
 
-    const { signState, types } = this.masa.contracts["dynamic-sssbt"].attach(
+    const { signSetState, types } = this.masa.contracts["dynamic-sssbt"].attach(
       this.contract,
     );
 
     // sign to create a signature
-    const signResult = await signState(types, value);
+    const signResult = await signSetState(types, value);
 
     if (signResult) {
       const { signature, authorityAddress } = signResult;
