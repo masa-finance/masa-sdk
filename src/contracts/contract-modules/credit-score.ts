@@ -4,6 +4,7 @@ import type {
   PayableOverrides,
   TypedDataDomain,
 } from "ethers";
+import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
@@ -18,7 +19,7 @@ export class CreditScore extends MasaSBTModuleBase {
   /**
    *
    */
-  public readonly types = {
+  public readonly types: Record<string, Array<TypedDataField>> = {
     MintCreditScore: [
       { name: "identityId", type: "uint256" },
       { name: "authorityAddress", type: "address" },
@@ -122,7 +123,7 @@ export class CreditScore extends MasaSBTModuleBase {
         "mint(address,uint256,address,uint256,bytes)": estimateGas,
       },
       "mint(address,uint256,address,uint256,bytes)": mint,
-    } = await this.instances.SoulboundCreditScoreContract;
+    } = this.instances.SoulboundCreditScoreContract;
 
     // estimate gas
     let gasLimit: BigNumber = await estimateGas(
@@ -183,13 +184,12 @@ export class CreditScore extends MasaSBTModuleBase {
       signatureDate,
     };
 
-    const { signature, domain } = await signTypedData(
-      this.instances.SoulboundCreditScoreContract,
-      this.masa.config.signer,
-      "SoulboundCreditScore",
-      this.types,
+    const { signature, domain } = await signTypedData({
+      contract: this.instances.SoulboundCreditScoreContract,
+      signer: this.masa.config.signer,
+      types: this.types,
       value,
-    );
+    });
 
     await this.verify(
       "Signing credit score failed!",

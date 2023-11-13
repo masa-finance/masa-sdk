@@ -8,6 +8,8 @@ import { CreditScore } from "./contract-modules/credit-score";
 import { Green } from "./contract-modules/green";
 import { Identity } from "./contract-modules/identity";
 import { ASBTContract } from "./contract-modules/sbt/ASBT";
+import { DynamicSBTContract } from "./contract-modules/sbt/dynamic";
+import { DynamicSSSBTContract } from "./contract-modules/sbt/dynamic/SSSBT";
 import { SBTContract } from "./contract-modules/sbt/SBT/sbt-contract";
 import { SSSBTContract } from "./contract-modules/sbt/SSSBT/sssbt-contract";
 import { SoulLinker } from "./contract-modules/soul-linker";
@@ -25,6 +27,9 @@ export class MasaContracts extends MasaBase {
   public sbt: SBTContract;
   public sssbt: SSSBTContract;
   public asbt: ASBTContract;
+  // dynamic
+  public ["dynamic-sbt"]: DynamicSBTContract;
+  public ["dynamic-sssbt"]: DynamicSSSBTContract;
   /**
    * Soul Linker
    */
@@ -69,6 +74,9 @@ export class MasaContracts extends MasaBase {
     this.sbt = new SBTContract(this.masa, this.instances);
     this.sssbt = new SSSBTContract(this.masa, this.instances);
     this.asbt = new ASBTContract(this.masa, this.instances);
+    // dynamic
+    this["dynamic-sbt"] = new DynamicSBTContract(this.masa, this.instances);
+    this["dynamic-sssbt"] = new DynamicSSSBTContract(this.masa, this.instances);
     /**
      * Soul Linker
      */

@@ -32,14 +32,6 @@ export class MasaSSSBTWrapper<
 
     const signatureDate = Date.now();
 
-    const types = {
-      Mint: [
-        { name: "to", type: "address" },
-        { name: "authorityAddress", type: "address" },
-        { name: "signatureDate", type: "uint256" },
-      ],
-    };
-
     // fill the collection with data
     const value: {
       to: string;
@@ -51,7 +43,7 @@ export class MasaSSSBTWrapper<
       signatureDate,
     };
 
-    const { sign } = await this.masa.contracts.sssbt.attach(this.contract);
+    const { sign, types } = this.masa.contracts.sssbt.attach(this.contract);
 
     // sign to create a signature
     const signResult = await sign("ReferenceSBTSelfSovereign", types, value);
@@ -101,7 +93,7 @@ export class MasaSSSBTWrapper<
     console.log(`Contract Address: '${this.contract.address}'`);
     console.log(`To receiver: '${receiver}'`);
 
-    const { mint } = await this.masa.contracts.sssbt.attach(this.contract);
+    const { mint } = this.masa.contracts.sssbt.attach(this.contract);
 
     return mint(
       paymentMethod,

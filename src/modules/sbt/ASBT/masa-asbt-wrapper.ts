@@ -23,7 +23,7 @@ export class MasaASBTWrapper<
     console.log(`Contract Address: '${this.contract.address}'`);
     console.log(`To receiver: '${receiver}'`);
 
-    const { mint } = await this.masa.contracts.asbt.attach(this.contract);
+    const { mint } = this.masa.contracts.asbt.attach(this.contract);
 
     return mint(paymentMethod, receiver);
   };
@@ -48,7 +48,7 @@ export class MasaASBTWrapper<
     console.log(`Contract Address: '${this.contract.address}'`);
     console.log(`To receiver: '${receivers}'`);
 
-    const { bulkMint } = await this.masa.contracts.asbt.attach(this.contract);
+    const { bulkMint } = this.masa.contracts.asbt.attach(this.contract);
 
     return bulkMint(paymentMethod, receivers);
   };

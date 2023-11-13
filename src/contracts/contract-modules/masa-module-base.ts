@@ -220,7 +220,7 @@ export abstract class MasaModuleBase extends MasaBase {
       | SoulLinker,
     domain: TypedDataDomain,
     types: Record<string, Array<TypedDataField>>,
-    value: Record<string, string | BigNumber | number>,
+    value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
   ) => {

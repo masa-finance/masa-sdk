@@ -4,6 +4,7 @@ import type {
   PayableOverrides,
   TypedDataDomain,
 } from "ethers";
+import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type { PaymentMethod, PriceInformation } from "../../interface";
@@ -18,7 +19,7 @@ export class SoulName extends MasaModuleBase {
   /**
    *
    */
-  public readonly types = {
+  public readonly types: Record<string, Array<TypedDataField>> = {
     MintSoulName: [
       { name: "to", type: "address" },
       { name: "name", type: "string" },
@@ -281,13 +282,13 @@ export class SoulName extends MasaModuleBase {
       tokenURI: metadataUrl,
     };
 
-    const { signature, domain } = await signTypedData(
-      this.instances.SoulStoreContract,
-      this.masa.config.signer,
-      "SoulStore",
-      this.types,
+    const { signature, domain } = await signTypedData({
+      contract: this.instances.SoulStoreContract,
+      signer: this.masa.config.signer,
+      name: "SoulStore",
+      types: this.types,
       value,
-    );
+    });
 
     const authorityAddress = await this.masa.config.signer.getAddress();
 

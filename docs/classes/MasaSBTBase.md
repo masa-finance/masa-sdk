@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.11.1](../README.md) / [Exports](../modules.md) / MasaSBTBase
+ - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / MasaSBTBase
 
 # Class: MasaSBTBase
 
@@ -28,13 +28,17 @@
 
 ### constructor
 
-• **new MasaSBTBase**(`masa`)
+• **new MasaSBTBase**(`masa`): [`MasaSBTBase`](MasaSBTBase.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `masa` | [`MasaInterface`](../interfaces/MasaInterface.md) |
+
+#### Returns
+
+[`MasaSBTBase`](MasaSBTBase.md)
 
 #### Inherited from
 
@@ -54,7 +58,7 @@ MasaBase.masa
 
 ### attach
 
-▸ **attach**<`Contract`\>(`contract`): [`MasaSBTWrapper`](MasaSBTWrapper.md)<`Contract`\>
+▸ **attach**\<`Contract`\>(`contract`): [`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>
 
 #### Type parameters
 
@@ -70,13 +74,13 @@ MasaBase.masa
 
 #### Returns
 
-[`MasaSBTWrapper`](MasaSBTWrapper.md)<`Contract`\>
+[`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>
 
 ___
 
 ### connect
 
-▸ **connect**<`Contract`\>(`address`, `factory?`): `Promise`<[`MasaSBTWrapper`](MasaSBTWrapper.md)<`Contract`\>\>
+▸ **connect**\<`Contract`\>(`address`, `factory?`): `Promise`\<[`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>\>
 
 #### Type parameters
 
@@ -93,4 +97,4 @@ ___
 
 #### Returns
 
-`Promise`<[`MasaSBTWrapper`](MasaSBTWrapper.md)<`Contract`\>\>
+`Promise`\<[`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>\>

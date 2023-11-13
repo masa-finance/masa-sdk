@@ -1,7 +1,7 @@
 [# Masa SDK
- - v3.11.1](../README.md) / [Exports](../modules.md) / MasaSSSBTWrapper
+ - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / MasaSSSBTWrapper
 
-# Class: MasaSSSBTWrapper<Contract\>
+# Class: MasaSSSBTWrapper\<Contract\>
 
 ## Type parameters
 
@@ -11,7 +11,7 @@
 
 ## Hierarchy
 
-- [`MasaSBTWrapper`](MasaSBTWrapper.md)<`Contract`\>
+- [`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>
 
   ↳ **`MasaSSSBTWrapper`**
 
@@ -40,7 +40,7 @@
 
 ### constructor
 
-• **new MasaSSSBTWrapper**<`Contract`\>(`masa`, `contract`)
+• **new MasaSSSBTWrapper**\<`Contract`\>(`masa`, `contract`): [`MasaSSSBTWrapper`](MasaSSSBTWrapper.md)\<`Contract`\>
 
 #### Type parameters
 
@@ -54,6 +54,10 @@
 | :------ | :------ |
 | `masa` | [`MasaInterface`](../interfaces/MasaInterface.md) |
 | `contract` | `Contract` |
+
+#### Returns
+
+[`MasaSSSBTWrapper`](MasaSSSBTWrapper.md)\<`Contract`\>
 
 #### Inherited from
 
@@ -93,7 +97,7 @@ ___
 
 ### burn
 
-▸ **burn**(`SBTId`): `Promise`<`boolean`\>
+▸ **burn**(`SBTId`): `Promise`\<`boolean`\>
 
 #### Parameters
 
@@ -103,7 +107,7 @@ ___
 
 #### Returns
 
-`Promise`<`boolean`\>
+`Promise`\<`boolean`\>
 
 #### Inherited from
 
@@ -113,7 +117,7 @@ ___
 
 ### list
 
-▸ **list**(`address?`): `Promise`<{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
+▸ **list**(`address?`): `Promise`\<\{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
 
 #### Parameters
 
@@ -123,7 +127,7 @@ ___
 
 #### Returns
 
-`Promise`<{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
+`Promise`\<\{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
 
 #### Inherited from
 
@@ -133,7 +137,7 @@ ___
 
 ### loadSBTIDs
 
-▸ `Protected` **loadSBTIDs**(`sbtIDs`): `Promise`<{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
+▸ **loadSBTIDs**(`sbtIDs`): `Promise`\<\{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
 
 #### Parameters
 
@@ -143,7 +147,7 @@ ___
 
 #### Returns
 
-`Promise`<{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
+`Promise`\<\{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
 
 #### Inherited from
 
@@ -153,7 +157,7 @@ ___
 
 ### loadSBTs
 
-▸ `Protected` **loadSBTs**(`identityIdOrAddress`): `Promise`<{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
+▸ **loadSBTs**(`identityIdOrAddress`): `Promise`\<\{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
 
 #### Parameters
 
@@ -163,7 +167,7 @@ ___
 
 #### Returns
 
-`Promise`<{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
+`Promise`\<\{ `tokenId`: `BigNumber` ; `tokenUri`: `string`  }[]\>
 
 #### Inherited from
 
@@ -173,7 +177,7 @@ ___
 
 ### mint
 
-▸ **mint**(`authorityAddress`, `signatureDate`, `signature`, `paymentMethod?`): `Promise`<`boolean`\>
+▸ **mint**(`authorityAddress`, `signatureDate`, `signature`, `paymentMethod?`): `Promise`\<`boolean`\>
 
 #### Parameters
 
@@ -186,13 +190,13 @@ ___
 
 #### Returns
 
-`Promise`<`boolean`\>
+`Promise`\<`boolean`\>
 
 ___
 
 ### sign
 
-▸ **sign**(`receiver`): `Promise`<`undefined` \| { `authorityAddress`: `string` ; `signature`: `string` ; `signatureDate`: `number`  }\>
+▸ **sign**(`receiver`): `Promise`\<`undefined` \| \{ `authorityAddress`: `string` ; `signature`: `string` ; `signatureDate`: `number`  }\>
 
 #### Parameters
 
@@ -202,4 +206,4 @@ ___
 
 #### Returns
 
-`Promise`<`undefined` \| { `authorityAddress`: `string` ; `signature`: `string` ; `signatureDate`: `number`  }\>
+`Promise`\<`undefined` \| \{ `authorityAddress`: `string` ; `signature`: `string` ; `signatureDate`: `number`  }\>

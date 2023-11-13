@@ -17,6 +17,17 @@ export class SSSBTContractWrapper<
   Contract extends ReferenceSBTSelfSovereign,
 > extends SBTContractWrapper<Contract> {
   /**
+   *
+   */
+  public readonly types: Record<string, Array<TypedDataField>> = {
+    Mint: [
+      { name: "to", type: "address" },
+      { name: "authorityAddress", type: "address" },
+      { name: "signatureDate", type: "uint256" },
+    ],
+  };
+
+  /**
    * Signs an SBT based on its address
    * @param name
    * @param types
@@ -32,13 +43,13 @@ export class SSSBTContractWrapper<
   }> => {
     const authorityAddress = await this.masa.config.signer.getAddress();
 
-    const { signature, domain } = await signTypedData(
-      this.contract,
-      this.masa.config.signer,
+    const { signature, domain } = await signTypedData({
+      contract: this.contract,
+      signer: this.masa.config.signer,
       name,
       types,
       value,
-    );
+    });
 
     await this.verify(
       "Signing SBT failed!",
@@ -63,7 +74,7 @@ export class SSSBTContractWrapper<
    * @param authorityAddress
    * @param slippage
    */
-  public prepareMint = async (
+  protected prepareMint = async (
     paymentMethod: PaymentMethod,
     name: string,
     types: Record<string, Array<TypedDataField>>,
@@ -145,14 +156,6 @@ export class SSSBTContractWrapper<
       }
     }
 
-    const types = {
-      Mint: [
-        { name: "to", type: "address" },
-        { name: "authorityAddress", type: "address" },
-        { name: "signatureDate", type: "uint256" },
-      ],
-    };
-
     // fill the collection with data
     const value: {
       to: string;
@@ -167,7 +170,7 @@ export class SSSBTContractWrapper<
     const { price, paymentAddress } = await this.prepareMint(
       paymentMethod,
       "ReferenceSBTSelfSovereign",
-      types,
+      this.types,
       value,
       signature,
       authorityAddress,
