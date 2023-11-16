@@ -4,14 +4,12 @@ import type { MasaArgs } from "../interface";
 
 // special type for env config that makes wallet optional
 export type Environment = {
-  name: "local" | "dev" | "test" | "stage" | "production";
   wallet?: Signer;
 } & MasaArgs;
 
 export const environments: Environment[] = [
   {
-    name: "local",
-    environment: "dev",
+    environment: "local",
     apiUrl: "http://localhost:4000/",
     networkName: "goerli",
     arweave: {
@@ -22,7 +20,6 @@ export const environments: Environment[] = [
     },
   } as Environment,
   {
-    name: "dev",
     environment: "dev",
     apiUrl: "https://dev.middleware.masa.finance/",
     networkName: "goerli",
@@ -34,8 +31,7 @@ export const environments: Environment[] = [
     },
   } as Environment,
   {
-    name: "stage",
-    environment: "beta",
+    environment: "stage",
     apiUrl: "https://beta.middleware.masa.finance/",
     networkName: "goerli",
     arweave: {
@@ -46,7 +42,6 @@ export const environments: Environment[] = [
     },
   } as Environment,
   {
-    name: "production",
     environment: "production",
     apiUrl: "https://middleware.masa.finance/",
     networkName: "ethereum",
