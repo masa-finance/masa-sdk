@@ -154,12 +154,13 @@ export class Identity extends MasaSBTModuleBase {
     let success = false;
 
     console.log(`Burning Identity with ID '${identityId}'!`);
-    try {
-      const {
-        estimateGas: { burn: estimateGas },
-        burn,
-      } = this.masa.contracts.instances.SoulboundIdentityContract;
 
+    const {
+      estimateGas: { burn: estimateGas },
+      burn,
+    } = this.masa.contracts.instances.SoulboundIdentityContract;
+
+    try {
       // estimate gas
       const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
         identityId,

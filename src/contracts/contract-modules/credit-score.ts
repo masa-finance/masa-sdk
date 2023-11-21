@@ -204,6 +204,8 @@ export class CreditScore extends MasaSBTModuleBase {
    * @param creditScoreId
    */
   public burn = async (creditScoreId: BigNumber): Promise<boolean> => {
+    let result = false;
+
     console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
 
     const {
@@ -230,13 +232,13 @@ export class CreditScore extends MasaSBTModuleBase {
       await wait();
 
       console.log(`Burned Credit Score with ID '${creditScoreId}'!`);
-      return true;
+      result = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(`Burning Credit Score Failed! '${error.message}'`);
       }
     }
 
-    return false;
+    return result;
   };
 }

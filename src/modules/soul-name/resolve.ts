@@ -20,9 +20,9 @@ export const resolveSoulName = async (
         cleansedSoulname,
       );
     owner = masa.contracts.instances.SoulNameContract.ownerOf(tokenId);
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error && masa.config.verbose) {
-      console.error(error.message);
+      console.error(`Resolving soul name failed: ${error.message}`);
     }
   }
 

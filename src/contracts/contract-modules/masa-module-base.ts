@@ -82,29 +82,35 @@ export abstract class MasaModuleBase extends MasaBase {
           estimateGas: { approve: estimateGas },
         } = tokenContract;
 
-        const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
-          spenderAddress,
-          price,
-        ]);
+        try {
+          const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+            spenderAddress,
+            price,
+          ]);
 
-        const { wait, hash } = await approve(
-          // spender
-          spenderAddress,
-          // amount
-          price,
-          { gasLimit },
-        );
-
-        if (this.masa.config.verbose) {
-          console.info(
-            Messages.WaitingToFinalize(
-              hash,
-              this.masa.config.network?.blockExplorerUrls?.[0],
-            ),
+          const { wait, hash } = await approve(
+            // spender
+            spenderAddress,
+            // amount
+            price,
+            { gasLimit },
           );
-        }
 
-        contractReceipt = await wait();
+          if (this.masa.config.verbose) {
+            console.info(
+              Messages.WaitingToFinalize(
+                hash,
+                this.masa.config.network?.blockExplorerUrls?.[0],
+              ),
+            );
+          }
+
+          contractReceipt = await wait();
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error(`approve failed ${error.message}`);
+          }
+        }
       }
     }
 
@@ -325,7 +331,7 @@ export abstract class MasaModuleBase extends MasaBase {
       try {
         recoveredAddressIsAuthority =
           await contract.authorities(recoveredAddress);
-      } catch (error) {
+      } catch (error: unknown) {
         if (error instanceof Error)
           console.error(`Retrieving authorities failed! ${error.message}.`);
       }

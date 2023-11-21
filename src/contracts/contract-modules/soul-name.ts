@@ -308,6 +308,8 @@ export class SoulName extends MasaModuleBase {
     soulName: string,
     receiver: string,
   ): Promise<boolean> => {
+    let result = false;
+
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
       this.masa.contracts.instances.SoulNameContract.extension(),
@@ -318,12 +320,12 @@ export class SoulName extends MasaModuleBase {
         `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
       );
 
-      try {
-        const {
-          transferFrom,
-          estimateGas: { transferFrom: estimateGas },
-        } = this.masa.contracts.instances.SoulNameContract;
+      const {
+        transferFrom,
+        estimateGas: { transferFrom: estimateGas },
+      } = this.masa.contracts.instances.SoulNameContract;
 
+      try {
         const transferFromArguments: [string, string, BigNumber] = [
           await this.masa.config.signer.getAddress(),
           receiver,
@@ -352,7 +354,7 @@ export class SoulName extends MasaModuleBase {
           `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
         );
 
-        return true;
+        result = true;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(`Sending of Soul Name Failed! ${error.message}`);
@@ -362,7 +364,7 @@ export class SoulName extends MasaModuleBase {
       console.error(`Soulname '${soulName}${extension}' does not exist!`);
     }
 
-    return false;
+    return result;
   };
 
   /**
@@ -370,6 +372,8 @@ export class SoulName extends MasaModuleBase {
    * @param soulName
    */
   public burn = async (soulName: string): Promise<boolean> => {
+    let result = false;
+
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
       this.masa.contracts.instances.SoulNameContract.extension(),
@@ -408,7 +412,7 @@ export class SoulName extends MasaModuleBase {
           `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
         );
 
-        return true;
+        result = true;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(
@@ -420,7 +424,7 @@ export class SoulName extends MasaModuleBase {
       console.error(`Soulname '${soulName}${extension}' does not exist!`);
     }
 
-    return false;
+    return result;
   };
 
   /**
@@ -429,6 +433,7 @@ export class SoulName extends MasaModuleBase {
    * @param years
    */
   public renew = async (soulName: string, years: number): Promise<boolean> => {
+    let result = false;
     const tokenId =
       await this.masa.contracts.instances.SoulNameContract.getTokenId(soulName);
 
@@ -437,22 +442,31 @@ export class SoulName extends MasaModuleBase {
       estimateGas: { renewYearsPeriod: estimateGas },
     } = this.masa.contracts.instances.SoulNameContract;
 
-    const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
-      tokenId,
-      years,
-    ]);
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        tokenId,
+        years,
+      ]);
 
-    const { wait, hash } = await renewYearsPeriod(tokenId, years, { gasLimit });
+      const { wait, hash } = await renewYearsPeriod(tokenId, years, {
+        gasLimit,
+      });
 
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
 
-    await wait();
+      await wait();
+      result = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`renewal failed! ${error.message}`);
+      }
+    }
 
-    return true;
+    return result;
   };
 }

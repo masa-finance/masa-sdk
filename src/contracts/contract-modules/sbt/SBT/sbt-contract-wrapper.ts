@@ -37,6 +37,8 @@ export class SBTContractWrapper<
    * @param tokenId
    */
   public burn = async (tokenId: BigNumber) => {
+    let result = false;
+
     const {
       estimateGas: { burn: estimateGas },
       burn,
@@ -58,13 +60,13 @@ export class SBTContractWrapper<
 
       await wait();
 
-      return true;
+      result = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(`Burning SBT Failed! '${error.message}'`);
       }
     }
 
-    return false;
+    return result;
   };
 }

@@ -130,6 +130,8 @@ export class SSSBTContractWrapper<
     signatureDate: number,
     authorityAddress: string,
   ): Promise<boolean> => {
+    let result = false;
+
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
 
@@ -148,11 +150,11 @@ export class SSSBTContractWrapper<
         console.error(
           `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
         );
-        return false;
+        return result;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn(error.message);
+        console.warn(`Loading SBT balance failed! ${error.message}`);
       }
     }
 
@@ -207,41 +209,47 @@ export class SSSBTContractWrapper<
       },
     } = this.contract;
 
-    const gasLimit = await this.estimateGasWithSlippage(
-      estimateGas,
-      mintSSSBTArguments,
-      mintSSSBTOverrides,
-    );
-
-    const { wait, hash } = await mint(...mintSSSBTArguments, {
-      ...mintSSSBTOverrides,
-      gasLimit,
-    });
-
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
-
-    const { logs } = await wait();
-
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
-
-    const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint",
-    );
-
-    if (mintEvent) {
-      const { args } = mintEvent;
-      console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        mintSSSBTArguments,
+        mintSSSBTOverrides,
       );
 
-      return true;
+      const { wait, hash } = await mint(...mintSSSBTArguments, {
+        ...mintSSSBTOverrides,
+        gasLimit,
+      });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      const { logs } = await wait();
+
+      const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
+
+      const mintEvent = parsedLogs.find(
+        (log: LogDescription) => log.name === "Mint",
+      );
+
+      if (mintEvent) {
+        const { args } = mintEvent;
+        console.log(
+          `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
+        );
+
+        result = true;
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Minting SSSBT failed! ${error.message}`);
+      }
     }
 
-    return false;
+    return result;
   };
 }

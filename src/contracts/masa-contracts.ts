@@ -125,7 +125,7 @@ export class MasaContracts extends MasaBase {
 
             try {
               result = contract.interface.parseLog(log);
-            } catch (error) {
+            } catch (error: unknown) {
               if (error instanceof Error) {
                 console.warn(error.message);
               }

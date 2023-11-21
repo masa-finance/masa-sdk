@@ -126,6 +126,8 @@ export class SoulLinker extends MasaModuleBase {
     signature: string,
     slippage: number | undefined = 250,
   ): Promise<boolean> => {
+    let result = false;
+
     const { price, paymentAddress } = await this.getPrice(
       tokenAddress,
       paymentMethod,
@@ -168,27 +170,34 @@ export class SoulLinker extends MasaModuleBase {
       addLink,
     } = this.instances.SoulLinkerContract;
 
-    const gasLimit = await this.estimateGasWithSlippage(
-      estimateGas,
-      addLinkArguments,
-      addLinkOverrides,
-    );
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        addLinkArguments,
+        addLinkOverrides,
+      );
 
-    const { wait, hash } = await addLink(...addLinkArguments, {
-      ...addLinkOverrides,
-      gasLimit,
-    });
+      const { wait, hash } = await addLink(...addLinkArguments, {
+        ...addLinkOverrides,
+        gasLimit,
+      });
 
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
 
-    await wait();
+      await wait();
+      result = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Adding link failed! ${error.message}`);
+      }
+    }
 
-    return true;
+    return result;
   };
 
   /**

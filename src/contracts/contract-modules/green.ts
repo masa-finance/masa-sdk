@@ -217,14 +217,16 @@ export class Green extends MasaSBTModuleBase {
    * @param greenId
    */
   public burn = async (greenId: BigNumber): Promise<boolean> => {
+    let result = false;
+
+    console.log(`Burning Green with ID '${greenId}'!`);
+
+    const {
+      estimateGas: { burn: estimateGas },
+      burn,
+    } = this.masa.contracts.instances.SoulboundGreenContract;
+
     try {
-      console.log(`Burning Green with ID '${greenId}'!`);
-
-      const {
-        estimateGas: { burn: estimateGas },
-        burn,
-      } = this.masa.contracts.instances.SoulboundGreenContract;
-
       const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
         greenId,
       ]);
@@ -243,13 +245,13 @@ export class Green extends MasaSBTModuleBase {
       await wait();
 
       console.log(`Burned Green with ID '${greenId}'!`);
-      return true;
+      result = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(`Burning Green Failed! '${error.message}'`);
       }
     }
 
-    return false;
+    return result;
   };
 }
