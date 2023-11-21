@@ -117,7 +117,8 @@ export const deploySSSBT = async ({
 
     if (adminAddress === signerAddress) {
       console.log(`Adding authority: '${authorityAddress}' to '${address}'`);
-      const { hash, wait } = await addAuthority(authorityAddress);
+
+      const { wait, hash } = await addAuthority(authorityAddress);
 
       console.log(
         Messages.WaitingToFinalize(

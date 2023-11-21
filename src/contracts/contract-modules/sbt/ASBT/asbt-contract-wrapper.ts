@@ -66,17 +66,11 @@ export class ASBTContractWrapper<
       estimateGas: { "mint(address,address)": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...mintASBTArguments,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      mintASBTArguments,
       mintASBTOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = ASBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     const { wait, hash } = await mint(...mintASBTArguments, {
       ...mintASBTOverrides,
@@ -169,17 +163,11 @@ export class ASBTContractWrapper<
       estimateGas: { "mint(address,address[])": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...mintASBTArguments,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      mintASBTArguments,
       mintASBTOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = ASBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     const { wait, hash } = await mint(...mintASBTArguments, {
       ...mintASBTOverrides,

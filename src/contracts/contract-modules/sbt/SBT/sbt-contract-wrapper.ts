@@ -1,5 +1,7 @@
 import { MasaSBT } from "@masa-finance/masa-contracts-identity";
+import { BigNumber } from "ethers";
 
+import { Messages } from "../../../../collections";
 import type {
   IIdentityContracts,
   MasaInterface,
@@ -29,4 +31,40 @@ export class SBTContractWrapper<
     slippage: number | undefined = 250,
   ): Promise<PriceInformation> =>
     this.getMintPrice(paymentMethod, this.contract, slippage);
+
+  /**
+   *
+   * @param tokenId
+   */
+  public burn = async (tokenId: BigNumber) => {
+    const {
+      estimateGas: { burn: estimateGas },
+      burn,
+    } = this.contract;
+
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        tokenId,
+      ]);
+
+      const { wait, hash } = await burn(tokenId, { gasLimit });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      await wait();
+
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Burning SBT Failed! '${error.message}'`);
+      }
+    }
+
+    return false;
+  };
 }

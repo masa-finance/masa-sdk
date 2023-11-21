@@ -142,17 +142,11 @@ export class SoulName extends MasaModuleBase {
     } = this.instances.SoulStoreContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas(
-      ...purchaseNameParameters,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      purchaseNameParameters,
       purchaseNameOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = SoulName.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     // execute
     return purchaseName(...purchaseNameParameters, {
@@ -325,13 +319,25 @@ export class SoulName extends MasaModuleBase {
       );
 
       try {
-        const { transferFrom } = this.masa.contracts.instances.SoulNameContract;
+        const {
+          transferFrom,
+          estimateGas: { transferFrom: estimateGas },
+        } = this.masa.contracts.instances.SoulNameContract;
 
-        const { wait, hash } = await transferFrom(
+        const transferFromArguments: [string, string, BigNumber] = [
           await this.masa.config.signer.getAddress(),
           receiver,
           soulNameData.tokenId,
+        ];
+
+        const gasLimit = await this.estimateGasWithSlippage(
+          estimateGas,
+          transferFromArguments,
         );
+
+        const { wait, hash } = await transferFrom(...transferFromArguments, {
+          gasLimit,
+        });
 
         console.log(
           Messages.WaitingToFinalize(
@@ -374,21 +380,16 @@ export class SoulName extends MasaModuleBase {
         `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`,
       );
 
+      const {
+        estimateGas: { burn: estimateGas },
+        burn,
+      } = this.masa.contracts.instances.SoulNameContract;
+
       try {
-        const {
-          estimateGas: { burn: estimateGas },
-          burn,
-        } = this.masa.contracts.instances.SoulNameContract;
-
         // estimate gas
-        let gasLimit: BigNumber = await estimateGas(soulNameData.tokenId);
-
-        if (this.masa.config.network?.gasSlippagePercentage) {
-          gasLimit = SoulName.addSlippage(
-            gasLimit,
-            this.masa.config.network.gasSlippagePercentage,
-          );
-        }
+        const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+          soulNameData.tokenId,
+        ]);
 
         const { wait, hash } = await burn(soulNameData.tokenId, {
           gasLimit,
@@ -420,5 +421,38 @@ export class SoulName extends MasaModuleBase {
     }
 
     return false;
+  };
+
+  /**
+   *
+   * @param soulName
+   * @param years
+   */
+  public renew = async (soulName: string, years: number): Promise<boolean> => {
+    const tokenId =
+      await this.masa.contracts.instances.SoulNameContract.getTokenId(soulName);
+
+    const {
+      renewYearsPeriod,
+      estimateGas: { renewYearsPeriod: estimateGas },
+    } = this.masa.contracts.instances.SoulNameContract;
+
+    const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+      tokenId,
+      years,
+    ]);
+
+    const { wait, hash } = await renewYearsPeriod(tokenId, years, { gasLimit });
+
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        this.masa.config.network?.blockExplorerUrls?.[0],
+      ),
+    );
+
+    await wait();
+
+    return true;
   };
 }

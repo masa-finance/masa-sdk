@@ -207,17 +207,11 @@ export class SSSBTContractWrapper<
       },
     } = this.contract;
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...mintSSSBTArguments,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      mintSSSBTArguments,
       mintSSSBTOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = SSSBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     const { wait, hash } = await mint(...mintSSSBTArguments, {
       ...mintSSSBTOverrides,

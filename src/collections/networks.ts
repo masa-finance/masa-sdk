@@ -180,6 +180,7 @@ const polygon: Network = {
   blockExplorerUrls: ["https://polygonscan.com"],
   blockExplorerApiUrls: ["https://api.polygonscan.com/api"],
   addresses: addresses["polygon"] as Addresses,
+  skipEip1559: true,
 };
 const mumbai: Network = {
   networkName: "mumbai",

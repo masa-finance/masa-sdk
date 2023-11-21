@@ -1,4 +1,3 @@
-import { Messages } from "../../collections";
 import type { MasaInterface } from "../../interface";
 
 export const renewSoulName = async (
@@ -12,23 +11,5 @@ export const renewSoulName = async (
     soulName = soulName.replace(extension, "");
   }
 
-  const tokenId =
-    await masa.contracts.instances.SoulNameContract.getTokenId(soulName);
-
-  const { wait, hash } =
-    await masa.contracts.instances.SoulNameContract.renewYearsPeriod(
-      tokenId,
-      years,
-    );
-
-  console.log(
-    Messages.WaitingToFinalize(
-      hash,
-      masa.config.network?.blockExplorerUrls?.[0],
-    ),
-  );
-
-  await wait();
-
-  return true;
+  return masa.contracts.soulName.renew(soulName, years);
 };

@@ -103,7 +103,7 @@ export class CreditScore extends MasaSBTModuleBase {
         isNativeCurrency(paymentMethod) ? price : undefined,
       );
 
-    const creditScoreMintParametersIdentity: [
+    const creditScoreMintParameters: [
       string,
       BigNumber,
       string,
@@ -126,17 +126,11 @@ export class CreditScore extends MasaSBTModuleBase {
     } = this.instances.SoulboundCreditScoreContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas(
-      ...creditScoreMintParametersIdentity,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      creditScoreMintParameters,
       creditScoreMintOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = CreditScore.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     const creditScoreMintOverridesWithGasLimit = {
       ...creditScoreMintOverrides,
@@ -145,14 +139,14 @@ export class CreditScore extends MasaSBTModuleBase {
 
     if (this.masa.config.verbose) {
       console.info({
-        creditScoreMintParametersIdentity,
+        creditScoreMintParameters,
         creditScoreMintOverridesWithGasLimit,
       });
     }
 
     // execute
     return mint(
-      ...creditScoreMintParametersIdentity,
+      ...creditScoreMintParameters,
       creditScoreMintOverridesWithGasLimit,
     );
   };
@@ -212,19 +206,15 @@ export class CreditScore extends MasaSBTModuleBase {
   public burn = async (creditScoreId: BigNumber): Promise<boolean> => {
     console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
 
-    try {
-      const {
-        estimateGas: { burn: estimateGas },
-        burn,
-      } = this.masa.contracts.instances.SoulboundCreditScoreContract;
+    const {
+      estimateGas: { burn: estimateGas },
+      burn,
+    } = this.masa.contracts.instances.SoulboundCreditScoreContract;
 
-      let gasLimit: BigNumber = await estimateGas(creditScoreId);
-      if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = CreditScore.addSlippage(
-          gasLimit,
-          this.masa.config.network.gasSlippagePercentage,
-        );
-      }
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        creditScoreId,
+      ]);
 
       const { wait, hash } = await burn(creditScoreId, {
         gasLimit,

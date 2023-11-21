@@ -1,7 +1,6 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { Messages } from "../../../collections";
 import { isBigNumber, patchMetadataUrl } from "../../../utils";
 import { MasaLinkable } from "../../masa-linkable";
 
@@ -128,35 +127,15 @@ export class MasaSBTWrapper<
    * @param SBTId
    */
   public burn = async (SBTId: BigNumber) => {
-    try {
-      console.log(`Burning SBT with ID '${SBTId}'!`);
+    console.log(`Burning SBT with ID '${SBTId}'!`);
 
-      const {
-        estimateGas: { burn: estimateGas },
-        burn,
-      } = this.contract;
+    const { burn } = this.masa.contracts.sbt.attach(this.contract);
 
-      const gasLimit: BigNumber = await estimateGas(SBTId);
+    const burned = await burn(SBTId);
 
-      const { wait, hash } = await burn(SBTId, { gasLimit });
-
-      console.log(
-        Messages.WaitingToFinalize(
-          hash,
-          this.masa.config.network?.blockExplorerUrls?.[0],
-        ),
-      );
-
-      await wait();
-
-      console.log(`Burned SBT with ID '${SBTId}'!`);
-      return true;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(`Burning SBT Failed! '${error.message}'`);
-      }
+    if (burned) {
+      console.log(`Burned SBT with ID '${SBTId.toNumber()}'!`);
     }
-
-    return false;
+    return burned;
   };
 }

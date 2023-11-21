@@ -21,14 +21,7 @@ export class Identity extends MasaSBTModuleBase {
     } = this.instances.SoulStoreContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas();
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = Identity.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
+    const gasLimit = await this.estimateGasWithSlippage(estimateGas);
 
     return await purchaseIdentity({ gasLimit });
   };
@@ -140,17 +133,11 @@ export class Identity extends MasaSBTModuleBase {
     } = this.instances.SoulStoreContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas(
-      ...purchaseIdentityAndNameParameters,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      purchaseIdentityAndNameParameters,
       purchaseIdentityAndNameOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = Identity.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     // execute tx
     return purchaseIdentityAndName(...purchaseIdentityAndNameParameters, {
@@ -174,14 +161,9 @@ export class Identity extends MasaSBTModuleBase {
       } = this.masa.contracts.instances.SoulboundIdentityContract;
 
       // estimate gas
-      let gasLimit: BigNumber = await estimateGas(identityId);
-
-      if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = Identity.addSlippage(
-          gasLimit,
-          this.masa.config.network.gasSlippagePercentage,
-        );
-      }
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        identityId,
+      ]);
 
       const { wait, hash } = await burn(identityId, { gasLimit });
 

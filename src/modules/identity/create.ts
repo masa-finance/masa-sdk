@@ -129,7 +129,7 @@ export const purchaseIdentityWithSoulName = async (
         }`;
         console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-        const purchaseInformation =
+        const { wait, hash } =
           await masa.contracts.identity.purchaseIdentityAndName(
             paymentMethod,
             soulName,
@@ -139,8 +139,6 @@ export const purchaseIdentityWithSoulName = async (
             storeMetadataResponse.authorityAddress,
             storeMetadataResponse.signature,
           );
-        const { wait, hash } = purchaseInformation;
-
         console.log(
           Messages.WaitingToFinalize(
             hash,

@@ -53,4 +53,8 @@ export interface Network {
    * the default gas slippage percentage used on some testnets
    */
   gasSlippagePercentage?: number;
+  /**
+   * skip eip1559 gas price calculation for this network
+   */
+  skipEip1559?: boolean;
 }

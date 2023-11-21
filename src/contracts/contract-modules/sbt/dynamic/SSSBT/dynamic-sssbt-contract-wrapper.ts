@@ -177,17 +177,11 @@ export class DynamicSSSBTContractWrapper<
 
     const mintSSSBTOverrides: PayableOverrides = await this.createOverrides();
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...dynamicSSSBTSetStateArguments,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      dynamicSSSBTSetStateArguments,
       mintSSSBTOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = DynamicSSSBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     const { wait, hash } = await setState(...dynamicSSSBTSetStateArguments, {
       ...mintSSSBTOverrides,
@@ -269,28 +263,11 @@ export class DynamicSSSBTContractWrapper<
       estimateGas: { "mint(address,address)": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber | undefined;
-
-    try {
-      gasLimit = await estimateGas(...mintSSSBTArguments, mintSSSBTOverrides);
-
-      if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = DynamicSSSBTContractWrapper.addSlippage(
-          gasLimit,
-          this.masa.config.network.gasSlippagePercentage,
-        );
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(`Estimate gas failed! ${error.message}`);
-      }
-
-      gasLimit = BigNumber.from(250_000);
-      if (!this.masa.config.force) {
-        // don't throw if we force this
-        throw error;
-      }
-    }
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      mintSSSBTArguments,
+      mintSSSBTOverrides,
+    );
 
     const { wait, hash } = await mint(...mintSSSBTArguments, {
       ...mintSSSBTOverrides,

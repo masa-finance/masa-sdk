@@ -154,17 +154,11 @@ export class Green extends MasaSBTModuleBase {
     } = this.instances.SoulboundGreenContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas(
-      ...greenMintParameters,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      greenMintParameters,
       greenMintOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = Green.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     // execute
     return mint(...greenMintParameters, { ...greenMintOverrides, gasLimit });
@@ -231,14 +225,10 @@ export class Green extends MasaSBTModuleBase {
         burn,
       } = this.masa.contracts.instances.SoulboundGreenContract;
 
-      let gasLimit: BigNumber = await estimateGas(greenId);
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        greenId,
+      ]);
 
-      if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = Green.addSlippage(
-          gasLimit,
-          this.masa.config.network.gasSlippagePercentage,
-        );
-      }
       const { wait, hash } = await burn(greenId, {
         gasLimit,
       });
