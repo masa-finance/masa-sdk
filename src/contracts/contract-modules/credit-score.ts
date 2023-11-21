@@ -187,6 +187,7 @@ export class CreditScore extends MasaSBTModuleBase {
     const { signature, domain } = await signTypedData({
       contract: this.instances.SoulboundCreditScoreContract,
       signer: this.masa.config.signer,
+      name: "SoulboundCreditScore",
       types: this.types,
       value,
     });
