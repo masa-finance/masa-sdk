@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / SoulLinker
+ - v3.13.0-alpha.1](../README.md) / [Exports](../modules.md) / SoulLinker
 
 # Class: SoulLinker
 
@@ -27,6 +27,7 @@
 - [breakLink](SoulLinker.md#breaklink)
 - [checkOrGiveAllowance](SoulLinker.md#checkorgiveallowance)
 - [createOverrides](SoulLinker.md#createoverrides)
+- [estimateGasWithSlippage](SoulLinker.md#estimategaswithslippage)
 - [formatPrice](SoulLinker.md#formatprice)
 - [getNetworkFeeInformation](SoulLinker.md#getnetworkfeeinformation)
 - [getPaymentAddress](SoulLinker.md#getpaymentaddress)
@@ -170,6 +171,28 @@ ___
 #### Inherited from
 
 MasaModuleBase.createOverrides
+
+___
+
+### estimateGasWithSlippage
+
+▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`undefined` \| `BigNumber`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `args?` | `unknown`[] |
+| `overrides?` | `PayableOverrides` |
+
+#### Returns
+
+`Promise`\<`undefined` \| `BigNumber`\>
+
+#### Inherited from
+
+MasaModuleBase.estimateGasWithSlippage
 
 ___
 

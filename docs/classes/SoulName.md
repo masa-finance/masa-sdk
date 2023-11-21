@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / SoulName
+ - v3.13.0-alpha.1](../README.md) / [Exports](../modules.md) / SoulName
 
 # Class: SoulName
 
@@ -26,6 +26,7 @@
 - [burn](SoulName.md#burn)
 - [checkOrGiveAllowance](SoulName.md#checkorgiveallowance)
 - [createOverrides](SoulName.md#createoverrides)
+- [estimateGasWithSlippage](SoulName.md#estimategaswithslippage)
 - [formatPrice](SoulName.md#formatprice)
 - [getNetworkFeeInformation](SoulName.md#getnetworkfeeinformation)
 - [getPaymentAddress](SoulName.md#getpaymentaddress)
@@ -33,6 +34,7 @@
 - [getSoulnameData](SoulName.md#getsoulnamedata)
 - [isAvailable](SoulName.md#isavailable)
 - [purchase](SoulName.md#purchase)
+- [renew](SoulName.md#renew)
 - [sign](SoulName.md#sign)
 - [transfer](SoulName.md#transfer)
 - [verify](SoulName.md#verify)
@@ -145,6 +147,28 @@ ___
 #### Inherited from
 
 MasaModuleBase.createOverrides
+
+___
+
+### estimateGasWithSlippage
+
+▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`undefined` \| `BigNumber`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `args?` | `unknown`[] |
+| `overrides?` | `PayableOverrides` |
+
+#### Returns
+
+`Promise`\<`undefined` \| `BigNumber`\>
+
+#### Inherited from
+
+MasaModuleBase.estimateGasWithSlippage
 
 ___
 
@@ -284,6 +308,23 @@ purchase only name
 #### Returns
 
 `Promise`\<`ContractTransaction`\>
+
+___
+
+### renew
+
+▸ **renew**(`soulName`, `years`): `Promise`\<`boolean`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `soulName` | `string` |
+| `years` | `number` |
+
+#### Returns
+
+`Promise`\<`boolean`\>
 
 ___
 

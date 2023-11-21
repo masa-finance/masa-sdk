@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / ASBTContractWrapper
+ - v3.13.0-alpha.1](../README.md) / [Exports](../modules.md) / ASBTContractWrapper
 
 # Class: ASBTContractWrapper\<Contract\>
 
@@ -30,8 +30,10 @@
 ### Methods
 
 - [bulkMint](ASBTContractWrapper.md#bulkmint)
+- [burn](ASBTContractWrapper.md#burn)
 - [checkOrGiveAllowance](ASBTContractWrapper.md#checkorgiveallowance)
 - [createOverrides](ASBTContractWrapper.md#createoverrides)
+- [estimateGasWithSlippage](ASBTContractWrapper.md#estimategaswithslippage)
 - [formatPrice](ASBTContractWrapper.md#formatprice)
 - [getMintPrice](ASBTContractWrapper.md#getmintprice)
 - [getNetworkFeeInformation](ASBTContractWrapper.md#getnetworkfeeinformation)
@@ -119,6 +121,26 @@ ___
 
 ___
 
+### burn
+
+▸ **burn**(`tokenId`): `Promise`\<`boolean`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `tokenId` | `BigNumber` |
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+#### Inherited from
+
+[SBTContractWrapper](SBTContractWrapper.md).[burn](SBTContractWrapper.md#burn)
+
+___
+
 ### checkOrGiveAllowance
 
 ▸ **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<`undefined` \| `ContractReceipt`\>
@@ -161,6 +183,28 @@ ___
 #### Inherited from
 
 [SBTContractWrapper](SBTContractWrapper.md).[createOverrides](SBTContractWrapper.md#createoverrides)
+
+___
+
+### estimateGasWithSlippage
+
+▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`undefined` \| `BigNumber`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `args?` | `unknown`[] |
+| `overrides?` | `PayableOverrides` |
+
+#### Returns
+
+`Promise`\<`undefined` \| `BigNumber`\>
+
+#### Inherited from
+
+[SBTContractWrapper](SBTContractWrapper.md).[estimateGasWithSlippage](SBTContractWrapper.md#estimategaswithslippage)
 
 ___
 

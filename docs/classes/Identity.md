@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / Identity
+ - v3.13.0-alpha.1](../README.md) / [Exports](../modules.md) / Identity
 
 # Class: Identity
 
@@ -25,6 +25,7 @@
 - [burn](Identity.md#burn)
 - [checkOrGiveAllowance](Identity.md#checkorgiveallowance)
 - [createOverrides](Identity.md#createoverrides)
+- [estimateGasWithSlippage](Identity.md#estimategaswithslippage)
 - [formatPrice](Identity.md#formatprice)
 - [getMintPrice](Identity.md#getmintprice)
 - [getNetworkFeeInformation](Identity.md#getnetworkfeeinformation)
@@ -136,6 +137,28 @@ ___
 #### Inherited from
 
 MasaSBTModuleBase.createOverrides
+
+___
+
+### estimateGasWithSlippage
+
+▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`undefined` \| `BigNumber`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `args?` | `unknown`[] |
+| `overrides?` | `PayableOverrides` |
+
+#### Returns
+
+`Promise`\<`undefined` \| `BigNumber`\>
+
+#### Inherited from
+
+MasaSBTModuleBase.estimateGasWithSlippage
 
 ___
 

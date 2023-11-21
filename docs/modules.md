@@ -1,8 +1,8 @@
 [# Masa SDK
- - v3.12.0-alpha.5](README.md) / Exports
+ - v3.13.0-alpha.1](README.md) / Exports
 
 # # Masa SDK
- - v3.12.0-alpha.5
+ - v3.13.0-alpha.1
 
 ## Table of contents
 
@@ -255,13 +255,13 @@ ___
 
 ### Environment
 
-Ƭ **Environment**: \{ `name`: ``"local"`` \| ``"dev"`` \| ``"test"`` \| ``"stage"`` \| ``"production"`` ; `wallet?`: `Signer`  } & [`MasaArgs`](interfaces/MasaArgs.md)
+Ƭ **Environment**: \{ `wallet?`: `Signer`  } & [`MasaArgs`](interfaces/MasaArgs.md)
 
 ___
 
 ### EnvironmentName
 
-Ƭ **EnvironmentName**: ``"dev"`` \| ``"test"`` \| ``"beta"`` \| ``"production"``
+Ƭ **EnvironmentName**: ``"local"`` \| ``"dev"`` \| ``"stage"`` \| ``"production"``
 
 ___
 

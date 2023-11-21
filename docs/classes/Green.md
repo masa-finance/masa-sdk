@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.12.0-alpha.5](../README.md) / [Exports](../modules.md) / Green
+ - v3.13.0-alpha.1](../README.md) / [Exports](../modules.md) / Green
 
 # Class: Green
 
@@ -26,6 +26,7 @@
 - [burn](Green.md#burn)
 - [checkOrGiveAllowance](Green.md#checkorgiveallowance)
 - [createOverrides](Green.md#createoverrides)
+- [estimateGasWithSlippage](Green.md#estimategaswithslippage)
 - [formatPrice](Green.md#formatprice)
 - [getMintPrice](Green.md#getmintprice)
 - [getNetworkFeeInformation](Green.md#getnetworkfeeinformation)
@@ -144,6 +145,28 @@ ___
 #### Inherited from
 
 MasaSBTModuleBase.createOverrides
+
+___
+
+### estimateGasWithSlippage
+
+▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`undefined` \| `BigNumber`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `args?` | `unknown`[] |
+| `overrides?` | `PayableOverrides` |
+
+#### Returns
+
+`Promise`\<`undefined` \| `BigNumber`\>
+
+#### Inherited from
+
+MasaSBTModuleBase.estimateGasWithSlippage
 
 ___
 
