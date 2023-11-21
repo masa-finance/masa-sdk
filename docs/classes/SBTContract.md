@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.13.0-alpha.1](../README.md) / [Exports](../modules.md) / SBTContract
+ - v3.13.0-alpha.3](../README.md) / [Exports](../modules.md) / SBTContract
 
 # Class: SBTContract
 
@@ -172,7 +172,7 @@ ___
 
 ### estimateGasWithSlippage
 
-▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`undefined` \| `BigNumber`\>
+▸ **estimateGasWithSlippage**(`estimateGas`, `args?`, `overrides?`): `Promise`\<`BigNumber`\>
 
 #### Parameters
 
@@ -184,7 +184,7 @@ ___
 
 #### Returns
 
-`Promise`\<`undefined` \| `BigNumber`\>
+`Promise`\<`BigNumber`\>
 
 #### Inherited from
 
