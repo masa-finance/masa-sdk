@@ -27,6 +27,8 @@ import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
 import { isERC20Currency, isNativeCurrency } from "../../utils";
 
+const DEFAULT_GAS_LIMIT: number = 750_000;
+
 export abstract class MasaModuleBase extends MasaBase {
   constructor(
     masa: MasaInterface,
@@ -223,8 +225,8 @@ export abstract class MasaModuleBase extends MasaBase {
     estimateGas: (...estimateGasArgAndOverrides: never) => Promise<BigNumber>,
     args?: unknown[],
     overrides?: PayableOverrides,
-  ): Promise<BigNumber | undefined> => {
-    let gasLimit: BigNumber | undefined;
+  ): Promise<BigNumber> => {
+    let gasLimit: BigNumber;
 
     try {
       gasLimit = await (overrides
@@ -242,8 +244,13 @@ export abstract class MasaModuleBase extends MasaBase {
         console.error(`Estimate gas failed! ${error.message}`);
       }
 
-      if (!this.masa.config.forceTransactions) {
+      if (this.masa.config.forceTransactions) {
         // don't throw if we force this
+        console.warn(
+          `Forcing transaction for ${DEFAULT_GAS_LIMIT.toLocaleString()} gas!`,
+        );
+        gasLimit = BigNumber.from(DEFAULT_GAS_LIMIT);
+      } else {
         throw error;
       }
     }
