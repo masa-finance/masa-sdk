@@ -228,16 +228,18 @@ export abstract class MasaModuleBase extends MasaBase {
    * @param overrides
    */
   protected estimateGasWithSlippage = async (
-    estimateGas: (...estimateGasArgAndOverrides: never) => Promise<BigNumber>,
+    estimateGas: (...estimateGasArgAndOverrides: never[]) => Promise<BigNumber>,
     args?: unknown[],
     overrides?: PayableOverrides,
   ): Promise<BigNumber> => {
     let gasLimit: BigNumber;
 
     try {
-      gasLimit = await (overrides
-        ? estimateGas(...(args as never), overrides)
-        : estimateGas(...(args as never)));
+      gasLimit = await (overrides && args
+        ? estimateGas(...(args as never[]), overrides as never)
+        : args
+          ? estimateGas(...(args as never[]))
+          : estimateGas());
 
       if (this.masa.config.network?.gasSlippagePercentage) {
         gasLimit = MasaModuleBase.addSlippage(
