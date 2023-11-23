@@ -1,6 +1,6 @@
 import type { BigNumber } from "ethers";
 
-import type { BaseResult } from "../base-result";
+import type { BaseResultWithTokenId } from "../base-result";
 
 export interface IGreen {
   name: "Masa Soulbound Green v1.0.0";
@@ -19,7 +19,7 @@ export interface GreenDetails {
   metadata?: IGreen;
 }
 
-export interface GreenBaseResult extends BaseResult {
+export interface GreenBaseResult extends BaseResultWithTokenId {
   status?: string;
   errorCode?: number;
 }

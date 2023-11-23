@@ -6,7 +6,7 @@ import {
 } from "ethers";
 
 import { Messages } from "../../collections";
-import type { PaymentMethod } from "../../interface";
+import type { BaseResult, PaymentMethod } from "../../interface";
 import { generateSignatureDomain, isNativeCurrency } from "../../utils";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
@@ -150,8 +150,8 @@ export class Identity extends MasaSBTModuleBase {
    *
    * @param identityId
    */
-  public burn = async (identityId: BigNumber): Promise<boolean> => {
-    let success = false;
+  public burn = async (identityId: BigNumber): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
 
     console.log(`Burning Identity with ID '${identityId}'!`);
 
@@ -178,13 +178,14 @@ export class Identity extends MasaSBTModuleBase {
       await wait();
 
       console.log(`Burned Identity with ID '${identityId}'!`);
-      success = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Burning Identity Failed! ${error.message}`);
+        result.message = `Burning Identity Failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 
-    return success;
+    return result;
   };
 }

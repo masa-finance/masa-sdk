@@ -7,7 +7,11 @@ import type {
 import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
-import type { PaymentMethod, PriceInformation } from "../../interface";
+import type {
+  BaseResult,
+  PaymentMethod,
+  PriceInformation,
+} from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -307,8 +311,8 @@ export class SoulName extends MasaModuleBase {
   public transfer = async (
     soulName: string,
     receiver: string,
-  ): Promise<boolean> => {
-    let result = false;
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
 
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
@@ -354,14 +358,16 @@ export class SoulName extends MasaModuleBase {
           `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
         );
 
-        result = true;
+        result.success = true;
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(`Sending of Soul Name Failed! ${error.message}`);
+          result.message = `Sending of Soul Name Failed! ${error.message}`;
+          console.error(result.message);
         }
       }
     } else {
-      console.error(`Soulname '${soulName}${extension}' does not exist!`);
+      result.message = `Soulname '${soulName}${extension}' does not exist!`;
+      console.error(result.message);
     }
 
     return result;
@@ -371,8 +377,10 @@ export class SoulName extends MasaModuleBase {
    *
    * @param soulName
    */
-  public burn = async (soulName: string): Promise<boolean> => {
-    let result = false;
+  public burn = async (soulName: string): Promise<BaseResult> => {
+    const result: BaseResult = {
+      success: false,
+    };
 
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
@@ -412,16 +420,16 @@ export class SoulName extends MasaModuleBase {
           `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
         );
 
-        result = true;
+        result.success = true;
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(
-            `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`,
-          );
+          result.message = `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`;
+          console.error(result.message);
         }
       }
     } else {
-      console.error(`Soulname '${soulName}${extension}' does not exist!`);
+      result.message = `Soulname '${soulName}${extension}' does not exist!`;
+      console.error(result.message);
     }
 
     return result;
@@ -432,8 +440,12 @@ export class SoulName extends MasaModuleBase {
    * @param soulName
    * @param years
    */
-  public renew = async (soulName: string, years: number): Promise<boolean> => {
-    let result = false;
+  public renew = async (
+    soulName: string,
+    years: number,
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     const tokenId =
       await this.masa.contracts.instances.SoulNameContract.getTokenId(soulName);
 
@@ -460,10 +472,11 @@ export class SoulName extends MasaModuleBase {
       );
 
       await wait();
-      result = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`renewal failed! ${error.message}`);
+        result.message = `renewal failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 

@@ -4,7 +4,11 @@ import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { PayableOverrides } from "ethers";
 
 import { Messages } from "../../../../collections";
-import type { PaymentMethod } from "../../../../interface";
+import type {
+  BaseResult,
+  BaseResultWithTokenId,
+  PaymentMethod,
+} from "../../../../interface";
 import { isNativeCurrency } from "../../../../utils";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
@@ -19,8 +23,8 @@ export class ASBTContractWrapper<
   public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
-  ): Promise<boolean> => {
-    let result = false;
+  ): Promise<BaseResultWithTokenId> => {
+    const result: BaseResultWithTokenId = { success: false };
 
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
@@ -37,9 +41,8 @@ export class ASBTContractWrapper<
       const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
-        console.error(
-          `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-        );
+        result.message = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+        console.error(result.message);
         return result;
       }
     } catch (error: unknown) {
@@ -101,11 +104,12 @@ export class ASBTContractWrapper<
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
-        result = true;
+        result.success = true;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Minting ASBT failed! ${error.message}`);
+        result.message = `Minting ASBT failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 
@@ -120,8 +124,8 @@ export class ASBTContractWrapper<
   public bulkMint = async (
     paymentMethod: PaymentMethod,
     receivers: string[],
-  ): Promise<boolean[]> => {
-    const result = [];
+  ): Promise<BaseResult[]> => {
+    const result: BaseResult[] = [];
 
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
@@ -139,10 +143,9 @@ export class ASBTContractWrapper<
         const balance: BigNumber = await this.contract.balanceOf(receiver);
 
         if (limit > 0 && balance.gte(limit)) {
-          console.error(
-            `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-          );
-          result.push(false);
+          const errorMessage = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+          console.error(errorMessage);
+          result.push({ success: false, message: errorMessage });
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -203,7 +206,7 @@ export class ASBTContractWrapper<
         `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
       );
 
-      result.push(true);
+      result.push({ success: true });
     }
 
     return result;

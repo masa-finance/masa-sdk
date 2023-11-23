@@ -46,7 +46,8 @@ export const queryLink = async (
   );
 
   if (!ownerIdentityId) {
-    console.error("Owner identity not found");
+    result.message = "Owner identity not found";
+    console.error(result.message);
     return result;
   }
 

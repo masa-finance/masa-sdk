@@ -5,7 +5,7 @@ import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
 import { Messages } from "../../../../../collections";
-import type { PaymentMethod } from "../../../../../interface";
+import type { BaseResult, PaymentMethod } from "../../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -75,7 +75,9 @@ export class DynamicSSSBTContractWrapper<
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     const { name, version, verifyingContract } =
       await this.contract.eip712Domain();
 
@@ -96,7 +98,9 @@ export class DynamicSSSBTContractWrapper<
       authorityAddress,
     );
 
-    return true;
+    result.success = true;
+
+    return result;
   };
 
   /**
@@ -115,8 +119,8 @@ export class DynamicSSSBTContractWrapper<
     signature: string,
     signatureDate: number,
     authorityAddress: string,
-  ): Promise<boolean> => {
-    let result = false;
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
 
     const [possibleStates, stateAlreadySet, name] = await Promise.all([
       this.contract.getBeforeMintStates(),
@@ -125,7 +129,8 @@ export class DynamicSSSBTContractWrapper<
     ]);
 
     if (stateAlreadySet) {
-      console.error(`State '${state}' already set on ${name} for ${receiver}`);
+      result.message = `State '${state}' already set on ${name} for ${receiver}`;
+      console.error(result.message);
       return result;
     }
 
@@ -134,7 +139,8 @@ export class DynamicSSSBTContractWrapper<
         .map((state: string) => state.toLowerCase())
         .includes(state.toLowerCase())
     ) {
-      console.error(`State '${state}' unknown to contract ${name}`);
+      result.message = `State '${state}' unknown to contract ${name}`;
+      console.error(result.message);
       return result;
     }
 
@@ -199,10 +205,11 @@ export class DynamicSSSBTContractWrapper<
       );
 
       await wait();
-      result = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Setting state failed! ${error.message}`);
+        result.message = `Setting state failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 
@@ -217,8 +224,8 @@ export class DynamicSSSBTContractWrapper<
   public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
-  ): Promise<boolean> => {
-    let result = false;
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
 
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -235,14 +242,13 @@ export class DynamicSSSBTContractWrapper<
       const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
-        console.error(
-          `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-        );
+        result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+        console.error(result.message);
         return result;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn(error.message);
+        console.warn(`Unable to load balance ${error.message}`);
       }
     }
 
@@ -307,11 +313,12 @@ export class DynamicSSSBTContractWrapper<
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
-        result = true;
+        result.success = true;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Minting failed! ${error.message}`);
+        result.message = `Minting failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 

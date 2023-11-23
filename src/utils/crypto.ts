@@ -146,8 +146,10 @@ export const recoverAddress = (
       utils.arrayify(utils.hashMessage(utils.arrayify(hash))),
       signature,
     );
-  } catch (err) {
-    console.error("Address recovery failed!", err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Address recovery failed! ${error.message}`);
+    }
   }
 
   return recovered;

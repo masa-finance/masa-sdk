@@ -287,7 +287,7 @@ export abstract class MasaModuleBase extends MasaBase {
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
-  ) => {
+  ): Promise<void> => {
     if (this.masa.config.verbose) {
       console.log({
         domain,

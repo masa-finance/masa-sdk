@@ -125,8 +125,8 @@ export class SoulLinker extends MasaModuleBase {
     expirationDate: number,
     signature: string,
     slippage: number | undefined = 250,
-  ): Promise<boolean> => {
-    let result = false;
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
 
     const { price, paymentAddress } = await this.getPrice(
       tokenAddress,
@@ -190,10 +190,11 @@ export class SoulLinker extends MasaModuleBase {
       );
 
       await wait();
-      result = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Adding link failed! ${error.message}`);
+        result.message = `Adding link failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 

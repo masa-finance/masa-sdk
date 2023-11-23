@@ -3,6 +3,7 @@ import { BigNumber } from "ethers";
 
 import { Messages } from "../../../../collections";
 import type {
+  BaseResult,
   IIdentityContracts,
   MasaInterface,
   PaymentMethod,
@@ -36,8 +37,8 @@ export class SBTContractWrapper<
    *
    * @param tokenId
    */
-  public burn = async (tokenId: BigNumber) => {
-    let result = false;
+  public burn = async (tokenId: BigNumber): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
 
     const {
       estimateGas: { burn: estimateGas },
@@ -60,10 +61,11 @@ export class SBTContractWrapper<
 
       await wait();
 
-      result = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Burning SBT Failed! '${error.message}'`);
+        result.message = `Burning SBT Failed! '${error.message}'`;
+        console.error(result.message);
       }
     }
 

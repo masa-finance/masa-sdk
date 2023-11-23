@@ -2,7 +2,7 @@ import { LogDescription } from "@ethersproject/abi";
 
 import { Messages } from "../../collections";
 import type {
-  BaseResult,
+  BaseResultWithTokenId,
   GenerateGreenResult,
   GreenBaseResult,
   MasaInterface,
@@ -126,7 +126,7 @@ export const mintGreen = async (
   authorityAddress: string,
   signatureDate: number,
   signature: string,
-): Promise<BaseResult> => {
+): Promise<BaseResultWithTokenId> => {
   const result = {
     success: false,
     message: "Unknown Error",

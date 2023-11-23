@@ -7,7 +7,11 @@ import type {
 import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
-import type { PaymentMethod, PriceInformation } from "../../interface";
+import type {
+  BaseResult,
+  PaymentMethod,
+  PriceInformation,
+} from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -216,8 +220,10 @@ export class Green extends MasaSBTModuleBase {
    *
    * @param greenId
    */
-  public burn = async (greenId: BigNumber): Promise<boolean> => {
-    let result = false;
+  public burn = async (greenId: BigNumber): Promise<BaseResult> => {
+    const result: BaseResult = {
+      success: false,
+    };
 
     console.log(`Burning Green with ID '${greenId}'!`);
 
@@ -245,10 +251,11 @@ export class Green extends MasaSBTModuleBase {
       await wait();
 
       console.log(`Burned Green with ID '${greenId}'!`);
-      result = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Burning Green Failed! '${error.message}'`);
+        result.message = `Burning Green Failed! '${error.message}'`;
+        console.error(result.message);
       }
     }
 

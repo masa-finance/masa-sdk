@@ -5,7 +5,11 @@ import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
 import { Messages } from "../../../../collections";
-import type { PaymentMethod, PriceInformation } from "../../../../interface";
+import type {
+  BaseResultWithTokenId,
+  PaymentMethod,
+  PriceInformation,
+} from "../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -129,8 +133,8 @@ export class SSSBTContractWrapper<
     signature: string,
     signatureDate: number,
     authorityAddress: string,
-  ): Promise<boolean> => {
-    let result = false;
+  ): Promise<BaseResultWithTokenId> => {
+    const result: BaseResultWithTokenId = { success: false };
 
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -147,9 +151,8 @@ export class SSSBTContractWrapper<
       const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
-        console.error(
-          `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-        );
+        result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+        console.error(result.message);
         return result;
       }
     } catch (error: unknown) {
@@ -242,11 +245,13 @@ export class SSSBTContractWrapper<
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
-        result = true;
+        result.success = true;
+        result.tokenId = args._tokenId;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Minting SSSBT failed! ${error.message}`);
+        result.message = `Minting SSSBT failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 

@@ -7,7 +7,11 @@ import type {
 import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
-import type { PaymentMethod, PriceInformation } from "../../interface";
+import type {
+  BaseResult,
+  PaymentMethod,
+  PriceInformation,
+} from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -203,8 +207,10 @@ export class CreditScore extends MasaSBTModuleBase {
    *
    * @param creditScoreId
    */
-  public burn = async (creditScoreId: BigNumber): Promise<boolean> => {
-    let result = false;
+  public burn = async (creditScoreId: BigNumber): Promise<BaseResult> => {
+    const result: BaseResult = {
+      success: false,
+    };
 
     console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
 
@@ -232,10 +238,11 @@ export class CreditScore extends MasaSBTModuleBase {
       await wait();
 
       console.log(`Burned Credit Score with ID '${creditScoreId}'!`);
-      result = true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Burning Credit Score Failed! '${error.message}'`);
+        result.message = `Burning Credit Score Failed! '${error.message}'`;
+        console.error(result.message);
       }
     }
 
