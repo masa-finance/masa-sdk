@@ -1,0 +1,72 @@
+[# Masa SDK
+ - v3.13.0-alpha.4](../README.md) / [Exports](../modules.md) / MasaArgs
+
+# Interface: MasaArgs
+
+## Table of contents
+
+### Properties
+
+- [apiUrl](MasaArgs.md#apiurl)
+- [arweave](MasaArgs.md#arweave)
+- [contractOverrides](MasaArgs.md#contractoverrides)
+- [cookie](MasaArgs.md#cookie)
+- [environment](MasaArgs.md#environment)
+- [forceTransactions](MasaArgs.md#forcetransactions)
+- [networkName](MasaArgs.md#networkname)
+- [signer](MasaArgs.md#signer)
+- [verbose](MasaArgs.md#verbose)
+
+## Properties
+
+### apiUrl
+
+• `Optional` `Readonly` **apiUrl**: `string`
+
+___
+
+### arweave
+
+• `Optional` `Readonly` **arweave**: `ApiConfig`
+
+___
+
+### contractOverrides
+
+• `Optional` `Readonly` **contractOverrides**: `Partial`\<[`IIdentityContracts`](IIdentityContracts.md)\>
+
+___
+
+### cookie
+
+• `Optional` `Readonly` **cookie**: `string`
+
+___
+
+### environment
+
+• `Optional` `Readonly` **environment**: [`EnvironmentName`](../modules.md#environmentname)
+
+___
+
+### forceTransactions
+
+• `Optional` `Readonly` **forceTransactions**: `boolean`
+
+___
+
+### networkName
+
+• `Optional` `Readonly` **networkName**: [`NetworkName`](../modules.md#networkname)
+
+___
+
+### signer
+
+• `Readonly` **signer**: `Signer`
+
+___
+
+### verbose
+
+• `Optional` `Readonly` **verbose**: `boolean`
