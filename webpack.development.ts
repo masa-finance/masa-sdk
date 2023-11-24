@@ -1,8 +1,7 @@
-"use strict";
+import TerserPlugin = require("terser-webpack-plugin");
+import { Configuration } from "webpack";
 
-const TerserPlugin = require("terser-webpack-plugin");
-
-module.exports = {
+export const development: Configuration = {
   devtool: "inline-source-map",
   optimization: {
     minimizer: [

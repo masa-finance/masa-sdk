@@ -1,9 +1,9 @@
-"use strict";
+import CircularDependencyPlugin = require("circular-dependency-plugin");
+import { WebpackConfiguration } from "webpack-cli";
 
-const { paths } = require("./webpack.parts.js");
-const CircularDependencyPlugin = require("circular-dependency-plugin");
+import { paths } from "./webpack.parts";
 
-module.exports = {
+export const common: WebpackConfiguration = {
   entry: paths.entry,
   mode: "none",
   optimization: {
@@ -18,7 +18,7 @@ module.exports = {
       include: /src/,
       // add errors to webpack instead of warnings
       failOnError: false,
-      // allow import cycles that include an asyncronous import,
+      // allow import cycles that include an asynchronous import,
       // e.g. via import(/* webpackMode: "weak" */ './file.js')
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
