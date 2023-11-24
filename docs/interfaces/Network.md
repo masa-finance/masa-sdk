@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.13.0-alpha.4](../README.md) / [Exports](../modules.md) / Network
+ - v3.13.0](../README.md) / [Exports](../modules.md) / Network
 
 # Interface: Network
 

@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.13.0-alpha.4](../README.md) / [Exports](../modules.md) / ASBTContractWrapper
+ - v3.13.0](../README.md) / [Exports](../modules.md) / ASBTContractWrapper
 
 # Class: ASBTContractWrapper\<Contract\>
 
@@ -194,7 +194,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`[]) => `Promise`\<`BigNumber`\> |
 | `args?` | `unknown`[] |
 | `overrides?` | `PayableOverrides` |
 

@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.13.0-alpha.4](../README.md) / [Exports](../modules.md) / SoulName
+ - v3.13.0](../README.md) / [Exports](../modules.md) / SoulName
 
 # Class: SoulName
 
@@ -158,7 +158,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`) => `Promise`\<`BigNumber`\> |
+| `estimateGas` | (...`estimateGasArgAndOverrides`: `never`[]) => `Promise`\<`BigNumber`\> |
 | `args?` | `unknown`[] |
 | `overrides?` | `PayableOverrides` |
 
