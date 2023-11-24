@@ -16,22 +16,11 @@ const outputMappings: { [index: string]: string } = {
 
 const configurationOverrides: Configuration = {};
 
-let configuration: Configuration[];
+const configurations: Configuration[] = outputs(
+  common,
+  isProduction ? "production" : "development",
+  outputMappings,
+  configurationOverrides,
+);
 
-if (isProduction) {
-  configuration = outputs(
-    common,
-    "production",
-    outputMappings,
-    configurationOverrides,
-  );
-} else {
-  configuration = outputs(
-    common,
-    "development",
-    outputMappings,
-    configurationOverrides,
-  );
-}
-
-export default configuration;
+export default configurations;

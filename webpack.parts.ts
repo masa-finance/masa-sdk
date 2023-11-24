@@ -1,4 +1,4 @@
-import * as path from "path";
+import { resolve } from "path";
 import { Configuration } from "webpack";
 import { merge } from "webpack-merge";
 
@@ -6,8 +6,8 @@ import { development } from "./webpack.development";
 import { production } from "./webpack.production";
 
 export const paths: { [index: string]: string } = {
-  entry: path.resolve(__dirname, "./dist/src/index.js"),
-  bundle: path.resolve(__dirname, "./dist/browser"),
+  entry: resolve(__dirname, "./dist/src/index.js"),
+  bundle: resolve(__dirname, "./dist/browser"),
 };
 
 export const outputs = (
@@ -21,7 +21,7 @@ export const outputs = (
   const library: string = "masa-sdk";
   const windowLibrary: string = "MasaSDK";
 
-  let configuration = development;
+  let configuration: Configuration = development;
   let ext = "js";
 
   if (environment === "production") {
