@@ -111,7 +111,12 @@ export const deploySSSBT = async ({
       ...deploySSSBTArguments,
     )) as ReferenceSBTSelfSovereign;
 
-    console.log(Messages.WaitingToFinalize(hash));
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        masa.config.network?.blockExplorerUrls?.[0],
+      ),
+    );
 
     await wait();
 

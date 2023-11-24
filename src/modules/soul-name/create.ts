@@ -160,6 +160,10 @@ export const createSoulName = async (
       return result;
     }
 
+    if (masa.config.verbose) {
+      console.info("Purchasing Soulname");
+    }
+
     return await purchaseSoulName(
       masa,
       paymentMethod,

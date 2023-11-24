@@ -23,7 +23,12 @@ export const purchaseIdentity = async (
   };
 
   const { wait, hash } = await masa.contracts.identity.purchase();
-  console.log(Messages.WaitingToFinalize(hash));
+  console.log(
+    Messages.WaitingToFinalize(
+      hash,
+      masa.config.network?.blockExplorerUrls?.[0],
+    ),
+  );
 
   const { logs } = await wait();
   const parsedLogs = masa.contracts.parseLogs(logs);
@@ -266,6 +271,10 @@ export const createIdentityWithSoulName = async (
       result.errorCode = SoulNameErrorCodes.SoulNameError;
       console.error(result.message);
       return result;
+    }
+
+    if (masa.config.verbose) {
+      console.info("Purchasing Identity with Soulname");
     }
 
     return await purchaseIdentityWithSoulName(
