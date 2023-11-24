@@ -7,7 +7,11 @@ import type {
 import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
-import type { PaymentMethod, PriceInformation } from "../../interface";
+import type {
+  BaseResult,
+  PaymentMethod,
+  PriceInformation,
+} from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -154,17 +158,11 @@ export class Green extends MasaSBTModuleBase {
     } = this.instances.SoulboundGreenContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas(
-      ...greenMintParameters,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      greenMintParameters,
       greenMintOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = Green.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     // execute
     return mint(...greenMintParameters, { ...greenMintOverrides, gasLimit });
@@ -222,23 +220,23 @@ export class Green extends MasaSBTModuleBase {
    *
    * @param greenId
    */
-  public burn = async (greenId: BigNumber): Promise<boolean> => {
+  public burn = async (greenId: BigNumber): Promise<BaseResult> => {
+    const result: BaseResult = {
+      success: false,
+    };
+
+    console.log(`Burning Green with ID '${greenId}'!`);
+
+    const {
+      estimateGas: { burn: estimateGas },
+      burn,
+    } = this.masa.contracts.instances.SoulboundGreenContract;
+
     try {
-      console.log(`Burning Green with ID '${greenId}'!`);
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        greenId,
+      ]);
 
-      const {
-        estimateGas: { burn: estimateGas },
-        burn,
-      } = this.masa.contracts.instances.SoulboundGreenContract;
-
-      let gasLimit: BigNumber = await estimateGas(greenId);
-
-      if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = Green.addSlippage(
-          gasLimit,
-          this.masa.config.network.gasSlippagePercentage,
-        );
-      }
       const { wait, hash } = await burn(greenId, {
         gasLimit,
       });
@@ -253,13 +251,14 @@ export class Green extends MasaSBTModuleBase {
       await wait();
 
       console.log(`Burned Green with ID '${greenId}'!`);
-      return true;
+      result.success = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Burning Green Failed! '${error.message}'`);
+        result.message = `Burning Green Failed! '${error.message}'`;
+        console.error(result.message);
       }
     }
 
-    return false;
+    return result;
   };
 }

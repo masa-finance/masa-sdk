@@ -53,7 +53,7 @@ export class Masa implements MasaInterface {
     },
     contractOverrides,
     verbose = false,
-    force = false,
+    forceTransactions = false,
   }: MasaArgs) {
     // build config
     this.config = {
@@ -63,7 +63,7 @@ export class Masa implements MasaInterface {
       network: SupportedNetworks[networkName],
       signer,
       verbose,
-      force,
+      forceTransactions,
     };
 
     // masa client

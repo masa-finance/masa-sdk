@@ -5,7 +5,7 @@ import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
 import { Messages } from "../../../../../collections";
-import type { PaymentMethod } from "../../../../../interface";
+import type { BaseResult, PaymentMethod } from "../../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -75,7 +75,9 @@ export class DynamicSSSBTContractWrapper<
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     const { name, version, verifyingContract } =
       await this.contract.eip712Domain();
 
@@ -96,7 +98,9 @@ export class DynamicSSSBTContractWrapper<
       authorityAddress,
     );
 
-    return true;
+    result.success = true;
+
+    return result;
   };
 
   /**
@@ -115,7 +119,9 @@ export class DynamicSSSBTContractWrapper<
     signature: string,
     signatureDate: number,
     authorityAddress: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     const [possibleStates, stateAlreadySet, name] = await Promise.all([
       this.contract.getBeforeMintStates(),
       this.contract.beforeMintState(receiver, state),
@@ -123,8 +129,9 @@ export class DynamicSSSBTContractWrapper<
     ]);
 
     if (stateAlreadySet) {
-      console.error(`State '${state}' already set on ${name} for ${receiver}`);
-      return false;
+      result.message = `State '${state}' already set on ${name} for ${receiver}`;
+      console.error(result.message);
+      return result;
     }
 
     if (
@@ -132,8 +139,9 @@ export class DynamicSSSBTContractWrapper<
         .map((state: string) => state.toLowerCase())
         .includes(state.toLowerCase())
     ) {
-      console.error(`State '${state}' unknown to contract ${name}`);
-      return false;
+      result.message = `State '${state}' unknown to contract ${name}`;
+      console.error(result.message);
+      return result;
     }
 
     const value: {
@@ -177,33 +185,35 @@ export class DynamicSSSBTContractWrapper<
 
     const mintSSSBTOverrides: PayableOverrides = await this.createOverrides();
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...dynamicSSSBTSetStateArguments,
-      mintSSSBTOverrides,
-    );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = DynamicSSSBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        dynamicSSSBTSetStateArguments,
+        mintSSSBTOverrides,
       );
+
+      const { wait, hash } = await setState(...dynamicSSSBTSetStateArguments, {
+        ...mintSSSBTOverrides,
+        gasLimit,
+      });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      await wait();
+      result.success = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        result.message = `Setting state failed! ${error.message}`;
+        console.error(result.message);
+      }
     }
 
-    const { wait, hash } = await setState(...dynamicSSSBTSetStateArguments, {
-      ...mintSSSBTOverrides,
-      gasLimit,
-    });
-
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
-
-    await wait();
-
-    return true;
+    return result;
   };
 
   /**
@@ -214,7 +224,9 @@ export class DynamicSSSBTContractWrapper<
   public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
 
@@ -230,14 +242,13 @@ export class DynamicSSSBTContractWrapper<
       const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
-        console.error(
-          `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-        );
-        return false;
+        result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+        console.error(result.message);
+        return result;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn(error.message);
+        console.warn(`Unable to load balance ${error.message}`);
       }
     }
 
@@ -269,58 +280,48 @@ export class DynamicSSSBTContractWrapper<
       estimateGas: { "mint(address,address)": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber | undefined;
-
     try {
-      gasLimit = await estimateGas(...mintSSSBTArguments, mintSSSBTOverrides);
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        mintSSSBTArguments,
+        mintSSSBTOverrides,
+      );
 
-      if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = DynamicSSSBTContractWrapper.addSlippage(
-          gasLimit,
-          this.masa.config.network.gasSlippagePercentage,
+      const { wait, hash } = await mint(...mintSSSBTArguments, {
+        ...mintSSSBTOverrides,
+        gasLimit,
+      });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      const { logs } = await wait();
+
+      const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
+
+      const mintEvent = parsedLogs.find(
+        (log: LogDescription) => log.name === "Mint",
+      );
+
+      if (mintEvent) {
+        const { args } = mintEvent;
+        console.log(
+          `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
+
+        result.success = true;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Estimate gas failed! ${error.message}`);
-      }
-
-      gasLimit = BigNumber.from(250_000);
-      if (!this.masa.config.force) {
-        // don't throw if we force this
-        throw error;
+        result.message = `Minting failed! ${error.message}`;
+        console.error(result.message);
       }
     }
 
-    const { wait, hash } = await mint(...mintSSSBTArguments, {
-      ...mintSSSBTOverrides,
-      gasLimit,
-    });
-
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
-
-    const { logs } = await wait();
-
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
-
-    const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint",
-    );
-
-    if (mintEvent) {
-      const { args } = mintEvent;
-      console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
-      );
-
-      return true;
-    }
-
-    return false;
+    return result;
   };
 }

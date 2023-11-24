@@ -7,7 +7,11 @@ import type {
 import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
-import type { PaymentMethod, PriceInformation } from "../../interface";
+import type {
+  BaseResult,
+  PaymentMethod,
+  PriceInformation,
+} from "../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
@@ -142,17 +146,11 @@ export class SoulName extends MasaModuleBase {
     } = this.instances.SoulStoreContract;
 
     // estimate gas
-    let gasLimit: BigNumber = await estimateGas(
-      ...purchaseNameParameters,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      purchaseNameParameters,
       purchaseNameOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = SoulName.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     // execute
     return purchaseName(...purchaseNameParameters, {
@@ -313,7 +311,9 @@ export class SoulName extends MasaModuleBase {
   public transfer = async (
     soulName: string,
     receiver: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
       this.masa.contracts.instances.SoulNameContract.extension(),
@@ -324,14 +324,26 @@ export class SoulName extends MasaModuleBase {
         `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
       );
 
-      try {
-        const { transferFrom } = this.masa.contracts.instances.SoulNameContract;
+      const {
+        transferFrom,
+        estimateGas: { transferFrom: estimateGas },
+      } = this.masa.contracts.instances.SoulNameContract;
 
-        const { wait, hash } = await transferFrom(
+      try {
+        const transferFromArguments: [string, string, BigNumber] = [
           await this.masa.config.signer.getAddress(),
           receiver,
           soulNameData.tokenId,
+        ];
+
+        const gasLimit = await this.estimateGasWithSlippage(
+          estimateGas,
+          transferFromArguments,
         );
+
+        const { wait, hash } = await transferFrom(...transferFromArguments, {
+          gasLimit,
+        });
 
         console.log(
           Messages.WaitingToFinalize(
@@ -346,24 +358,30 @@ export class SoulName extends MasaModuleBase {
           `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
         );
 
-        return true;
+        result.success = true;
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(`Sending of Soul Name Failed! ${error.message}`);
+          result.message = `Sending of Soul Name Failed! ${error.message}`;
+          console.error(result.message);
         }
       }
     } else {
-      console.error(`Soulname '${soulName}${extension}' does not exist!`);
+      result.message = `Soulname '${soulName}${extension}' does not exist!`;
+      console.error(result.message);
     }
 
-    return false;
+    return result;
   };
 
   /**
    *
    * @param soulName
    */
-  public burn = async (soulName: string): Promise<boolean> => {
+  public burn = async (soulName: string): Promise<BaseResult> => {
+    const result: BaseResult = {
+      success: false,
+    };
+
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
       this.masa.contracts.instances.SoulNameContract.extension(),
@@ -374,21 +392,16 @@ export class SoulName extends MasaModuleBase {
         `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`,
       );
 
+      const {
+        estimateGas: { burn: estimateGas },
+        burn,
+      } = this.masa.contracts.instances.SoulNameContract;
+
       try {
-        const {
-          estimateGas: { burn: estimateGas },
-          burn,
-        } = this.masa.contracts.instances.SoulNameContract;
-
         // estimate gas
-        let gasLimit: BigNumber = await estimateGas(soulNameData.tokenId);
-
-        if (this.masa.config.network?.gasSlippagePercentage) {
-          gasLimit = SoulName.addSlippage(
-            gasLimit,
-            this.masa.config.network.gasSlippagePercentage,
-          );
-        }
+        const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+          soulNameData.tokenId,
+        ]);
 
         const { wait, hash } = await burn(soulNameData.tokenId, {
           gasLimit,
@@ -407,18 +420,66 @@ export class SoulName extends MasaModuleBase {
           `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
         );
 
-        return true;
+        result.success = true;
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(
-            `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`,
-          );
+          result.message = `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`;
+          console.error(result.message);
         }
       }
     } else {
-      console.error(`Soulname '${soulName}${extension}' does not exist!`);
+      result.message = `Soulname '${soulName}${extension}' does not exist!`;
+      console.error(result.message);
     }
 
-    return false;
+    return result;
+  };
+
+  /**
+   *
+   * @param soulName
+   * @param years
+   */
+  public renew = async (
+    soulName: string,
+    years: number,
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
+    const tokenId =
+      await this.masa.contracts.instances.SoulNameContract.getTokenId(soulName);
+
+    const {
+      renewYearsPeriod,
+      estimateGas: { renewYearsPeriod: estimateGas },
+    } = this.masa.contracts.instances.SoulNameContract;
+
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+        tokenId,
+        years,
+      ]);
+
+      const { wait, hash } = await renewYearsPeriod(tokenId, years, {
+        gasLimit,
+      });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      await wait();
+      result.success = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        result.message = `renewal failed! ${error.message}`;
+        console.error(result.message);
+      }
+    }
+
+    return result;
   };
 }

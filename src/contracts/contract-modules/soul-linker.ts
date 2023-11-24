@@ -125,7 +125,9 @@ export class SoulLinker extends MasaModuleBase {
     expirationDate: number,
     signature: string,
     slippage: number | undefined = 250,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
+    const result: BaseResult = { success: false };
+
     const { price, paymentAddress } = await this.getPrice(
       tokenAddress,
       paymentMethod,
@@ -139,7 +141,7 @@ export class SoulLinker extends MasaModuleBase {
       price,
     );
 
-    const params: [
+    const addLinkArguments: [
       string, // paymentMethod
       BigNumber, //readerIdentityId
       BigNumber, // ownerIdentityId
@@ -168,35 +170,35 @@ export class SoulLinker extends MasaModuleBase {
       addLink,
     } = this.instances.SoulLinkerContract;
 
-    let gasLimit: BigNumber = await estimateGas(...params, addLinkOverrides);
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = SoulLinker.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        addLinkArguments,
+        addLinkOverrides,
       );
+
+      const { wait, hash } = await addLink(...addLinkArguments, {
+        ...addLinkOverrides,
+        gasLimit,
+      });
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      await wait();
+      result.success = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        result.message = `Adding link failed! ${error.message}`;
+        console.error(result.message);
+      }
     }
 
-    const addLinkOverridesWithGasLimit = {
-      ...addLinkOverrides,
-      gasLimit,
-    };
-
-    const { wait, hash } = await addLink(
-      ...params,
-      addLinkOverridesWithGasLimit,
-    );
-
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
-
-    await wait();
-
-    return true;
+    return result;
   };
 
   /**
@@ -296,15 +298,33 @@ export class SoulLinker extends MasaModuleBase {
     for (const link of filteredLinks) {
       console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
 
-      const { revokeLink } = this.masa.contracts.instances.SoulLinkerContract;
+      const {
+        revokeLink,
+        estimateGas: { revokeLink: estimateGas },
+      } = this.masa.contracts.instances.SoulLinkerContract;
 
-      const { wait, hash } = await revokeLink(
+      const revokeLinksArguments: [
+        BigNumber,
+        BigNumber,
+        string,
+        BigNumber,
+        BigNumber,
+      ] = [
         readerIdentityId,
         identityId,
         contract.address,
         tokenId,
         link.signatureDate,
+      ];
+
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        revokeLinksArguments,
       );
+
+      const { wait, hash } = await revokeLink(...revokeLinksArguments, {
+        gasLimit,
+      });
 
       console.log(
         Messages.WaitingToFinalize(

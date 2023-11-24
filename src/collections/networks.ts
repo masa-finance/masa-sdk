@@ -180,6 +180,8 @@ const polygon: Network = {
   blockExplorerUrls: ["https://polygonscan.com"],
   blockExplorerApiUrls: ["https://api.polygonscan.com/api"],
   addresses: addresses["polygon"] as Addresses,
+  // https://github.com/maticnetwork/bor/issues/384
+  skipEip1559: true,
 };
 const mumbai: Network = {
   networkName: "mumbai",

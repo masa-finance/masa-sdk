@@ -1,6 +1,6 @@
 import type { BigNumber } from "ethers";
 
-import type { BaseResult } from "../base-result";
+import type { BaseResult, BaseResultWithTokenId } from "../base-result";
 
 export interface ICreditScore {
   name: "Masa Soulbound Credit Score v1.0.0";
@@ -30,7 +30,7 @@ export interface GenerateCreditScoreResult extends BaseResult {
   authorityAddress?: string;
 }
 
-export interface UpdateCreditScoreResult extends BaseResult {
+export interface UpdateCreditScoreResult extends BaseResultWithTokenId {
   status?: string;
   signature?: string;
 }

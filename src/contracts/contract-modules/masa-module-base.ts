@@ -27,6 +27,8 @@ import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
 import { isERC20Currency, isNativeCurrency } from "../../utils";
 
+const DEFAULT_GAS_LIMIT: number = 750_000;
+
 export abstract class MasaModuleBase extends MasaBase {
   constructor(
     masa: MasaInterface,
@@ -52,13 +54,13 @@ export abstract class MasaModuleBase extends MasaBase {
     let contractReceipt;
 
     if (isERC20Currency(paymentMethod)) {
-      const contract: ERC20 = ERC20__factory.connect(
+      const tokenContract: ERC20 = ERC20__factory.connect(
         paymentAddress,
         this.masa.config.signer,
       );
 
       // get current allowance
-      const currentAllowance = await contract.allowance(
+      const currentAllowance = await tokenContract.allowance(
         // owner
         await this.masa.config.signer.getAddress(),
         // spender
@@ -75,23 +77,40 @@ export abstract class MasaModuleBase extends MasaBase {
           );
         }
 
-        const { wait, hash } = await contract.approve(
-          // spender
-          spenderAddress,
-          // amount
-          price,
-        );
+        const {
+          approve,
+          estimateGas: { approve: estimateGas },
+        } = tokenContract;
 
-        if (this.masa.config.verbose) {
-          console.info(
-            Messages.WaitingToFinalize(
-              hash,
-              this.masa.config.network?.blockExplorerUrls?.[0],
-            ),
+        try {
+          const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
+            spenderAddress,
+            price,
+          ]);
+
+          const { wait, hash } = await approve(
+            // spender
+            spenderAddress,
+            // amount
+            price,
+            { gasLimit },
           );
-        }
 
-        contractReceipt = await wait();
+          if (this.masa.config.verbose) {
+            console.info(
+              Messages.WaitingToFinalize(
+                hash,
+                this.masa.config.network?.blockExplorerUrls?.[0],
+              ),
+            );
+          }
+
+          contractReceipt = await wait();
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error(`approve failed ${error.message}`);
+          }
+        }
       }
     }
 
@@ -125,7 +144,9 @@ export abstract class MasaModuleBase extends MasaBase {
   protected createOverrides = async (
     value?: BigNumber,
   ): Promise<PayableOverrides> => {
-    const feeData: FeeData | undefined = await this.getNetworkFeeInformation();
+    const feeData: FeeData | undefined = this.masa.config.network?.skipEip1559
+      ? undefined
+      : await this.getNetworkFeeInformation();
 
     return {
       value,
@@ -148,15 +169,15 @@ export abstract class MasaModuleBase extends MasaBase {
   protected getNetworkFeeInformation = async (): Promise<
     FeeData | undefined
   > => {
-    let result;
+    let feeData;
 
     try {
-      result = await this.masa.config.signer.provider?.getFeeData();
+      feeData = await this.masa.config.signer.provider?.getFeeData();
 
       if (this.masa.config.verbose) {
         console.dir(
           {
-            networkFeeInformation: result,
+            networkFeeInformation: feeData,
           },
           {
             depth: null,
@@ -169,7 +190,7 @@ export abstract class MasaModuleBase extends MasaBase {
       }
     }
 
-    return result;
+    return feeData;
   };
 
   /**
@@ -201,6 +222,51 @@ export abstract class MasaModuleBase extends MasaBase {
   };
 
   /**
+   *
+   * @param estimateGas
+   * @param args
+   * @param overrides
+   */
+  protected estimateGasWithSlippage = async (
+    estimateGas: (...estimateGasArgAndOverrides: never[]) => Promise<BigNumber>,
+    args?: unknown[],
+    overrides?: PayableOverrides,
+  ): Promise<BigNumber> => {
+    let gasLimit: BigNumber;
+
+    try {
+      gasLimit = await (overrides && args
+        ? estimateGas(...(args as never[]), overrides as never)
+        : args
+          ? estimateGas(...(args as never[]))
+          : estimateGas());
+
+      if (this.masa.config.network?.gasSlippagePercentage) {
+        gasLimit = MasaModuleBase.addSlippage(
+          gasLimit,
+          this.masa.config.network.gasSlippagePercentage,
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Estimate gas failed! ${error.message}`);
+      }
+
+      if (this.masa.config.forceTransactions) {
+        // don't throw if we force this
+        console.warn(
+          `Forcing transaction for ${DEFAULT_GAS_LIMIT.toLocaleString()} gas!`,
+        );
+        gasLimit = BigNumber.from(DEFAULT_GAS_LIMIT);
+      } else {
+        throw error;
+      }
+    }
+
+    return gasLimit;
+  };
+
+  /**
    * verify a signature created during one of the SBT signing flows
    * @param errorMessage
    * @param domain
@@ -223,7 +289,7 @@ export abstract class MasaModuleBase extends MasaBase {
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,
-  ) => {
+  ): Promise<void> => {
     if (this.masa.config.verbose) {
       console.log({
         domain,
@@ -267,7 +333,7 @@ export abstract class MasaModuleBase extends MasaBase {
       try {
         recoveredAddressIsAuthority =
           await contract.authorities(recoveredAddress);
-      } catch (error) {
+      } catch (error: unknown) {
         if (error instanceof Error)
           console.error(`Retrieving authorities failed! ${error.message}.`);
       }

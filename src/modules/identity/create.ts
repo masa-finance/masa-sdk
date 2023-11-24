@@ -3,7 +3,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 
 import { Messages, SoulNameErrorCodes } from "../../collections";
 import type {
-  BaseResult,
+  BaseResultWithTokenId,
   CreateSoulNameResult,
   MasaInterface,
   PaymentMethod,
@@ -16,7 +16,7 @@ import { isSoulNameMetadataStoreResult } from "../../utils";
  */
 export const purchaseIdentity = async (
   masa: MasaInterface,
-): Promise<BaseResult> => {
+): Promise<BaseResultWithTokenId> => {
   const result = {
     success: false,
     message: "Unknown Error",
@@ -60,7 +60,7 @@ export const purchaseIdentity = async (
  */
 export const createIdentity = async (
   masa: MasaInterface,
-): Promise<BaseResult> => {
+): Promise<BaseResultWithTokenId> => {
   const result = {
     success: false,
     message: "Unknown Error",
@@ -129,7 +129,7 @@ export const purchaseIdentityWithSoulName = async (
         }`;
         console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-        const purchaseInformation =
+        const { wait, hash } =
           await masa.contracts.identity.purchaseIdentityAndName(
             paymentMethod,
             soulName,
@@ -139,8 +139,6 @@ export const purchaseIdentityWithSoulName = async (
             storeMetadataResponse.authorityAddress,
             storeMetadataResponse.signature,
           );
-        const { wait, hash } = purchaseInformation;
-
         console.log(
           Messages.WaitingToFinalize(
             hash,

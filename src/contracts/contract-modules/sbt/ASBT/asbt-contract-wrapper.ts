@@ -4,7 +4,11 @@ import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { PayableOverrides } from "ethers";
 
 import { Messages } from "../../../../collections";
-import type { PaymentMethod } from "../../../../interface";
+import type {
+  BaseResult,
+  BaseResultWithTokenId,
+  PaymentMethod,
+} from "../../../../interface";
 import { isNativeCurrency } from "../../../../utils";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
@@ -19,7 +23,9 @@ export class ASBTContractWrapper<
   public mint = async (
     paymentMethod: PaymentMethod,
     receiver: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResultWithTokenId> => {
+    const result: BaseResultWithTokenId = { success: false };
+
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
 
@@ -35,14 +41,13 @@ export class ASBTContractWrapper<
       const balance: BigNumber = await this.contract.balanceOf(receiver);
 
       if (limit > 0 && balance.gte(limit)) {
-        console.error(
-          `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-        );
-        return false;
+        result.message = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+        console.error(result.message);
+        return result;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn(error.message);
+        console.warn(`Loading SBT balance failed! ${error.message}`);
       }
     }
 
@@ -66,48 +71,49 @@ export class ASBTContractWrapper<
       estimateGas: { "mint(address,address)": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...mintASBTArguments,
-      mintASBTOverrides,
-    );
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        mintASBTArguments,
+        mintASBTOverrides,
+      );
 
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = ASBTContractWrapper.addSlippage(
+      const { wait, hash } = await mint(...mintASBTArguments, {
+        ...mintASBTOverrides,
         gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
+      });
 
-    const { wait, hash } = await mint(...mintASBTArguments, {
-      ...mintASBTOverrides,
-      gasLimit,
-    });
-
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
-
-    const { logs } = await wait();
-
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
-
-    const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint",
-    );
-
-    if (mintEvent) {
-      const { args } = mintEvent;
       console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
-      return true;
+      const { logs } = await wait();
+
+      const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
+
+      const mintEvent = parsedLogs.find(
+        (log: LogDescription) => log.name === "Mint",
+      );
+
+      if (mintEvent) {
+        const { args } = mintEvent;
+        console.log(
+          `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
+        );
+
+        result.success = true;
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        result.message = `Minting ASBT failed! ${error.message}`;
+        console.error(result.message);
+      }
     }
 
-    return false;
+    return result;
   };
 
   /**
@@ -118,8 +124,8 @@ export class ASBTContractWrapper<
   public bulkMint = async (
     paymentMethod: PaymentMethod,
     receivers: string[],
-  ): Promise<boolean[]> => {
-    const result = [];
+  ): Promise<BaseResult[]> => {
+    const result: BaseResult[] = [];
 
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
@@ -137,14 +143,13 @@ export class ASBTContractWrapper<
         const balance: BigNumber = await this.contract.balanceOf(receiver);
 
         if (limit > 0 && balance.gte(limit)) {
-          console.error(
-            `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`,
-          );
-          result.push(false);
+          const errorMessage = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+          console.error(errorMessage);
+          result.push({ success: false, message: errorMessage });
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.warn(error.message);
+          console.warn(`Loading SBT balance failed! ${error.message}`);
         }
       }
     }
@@ -169,17 +174,11 @@ export class ASBTContractWrapper<
       estimateGas: { "mint(address,address[])": estimateGas },
     } = this.contract;
 
-    let gasLimit: BigNumber = await estimateGas(
-      ...mintASBTArguments,
+    const gasLimit = await this.estimateGasWithSlippage(
+      estimateGas,
+      mintASBTArguments,
       mintASBTOverrides,
     );
-
-    if (this.masa.config.network?.gasSlippagePercentage) {
-      gasLimit = ASBTContractWrapper.addSlippage(
-        gasLimit,
-        this.masa.config.network.gasSlippagePercentage,
-      );
-    }
 
     const { wait, hash } = await mint(...mintASBTArguments, {
       ...mintASBTOverrides,
@@ -207,7 +206,7 @@ export class ASBTContractWrapper<
         `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
       );
 
-      result.push(true);
+      result.push({ success: true });
     }
 
     return result;

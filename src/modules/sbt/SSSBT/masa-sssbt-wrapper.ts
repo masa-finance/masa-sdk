@@ -1,6 +1,6 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
-import type { PaymentMethod } from "../../../interface";
+import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaSSSBTWrapper<
@@ -79,7 +79,7 @@ export class MasaSSSBTWrapper<
     signatureDate: number,
     signature: string,
     paymentMethod: PaymentMethod = "ETH",
-  ): Promise<boolean> => {
+  ): Promise<BaseResultWithTokenId> => {
     const receiver = await this.masa.config.signer.getAddress();
 
     const [name, symbol] = await Promise.all([

@@ -50,7 +50,8 @@ export const verifyLink = async (
     );
 
     if (!ownerIdentityId) {
-      console.error("Owner identity not found");
+      result.message = "Owner identity not found";
+      console.error(result.message);
       return result;
     }
 
@@ -115,7 +116,8 @@ export const verifyLink = async (
 
     console.log({ validateLinkResult: result });
   } catch {
-    console.error(`Token ${tokenId.toString()} does not exist!`);
+    result.message = `Token ${tokenId.toString()} does not exist!`;
+    console.error(result.message);
   }
 
   return result;

@@ -11,6 +11,8 @@ const checkExists = async (
   address: string,
   signer: Signer,
 ): Promise<boolean> => {
+  let result = true;
+
   const storage = await signer.provider?.getStorageAt(address, 0);
 
   // check if storage is 0x0 at position 0, this is the case most of the cases
@@ -23,11 +25,11 @@ const checkExists = async (
     const code = await signer.provider?.getCode(address);
     if (code === "0x0") {
       // no contract in the blockchain dude
-      return false;
+      result = false;
     }
   }
 
-  return true;
+  return result;
 };
 
 export abstract class MasaSBTModuleBase extends MasaModuleBase {
@@ -103,13 +105,13 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
     address: string,
     factory: ContractFactory,
   ): Promise<Contract> => {
-    let error = `Smart contract '${address}' does not exist on network '${this.masa.config.networkName}'!`;
+    let errorMessage = `Smart contract '${address}' does not exist on network '${this.masa.config.networkName}'!`;
 
     // address invalid, unable to load
     if (!utils.isAddress(address)) {
-      error = `SBT Address '${address}' is not valid!`;
-      console.error(error);
-      throw new Error(error);
+      errorMessage = `SBT Address '${address}' is not valid!`;
+      console.error(errorMessage);
+      throw new Error(errorMessage);
     }
 
     const contractExists: boolean = await checkExists(
@@ -119,7 +121,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
 
     // no code exists, unable to load
     if (!contractExists) {
-      throw new Error(error);
+      throw new Error(errorMessage);
     }
 
     const contract = (factory as typeof ContractFactory).connect<Contract>(
@@ -129,8 +131,8 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
 
     // failed to load, unable to load
     if (!contract) {
-      console.error(error);
-      throw new Error(error);
+      console.error(errorMessage);
+      throw new Error(errorMessage);
     } else if (this.masa.config.verbose) {
       console.info(`Loaded contract with name: ${await contract.name()}`);
     }

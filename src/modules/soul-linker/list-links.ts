@@ -75,7 +75,8 @@ export const listLinks = async (
   try {
     await contract.ownerOf(tokenId);
   } catch {
-    console.error(`Token ${tokenId.toString()} does not exist!`);
+    result.message = `Token ${tokenId.toString()} does not exist!`;
+    console.error(result.message);
     return result;
   }
 

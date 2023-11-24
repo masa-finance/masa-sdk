@@ -1,7 +1,17 @@
 import type { MasaDynamicSSSBT } from "@masa-finance/masa-contracts-identity";
 
-import type { PaymentMethod } from "../../../../interface";
+import type {
+  BaseResult,
+  BaseResultWithTokenId,
+  PaymentMethod,
+} from "../../../../interface";
 import { MasaDynamicSBTWrapper } from "../masa-dynamic-sbt-wrapper";
+
+type SignSetStateResult = BaseResult & {
+  authorityAddress?: string;
+  signatureDate?: number;
+  signature?: string;
+};
 
 export class MasaDynamicSSSBTWrapper<
   Contract extends MasaDynamicSSSBT,
@@ -16,21 +26,8 @@ export class MasaDynamicSSSBTWrapper<
     receiver: string,
     state: string,
     stateValue: boolean,
-  ): Promise<
-    | {
-        authorityAddress: string;
-        signatureDate: number;
-        signature: string;
-      }
-    | undefined
-  > => {
-    let result:
-      | {
-          authorityAddress: string;
-          signatureDate: number;
-          signature: string;
-        }
-      | undefined;
+  ): Promise<SignSetStateResult> => {
+    const result: SignSetStateResult = { success: false };
 
     const [name, symbol] = await Promise.all([
       this.contract.name(),
@@ -73,8 +70,9 @@ export class MasaDynamicSSSBTWrapper<
     ]);
 
     if (stateAlreadySet) {
-      console.error(`State '${state}' already set on ${name} for ${receiver}`);
-      return;
+      result.message = `State '${state}' already set on ${name} for ${receiver}`;
+      console.error(result.message);
+      return result;
     }
 
     if (
@@ -82,8 +80,9 @@ export class MasaDynamicSSSBTWrapper<
         .map((state: string) => state.toLowerCase())
         .includes(state.toLowerCase())
     ) {
-      console.error(`State '${state}' unknown to contract ${name}`);
-      return;
+      result.message = `State '${state}' unknown to contract ${name}`;
+      console.error(result.message);
+      return result;
     }
 
     // sign to create a signature
@@ -91,6 +90,7 @@ export class MasaDynamicSSSBTWrapper<
 
     if (signResult) {
       const { signature, authorityAddress } = signResult;
+
       if (this.masa.config.verbose) {
         console.info({
           signature,
@@ -98,11 +98,11 @@ export class MasaDynamicSSSBTWrapper<
           signatureDate,
         });
       }
-      result = {
-        authorityAddress,
-        signatureDate,
-        signature,
-      };
+
+      result.success = true;
+      result.authorityAddress = authorityAddress;
+      result.signatureDate = signatureDate;
+      result.signature = signature;
     }
 
     return result;
@@ -114,7 +114,7 @@ export class MasaDynamicSSSBTWrapper<
    */
   public mint = async (
     paymentMethod: PaymentMethod = "ETH",
-  ): Promise<boolean> => {
+  ): Promise<BaseResultWithTokenId> => {
     const receiver = await this.masa.config.signer.getAddress();
 
     const [name, symbol] = await Promise.all([
@@ -147,7 +147,7 @@ export class MasaDynamicSSSBTWrapper<
     signature: string,
     signatureDate: number,
     authorityAddress: string,
-  ): Promise<boolean> => {
+  ): Promise<BaseResult> => {
     const receiver = await this.masa.config.signer.getAddress();
 
     const [name, symbol] = await Promise.all([

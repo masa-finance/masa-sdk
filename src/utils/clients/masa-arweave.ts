@@ -39,7 +39,7 @@ export class MasaArweave extends Arweave {
           ? JSON.parse(dataResponse as string)
           : (dataResponse as Uint8Array);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof Error && this.masaConfig.verbose) {
         console.error("Arweave getData failed!", error.message);
       }

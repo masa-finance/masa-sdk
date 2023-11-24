@@ -1,7 +1,7 @@
 import type { BigNumber } from "ethers";
 
 import { SoulNameErrorCodes } from "../../collections";
-import type { BaseResult } from "../base-result";
+import type { BaseResultWithTokenId } from "../base-result";
 
 export interface Attribute {
   display_type?: string;
@@ -41,7 +41,7 @@ export interface SoulNameDetails {
   metadata: ISoulName;
 }
 
-export interface SoulNameResultBase extends BaseResult {
+export interface SoulNameResultBase extends BaseResultWithTokenId {
   errorCode: SoulNameErrorCodes;
 }
 
