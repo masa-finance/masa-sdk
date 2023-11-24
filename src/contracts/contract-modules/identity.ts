@@ -45,17 +45,10 @@ export class Identity extends MasaSBTModuleBase {
     authorityAddress: string,
     signature: string,
   ): Promise<ContractTransaction> => {
-    const {
-      name: eipName,
-      verifyingContract,
-      version,
-    } = await this.instances.SoulStoreContract.eip712Domain();
-
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
-      eipName,
-      verifyingContract,
-      version,
+      "SoulStore",
+      this.instances.SoulStoreContract.address,
     );
 
     const value: {
