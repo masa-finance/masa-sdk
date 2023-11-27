@@ -45,66 +45,69 @@ const purchaseSoulName = async (
 
     if (storeMetadataResponse) {
       if (isSoulNameMetadataStoreResult(storeMetadataResponse)) {
-        const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
-          storeMetadataResponse.metadataTransaction.id
-        }`;
-        console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
+        try {
+          const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
+            storeMetadataResponse.metadataTransaction.id
+          }`;
+          console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-        const { wait, hash } = await masa.contracts.soulName.purchase(
-          paymentMethod,
-          soulName,
-          soulNameLength,
-          duration,
-          soulNameMetadataUrl,
-          storeMetadataResponse.authorityAddress,
-          storeMetadataResponse.signature,
-          receiver,
-        );
-
-        console.log(
-          Messages.WaitingToFinalize(
-            hash,
-            masa.config.network?.blockExplorerUrls?.[0],
-          ),
-        );
-
-        const { logs } = await wait();
-
-        const parsedLogs = masa.contracts.parseLogs(logs);
-
-        {
-          let tokenId: string | undefined;
-
-          const soulnameTransferEvent = parsedLogs.find(
-            (event: LogDescription) => event.name === "Transfer",
+          const { wait, hash } = await masa.contracts.soulName.purchase(
+            paymentMethod,
+            soulName,
+            soulNameLength,
+            duration,
+            soulNameMetadataUrl,
+            storeMetadataResponse.authorityAddress,
+            storeMetadataResponse.signature,
+            receiver,
           );
 
-          if (soulnameTransferEvent) {
-            const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
-            if (masa.config.verbose) {
-              console.dir({ soulnameTransferEventArgs }, { depth: null });
+          console.log(
+            Messages.WaitingToFinalize(
+              hash,
+              masa.config.network?.blockExplorerUrls?.[0],
+            ),
+          );
+
+          const { logs } = await wait();
+
+          const parsedLogs = masa.contracts.parseLogs(logs);
+
+          {
+            let tokenId: string | undefined;
+
+            const soulnameTransferEvent = parsedLogs.find(
+              (event: LogDescription) => event.name === "Transfer",
+            );
+
+            if (soulnameTransferEvent) {
+              const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
+              if (masa.config.verbose) {
+                console.dir({ soulnameTransferEventArgs }, { depth: null });
+              }
+
+              tokenId = soulnameTransferEventArgs.tokenId.toString();
+              console.log(`SoulName with ID: '${tokenId}' created.`);
             }
 
-            tokenId = soulnameTransferEventArgs.tokenId.toString();
-            console.log(`SoulName with ID: '${tokenId}' created.`);
+            if (tokenId) {
+              result.success = true;
+              result.message = "";
+              result.errorCode = SoulNameErrorCodes.NoError;
+              result.tokenId = tokenId;
+              result.soulName = soulName;
+            }
           }
-
-          if (tokenId) {
-            return {
-              success: true,
-              message: "",
-              errorCode: SoulNameErrorCodes.NoError,
-              tokenId,
-              soulName,
-            };
+        } catch (error: unknown) {
+          result.errorCode = SoulNameErrorCodes.NetworkError;
+          if (error instanceof Error) {
+            result.message = `Creating Soul Name failed! ${error.message}`;
           }
         }
       } else {
-        return {
-          success: storeMetadataResponse.success,
-          message: storeMetadataResponse.message,
-          errorCode: storeMetadataResponse.errorCode,
-        };
+        result.success = storeMetadataResponse.success;
+        result.message = storeMetadataResponse.message;
+        result.errorCode = storeMetadataResponse.errorCode;
       }
     }
   } else {

@@ -108,7 +108,7 @@ export const purchaseIdentityWithSoulName = async (
   paymentMethod: PaymentMethod,
   style?: string,
 ): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
-  const result: CreateSoulNameResult = {
+  const result: { identityId?: string | BigNumber } & CreateSoulNameResult = {
     success: false,
     errorCode: SoulNameErrorCodes.UnknownError,
     message: "Unknown Error",
@@ -129,79 +129,83 @@ export const purchaseIdentityWithSoulName = async (
 
     if (storeMetadataResponse) {
       if (isSoulNameMetadataStoreResult(storeMetadataResponse)) {
-        const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
-          storeMetadataResponse.metadataTransaction.id
-        }`;
-        console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
+        try {
+          const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
+            storeMetadataResponse.metadataTransaction.id
+          }`;
+          console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-        const { wait, hash } =
-          await masa.contracts.identity.purchaseIdentityAndName(
-            paymentMethod,
-            soulName,
-            soulNameLength,
-            duration,
-            soulNameMetadataUrl,
-            storeMetadataResponse.authorityAddress,
-            storeMetadataResponse.signature,
-          );
-        console.log(
-          Messages.WaitingToFinalize(
-            hash,
-            masa.config.network?.blockExplorerUrls?.[0],
-          ),
-        );
-
-        const { logs } = await wait();
-
-        const parsedLogs = masa.contracts.parseLogs(logs);
-
-        {
-          let identityId: string | undefined, tokenId: string | undefined;
-
-          const identityMintEvent = parsedLogs.find(
-            (event: LogDescription) => event.name === "Mint",
-          );
-
-          if (identityMintEvent) {
-            if (masa.config.verbose) {
-              console.info({ identityMintEvent });
-            }
-
-            identityId = identityMintEvent.args._tokenId.toString();
-            console.log(`Identity with ID: '${identityId}' created.`);
-          }
-
-          const soulnameTransferEvent = parsedLogs.find(
-            (event: LogDescription) => event.name === "Transfer",
-          );
-
-          if (soulnameTransferEvent) {
-            const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
-            if (masa.config.verbose) {
-              console.dir({ soulnameTransferEventArgs }, { depth: null });
-            }
-
-            tokenId = soulnameTransferEventArgs.tokenId.toString();
-            console.log(`SoulName with ID: '${tokenId}' created.`);
-          }
-
-          if (identityId && tokenId) {
-            return {
-              success: true,
-              errorCode: SoulNameErrorCodes.NoError,
-              message: "",
-              tokenId,
-              identityId,
+          const { wait, hash } =
+            await masa.contracts.identity.purchaseIdentityAndName(
+              paymentMethod,
               soulName,
-            };
+              soulNameLength,
+              duration,
+              soulNameMetadataUrl,
+              storeMetadataResponse.authorityAddress,
+              storeMetadataResponse.signature,
+            );
+
+          console.log(
+            Messages.WaitingToFinalize(
+              hash,
+              masa.config.network?.blockExplorerUrls?.[0],
+            ),
+          );
+
+          const { logs } = await wait();
+
+          const parsedLogs = masa.contracts.parseLogs(logs);
+
+          {
+            let identityId: string | undefined, tokenId: string | undefined;
+
+            const identityMintEvent = parsedLogs.find(
+              (event: LogDescription) => event.name === "Mint",
+            );
+
+            if (identityMintEvent) {
+              if (masa.config.verbose) {
+                console.info({ identityMintEvent });
+              }
+
+              identityId = identityMintEvent.args._tokenId.toString();
+              console.log(`Identity with ID: '${identityId}' created.`);
+            }
+
+            const soulnameTransferEvent = parsedLogs.find(
+              (event: LogDescription) => event.name === "Transfer",
+            );
+
+            if (soulnameTransferEvent) {
+              const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
+              if (masa.config.verbose) {
+                console.dir({ soulnameTransferEventArgs }, { depth: null });
+              }
+
+              tokenId = soulnameTransferEventArgs.tokenId.toString();
+              console.log(`SoulName with ID: '${tokenId}' created.`);
+            }
+
+            if (identityId && tokenId) {
+              result.success = true;
+              result.errorCode = SoulNameErrorCodes.NoError;
+              result.message = "";
+              result.tokenId = tokenId;
+              result.identityId = identityId;
+              result.soulName = soulName;
+            }
+          }
+        } catch (error: unknown) {
+          result.errorCode = SoulNameErrorCodes.NetworkError;
+          if (error instanceof Error) {
+            result.message = `Creating Soul Name failed! ${error.message}`;
           }
         }
       } else {
-        return {
-          success: storeMetadataResponse.success,
-          message: storeMetadataResponse.message,
-          errorCode: storeMetadataResponse.errorCode,
-        };
+        result.success = storeMetadataResponse.success;
+        result.message = storeMetadataResponse.message;
+        result.errorCode = storeMetadataResponse.errorCode;
       }
     }
   } else {
