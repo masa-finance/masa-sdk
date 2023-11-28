@@ -305,6 +305,7 @@ const base: Network = {
   blockExplorerApiUrls: ["https://api.basescan.org/api"],
   addresses: addresses["base"] as Addresses,
 };
+// @deprecated: use base sepolia instead
 const basegoerli: Network = {
   networkName: "basegoerli",
   chainName: "Base Goerli Testnet",
@@ -329,6 +330,25 @@ const basegoerli: Network = {
   blockExplorerUrls: ["https://goerli.basescan.org"],
   blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
   addresses: addresses["basegoerli"] as Addresses,
+};
+const basesepolia: Network = {
+  networkName: "basesepolia",
+  chainName: "Base Sepolia Testnet",
+  chainNameShort: "Base Sepolia",
+  isTestnet: true,
+  chainId: 84532,
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: [
+    // default https
+    "https://sepolia.base.org",
+  ],
+  blockExplorerUrls: ["https://base-sepolia.blockscout.com"],
+  blockExplorerApiUrls: ["https://api-sepolia.basescan.org/api"],
+  addresses: addresses["basesepolia"] as Addresses,
 };
 
 // scroll mainnet
@@ -403,7 +423,9 @@ export const SupportedNetworks: Partial<{
   alfajores,
   // base
   base,
+  // @deprecated: use base sepolia instead
   basegoerli,
+  basesepolia,
   // scroll
   scroll,
   scrollsepolia,

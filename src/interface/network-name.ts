@@ -17,6 +17,7 @@ export type NetworkName =
   | "opbnb" // mainnet
   // base
   | "basegoerli" // testnet
+  | "basesepolia" // testnet
   | "base" // mainnet
   // scroll
   | "scrollsepolia" // testnet
