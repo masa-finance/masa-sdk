@@ -1,6 +1,7 @@
 export type NetworkName =
   // eth
   | "goerli" // testnet
+  | "sepolia" // testnet
   | "ethereum" // mainnet
   // celo
   | "alfajores" // testnet

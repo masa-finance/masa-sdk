@@ -236,6 +236,7 @@ const ethereum: Network = {
   blockExplorerApiUrls: ["https://api.etherscan.io/api"],
   addresses: addresses["ethereum"] as Addresses,
 };
+// @deprecated: use sepolia instead
 const goerli: Network = {
   networkName: "goerli",
   chainName: "Goerli Testnet",
@@ -260,6 +261,22 @@ const goerli: Network = {
   blockExplorerUrls: ["https://goerli.etherscan.io"],
   blockExplorerApiUrls: ["https://api-goerli.etherscan.io/api"],
   addresses: addresses["goerli"] as Addresses,
+};
+const sepolia: Network = {
+  networkName: "sepolia",
+  chainName: "Sepolia Testnet",
+  chainNameShort: "Sepolia",
+  isTestnet: true,
+  chainId: 11155111,
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: ["https://rpc.sepolia.org", "https://rpc2.sepolia.org"],
+  blockExplorerUrls: ["https://sepolia.etherscan.io"],
+  blockExplorerApiUrls: ["https://api-sepolia.etherscan.io/api"],
+  addresses: addresses["sepolia"] as Addresses,
 };
 
 // base mainnet
@@ -369,7 +386,9 @@ export const SupportedNetworks: Partial<{
 }> = {
   // ETH
   ethereum,
+  // @deprecated: use sepolia instead
   goerli,
+  sepolia,
   // BSC
   bsc,
   bsctest,
