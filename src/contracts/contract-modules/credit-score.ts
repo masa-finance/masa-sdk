@@ -17,6 +17,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../utils";
+import { isEthersError } from "./ethers";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class CreditScore extends MasaSBTModuleBase {
@@ -240,10 +241,15 @@ export class CreditScore extends MasaSBTModuleBase {
       console.log(`Burned Credit Score with ID '${creditScoreId}'!`);
       result.success = true;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Burning Credit Score Failed! '${error.message}'`;
-        console.error(result.message);
+      result.message = "Burning Credit Score Failed! ";
+      if (isEthersError(error)) {
+        console.log(error.code);
+        result.message += error.reason;
+      } else if (error instanceof Error) {
+        result.message += error.message;
       }
+
+      console.error(result.message);
     }
 
     return result;

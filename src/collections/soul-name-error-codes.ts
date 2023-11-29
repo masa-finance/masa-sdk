@@ -1,8 +1,15 @@
-export enum SoulNameErrorCodes {
+export enum BaseErrorCodes {
   NoError,
-  ArweaveError,
   NetworkError,
-  CryptoError,
-  SoulNameError,
+  InsufficientFunds,
+  RejectedTransaction,
+  GeneralGasIssue,
   UnknownError = 1337,
 }
+
+export enum SoulNameErrorCodes {
+  ArweaveError,
+  SoulNameError,
+}
+
+export type CreateSoulNameErrorCodes = SoulNameErrorCodes | BaseErrorCodes;

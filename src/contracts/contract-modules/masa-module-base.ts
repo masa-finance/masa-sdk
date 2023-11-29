@@ -26,6 +26,7 @@ import { MasaBase } from "../../masa-base";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
 import { isERC20Currency, isNativeCurrency } from "../../utils";
+import { parseEthersError } from "./ethers";
 
 const DEFAULT_GAS_LIMIT: number = 750_000;
 
@@ -248,9 +249,13 @@ export abstract class MasaModuleBase extends MasaBase {
         );
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(`Estimate gas failed! ${error.message}`);
-      }
+      let message = "Estimate gas failed! ";
+
+      const { message: ethersMessage, errorCode } = parseEthersError(error);
+
+      message += ethersMessage;
+
+      console.error(message, errorCode);
 
       if (this.masa.config.forceTransactions) {
         // don't throw if we force this
@@ -259,7 +264,7 @@ export abstract class MasaModuleBase extends MasaBase {
         );
         gasLimit = BigNumber.from(DEFAULT_GAS_LIMIT);
       } else {
-        throw error;
+        throw new Error(message);
       }
     }
 

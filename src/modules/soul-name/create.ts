@@ -1,6 +1,10 @@
 import { LogDescription } from "@ethersproject/abi";
 
-import { Messages, SoulNameErrorCodes } from "../../collections";
+import {
+  BaseErrorCodes,
+  Messages,
+  SoulNameErrorCodes,
+} from "../../collections";
 import type {
   CreateSoulNameResult,
   MasaInterface,
@@ -21,7 +25,7 @@ const purchaseSoulName = async (
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
-    errorCode: SoulNameErrorCodes.UnknownError,
+    errorCode: BaseErrorCodes.UnknownError,
     message: "Unknown Error",
   };
 
@@ -93,13 +97,13 @@ const purchaseSoulName = async (
             if (tokenId) {
               result.success = true;
               result.message = "";
-              result.errorCode = SoulNameErrorCodes.NoError;
+              result.errorCode = BaseErrorCodes.NoError;
               result.tokenId = tokenId;
               result.soulName = soulName;
             }
           }
         } catch (error: unknown) {
-          result.errorCode = SoulNameErrorCodes.NetworkError;
+          result.errorCode = BaseErrorCodes.NetworkError;
           if (error instanceof Error) {
             result.message = `Creating Soul Name failed! ${error.message}`;
           }
@@ -128,7 +132,7 @@ export const createSoulName = async (
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
-    errorCode: SoulNameErrorCodes.UnknownError,
+    errorCode: BaseErrorCodes.UnknownError,
     message: "Unknown Error",
   };
 

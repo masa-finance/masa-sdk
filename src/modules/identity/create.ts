@@ -1,7 +1,11 @@
 import { LogDescription } from "@ethersproject/abi";
 import type { BigNumber } from "@ethersproject/bignumber";
 
-import { Messages, SoulNameErrorCodes } from "../../collections";
+import {
+  BaseErrorCodes,
+  Messages,
+  SoulNameErrorCodes,
+} from "../../collections";
 import type {
   BaseResultWithTokenId,
   CreateSoulNameResult,
@@ -110,7 +114,7 @@ export const purchaseIdentityWithSoulName = async (
 ): Promise<{ identityId?: string | BigNumber } & CreateSoulNameResult> => {
   const result: { identityId?: string | BigNumber } & CreateSoulNameResult = {
     success: false,
-    errorCode: SoulNameErrorCodes.UnknownError,
+    errorCode: BaseErrorCodes.UnknownError,
     message: "Unknown Error",
   };
 
@@ -189,7 +193,7 @@ export const purchaseIdentityWithSoulName = async (
 
             if (identityId && tokenId) {
               result.success = true;
-              result.errorCode = SoulNameErrorCodes.NoError;
+              result.errorCode = BaseErrorCodes.NoError;
               result.message = "";
               result.tokenId = tokenId;
               result.identityId = identityId;
@@ -197,7 +201,7 @@ export const purchaseIdentityWithSoulName = async (
             }
           }
         } catch (error: unknown) {
-          result.errorCode = SoulNameErrorCodes.NetworkError;
+          result.errorCode = BaseErrorCodes.NetworkError;
           if (error instanceof Error) {
             result.message = `Creating Soul Name failed! ${error.message}`;
           }
@@ -237,7 +241,7 @@ export const createIdentityWithSoulName = async (
 > => {
   const result: CreateSoulNameResult = {
     success: false,
-    errorCode: SoulNameErrorCodes.UnknownError,
+    errorCode: BaseErrorCodes.UnknownError,
     message: "Unknown Error",
   };
 
