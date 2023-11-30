@@ -170,7 +170,7 @@ export class MasaClient extends MasaBase {
     },
 
     logout: async (): Promise<LogoutResult | undefined> => {
-      const logoutResult = await this.post<undefined, LogoutResult>(
+      const { data: logoutResult } = await this.post<undefined, LogoutResult>(
         "/session/logout",
         undefined,
       );
@@ -240,7 +240,7 @@ export class MasaClient extends MasaBase {
     > => {
       console.log(`Writing metadata for '${soulName}'`);
 
-      return await this.post<
+      const { data: soulNameMetadataStoreResult } = await this.post<
         {
           soulName: string;
           receiver: string;
@@ -256,6 +256,8 @@ export class MasaClient extends MasaBase {
         network: this.masa.config.networkName,
         style,
       });
+
+      return soulNameMetadataStoreResult;
     },
   };
 
@@ -271,8 +273,10 @@ export class MasaClient extends MasaBase {
         message: "Generating green failed",
       };
 
-      const greenGenerateResponseData = await this.post<
-        { phoneNumber: string },
+      const { data: greenGenerateResponseData } = await this.post<
+        {
+          phoneNumber: string;
+        },
         GenerateGreenResult
       >("/green/generate", {
         phoneNumber,
@@ -301,7 +305,7 @@ export class MasaClient extends MasaBase {
         message: "Verifying green failed",
       };
 
-      const greenVerifyResponseData = await this.post<
+      const { data: greenVerifyResponseData } = await this.post<
         {
           phoneNumber: string;
           code: string;
@@ -372,7 +376,7 @@ export class MasaClient extends MasaBase {
         message: "Updating of credit score failed!",
       };
 
-      const updateCreditScoreResponseData = await this.post<
+      const { data: updateCreditScoreResponseData } = await this.post<
         {
           transactionHash: string;
           network: NetworkName;
@@ -400,7 +404,11 @@ export class MasaClient extends MasaBase {
     endpoint: string,
     data: Payload,
     silent: boolean = false,
-  ): Promise<Result | undefined> => {
+  ): Promise<{
+    data: Result | undefined;
+    status: number | undefined;
+    statusText: string | undefined;
+  }> => {
     if (this.masa.config.verbose) {
       console.log(`Posting '${JSON.stringify(data)}' to '${endpoint}'`);
     }
@@ -418,18 +426,22 @@ export class MasaClient extends MasaBase {
         }
       });
 
-    const { data: postData, status } = postResponse || {};
+    const { data: postResponseData, status, statusText } = postResponse || {};
 
     if (this.masa.config.verbose) {
       console.info({
         postResponse: {
           status,
-          postData,
+          postResponseData,
         },
       });
     }
 
-    return postData;
+    return {
+      data: postResponseData,
+      status,
+      statusText,
+    };
   };
 
   patch = async <Payload, Result>(
