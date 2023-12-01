@@ -64,11 +64,11 @@ const opbnb: Network = {
     // default https
     "https://opbnb-mainnet-rpc.bnbchain.org",
     // alternative https
-    undefined,
+    "https://opbnb.publicnode.com",
     // default wss
     "wss://opbnb.publicnode.com",
     // alternative wss
-    undefined,
+    "wss://opbnb-mainnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
   ],
   nativeCurrency: {
     name: "BNB",
@@ -88,11 +88,11 @@ const opbnbtest: Network = {
     // default https
     "https://opbnb-testnet-rpc.bnbchain.org",
     // alternative https
-    undefined,
+    "https://opbnb-testnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
     // default wss
-    undefined,
+    "wss://opbnb-testnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
     // alternative wss
-    undefined,
+    "wss://opbnb-testnet.nodereal.io/ws/v1/64a9df0874fb4a93b9d0a3849de012d3",
   ],
   nativeCurrency: {
     name: "tBNB",
