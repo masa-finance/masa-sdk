@@ -1,4 +1,4 @@
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   GenerateCreditScoreResult,
   MasaInterface,
@@ -9,14 +9,15 @@ export const createCreditScore = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
 ): Promise<GenerateCreditScoreResult> => {
-  const result: GenerateCreditScoreResult = {
+  let result: GenerateCreditScoreResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   if (await masa.session.checkLogin()) {
     if (!masa.contracts.instances.SoulboundCreditScoreContract.hasAddress) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
@@ -25,6 +26,7 @@ export const createCreditScore = async (
     const { identityId, address } = (await masa.identity.load()) || {};
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
+      result.errorCode = BaseErrorCodes.DoesNotExist;
       return result;
     }
 
@@ -35,6 +37,7 @@ export const createCreditScore = async (
 
     if (balance.toNumber() > 0) {
       result.message = "Credit Score already created!";
+      result.errorCode = BaseErrorCodes.AlreadyExists;
       return result;
     }
 
@@ -74,7 +77,10 @@ export const createCreditScore = async (
             console.log({ creditScoreUpdateResponse });
           }
 
-          return { ...result, ...creditScoreUpdateResponse };
+          result = {
+            ...result,
+            ...creditScoreUpdateResponse,
+          };
         } catch (error: unknown) {
           result.success = false;
 

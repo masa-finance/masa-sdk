@@ -1,6 +1,6 @@
 import type { BigNumber, Contract } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, IPassport, MasaInterface } from "../../interface";
 import { resolveIdentity } from "../identity/resolve";
 
@@ -14,7 +14,7 @@ export const createLink = async (
 ): Promise<CreateLinkResult> => {
   const result: CreateLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId, address } = await masa.identity.load();
@@ -28,6 +28,7 @@ export const createLink = async (
 
   if (!receiverAddress) {
     result.message = `Receiver identity not found! ${readerIdentityId}`;
+    result.errorCode = BaseErrorCodes.NotFound;
     return result;
   }
 
@@ -71,6 +72,7 @@ export const createLink = async (
   console.log("\nLink passport:", result.passport, "\n");
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };

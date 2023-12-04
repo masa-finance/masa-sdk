@@ -6,7 +6,7 @@ import type {
 } from "ethers";
 import { TypedDataField } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   PaymentMethod,
@@ -17,7 +17,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../utils";
-import { isEthersError } from "./ethers";
+import { parseEthersError } from "./ethers";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class CreditScore extends MasaSBTModuleBase {
@@ -211,6 +211,7 @@ export class CreditScore extends MasaSBTModuleBase {
   public burn = async (creditScoreId: BigNumber): Promise<BaseResult> => {
     const result: BaseResult = {
       success: false,
+      errorCode: BaseErrorCodes.UnknownError,
     };
 
     console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
@@ -240,16 +241,16 @@ export class CreditScore extends MasaSBTModuleBase {
 
       console.log(`Burned Credit Score with ID '${creditScoreId}'!`);
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
       result.message = "Burning Credit Score Failed! ";
-      if (isEthersError(error)) {
-        console.log(error.code);
-        result.message += error.reason;
-      } else if (error instanceof Error) {
-        result.message += error.message;
-      }
 
-      console.error(result.message);
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      console.error(result.message, { errorCode });
     }
 
     return result;

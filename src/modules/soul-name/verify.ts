@@ -1,6 +1,7 @@
 import { utils } from "ethers";
 
-import type { MasaInterface } from "../../interface";
+import { BaseErrorCodes } from "../../collections";
+import type { BaseResult, MasaInterface } from "../../interface";
 import { recoverAddress } from "../../utils";
 
 const minters = [
@@ -16,18 +17,22 @@ const arAccounts = [
   "xDKpdiZ7H9n_SsdX_CMpkybMGIdin5AUciM00mQgxRE",
 ];
 
-export const verifyByName = async (
-  masa: MasaInterface,
-  soulName: string,
-): Promise<{
+export interface VerifyResult extends BaseResult {
   nameMatch: boolean;
   imageOwnerIsMasaAccount: boolean;
   imageHashMatch: boolean;
   imageSignatureMatch: boolean;
   metadataSignatureMatch: boolean;
   metadataOwnerIsMasaAccount: boolean;
-}> => {
-  const result = {
+}
+
+export const verifyByName = async (
+  masa: MasaInterface,
+  soulName: string,
+): Promise<VerifyResult> => {
+  const result: VerifyResult = {
+    success: false,
+    errorCode: BaseErrorCodes.UnknownError,
     nameMatch: false,
     imageOwnerIsMasaAccount: false,
     imageHashMatch: false,
@@ -131,8 +136,19 @@ export const verifyByName = async (
           minters.indexOf(recoveredMetadataAddress) > -1,
       );
     }
+
+    result.success =
+      result.nameMatch &&
+      result.imageOwnerIsMasaAccount &&
+      result.imageHashMatch &&
+      result.imageSignatureMatch &&
+      result.metadataSignatureMatch &&
+      result.metadataOwnerIsMasaAccount;
   } else {
-    console.error(`Soul Name '${soulName}' not found!`);
+    result.message = `Soul Name '${soulName}' not found!`;
+    result.errorCode = BaseErrorCodes.NotFound;
+
+    console.error(result.message);
   }
 
   return result;

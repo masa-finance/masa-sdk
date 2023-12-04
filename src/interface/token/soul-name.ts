@@ -41,8 +41,9 @@ export interface SoulNameDetails {
   metadata: ISoulName;
 }
 
-export interface SoulNameResultBase extends BaseResultWithTokenId {
-  errorCode: CreateSoulNameErrorCodes;
+export interface SoulNameResultBase
+  extends Omit<BaseResultWithTokenId, "errorCode"> {
+  errorCode?: CreateSoulNameErrorCodes;
 }
 
 export interface CreateSoulNameResult extends SoulNameResultBase {

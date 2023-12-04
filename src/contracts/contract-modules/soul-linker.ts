@@ -2,7 +2,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract, PayableOverrides } from "ethers";
 import { TypedDataField } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   PaymentMethod,
@@ -126,7 +126,10 @@ export class SoulLinker extends MasaModuleBase {
     signature: string,
     slippage: number | undefined = 250,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const { price, paymentAddress } = await this.getPrice(
       tokenAddress,
@@ -191,6 +194,7 @@ export class SoulLinker extends MasaModuleBase {
 
       await wait();
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
       if (error instanceof Error) {
         result.message = `Adding link failed! ${error.message}`;
@@ -272,12 +276,13 @@ export class SoulLinker extends MasaModuleBase {
   ): Promise<BreakLinkResult> => {
     const result: BreakLinkResult = {
       success: false,
-      message: "Unknown Error",
+      errorCode: BaseErrorCodes.UnknownError,
     };
 
     const { identityId, address } = await this.masa.identity.load();
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
+      result.errorCode = BaseErrorCodes.DoesNotExist;
       console.error(result.message);
       return result;
     }

@@ -3,7 +3,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { PayableOverrides } from "ethers";
 
-import { Messages } from "../../../../collections";
+import { BaseErrorCodes, Messages } from "../../../../collections";
 import type {
   BaseResult,
   BaseResultWithTokenId,
@@ -24,7 +24,10 @@ export class ASBTContractWrapper<
     paymentMethod: PaymentMethod,
     receiver: string,
   ): Promise<BaseResultWithTokenId> => {
-    const result: BaseResultWithTokenId = { success: false };
+    const result: BaseResultWithTokenId = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
@@ -105,6 +108,7 @@ export class ASBTContractWrapper<
         );
 
         result.success = true;
+        delete result.errorCode;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -145,7 +149,11 @@ export class ASBTContractWrapper<
         if (limit > 0 && balance.gte(limit)) {
           const errorMessage = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
           console.error(errorMessage);
-          result.push({ success: false, message: errorMessage });
+          result.push({
+            success: false,
+            errorCode: BaseErrorCodes.UnknownError,
+            message: errorMessage,
+          });
         }
       } catch (error: unknown) {
         if (error instanceof Error) {

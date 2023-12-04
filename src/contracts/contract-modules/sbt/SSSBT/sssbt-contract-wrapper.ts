@@ -4,7 +4,7 @@ import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity
 import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
-import { Messages } from "../../../../collections";
+import { BaseErrorCodes, Messages } from "../../../../collections";
 import type {
   BaseResultWithTokenId,
   PaymentMethod,
@@ -15,6 +15,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../../../utils";
+import { parseEthersError } from "../../ethers";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class SSSBTContractWrapper<
@@ -134,7 +135,10 @@ export class SSSBTContractWrapper<
     signatureDate: number,
     authorityAddress: string,
   ): Promise<BaseResultWithTokenId> => {
-    const result: BaseResultWithTokenId = { success: false };
+    const result: BaseResultWithTokenId = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -152,13 +156,21 @@ export class SSSBTContractWrapper<
 
       if (limit > 0 && balance.gte(limit)) {
         result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
+        result.errorCode = BaseErrorCodes.LimitOutOfBounds;
         console.error(result.message);
         return result;
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.warn(`Loading SBT balance failed! ${error.message}`);
-      }
+      result.message = "Loading SBT balance failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      console.warn(result.message, { errorCode });
+
+      return result;
     }
 
     // fill the collection with data
@@ -246,13 +258,18 @@ export class SSSBTContractWrapper<
         );
 
         result.success = true;
+        delete result.errorCode;
         result.tokenId = args._tokenId;
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Minting SSSBT failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Minting SSSBT failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      console.error(result.message, { errorCode });
     }
 
     return result;

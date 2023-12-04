@@ -4,7 +4,7 @@ import { MasaDynamicSSSBT } from "@masa-finance/masa-contracts-identity";
 import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
-import { Messages } from "../../../../../collections";
+import { BaseErrorCodes, Messages } from "../../../../../collections";
 import type { BaseResult, PaymentMethod } from "../../../../../interface";
 import {
   generateSignatureDomain,
@@ -76,7 +76,10 @@ export class DynamicSSSBTContractWrapper<
     signature: string,
     authorityAddress: string,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const { name, version, verifyingContract } =
       await this.contract.eip712Domain();
@@ -99,6 +102,7 @@ export class DynamicSSSBTContractWrapper<
     );
 
     result.success = true;
+    delete result.errorCode;
 
     return result;
   };
@@ -120,7 +124,10 @@ export class DynamicSSSBTContractWrapper<
     signatureDate: number,
     authorityAddress: string,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const [possibleStates, stateAlreadySet, name] = await Promise.all([
       this.contract.getBeforeMintStates(),
@@ -206,6 +213,7 @@ export class DynamicSSSBTContractWrapper<
 
       await wait();
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
       if (error instanceof Error) {
         result.message = `Setting state failed! ${error.message}`;
@@ -225,7 +233,10 @@ export class DynamicSSSBTContractWrapper<
     paymentMethod: PaymentMethod,
     receiver: string,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -314,6 +325,7 @@ export class DynamicSSSBTContractWrapper<
         );
 
         result.success = true;
+        delete result.errorCode;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {

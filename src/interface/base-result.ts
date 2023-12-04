@@ -1,7 +1,10 @@
 import { BigNumber } from "ethers";
 
+import { BaseErrorCodes } from "../collections";
+
 export interface BaseResult {
   success: boolean;
+  errorCode?: BaseErrorCodes;
   message?: string;
 }
 

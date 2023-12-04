@@ -1,7 +1,7 @@
 import type { SoulLinker } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber, Contract } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
 
 export type Link = {
@@ -55,7 +55,7 @@ export const listLinks = async (
 ): Promise<ListLinksResult> => {
   const result: ListLinksResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
     links: [],
   };
 
@@ -63,6 +63,7 @@ export const listLinks = async (
 
   if (!identityId) {
     result.message = Messages.NoIdentity(address);
+    result.errorCode = BaseErrorCodes.DoesNotExist;
     return result;
   }
 
@@ -73,9 +74,12 @@ export const listLinks = async (
   );
 
   try {
-    await contract.ownerOf(tokenId);
-  } catch {
+    const { ownerOf } = contract;
+    await ownerOf(tokenId);
+  } catch (error: unknown) {
     result.message = `Token ${tokenId.toString()} does not exist!`;
+    result.errorCode = BaseErrorCodes.DoesNotExist;
+
     console.error(result.message);
     return result;
   }
@@ -128,6 +132,7 @@ export const listLinks = async (
   }
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };

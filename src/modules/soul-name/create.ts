@@ -26,7 +26,6 @@ const purchaseSoulName = async (
   const result: CreateSoulNameResult = {
     success: false,
     errorCode: BaseErrorCodes.UnknownError,
-    message: "Unknown Error",
   };
 
   const [extension, isAvailable] = await Promise.all([
@@ -96,8 +95,7 @@ const purchaseSoulName = async (
 
             if (tokenId) {
               result.success = true;
-              result.message = "";
-              result.errorCode = BaseErrorCodes.NoError;
+              delete result.errorCode;
               result.tokenId = tokenId;
               result.soulName = soulName;
             }
@@ -133,7 +131,6 @@ export const createSoulName = async (
   const result: CreateSoulNameResult = {
     success: false,
     errorCode: BaseErrorCodes.UnknownError,
-    message: "Unknown Error",
   };
 
   if (await masa.session.checkLogin()) {
@@ -142,6 +139,7 @@ export const createSoulName = async (
       !masa.contracts.instances.SoulNameContract.hasAddress
     ) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
@@ -164,6 +162,7 @@ export const createSoulName = async (
     const { identityId, address } = await masa.identity.load();
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
+      result.errorCode = BaseErrorCodes.DoesNotExist;
       return result;
     }
 

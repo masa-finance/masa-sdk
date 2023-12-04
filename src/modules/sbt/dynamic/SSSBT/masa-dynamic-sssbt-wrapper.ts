@@ -1,5 +1,6 @@
 import type { MasaDynamicSSSBT } from "@masa-finance/masa-contracts-identity";
 
+import { BaseErrorCodes } from "../../../../collections";
 import type {
   BaseResult,
   BaseResultWithTokenId,
@@ -27,7 +28,10 @@ export class MasaDynamicSSSBTWrapper<
     state: string,
     stateValue: boolean,
   ): Promise<SignSetStateResult> => {
-    const result: SignSetStateResult = { success: false };
+    const result: SignSetStateResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const [name, symbol] = await Promise.all([
       this.contract.name(),
@@ -71,6 +75,7 @@ export class MasaDynamicSSSBTWrapper<
 
     if (stateAlreadySet) {
       result.message = `State '${state}' already set on ${name} for ${receiver}`;
+      result.errorCode = BaseErrorCodes.AlreadyExists;
       console.error(result.message);
       return result;
     }
@@ -81,6 +86,7 @@ export class MasaDynamicSSSBTWrapper<
         .includes(state.toLowerCase())
     ) {
       result.message = `State '${state}' unknown to contract ${name}`;
+      result.errorCode = BaseErrorCodes.DoesNotExist;
       console.error(result.message);
       return result;
     }
@@ -100,6 +106,7 @@ export class MasaDynamicSSSBTWrapper<
       }
 
       result.success = true;
+      delete result.errorCode;
       result.authorityAddress = authorityAddress;
       result.signatureDate = signatureDate;
       result.signature = signature;

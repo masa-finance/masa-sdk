@@ -1,6 +1,6 @@
 import type { BigNumber } from "ethers";
 
-import { Templates } from "../../collections";
+import { BaseErrorCodes, Templates } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
 import { signMessage, unpackSessionId } from "../../utils";
 
@@ -13,7 +13,10 @@ export interface LoginResult extends BaseResult {
 export const login = async (masa: MasaInterface): Promise<LoginResult> => {
   console.log("Logging in");
 
-  let result: LoginResult = { success: false };
+  let result: LoginResult = {
+    success: false,
+    errorCode: BaseErrorCodes.UnknownError,
+  };
 
   if (!(await masa.session.checkLogin())) {
     // get challenge

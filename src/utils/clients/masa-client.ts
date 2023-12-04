@@ -1,6 +1,7 @@
 import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axios from "axios";
 
+import { BaseErrorCodes } from "../../collections";
 import type {
   ChallengeResult,
   ChallengeResultWithCookie,
@@ -267,10 +268,10 @@ export class MasaClient extends MasaBase {
      * @param phoneNumber
      */
     generate: async (phoneNumber: string): Promise<GenerateGreenResult> => {
-      const result = {
+      const result: GenerateGreenResult = {
         success: false,
         status: "failed",
-        message: "Generating green failed",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
       const { data: greenGenerateResponseData } = await this.post<
@@ -284,9 +285,13 @@ export class MasaClient extends MasaBase {
 
       if (greenGenerateResponseData) {
         result.success = true;
-        result.message = "";
+        delete result.errorCode;
         result.status = "success";
-        return { ...result, ...greenGenerateResponseData };
+
+        return {
+          ...result,
+          ...greenGenerateResponseData,
+        };
       } else {
         result.message = `Generating green failed! ${result.message}`;
         console.error(result.message);
@@ -299,10 +304,10 @@ export class MasaClient extends MasaBase {
       phoneNumber: string,
       code: string,
     ): Promise<VerifyGreenResult | undefined> => {
-      const result = {
+      const result: VerifyGreenResult = {
         success: false,
         status: "failed",
-        message: "Verifying green failed",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
       const { data: greenVerifyResponseData } = await this.post<
@@ -320,11 +325,15 @@ export class MasaClient extends MasaBase {
 
       if (greenVerifyResponseData) {
         result.success = true;
-        result.message = "";
+        delete result.errorCode;
         result.status = "success";
-        return { ...result, ...greenVerifyResponseData };
+
+        return {
+          ...result,
+          ...greenVerifyResponseData,
+        };
       } else {
-        result.message = `Verifying green failed! ${result.message}`;
+        result.message = `Verifying green failed!`;
         console.error(result.message);
       }
 
@@ -336,31 +345,42 @@ export class MasaClient extends MasaBase {
     /**
      * Generates a new credit score
      */
-    generate: async (): Promise<GenerateCreditScoreResult | undefined> => {
-      const result = {
+    generate: async (): Promise<GenerateCreditScoreResult> => {
+      let result: GenerateCreditScoreResult = {
         success: false,
-        status: "failed",
-        message: "Generating Credit Score failed!",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
-      const generateCreditScoreResponseData = await this.post<
-        {
-          network: NetworkName;
-        },
-        GenerateCreditScoreResult
-      >("/credit-score/generate", {
-        network: this.masa.config.networkName,
-      });
+      try {
+        const generateCreditScoreResponseData = await this.post<
+          {
+            network: NetworkName;
+          },
+          GenerateCreditScoreResult
+        >("/credit-score/generate", {
+          network: this.masa.config.networkName,
+        });
 
-      if (generateCreditScoreResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...generateCreditScoreResponseData };
-      } else {
+        if (generateCreditScoreResponseData) {
+          result.success = true;
+          delete result.errorCode;
+
+          result = {
+            ...result,
+            ...generateCreditScoreResponseData,
+          };
+        }
+      } catch (error: unknown) {
+        result.message = "Generating Credit Score failed! ";
+
+        if (error instanceof Error) {
+          result.message += error.message;
+        }
+
         console.error(result.message);
-        return result;
       }
+
+      return result;
     },
 
     /**
@@ -369,31 +389,41 @@ export class MasaClient extends MasaBase {
      */
     update: async (
       transactionHash: string,
-    ): Promise<UpdateCreditScoreResult | undefined> => {
-      const result = {
+    ): Promise<UpdateCreditScoreResult> => {
+      let result: UpdateCreditScoreResult = {
         success: false,
         status: "failed",
-        message: "Updating of credit score failed!",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
-      const { data: updateCreditScoreResponseData } = await this.post<
-        {
-          transactionHash: string;
-          network: NetworkName;
-        },
-        UpdateCreditScoreResult
-      >("/credit-score/update", {
-        transactionHash,
-        network: this.masa.config.networkName,
-      });
+      try {
+        const { data: updateCreditScoreResponseData } = await this.post<
+          {
+            transactionHash: string;
+            network: NetworkName;
+          },
+          UpdateCreditScoreResult
+        >("/credit-score/update", {
+          transactionHash,
+          network: this.masa.config.networkName,
+        });
 
-      if (updateCreditScoreResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...updateCreditScoreResponseData };
-      } else {
-        console.error(result.message);
+        if (updateCreditScoreResponseData) {
+          result.success = true;
+          delete result.errorCode;
+          result.status = "success";
+
+          result = {
+            ...result,
+            ...updateCreditScoreResponseData,
+          };
+        }
+      } catch (error: unknown) {
+        result.message = "Updating of credit score failed! ";
+
+        if (error instanceof Error) {
+          result.message += error.message;
+        }
       }
 
       return result;

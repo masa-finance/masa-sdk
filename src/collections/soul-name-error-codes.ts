@@ -1,15 +1,14 @@
-export enum BaseErrorCodes {
-  NoError,
-  NetworkError,
-  InsufficientFunds,
-  RejectedTransaction,
-  GeneralGasIssue,
-  UnknownError = 1337,
-}
+import { BaseErrorCodes } from "./base-error-codes";
 
 export enum SoulNameErrorCodes {
-  ArweaveError,
-  SoulNameError,
+  /**
+   * Arweave related issues
+   */
+  ArweaveError = "ArweaveError",
+  /**
+   * @description Soulname Already taken or does not exists
+   */
+  SoulNameError = "SoulNameError",
 }
 
 export type CreateSoulNameErrorCodes = SoulNameErrorCodes | BaseErrorCodes;

@@ -5,7 +5,7 @@ import {
   TypedDataDomain,
 } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, PaymentMethod } from "../../interface";
 import { generateSignatureDomain, isNativeCurrency } from "../../utils";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
@@ -144,7 +144,10 @@ export class Identity extends MasaSBTModuleBase {
    * @param identityId
    */
   public burn = async (identityId: BigNumber): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     console.log(`Burning Identity with ID '${identityId}'!`);
 
@@ -172,6 +175,7 @@ export class Identity extends MasaSBTModuleBase {
 
       console.log(`Burned Identity with ID '${identityId}'!`);
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
       if (error instanceof Error) {
         result.message = `Burning Identity Failed! ${error.message}`;

@@ -1,5 +1,6 @@
 import type { BigNumber, Contract } from "ethers";
 
+import { BaseErrorCodes } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
 import { Link, loadLinks } from "./list-links";
 
@@ -13,7 +14,7 @@ export const verifyLink = async (
 ): Promise<VerifyLinkResult> => {
   const result: VerifyLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId } = await masa.identity.load();
@@ -94,8 +95,8 @@ export const verifyLink = async (
           );
 
         if (result.verified) {
-          result.message = "";
           result.success = true;
+          delete result.errorCode;
           break;
         }
       } catch (error: unknown) {
@@ -111,6 +112,8 @@ export const verifyLink = async (
 
     if (links.length < 1) {
       result.message = "Link not found!";
+      result.errorCode = BaseErrorCodes.NotFound;
+
       console.error(result.message);
     }
 

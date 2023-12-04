@@ -6,7 +6,7 @@ import type {
 } from "ethers";
 import { TypedDataField } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   PaymentMethod,
@@ -312,7 +312,10 @@ export class SoulName extends MasaModuleBase {
     soulName: string,
     receiver: string,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
@@ -359,6 +362,7 @@ export class SoulName extends MasaModuleBase {
         );
 
         result.success = true;
+        delete result.errorCode;
       } catch (error: unknown) {
         if (error instanceof Error) {
           result.message = `Sending of Soul Name Failed! ${error.message}`;
@@ -380,6 +384,7 @@ export class SoulName extends MasaModuleBase {
   public burn = async (soulName: string): Promise<BaseResult> => {
     const result: BaseResult = {
       success: false,
+      errorCode: BaseErrorCodes.UnknownError,
     };
 
     const [soulNameData, extension] = await Promise.all([
@@ -421,6 +426,7 @@ export class SoulName extends MasaModuleBase {
         );
 
         result.success = true;
+        delete result.errorCode;
       } catch (error: unknown) {
         if (error instanceof Error) {
           result.message = `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`;
@@ -444,7 +450,10 @@ export class SoulName extends MasaModuleBase {
     soulName: string,
     years: number,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const tokenId =
       await this.masa.contracts.instances.SoulNameContract.getTokenId(soulName);
@@ -472,7 +481,9 @@ export class SoulName extends MasaModuleBase {
       );
 
       await wait();
+
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
       if (error instanceof Error) {
         result.message = `renewal failed! ${error.message}`;

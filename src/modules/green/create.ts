@@ -1,6 +1,6 @@
 import { LogDescription } from "@ethersproject/abi";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResultWithTokenId,
   GenerateGreenResult,
@@ -19,14 +19,15 @@ export const generateGreen = async (
   masa: MasaInterface,
   phoneNumber: string,
 ): Promise<GenerateGreenResult> => {
-  const result: GenerateGreenResult = {
+  let result: GenerateGreenResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   if (await masa.session.checkLogin()) {
     if (!masa.contracts.instances.SoulboundGreenContract.hasAddress) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
@@ -47,10 +48,11 @@ export const generateGreen = async (
         return greenGenerateResult;
       } else {
         const message = "Masa Green already created!";
-        return {
-          success: false,
+        result = {
+          ...result,
           message,
           status: "failed",
+          errorCode: BaseErrorCodes.AlreadyExists,
         };
       }
     } catch (error: unknown) {
@@ -78,7 +80,7 @@ export const verifyGreen = async (
 ): Promise<VerifyGreenResult | undefined> => {
   const result: VerifyGreenResult = {
     success: false,
-    message: "Unknown Verify Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   // try to verify with the code
@@ -91,6 +93,7 @@ export const verifyGreen = async (
   // we got a verification result
   if (greenVerifyResult) {
     result.success = greenVerifyResult.success;
+    delete result.errorCode;
     result.status = greenVerifyResult.status;
     result.message = greenVerifyResult.message;
 
@@ -104,6 +107,7 @@ export const verifyGreen = async (
       result.signatureDate = greenVerifyResult.signatureDate;
       result.authorityAddress = greenVerifyResult.authorityAddress;
     } else if (greenVerifyResult.errorCode) {
+      result.message = "Unknown Verify Error";
       // error code, unpack the error code
       result.errorCode = greenVerifyResult.errorCode;
     }
@@ -127,9 +131,9 @@ export const mintGreen = async (
   signatureDate: number,
   signature: string,
 ): Promise<BaseResultWithTokenId> => {
-  const result = {
+  let result: BaseResultWithTokenId = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { wait, hash } = await masa.contracts.green.mint(
@@ -167,9 +171,9 @@ export const mintGreen = async (
   }
 
   if (tokenId) {
-    return {
+    result = {
+      ...result,
       success: true,
-      message: "",
       tokenId,
     };
   }
@@ -192,7 +196,7 @@ export const createGreen = async (
 ): Promise<GreenBaseResult> => {
   const result: GreenBaseResult = {
     success: false,
-    message: "Unknown Create Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   // verify
@@ -230,7 +234,7 @@ export const createGreen = async (
 
       if (mintGreenResult) {
         result.success = true;
-        result.message = "";
+        delete result.errorCode;
         result.tokenId = mintGreenResult.tokenId;
       }
     } else {

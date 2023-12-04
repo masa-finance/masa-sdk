@@ -36,6 +36,7 @@ export const isEthersError = (error: unknown): error is EthersError =>
 
 export const parseEthersError = (
   error: unknown,
+  verbose: boolean = false,
 ): {
   errorCode: BaseErrorCodes;
   message?: string;
@@ -44,17 +45,23 @@ export const parseEthersError = (
   let errorCode = BaseErrorCodes.UnknownError;
 
   if (isEthersError(error)) {
-    message = error.reason;
+    message = error.reason ?? error.error?.message;
 
     switch (error.code) {
       case RETURN_VALUE_ERROR_CODES.TRANSACTION_RAN_OUT_OF_GAS:
       case RETURN_VALUE_ERROR_CODES.MAX_FEE_PER_GAS_LESS_THAN_BLOCK_BASE_FEE:
       case RETURN_VALUE_ERROR_CODES.MAX_PRIORITY_FEE_PER_GAS_HIGHER_THAN_MAX_FEE_PER_GAS:
-      case ETHERS_ERROR_CODES.UNPREDICTABLE_GAS_LIMIT:
         errorCode = BaseErrorCodes.GeneralGasIssue;
+        break;
+      case ETHERS_ERROR_CODES.UNPREDICTABLE_GAS_LIMIT:
+        errorCode = BaseErrorCodes.EstimateGasFailed;
         break;
       case RETURN_VALUE_ERROR_CODES.INSUFFICIENT_FUNDS_FOR_GAS:
         errorCode = BaseErrorCodes.InsufficientFunds;
+        break;
+      case RETURN_VALUE_ERROR_CODES.CALL_REVERTED:
+      case ETHERS_ERROR_CODES.CALL_EXCEPTION:
+        errorCode = BaseErrorCodes.TransactionFailed;
         break;
       case RETURN_VALUE_ERROR_CODES.REJECTED_TRANSACTION:
       case ETHERS_ERROR_CODES.ACTION_REJECTED:
@@ -71,7 +78,7 @@ export const parseEthersError = (
           errorCode = BaseErrorCodes.NetworkError;
           break;
         case NESTED_ETHERS_ERROR_CODES.TRANSACTION_UNDERPRICED:
-          errorCode = BaseErrorCodes.GeneralGasIssue;
+          errorCode = BaseErrorCodes.TransactionFailed;
           break;
       }
     }
@@ -79,7 +86,9 @@ export const parseEthersError = (
     message = error.message;
   }
 
-  console.log({ errorCode });
+  if (verbose) {
+    console.log(message, { errorCode });
+  }
 
   return {
     errorCode,

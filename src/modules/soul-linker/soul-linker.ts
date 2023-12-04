@@ -1,4 +1,5 @@
-import type { BigNumber, Contract } from "ethers";
+import { ILinkableSBT } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
 import type { MasaInterface, PaymentMethod } from "../../interface";
 import { MasaBase } from "../../masa-base";
@@ -11,7 +12,7 @@ import { verifyLink } from "./verify-link";
 export class MasaSoulLinker extends MasaBase {
   constructor(
     masa: MasaInterface,
-    private contract: Contract,
+    private contract: ILinkableSBT,
   ) {
     super(masa);
   }

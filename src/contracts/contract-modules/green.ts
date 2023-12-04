@@ -6,7 +6,7 @@ import type {
 } from "ethers";
 import { TypedDataField } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   PaymentMethod,
@@ -17,6 +17,7 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../utils";
+import { parseEthersError } from "./ethers";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class Green extends MasaSBTModuleBase {
@@ -223,6 +224,7 @@ export class Green extends MasaSBTModuleBase {
   public burn = async (greenId: BigNumber): Promise<BaseResult> => {
     const result: BaseResult = {
       success: false,
+      errorCode: BaseErrorCodes.UnknownError,
     };
 
     console.log(`Burning Green with ID '${greenId}'!`);
@@ -252,11 +254,16 @@ export class Green extends MasaSBTModuleBase {
 
       console.log(`Burned Green with ID '${greenId}'!`);
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Burning Green Failed! '${error.message}'`;
-        console.error(result.message);
-      }
+      result.message = "Burning Green Failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      console.error(result.message, { errorCode });
     }
 
     return result;

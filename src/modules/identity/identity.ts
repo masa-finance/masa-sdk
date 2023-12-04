@@ -1,17 +1,11 @@
-import type { SoulboundIdentity } from "@masa-finance/masa-contracts-identity";
-
-import type { MasaInterface, PaymentMethod } from "../../interface";
-import { MasaLinkable } from "../masa-linkable";
+import type { PaymentMethod } from "../../interface";
+import { MasaBase } from "../../masa-base";
 import { burnIdentity } from "./burn";
 import { createIdentity, createIdentityWithSoulName } from "./create";
 import { loadIdentityByAddress } from "./load";
 import { showIdentity } from "./show";
 
-export class MasaIdentity extends MasaLinkable<SoulboundIdentity> {
-  constructor(masa: MasaInterface) {
-    super(masa, masa.contracts.instances.SoulboundIdentityContract);
-  }
-
+export class MasaIdentity extends MasaBase {
   create = () => createIdentity(this.masa);
   createWithSoulName = (
     paymentMethod: PaymentMethod,

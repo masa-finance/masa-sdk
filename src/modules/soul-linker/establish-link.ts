@@ -1,6 +1,6 @@
 import { BigNumber, Contract } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   IPassport,
@@ -23,7 +23,7 @@ export const establishLink = async (
 ): Promise<EstablishLinkResult> => {
   const result: EstablishLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId, address } = await masa.identity.load();
@@ -69,6 +69,7 @@ export const establishLink = async (
   );
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };

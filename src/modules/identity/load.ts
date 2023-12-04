@@ -33,7 +33,10 @@ export const loadIdentityByAddress = async (
     // ignore
   }
 
-  return { identityId, address };
+  return {
+    identityId,
+    address,
+  };
 };
 
 export const loadIdentityDetails = async (

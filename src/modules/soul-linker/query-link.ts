@@ -1,7 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import type { Contract } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   IPassport,
@@ -25,12 +25,14 @@ export const queryLink = async (
 ): Promise<QueryLinkResult> => {
   const result: QueryLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId, address } = await masa.identity.load();
+
   if (!identityId) {
     result.message = Messages.NoIdentity(address);
+    result.errorCode = BaseErrorCodes.DoesNotExist;
     return result;
   }
 
@@ -47,6 +49,8 @@ export const queryLink = async (
 
   if (!ownerIdentityId) {
     result.message = "Owner identity not found";
+    result.errorCode = BaseErrorCodes.NotFound;
+
     console.error(result.message);
     return result;
   }
@@ -79,6 +83,7 @@ export const queryLink = async (
   console.log({ tokenUri });
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };

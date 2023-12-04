@@ -21,9 +21,9 @@ import { isSoulNameMetadataStoreResult } from "../../utils";
 export const purchaseIdentity = async (
   masa: MasaInterface,
 ): Promise<BaseResultWithTokenId> => {
-  const result = {
+  let result: BaseResultWithTokenId = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { wait, hash } = await masa.contracts.identity.purchase();
@@ -53,9 +53,8 @@ export const purchaseIdentity = async (
   }
 
   if (tokenId) {
-    return {
-      success: false,
-      message: "",
+    result = {
+      ...result,
       tokenId,
     };
   }
@@ -70,9 +69,9 @@ export const purchaseIdentity = async (
 export const createIdentity = async (
   masa: MasaInterface,
 ): Promise<BaseResultWithTokenId> => {
-  const result = {
+  const result: BaseResultWithTokenId = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   if (
@@ -80,6 +79,7 @@ export const createIdentity = async (
     !masa.contracts.instances.SoulboundIdentityContract.hasAddress
   ) {
     result.message = Messages.ContractNotDeployed(masa.config.networkName);
+    result.errorCode = BaseErrorCodes.NetworkError;
     return result;
   }
 
@@ -87,6 +87,8 @@ export const createIdentity = async (
 
   if (identityId) {
     result.message = `Identity already created! '${identityId}'`;
+    result.errorCode = BaseErrorCodes.AlreadyExists;
+
     console.error(result.message);
     return result;
   }
@@ -115,7 +117,6 @@ export const purchaseIdentityWithSoulName = async (
   const result: { identityId?: string | BigNumber } & CreateSoulNameResult = {
     success: false,
     errorCode: BaseErrorCodes.UnknownError,
-    message: "Unknown Error",
   };
 
   const [extension, isAvailable] = await Promise.all([
@@ -193,8 +194,7 @@ export const purchaseIdentityWithSoulName = async (
 
             if (identityId && tokenId) {
               result.success = true;
-              result.errorCode = BaseErrorCodes.NoError;
-              result.message = "";
+              delete result.errorCode;
               result.tokenId = tokenId;
               result.identityId = identityId;
               result.soulName = soulName;
@@ -242,7 +242,6 @@ export const createIdentityWithSoulName = async (
   const result: CreateSoulNameResult = {
     success: false,
     errorCode: BaseErrorCodes.UnknownError,
-    message: "Unknown Error",
   };
 
   if (await masa.session.checkLogin()) {
@@ -252,6 +251,7 @@ export const createIdentityWithSoulName = async (
       !masa.contracts.instances.SoulNameContract.hasAddress
     ) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
@@ -267,6 +267,7 @@ export const createIdentityWithSoulName = async (
     if (!isValid) {
       result.message = "Soulname not valid!";
       result.errorCode = SoulNameErrorCodes.SoulNameError;
+
       console.error(result.message);
       return result;
     }
@@ -277,6 +278,7 @@ export const createIdentityWithSoulName = async (
     if (identityId) {
       result.message = `Identity already created! '${identityId}'`;
       result.errorCode = SoulNameErrorCodes.SoulNameError;
+
       console.error(result.message);
       return result;
     }

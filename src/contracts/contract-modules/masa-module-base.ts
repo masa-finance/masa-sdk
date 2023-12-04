@@ -255,7 +255,7 @@ export abstract class MasaModuleBase extends MasaBase {
 
       message += ethersMessage;
 
-      console.error(message, errorCode);
+      console.error(message, { errorCode });
 
       if (this.masa.config.forceTransactions) {
         // don't throw if we force this
@@ -264,7 +264,7 @@ export abstract class MasaModuleBase extends MasaBase {
         );
         gasLimit = BigNumber.from(DEFAULT_GAS_LIMIT);
       } else {
-        throw new Error(message);
+        throw error;
       }
     }
 

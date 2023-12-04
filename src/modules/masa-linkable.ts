@@ -1,11 +1,11 @@
-import type { Contract } from "ethers";
+import { ILinkableSBT } from "@masa-finance/masa-contracts-identity";
 
 import type { MasaInterface } from "../interface";
 import { MasaBase } from "../masa-base";
 import { MasaSoulLinker } from "./soul-linker";
 
 export abstract class MasaLinkable<
-  LinkContract extends Contract,
+  LinkContract extends ILinkableSBT,
 > extends MasaBase {
   public readonly links: MasaSoulLinker;
 
