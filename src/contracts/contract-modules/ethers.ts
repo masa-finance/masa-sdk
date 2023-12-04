@@ -67,6 +67,8 @@ export const parseEthersError = (
       case ETHERS_ERROR_CODES.ACTION_REJECTED:
         errorCode = BaseErrorCodes.RejectedTransaction;
         break;
+      default:
+        errorCode = BaseErrorCodes.UnknownError;
     }
 
     if (errorCode === BaseErrorCodes.UnknownError && error.error) {
@@ -80,6 +82,8 @@ export const parseEthersError = (
         case NESTED_ETHERS_ERROR_CODES.TRANSACTION_UNDERPRICED:
           errorCode = BaseErrorCodes.TransactionFailed;
           break;
+        default:
+          errorCode = BaseErrorCodes.UnknownError;
       }
     }
   } else if (error instanceof Error) {

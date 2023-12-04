@@ -333,7 +333,7 @@ export class MasaClient extends MasaBase {
           ...greenVerifyResponseData,
         };
       } else {
-        result.message = `Verifying green failed!`;
+        result.message = "Verifying green failed!";
         console.error(result.message);
       }
 
