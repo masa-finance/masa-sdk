@@ -81,8 +81,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `generate` | () => `Promise`\<`undefined` \| [`GenerateCreditScoreResult`](../interfaces/GenerateCreditScoreResult.md)\> |
-| `update` | (`transactionHash`: `string`) => `Promise`\<`undefined` \| [`UpdateCreditScoreResult`](../interfaces/UpdateCreditScoreResult.md)\> |
+| `generate` | () => `Promise`\<[`GenerateCreditScoreResult`](../interfaces/GenerateCreditScoreResult.md)\> |
+| `update` | (`transactionHash`: `string`) => `Promise`\<[`UpdateCreditScoreResult`](../interfaces/UpdateCreditScoreResult.md)\> |
 
 ___
 

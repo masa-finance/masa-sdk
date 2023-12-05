@@ -14,6 +14,7 @@
 ### Properties
 
 - [authorityAddress](GenerateCreditScoreResult.md#authorityaddress)
+- [errorCode](GenerateCreditScoreResult.md#errorcode)
 - [message](GenerateCreditScoreResult.md#message)
 - [signature](GenerateCreditScoreResult.md#signature)
 - [signatureDate](GenerateCreditScoreResult.md#signaturedate)
@@ -24,6 +25,16 @@
 ### authorityAddress
 
 • `Optional` **authorityAddress**: `string`
+
+___
+
+### errorCode
+
+• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
+
+#### Inherited from
+
+[BaseResult](BaseResult.md).[errorCode](BaseResult.md#errorcode)
 
 ___
 

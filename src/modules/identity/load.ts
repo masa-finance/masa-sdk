@@ -12,7 +12,10 @@ import { resolveReverseIdentity } from "./resolve";
 export const loadIdentityByAddress = async (
   masa: MasaInterface,
   address?: string,
-): Promise<{ identityId?: BigNumber; address: string }> => {
+): Promise<{
+  identityId?: BigNumber;
+  address: string;
+}> => {
   address = address || (await masa.config.signer.getAddress());
   let identityId;
 

@@ -5,7 +5,10 @@ import type { MasaInterface } from "../interface";
  * @param masa
  * @param metadataUrl
  */
-export const patchMetadataUrl = (masa: MasaInterface, metadataUrl: string) => {
+export const patchMetadataUrl = (
+  masa: MasaInterface,
+  metadataUrl: string,
+): string => {
   const env: string = masa.config.environment;
   // make sure this ends with / otherwise it blows
   const apiUrl: string = !masa.config.apiUrl.endsWith("/")

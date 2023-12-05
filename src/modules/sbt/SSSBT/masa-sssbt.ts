@@ -1,10 +1,13 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 import { ReferenceSBTSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
+import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/SoulStore";
 
+import { DeployResult } from "../../../interface";
 import type { ContractFactory } from "../../../interface/contract-factory";
 import { MasaBase } from "../../../masa-base";
 import { deploySSSBT } from "./deploy";
 import { MasaSSSBTWrapper } from "./masa-sssbt-wrapper";
+import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export class MasaSSSBT extends MasaBase {
   /**
@@ -30,7 +33,7 @@ export class MasaSSSBT extends MasaBase {
     limit?: number;
     authorityAddress: string;
     adminAddress?: string;
-  }) =>
+  }): Promise<DeployResult<PaymentParamsStruct> | undefined> =>
     deploySSSBT({
       masa: this.masa,
       name,

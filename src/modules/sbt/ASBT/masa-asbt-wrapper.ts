@@ -1,6 +1,7 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
 import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
+import { BaseResult } from "../../../interface";
 import { logger } from "../../../utils";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
@@ -40,7 +41,7 @@ export class MasaASBTWrapper<
   bulkMint = async (
     receivers: string[],
     paymentMethod: PaymentMethod = "ETH",
-  ) => {
+  ): Promise<BaseResult[]> => {
     const [name, symbol] = await Promise.all([
       this.contract.name(),
       this.contract.symbol(),

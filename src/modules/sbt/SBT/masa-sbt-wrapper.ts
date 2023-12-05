@@ -1,6 +1,7 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
+import { BaseResult } from "../../../interface";
 import { isBigNumber, logger, patchMetadataUrl } from "../../../utils";
 import { MasaLinkable } from "../../masa-linkable";
 
@@ -11,7 +12,14 @@ export class MasaSBTWrapper<
    *
    * @param address
    */
-  public list = async (address?: string) => {
+  public list = async (
+    address?: string,
+  ): Promise<
+    {
+      tokenId: BigNumber;
+      tokenUri: string;
+    }[]
+  > => {
     address = address || (await this.masa.config.signer.getAddress());
 
     const SBTs = await this.loadSBTs(address);
@@ -107,7 +115,14 @@ export class MasaSBTWrapper<
    *
    * @param sbtIDs
    */
-  protected loadSBTIDs = async (sbtIDs: BigNumber[]) => {
+  protected loadSBTIDs = async (
+    sbtIDs: BigNumber[],
+  ): Promise<
+    {
+      tokenId: BigNumber;
+      tokenUri: string;
+    }[]
+  > => {
     return await Promise.all(
       sbtIDs.map(async (tokenId: BigNumber) => {
         const tokenUri = patchMetadataUrl(
@@ -127,7 +142,7 @@ export class MasaSBTWrapper<
    *
    * @param SBTId
    */
-  public burn = async (SBTId: BigNumber) => {
+  public burn = async (SBTId: BigNumber): Promise<BaseResult> => {
     logger("log", `Burning SBT with ID '${SBTId}'!`);
 
     const { burn } = this.masa.contracts.sbt.attach(this.contract);

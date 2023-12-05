@@ -13,14 +13,23 @@
 
   ↳ [`LoginResult`](LoginResult.md)
 
+  ↳ [`VerifyResult`](VerifyResult.md)
+
 ## Table of contents
 
 ### Properties
 
+- [errorCode](BaseResult.md#errorcode)
 - [message](BaseResult.md#message)
 - [success](BaseResult.md#success)
 
 ## Properties
+
+### errorCode
+
+• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
+
+___
 
 ### message
 

@@ -83,7 +83,7 @@ export const verifyGreen = async (
   masa: MasaInterface,
   phoneNumber: string,
   code: string,
-): Promise<VerifyGreenResult | undefined> => {
+): Promise<VerifyGreenResult> => {
   const result: VerifyGreenResult = {
     success: false,
     errorCode: BaseErrorCodes.UnknownError,
@@ -218,7 +218,7 @@ export const createGreen = async (
   };
 
   // verify
-  const verifyGreenResult: VerifyGreenResult | undefined = await verifyGreen(
+  const verifyGreenResult: VerifyGreenResult = await verifyGreen(
     masa,
     phoneNumber,
     code,

@@ -87,7 +87,7 @@ export const establishLinkFromPassport = async (
   paymentMethod: PaymentMethod,
   contract: Contract,
   passport: string,
-) => {
+): Promise<BaseResult> => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
   return await establishLink(

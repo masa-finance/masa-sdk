@@ -11,7 +11,16 @@ export class MasaSSSBTWrapper<
    *
    * @param receiver
    */
-  sign = async (receiver: string) => {
+  sign = async (
+    receiver: string,
+  ): Promise<
+    | {
+        authorityAddress: string;
+        signatureDate: number;
+        signature: string;
+      }
+    | undefined
+  > => {
     let result:
       | {
           authorityAddress: string;

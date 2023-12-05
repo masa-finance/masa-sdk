@@ -37,7 +37,7 @@ ___
 
 ### errorCode
 
-• `Optional` **errorCode**: `number`
+• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
 
 #### Inherited from
 

@@ -107,7 +107,7 @@ export class Masa implements MasaInterface {
     version,
   };
 
-  public static create = async (masaArgs: MasaArgs) => {
+  public static create = async (masaArgs: MasaArgs): Promise<Masa> => {
     const network = await masaArgs.signer.provider?.getNetwork();
 
     return new Masa({

@@ -114,6 +114,6 @@ export const loadSoulNames = async (
 export const loadSoulNameDetailsByAddress = async (
   masa: MasaInterface,
   address: string,
-) => {
+): Promise<SoulNameDetails[]> => {
   return await loadSoulNamesByNames(masa, await loadSoulNames(masa, address));
 };

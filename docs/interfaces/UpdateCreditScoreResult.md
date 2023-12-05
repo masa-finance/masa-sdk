@@ -13,6 +13,7 @@
 
 ### Properties
 
+- [errorCode](UpdateCreditScoreResult.md#errorcode)
 - [message](UpdateCreditScoreResult.md#message)
 - [signature](UpdateCreditScoreResult.md#signature)
 - [status](UpdateCreditScoreResult.md#status)
@@ -20,6 +21,16 @@
 - [tokenId](UpdateCreditScoreResult.md#tokenid)
 
 ## Properties
+
+### errorCode
+
+• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
+
+#### Inherited from
+
+[BaseResultWithTokenId](BaseResultWithTokenId.md).[errorCode](BaseResultWithTokenId.md#errorcode)
+
+___
 
 ### message
 

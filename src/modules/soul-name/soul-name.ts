@@ -1,6 +1,11 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 
-import type { PaymentMethod } from "../../interface";
+import type {
+  BaseResult,
+  CreateSoulNameResult,
+  PaymentMethod,
+  SoulNameDetails,
+} from "../../interface";
 import { MasaBase } from "../../masa-base";
 import { burnSoulName } from "./burn";
 import { createSoulName } from "./create";
@@ -16,46 +21,54 @@ import { resolveSoulName } from "./resolve";
 import { sendSoulName } from "./send";
 import { tailSoulNames } from "./tail";
 import { validateSoulName } from "./validate";
-import { verifyByName } from "./verify";
+import { verifyByName, VerifyResult } from "./verify";
 
 export class MasaSoulName extends MasaBase {
   /**
    *
    * @param address
    */
-  list = (address?: string) => listSoulNames(this.masa, address);
+  list = (address?: string): Promise<SoulNameDetails[]> =>
+    listSoulNames(this.masa, address);
 
   /**
    *
    * @param limit
    */
-  tail = (limit?: number) => tailSoulNames(this.masa, limit);
+  tail = (limit?: number): Promise<SoulNameDetails[]> =>
+    tailSoulNames(this.masa, limit);
 
   /**
    *
    * @param soulName
    */
-  resolve = (soulName: string) => resolveSoulName(this.masa, soulName);
+  resolve = (soulName: string): Promise<string | undefined> =>
+    resolveSoulName(this.masa, soulName);
 
   /**
    *
    * @param identityIdOrAddress
    */
-  loadSoulNames = (identityIdOrAddress: BigNumber | string) =>
-    loadSoulNames(this.masa, identityIdOrAddress);
+  loadSoulNames = (
+    identityIdOrAddress: BigNumber | string,
+  ): Promise<string[]> => loadSoulNames(this.masa, identityIdOrAddress);
 
   /**
    *
    * @param soulName
    */
-  loadSoulNameByName = (soulName: string) =>
+  loadSoulNameByName = (
+    soulName: string,
+  ): Promise<SoulNameDetails | undefined> =>
     loadSoulNameByName(this.masa, soulName);
 
   /**
    *
    * @param tokenId
    */
-  loadSoulNameByTokenId = (tokenId: string | BigNumber) =>
+  loadSoulNameByTokenId = (
+    tokenId: string | BigNumber,
+  ): Promise<SoulNameDetails | undefined> =>
     loadSoulNameByTokenId(this.masa, tokenId);
 
   /**
@@ -72,7 +85,7 @@ export class MasaSoulName extends MasaBase {
     duration: number,
     receiver?: string,
     style?: string,
-  ) =>
+  ): Promise<CreateSoulNameResult> =>
     createSoulName(
       this.masa,
       paymentMethod,
@@ -86,14 +99,15 @@ export class MasaSoulName extends MasaBase {
    *
    * @param soulName
    */
-  burn = (soulName: string) => burnSoulName(this.masa, soulName);
+  burn = (soulName: string): Promise<BaseResult> =>
+    burnSoulName(this.masa, soulName);
 
   /**
    *
    * @param soulName
    * @param years
    */
-  renew = (soulName: string, years: number) =>
+  renew = (soulName: string, years: number): Promise<BaseResult> =>
     renewSoulName(this.masa, soulName, years);
 
   /**
@@ -101,23 +115,31 @@ export class MasaSoulName extends MasaBase {
    * @param soulName
    * @param receiver
    */
-  send = (soulName: string, receiver: string) =>
+  send = (soulName: string, receiver: string): Promise<BaseResult> =>
     sendSoulName(this.masa, soulName, receiver);
 
   /**
    *
    * @param soulName
    */
-  verify = (soulName: string) => verifyByName(this.masa, soulName);
+  verify = (soulName: string): Promise<VerifyResult> =>
+    verifyByName(this.masa, soulName);
 
   /**
    *
    * @param soulName
    */
-  validate = (soulName: string) => validateSoulName(this.masa, soulName);
+  validate = (
+    soulName: string,
+  ): {
+    isValid: boolean;
+    length: number;
+    message?: string;
+  } => validateSoulName(this.masa, soulName);
 
   /**
    *
    */
-  getSoulNameMetadataPrefix = () => getSoulNameMetadataPrefix(this.masa);
+  getSoulNameMetadataPrefix = (): string =>
+    getSoulNameMetadataPrefix(this.masa);
 }

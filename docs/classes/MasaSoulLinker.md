@@ -40,7 +40,7 @@
 | Name | Type |
 | :------ | :------ |
 | `masa` | [`MasaInterface`](../interfaces/MasaInterface.md) |
-| `contract` | `Contract` |
+| `contract` | `ILinkableSBT` |
 
 #### Returns
 
@@ -54,7 +54,7 @@ MasaBase.constructor
 
 ### contract
 
-• `Private` **contract**: `Contract`
+• `Private` **contract**: `ILinkableSBT`
 
 ___
 

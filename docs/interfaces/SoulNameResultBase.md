@@ -5,7 +5,7 @@
 
 ## Hierarchy
 
-- [`BaseResultWithTokenId`](BaseResultWithTokenId.md)
+- `Omit`\<[`BaseResultWithTokenId`](BaseResultWithTokenId.md), ``"errorCode"``\>
 
   ↳ **`SoulNameResultBase`**
 
@@ -26,7 +26,7 @@
 
 ### errorCode
 
-• **errorCode**: [`SoulNameErrorCodes`](../enums/SoulNameErrorCodes.md)
+• `Optional` **errorCode**: [`CreateSoulNameErrorCodes`](../modules.md#createsoulnameerrorcodes)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Inherited from
 
-[BaseResultWithTokenId](BaseResultWithTokenId.md).[message](BaseResultWithTokenId.md#message)
+Omit.message
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Inherited from
 
-[BaseResultWithTokenId](BaseResultWithTokenId.md).[success](BaseResultWithTokenId.md#success)
+Omit.success
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Inherited from
 
-[BaseResultWithTokenId](BaseResultWithTokenId.md).[tokenId](BaseResultWithTokenId.md#tokenid)
+Omit.tokenId

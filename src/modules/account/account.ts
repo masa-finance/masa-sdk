@@ -1,6 +1,7 @@
 import { MasaBase } from "../../masa-base";
-import { getBalances } from "./get-balances";
+import { Balances, getBalances } from "./get-balances";
 
 export class MasaAccount extends MasaBase {
-  getBalances = (address?: string) => getBalances(this.masa, address);
+  getBalances = (address?: string): Promise<Balances> =>
+    getBalances(this.masa, address);
 }

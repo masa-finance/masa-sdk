@@ -31,7 +31,7 @@ export class MasaClient extends MasaBase {
   private _middlewareClient: AxiosInstance;
   private _cookie?: string;
 
-  get cookie() {
+  get cookie(): string | undefined {
     return this._cookie;
   }
 
@@ -299,7 +299,7 @@ export class MasaClient extends MasaBase {
     verify: async (
       phoneNumber: string,
       code: string,
-    ): Promise<VerifyGreenResult | undefined> => {
+    ): Promise<VerifyGreenResult> => {
       const result: VerifyGreenResult = {
         success: false,
         status: "failed",

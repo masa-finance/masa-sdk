@@ -2,7 +2,7 @@ import { constants, providers, VoidSigner } from "ethers";
 
 import { Masa, NetworkName, SupportedNetworks } from "../../src";
 
-export const getTestMasa = (networkName: NetworkName) => {
+export const getTestMasa = (networkName: NetworkName): Masa => {
   const provider = new providers.JsonRpcProvider(
     SupportedNetworks[networkName].rpcUrls[0],
   );

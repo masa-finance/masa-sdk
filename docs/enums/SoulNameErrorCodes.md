@@ -8,44 +8,22 @@
 ### Enumeration Members
 
 - [ArweaveError](SoulNameErrorCodes.md#arweaveerror)
-- [CryptoError](SoulNameErrorCodes.md#cryptoerror)
-- [NetworkError](SoulNameErrorCodes.md#networkerror)
-- [NoError](SoulNameErrorCodes.md#noerror)
 - [SoulNameError](SoulNameErrorCodes.md#soulnameerror)
-- [UnknownError](SoulNameErrorCodes.md#unknownerror)
 
 ## Enumeration Members
 
 ### ArweaveError
 
-• **ArweaveError** = ``1``
+• **ArweaveError** = ``"ArweaveError"``
 
-___
-
-### CryptoError
-
-• **CryptoError** = ``3``
-
-___
-
-### NetworkError
-
-• **NetworkError** = ``2``
-
-___
-
-### NoError
-
-• **NoError** = ``0``
+Arweave related issues
 
 ___
 
 ### SoulNameError
 
-• **SoulNameError** = ``4``
+• **SoulNameError** = ``"SoulNameError"``
 
-___
+**`Description`**
 
-### UnknownError
-
-• **UnknownError** = ``1337``
+Soulname Already taken or does not exists

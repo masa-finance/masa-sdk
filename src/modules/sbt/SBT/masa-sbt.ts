@@ -12,7 +12,9 @@ export class MasaSBTBase extends MasaBase {
    *
    * @param contract
    */
-  public attach = <Contract extends MasaSBT>(contract: Contract) => {
+  public attach = <Contract extends MasaSBT>(
+    contract: Contract,
+  ): MasaSBTWrapper<Contract> => {
     return new MasaSBTWrapper<Contract>(this.masa, contract);
   };
 

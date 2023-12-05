@@ -2,7 +2,10 @@ import { version as contractsVersion } from "@masa-finance/masa-contracts-identi
 
 import { version as sdkVersion } from "../../package.json";
 
-export const version = () => {
+export const version = (): {
+  contractsVersion: string;
+  sdkVersion: string;
+} => {
   return {
     contractsVersion,
     sdkVersion,

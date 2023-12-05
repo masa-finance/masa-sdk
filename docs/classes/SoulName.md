@@ -107,7 +107,7 @@ ___
 
 ### checkOrGiveAllowance
 
-▸ **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<`undefined` \| `ContractReceipt`\>
+▸ **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
 Checks or gives allowance on ERC20 tokens
 
@@ -122,7 +122,7 @@ Checks or gives allowance on ERC20 tokens
 
 #### Returns
 
-`Promise`\<`undefined` \| `ContractReceipt`\>
+`Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
 #### Inherited from
 

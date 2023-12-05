@@ -13,17 +13,26 @@
 
   ↳↳ [`GreenBaseResult`](GreenBaseResult.md)
 
-  ↳↳ [`SoulNameResultBase`](SoulNameResultBase.md)
-
 ## Table of contents
 
 ### Properties
 
+- [errorCode](BaseResultWithTokenId.md#errorcode)
 - [message](BaseResultWithTokenId.md#message)
 - [success](BaseResultWithTokenId.md#success)
 - [tokenId](BaseResultWithTokenId.md#tokenid)
 
 ## Properties
+
+### errorCode
+
+• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
+
+#### Inherited from
+
+[BaseResult](BaseResult.md).[errorCode](BaseResult.md#errorcode)
+
+___
 
 ### message
 

@@ -232,7 +232,11 @@ export class SoulLinker extends MasaModuleBase {
     signatureDate: number = Math.floor(Date.now() / 1000),
     // default to 15 minutes
     expirationOffset: number = 60 * 15,
-  ) => {
+  ): Promise<{
+    signature: string;
+    signatureDate: number;
+    expirationDate: number;
+  }> => {
     const expirationDate = signatureDate + expirationOffset;
 
     const value: {
@@ -269,7 +273,11 @@ export class SoulLinker extends MasaModuleBase {
       await this.masa.config.signer.getAddress(),
     );
 
-    return { signature, signatureDate, expirationDate };
+    return {
+      signature,
+      signatureDate,
+      expirationDate,
+    };
   };
 
   /**

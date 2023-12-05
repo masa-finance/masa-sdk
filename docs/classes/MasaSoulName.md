@@ -267,7 +267,7 @@ ___
 
 ### verify
 
-▸ **verify**(`soulName`): `Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
+▸ **verify**(`soulName`): `Promise`\<[`VerifyResult`](../interfaces/VerifyResult.md)\>
 
 #### Parameters
 
@@ -277,4 +277,4 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
+`Promise`\<[`VerifyResult`](../interfaces/VerifyResult.md)\>

@@ -23,7 +23,7 @@
 
 ### errorCode
 
-• **errorCode**: [`SoulNameErrorCodes`](../enums/SoulNameErrorCodes.md)
+• `Optional` **errorCode**: [`CreateSoulNameErrorCodes`](../modules.md#createsoulnameerrorcodes)
 
 #### Inherited from
 

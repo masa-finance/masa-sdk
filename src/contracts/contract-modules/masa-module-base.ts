@@ -202,7 +202,10 @@ export abstract class MasaModuleBase extends MasaBase {
    * @param paymentAddress
    * @param price
    */
-  protected formatPrice = async (paymentAddress: string, price: BigNumber) => {
+  protected formatPrice = async (
+    paymentAddress: string,
+    price: BigNumber,
+  ): Promise<string> => {
     let decimals = 18;
     if (paymentAddress !== constants.AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
@@ -220,7 +223,10 @@ export abstract class MasaModuleBase extends MasaBase {
    * @param price
    * @param slippage
    */
-  protected static addSlippage = (price: BigNumber, slippage: number) => {
+  protected static addSlippage = (
+    price: BigNumber,
+    slippage: number,
+  ): BigNumber => {
     price = price.add(price.mul(slippage).div(10000));
     return price;
   };

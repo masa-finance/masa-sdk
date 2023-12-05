@@ -8,6 +8,7 @@
 
 ### Enumerations
 
+- [BaseErrorCodes](enums/BaseErrorCodes.md)
 - [SoulNameErrorCodes](enums/SoulNameErrorCodes.md)
 
 ### Classes
@@ -91,6 +92,7 @@
 - [UpdateCreditScoreResult](interfaces/UpdateCreditScoreResult.md)
 - [User](interfaces/User.md)
 - [VerifyGreenResult](interfaces/VerifyGreenResult.md)
+- [VerifyResult](interfaces/VerifyResult.md)
 
 ### Type Aliases
 
@@ -100,6 +102,7 @@
 - [Balances](modules.md#balances)
 - [BreakLinkResult](modules.md#breaklinkresult)
 - [CreateLinkResult](modules.md#createlinkresult)
+- [CreateSoulNameErrorCodes](modules.md#createsoulnameerrorcodes)
 - [ERC20Currencies](modules.md#erc20currencies)
 - [Environment](modules.md#environment)
 - [EnvironmentName](modules.md#environmentname)
@@ -158,6 +161,7 @@
 - [getNetworkNameByChainId](modules.md#getnetworknamebychainid)
 - [getSession](modules.md#getsession)
 - [getSoulNameMetadataPrefix](modules.md#getsoulnamemetadataprefix)
+- [isBaseResult](modules.md#isbaseresult)
 - [isBigNumber](modules.md#isbignumber)
 - [isERC20Currency](modules.md#iserc20currency)
 - [isNativeCurrency](modules.md#isnativecurrency)
@@ -183,6 +187,7 @@
 - [loadSoulNameDetailsByAddress](modules.md#loadsoulnamedetailsbyaddress)
 - [loadSoulNames](modules.md#loadsoulnames)
 - [loadSoulNamesByNames](modules.md#loadsoulnamesbynames)
+- [logger](modules.md#logger)
 - [login](modules.md#login)
 - [logout](modules.md#logout)
 - [mintGreen](modules.md#mintgreen)
@@ -246,6 +251,12 @@ ___
 ### CreateLinkResult
 
 Ƭ **CreateLinkResult**: [`BaseResult`](interfaces/BaseResult.md) & \{ `passport?`: `string`  }
+
+___
+
+### CreateSoulNameErrorCodes
+
+Ƭ **CreateSoulNameErrorCodes**: [`SoulNameErrorCodes`](enums/SoulNameErrorCodes.md) \| [`BaseErrorCodes`](enums/BaseErrorCodes.md)
 
 ___
 
@@ -838,6 +849,22 @@ try to evaluate the right prefix
 
 ___
 
+### isBaseResult
+
+▸ **isBaseResult**(`message`): message is BaseResult
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `unknown` |
+
+#### Returns
+
+message is BaseResult
+
+___
+
 ### isBigNumber
 
 ▸ **isBigNumber**(`item`): item is BigNumber
@@ -1261,6 +1288,23 @@ ___
 #### Returns
 
 `Promise`\<[`SoulNameDetails`](interfaces/SoulNameDetails.md)[]\>
+
+___
+
+### logger
+
+▸ **logger**(`method`, `message`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `method` | ``"warn"`` \| ``"error"`` \| ``"log"`` \| ``"info"`` \| ``"dir"`` |
+| `message` | `unknown` |
+
+#### Returns
+
+`void`
 
 ___
 
@@ -1691,7 +1735,7 @@ ___
 
 ### verifyByName
 
-▸ **verifyByName**(`masa`, `soulName`): `Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
+▸ **verifyByName**(`masa`, `soulName`): `Promise`\<[`VerifyResult`](interfaces/VerifyResult.md)\>
 
 #### Parameters
 
@@ -1702,7 +1746,7 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
+`Promise`\<[`VerifyResult`](interfaces/VerifyResult.md)\>
 
 ___
 

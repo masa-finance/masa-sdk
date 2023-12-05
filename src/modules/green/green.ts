@@ -2,6 +2,14 @@ import type { SoulboundGreen } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
 import type { MasaInterface, PaymentMethod } from "../../interface";
+import {
+  BaseResult,
+  BaseResultWithTokenId,
+  GenerateGreenResult,
+  GreenBaseResult,
+  GreenDetails,
+  VerifyGreenResult,
+} from "../../interface";
 import { MasaLinkable } from "../masa-linkable";
 import { createGreen, generateGreen, mintGreen, verifyGreen } from "./create";
 import { listGreens } from "./list";
@@ -16,14 +24,15 @@ export class MasaGreen extends MasaLinkable<SoulboundGreen> {
    * Generates a new verification attempt
    * @param phoneNumber
    */
-  generate = (phoneNumber: string) => generateGreen(this.masa, phoneNumber);
+  generate = (phoneNumber: string): Promise<GenerateGreenResult> =>
+    generateGreen(this.masa, phoneNumber);
 
   /**
    * Tries to verify the current verification attempt
    * @param phoneNumber
    * @param code
    */
-  verify = (phoneNumber: string, code: string) =>
+  verify = (phoneNumber: string, code: string): Promise<VerifyGreenResult> =>
     verifyGreen(this.masa, phoneNumber, code);
 
   /**
@@ -38,7 +47,7 @@ export class MasaGreen extends MasaLinkable<SoulboundGreen> {
     authorityAddress: string,
     signatureDate: number,
     signature: string,
-  ) =>
+  ): Promise<BaseResultWithTokenId> =>
     mintGreen(
       this.masa,
       paymentMethod,
@@ -57,24 +66,27 @@ export class MasaGreen extends MasaLinkable<SoulboundGreen> {
     paymentMethod: PaymentMethod = "ETH",
     phoneNumber: string,
     code: string,
-  ) => createGreen(this.masa, paymentMethod, phoneNumber, code);
+  ): Promise<GreenBaseResult> =>
+    createGreen(this.masa, paymentMethod, phoneNumber, code);
 
   /**
    * Burns a green
    * @param greenId
    */
-  burn = (greenId: BigNumber) => this.masa.contracts.green.burn(greenId);
+  burn = (greenId: BigNumber): Promise<BaseResult> =>
+    this.masa.contracts.green.burn(greenId);
 
   /**
    * Lits all greens on the current network
    * @param address
    */
-  list = (address?: string) => listGreens(this.masa, address);
+  list = (address?: string): Promise<GreenDetails[]> =>
+    listGreens(this.masa, address);
 
   /**
    * Loads all greens for an identity on the current network
    * @param identityIdOrAddress
    */
-  load = (identityIdOrAddress: BigNumber | string) =>
+  load = (identityIdOrAddress: BigNumber | string): Promise<GreenDetails[]> =>
     loadGreens(this.masa, identityIdOrAddress);
 }

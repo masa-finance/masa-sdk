@@ -27,7 +27,11 @@
 
 ### errorCode
 
-• `Optional` **errorCode**: `number`
+• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
+
+#### Inherited from
+
+[BaseResultWithTokenId](BaseResultWithTokenId.md).[errorCode](BaseResultWithTokenId.md#errorcode)
 
 ___
 

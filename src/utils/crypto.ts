@@ -16,7 +16,7 @@ import { logger } from "./logger";
  *
  * @param data
  */
-const hashData = (data: BytesLike) => utils.keccak256(data);
+const hashData = (data: BytesLike): string => utils.keccak256(data);
 
 /**
  *
