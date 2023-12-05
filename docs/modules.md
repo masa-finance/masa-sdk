@@ -1752,7 +1752,7 @@ ___
 
 ### verifyGreen
 
-▸ **verifyGreen**(`masa`, `phoneNumber`, `code`): `Promise`\<`undefined` \| [`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
+▸ **verifyGreen**(`masa`, `phoneNumber`, `code`): `Promise`\<[`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
 
 #### Parameters
 
@@ -1764,7 +1764,7 @@ ___
 
 #### Returns
 
-`Promise`\<`undefined` \| [`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
+`Promise`\<[`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
 
 ___
 

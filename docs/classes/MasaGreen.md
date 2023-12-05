@@ -198,7 +198,7 @@ ___
 
 ### verify
 
-▸ **verify**(`phoneNumber`, `code`): `Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
+▸ **verify**(`phoneNumber`, `code`): `Promise`\<[`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
 
 Tries to verify the current verification attempt
 
@@ -211,4 +211,4 @@ Tries to verify the current verification attempt
 
 #### Returns
 
-`Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
+`Promise`\<[`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>

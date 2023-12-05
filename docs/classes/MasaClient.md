@@ -95,7 +95,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `generate` | (`phoneNumber`: `string`) => `Promise`\<[`GenerateGreenResult`](../interfaces/GenerateGreenResult.md)\> |
-| `verify` | (`phoneNumber`: `string`, `code`: `string`) => `Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\> |
+| `verify` | (`phoneNumber`: `string`, `code`: `string`) => `Promise`\<[`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\> |
 
 ___
 
