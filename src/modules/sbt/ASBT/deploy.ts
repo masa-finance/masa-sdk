@@ -6,7 +6,9 @@ import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typec
 import { constants, ContractFactory } from "ethers";
 
 import { Messages } from "../../../collections";
+import { parseEthersError } from "../../../contracts/contract-modules/ethers";
 import type { DeployResult, MasaInterface } from "../../../interface";
+import { logger } from "../../../utils";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export const deployASBT = async ({
@@ -32,7 +34,8 @@ export const deployASBT = async ({
 
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
 
-  console.log(
+  logger(
+    "log",
     `Deploying ASBT contract to network '${masa.config.networkName}'`,
   );
 
@@ -41,7 +44,7 @@ export const deployASBT = async ({
       constants.AddressZero ||
     !masa.contracts.instances.SoulboundIdentityContract.hasAddress
   ) {
-    console.warn("Identity contract is not deployed to this network!");
+    logger("warn", "Identity contract is not deployed to this network!");
   }
 
   const contractFactory: ContractFactory = new ContractFactory(
@@ -88,13 +91,10 @@ export const deployASBT = async ({
   const abiEncodedDeployASBTArguments =
     contractFactory.interface.encodeDeploy(deployASBTArguments);
   if (masa.config.verbose) {
-    console.dir(
-      {
-        deployASBTArguments,
-        abiEncodedDeployASBTArguments,
-      },
-      { depth: null },
-    );
+    logger("dir", {
+      deployASBTArguments,
+      abiEncodedDeployASBTArguments,
+    });
   }
 
   try {
@@ -102,7 +102,9 @@ export const deployASBT = async ({
       deployTransaction: { wait, hash },
       address,
     } = await contractFactory.deploy(...deployASBTArguments);
-    console.log(
+
+    logger(
+      "log",
       Messages.WaitingToFinalize(
         hash,
         masa.config.network?.blockExplorerUrls?.[0],
@@ -111,7 +113,8 @@ export const deployASBT = async ({
 
     await wait();
 
-    console.log(
+    logger(
+      "log",
       `ASBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`,
     );
 
@@ -121,9 +124,12 @@ export const deployASBT = async ({
       abiEncodedConstructorArguments: abiEncodedDeployASBTArguments,
     };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("ASBT deployment failed!", error.message);
-    }
+    let msg = "ASBT deployment failed! ";
+
+    const { message } = parseEthersError(error);
+    msg += message;
+
+    logger("error", msg);
   }
 
   return result;

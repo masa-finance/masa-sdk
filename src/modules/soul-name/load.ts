@@ -5,7 +5,7 @@ import type {
   MasaInterface,
   SoulNameDetails,
 } from "../../interface";
-import { isBigNumber } from "../../utils";
+import { isBigNumber, logger } from "../../utils";
 
 export const loadSoulNameByTokenId = async (
   masa: MasaInterface,
@@ -41,9 +41,11 @@ export const loadSoulNameByTokenId = async (
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(
-        `Failed to load Soul Name with TokenID ${tokenId.toString()}`,
-        error.message,
+      logger(
+        "error",
+        `Failed to load Soul Name with TokenID ${tokenId.toString()} ${
+          error.message
+        }`,
       );
     }
   }
@@ -64,7 +66,10 @@ export const loadSoulNameByName = async (
     result = await loadSoulNameByTokenId(masa, tokenId);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Failed to load Soul Name '${soulName}'`, error.message);
+      logger(
+        "error",
+        `Failed to load Soul Name '${soulName}' ${error.message}`,
+      );
     }
   }
 

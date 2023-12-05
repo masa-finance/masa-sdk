@@ -4,7 +4,7 @@ import { Signer, utils } from "ethers";
 
 import type { PaymentMethod, PriceInformation } from "../../../interface";
 import type { ContractFactory } from "../../../interface/contract-factory";
-import { isNativeCurrency } from "../../../utils";
+import { isNativeCurrency, logger } from "../../../utils";
 import { MasaModuleBase } from "../masa-module-base";
 
 const checkExists = async (
@@ -110,7 +110,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
     // address invalid, unable to load
     if (!utils.isAddress(address)) {
       errorMessage = `SBT Address '${address}' is not valid!`;
-      console.error(errorMessage);
+      logger("error", errorMessage);
       throw new Error(errorMessage);
     }
 
@@ -131,10 +131,10 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
 
     // failed to load, unable to load
     if (!contract) {
-      console.error(errorMessage);
+      logger("error", errorMessage);
       throw new Error(errorMessage);
     } else if (this.masa.config.verbose) {
-      console.info(`Loaded contract with name: ${await contract.name()}`);
+      logger("info", `Loaded contract with name: ${await contract.name()}`);
     }
 
     return contract;

@@ -7,7 +7,9 @@ import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typec
 import { constants, ContractFactory } from "ethers";
 
 import { Messages } from "../../../collections";
+import { parseEthersError } from "../../../contracts/contract-modules/ethers";
 import type { DeployResult, MasaInterface } from "../../../interface";
+import { logger } from "../../../utils";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export const deploySSSBT = async ({
@@ -37,7 +39,8 @@ export const deploySSSBT = async ({
   adminAddress = adminAddress || signerAddress;
   authorityAddress = authorityAddress || signerAddress;
 
-  console.log(
+  logger(
+    "log",
     `Deploying SSSBT contract to network '${masa.config.networkName}'`,
   );
 
@@ -46,7 +49,7 @@ export const deploySSSBT = async ({
       constants.AddressZero ||
     !masa.contracts.instances.SoulboundIdentityContract.hasAddress
   ) {
-    console.warn("Identity contract is not deployed to this network!");
+    logger("warn", "Identity contract is not deployed to this network!");
   }
 
   const contractFactory: ContractFactory = new ContractFactory(
@@ -93,13 +96,10 @@ export const deploySSSBT = async ({
   const abiEncodedDeploySSSBTArguments =
     contractFactory.interface.encodeDeploy(deploySSSBTArguments);
   if (masa.config.verbose) {
-    console.dir(
-      {
-        deploySSSBTArguments,
-        abiEncodedDeploySSSBTArguments,
-      },
-      { depth: null },
-    );
+    logger("dir", {
+      deploySSSBTArguments,
+      abiEncodedDeploySSSBTArguments,
+    });
   }
 
   try {
@@ -111,7 +111,8 @@ export const deploySSSBT = async ({
       ...deploySSSBTArguments,
     )) as ReferenceSBTSelfSovereign;
 
-    console.log(
+    logger(
+      "log",
       Messages.WaitingToFinalize(
         hash,
         masa.config.network?.blockExplorerUrls?.[0],
@@ -121,11 +122,12 @@ export const deploySSSBT = async ({
     await wait();
 
     if (adminAddress === signerAddress) {
-      console.log(`Adding authority: '${authorityAddress}' to '${address}'`);
+      logger("log", `Adding authority: '${authorityAddress}' to '${address}'`);
 
       const { wait, hash } = await addAuthority(authorityAddress);
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           masa.config.network?.blockExplorerUrls?.[0],
@@ -134,14 +136,16 @@ export const deploySSSBT = async ({
 
       await wait();
     } else {
-      console.log(
+      logger(
+        "log",
         `Authority: ${authorityAddress} could not be added because ${signerAddress} is not the admin!`,
       );
 
-      console.log(`Please add authority manually from ${adminAddress}`);
+      logger("log", `Please add authority manually from ${adminAddress}`);
     }
 
-    console.log(
+    logger(
+      "log",
       `SSSBT successfully deployed to '${masa.config.networkName}' with contract address: '${address}'`,
     );
 
@@ -151,9 +155,12 @@ export const deploySSSBT = async ({
       abiEncodedConstructorArguments: abiEncodedDeploySSSBTArguments,
     };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("SSSBT deployment failed!", error.message);
-    }
+    let msg = "SSSBT deployment failed! ";
+
+    const { message } = parseEthersError(error);
+    msg += message;
+
+    logger("error", msg);
   }
 
   return result;

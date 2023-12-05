@@ -10,7 +10,8 @@ import type {
 } from "../../interface";
 import type { Link } from "../../modules";
 import { loadLinks } from "../../modules";
-import { isNativeCurrency, signTypedData } from "../../utils";
+import { isNativeCurrency, logger, signTypedData } from "../../utils";
+import { parseEthersError } from "./ethers";
 import { MasaModuleBase } from "./masa-module-base";
 
 export type BreakLinkResult = BaseResult;
@@ -77,7 +78,10 @@ export class SoulLinker extends MasaModuleBase {
     }
 
     if (this.masa.config.verbose) {
-      console.info({ paymentAddress, price });
+      logger("dir", {
+        paymentAddress,
+        price,
+      });
     }
 
     // total price
@@ -185,7 +189,8 @@ export class SoulLinker extends MasaModuleBase {
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -193,13 +198,17 @@ export class SoulLinker extends MasaModuleBase {
       );
 
       await wait();
+
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Adding link failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Adding link failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;
@@ -283,13 +292,14 @@ export class SoulLinker extends MasaModuleBase {
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
       result.errorCode = BaseErrorCodes.DoesNotExist;
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
     const links: Link[] = await loadLinks(this.masa, contract, tokenId);
 
-    console.log({ links, readerIdentityId });
+    logger("dir", { links, readerIdentityId });
 
     const filteredLinks: Link[] = links.filter(
       (link: Link) =>
@@ -298,15 +308,10 @@ export class SoulLinker extends MasaModuleBase {
         !link.isRevoked,
     );
 
-    console.log({ filteredLinks });
+    logger("dir", { filteredLinks });
 
     for (const link of filteredLinks) {
-      console.log(`Breaking link ${JSON.stringify(link, undefined, 2)}`);
-
-      const {
-        revokeLink,
-        estimateGas: { revokeLink: estimateGas },
-      } = this.masa.contracts.instances.SoulLinkerContract;
+      logger("log", `Breaking link ${JSON.stringify(link, undefined, 2)}`);
 
       const revokeLinksArguments: [
         BigNumber,
@@ -322,23 +327,43 @@ export class SoulLinker extends MasaModuleBase {
         link.signatureDate,
       ];
 
-      const gasLimit = await this.estimateGasWithSlippage(
-        estimateGas,
-        revokeLinksArguments,
-      );
+      const {
+        revokeLink,
+        estimateGas: { revokeLink: estimateGas },
+      } = this.masa.contracts.instances.SoulLinkerContract;
 
-      const { wait, hash } = await revokeLink(...revokeLinksArguments, {
-        gasLimit,
-      });
+      try {
+        const gasLimit = await this.estimateGasWithSlippage(
+          estimateGas,
+          revokeLinksArguments,
+        );
 
-      console.log(
-        Messages.WaitingToFinalize(
-          hash,
-          this.masa.config.network?.blockExplorerUrls?.[0],
-        ),
-      );
+        const { wait, hash } = await revokeLink(...revokeLinksArguments, {
+          gasLimit,
+        });
 
-      await wait();
+        logger(
+          "log",
+          Messages.WaitingToFinalize(
+            hash,
+            this.masa.config.network?.blockExplorerUrls?.[0],
+          ),
+        );
+
+        await wait();
+
+        result.success = true;
+        delete result.errorCode;
+      } catch (error: unknown) {
+        result.message = "Breaking link failed! ";
+
+        const { message, errorCode } = parseEthersError(error);
+
+        result.message += message;
+        result.errorCode = errorCode;
+
+        logger("error", result);
+      }
     }
 
     return result;

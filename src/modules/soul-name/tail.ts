@@ -2,6 +2,7 @@ import { TransferEvent } from "@masa-finance/masa-contracts-identity/dist/typech
 import { constants } from "ethers";
 
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { logger } from "../../utils";
 import { printSoulName } from "./helpers";
 import { loadSoulNameByTokenId } from "./load";
 
@@ -65,7 +66,7 @@ export const tailSoulNamesAndPrint = async (
       index++;
     }
   } else {
-    console.error("No soulnames found!");
+    logger("error", "No soulnames found!");
   }
 
   return soulNames;

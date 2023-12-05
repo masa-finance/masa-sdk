@@ -2,7 +2,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 
 import type { MasaInterface } from "../../interface";
 import { CreditScoreDetails, ICreditScore } from "../../interface";
-import { isBigNumber, patchMetadataUrl } from "../../utils";
+import { isBigNumber, logger, patchMetadataUrl } from "../../utils";
 
 export const loadCreditScoreDetails = async (
   masa: MasaInterface,
@@ -19,7 +19,7 @@ export const loadCreditScoreDetails = async (
         );
 
         if (masa.config.verbose) {
-          console.info(`Credit Score Metadata URL: '${tokenUri}'`);
+          logger("info", `Credit Score Metadata URL: '${tokenUri}'`);
         }
 
         const metadata = <ICreditScore | undefined>(
@@ -92,7 +92,7 @@ export const loadCreditScores = async (
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Loading credit scores failed! ${error.message}`);
+      logger("error", `Loading credit scores failed! ${error.message}`);
     }
   }
 

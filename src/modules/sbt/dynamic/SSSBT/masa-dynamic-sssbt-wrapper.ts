@@ -6,6 +6,7 @@ import type {
   BaseResultWithTokenId,
   PaymentMethod,
 } from "../../../../interface";
+import { logger } from "../../../../utils";
 import { MasaDynamicSBTWrapper } from "../masa-dynamic-sbt-wrapper";
 
 type SignSetStateResult = BaseResult & {
@@ -38,14 +39,15 @@ export class MasaDynamicSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(
+    logger(
+      "log",
       `Signing Set State for Dynamic SSSBT on: '${this.masa.config.networkName}'`,
     );
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`State: '${state}': ${stateValue}`);
-    console.log(`To receiver: '${receiver}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `State: '${state}': ${stateValue}`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const signatureDate = Date.now();
 
@@ -76,7 +78,8 @@ export class MasaDynamicSSSBTWrapper<
     if (stateAlreadySet) {
       result.message = `State '${state}' already set on ${name} for ${receiver}`;
       result.errorCode = BaseErrorCodes.AlreadyExists;
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
@@ -87,7 +90,8 @@ export class MasaDynamicSSSBTWrapper<
     ) {
       result.message = `State '${state}' unknown to contract ${name}`;
       result.errorCode = BaseErrorCodes.DoesNotExist;
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
@@ -98,7 +102,7 @@ export class MasaDynamicSSSBTWrapper<
       const { signature, authorityAddress } = signResult;
 
       if (this.masa.config.verbose) {
-        console.info({
+        logger("dir", {
           signature,
           authorityAddress,
           signatureDate,
@@ -129,11 +133,14 @@ export class MasaDynamicSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Minting Dynamic SSSBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receiver}'`);
+    logger(
+      "log",
+      `Minting Dynamic SSSBT on: '${this.masa.config.networkName}'`,
+    );
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const { mint } = this.masa.contracts["dynamic-sssbt"].attach(this.contract);
 
@@ -162,14 +169,15 @@ export class MasaDynamicSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(
+    logger(
+      "log",
       `Setting State for Dynamic SSSBT on: '${this.masa.config.networkName}'`,
     );
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`State: '${state}': ${stateValue}`);
-    console.log(`To receiver: '${receiver}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `State: '${state}': ${stateValue}`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const { setState } = this.masa.contracts["dynamic-sssbt"].attach(
       this.contract,

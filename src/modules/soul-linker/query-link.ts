@@ -8,7 +8,7 @@ import type {
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
-import { patchMetadataUrl } from "../../utils";
+import { logger, patchMetadataUrl } from "../../utils";
 import { parsePassport } from "./parse-passport";
 
 export type QueryLinkResult = BaseResult;
@@ -38,7 +38,8 @@ export const queryLink = async (
 
   if (identityId.toString() !== readerIdentityId.toString()) {
     result.message = `Reader identity mismatch! This passport was issued for ${readerIdentityId.toString()}`;
-    console.error(result.message);
+    logger("error", result);
+
     return result;
   }
 
@@ -50,18 +51,22 @@ export const queryLink = async (
   if (!ownerIdentityId) {
     result.message = "Owner identity not found";
     result.errorCode = BaseErrorCodes.NotFound;
+    logger("error", result);
 
-    console.error(result.message);
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Querying link for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
   );
-  console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
-  console.log(`to Identity ${readerIdentityId.toString()} (${address})\n`);
+  logger(
+    "log",
+    `from Identity ${ownerIdentityId.toString()} (${ownerAddress})`,
+  );
+  logger("log", `to Identity ${readerIdentityId.toString()} (${address})\n`);
 
   const txHash = await masa.contracts.soulLinker.addLink(
     contract.address,
@@ -74,13 +79,13 @@ export const queryLink = async (
     signature,
   );
 
-  console.log("tx hash for middleware", txHash);
+  logger("log", `tx hash for middleware ${txHash}`);
 
   const { "tokenURI(uint256)": tokenURI } = contract;
 
   const tokenUri = patchMetadataUrl(masa, await tokenURI(tokenId));
 
-  console.log({ tokenUri });
+  logger("dir", { tokenUri });
 
   result.success = true;
   delete result.errorCode;

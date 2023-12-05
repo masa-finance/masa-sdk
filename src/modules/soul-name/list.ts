@@ -1,4 +1,5 @@
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { logger } from "../../utils";
 import { printSoulName } from "./helpers";
 import { loadSoulNameDetailsByAddress } from "./load";
 
@@ -36,7 +37,7 @@ export const listSoulNamesAndPrint = async (
       index++;
     }
   } else {
-    console.error(`No soulnames found for '${address}'`);
+    logger("error", `No soulnames found for '${address}'`);
   }
 
   return soulNames;

@@ -4,6 +4,7 @@ import type { ApiConfig } from "arweave/node/lib/api";
 import axios from "axios";
 
 import type { MasaConfig } from "../../interface";
+import { logger } from "../logger";
 
 export class MasaArweave extends Arweave {
   constructor(
@@ -41,7 +42,7 @@ export class MasaArweave extends Arweave {
       }
     } catch (error: unknown) {
       if (error instanceof Error && this.masaConfig.verbose) {
-        console.error("Arweave getData failed!", error.message);
+        logger("error", `Arweave getData failed! ${error.message}`);
       }
     }
 
@@ -50,7 +51,8 @@ export class MasaArweave extends Arweave {
       const url = `${config.api.protocol}://${config.api.host}:${config.api.port}/${txId}`;
 
       if (this.masaConfig.verbose) {
-        console.error(
+        logger(
+          "error",
           `Failed to load arweave tx id: ${txId} getting ${url} instead`,
         );
       }

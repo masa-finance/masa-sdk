@@ -2,7 +2,7 @@ import type { BigNumber } from "ethers";
 
 import { BaseErrorCodes, Templates } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
-import { signMessage, unpackSessionId } from "../../utils";
+import { logger, signMessage, unpackSessionId } from "../../utils";
 
 export interface LoginResult extends BaseResult {
   address?: string;
@@ -11,7 +11,7 @@ export interface LoginResult extends BaseResult {
 }
 
 export const login = async (masa: MasaInterface): Promise<LoginResult> => {
-  console.log("Logging in");
+  logger("log", "Logging in");
 
   let result: LoginResult = {
     success: false,
@@ -32,12 +32,12 @@ export const login = async (masa: MasaInterface): Promise<LoginResult> => {
       const address = await masa.config.signer.getAddress();
 
       if (masa.config.verbose) {
-        console.info(`Signer Address: '${address}'`);
+        logger("info", `Signer Address: '${address}'`);
       }
 
-      console.info(`Signing: \n'${msg}'\n`);
+      logger("info", `Signing: \n'${msg}'\n`);
       const signature = await signMessage(msg, masa.config.signer);
-      console.log(`Signature: '${signature}'`);
+      logger("log", `Signature: '${signature}'`);
 
       if (signature) {
         const checkSignatureResponse = await masa.client.session.checkSignature(
@@ -47,12 +47,13 @@ export const login = async (masa: MasaInterface): Promise<LoginResult> => {
         );
 
         if (checkSignatureResponse) {
-          console.log("\nLogged in as:");
-          console.log(`Address: '${address}'`);
+          logger("log", "\nLogged in as:");
+          logger("log", `Address: '${address}'`);
 
           if (masa.config.verbose) {
-            console.log(`User ID: '${checkSignatureResponse.userId}'`);
-            console.log(
+            logger("log", `User ID: '${checkSignatureResponse.userId}'`);
+            logger(
+              "log",
               `Session ID: '${unpackSessionId(challengeData.cookie)}'`,
             );
           }
@@ -66,13 +67,13 @@ export const login = async (masa: MasaInterface): Promise<LoginResult> => {
         }
       } else {
         result.message = "Creating signature failed!";
-        console.error(result.message);
+        logger("error", result);
       }
     }
   } else {
     result.message =
       "Already logged in! Please logout before logging in again.";
-    console.error(result.message);
+    logger("error", result);
   }
 
   return result;

@@ -6,5 +6,6 @@ export * from "./is-big-number";
 export * from "./is-ERC20-currency";
 export * from "./is-native-currency";
 export * from "./is-soul-name-metadata-store-result";
+export * from "./logger";
 export * from "./patch-metadata-url";
 export * from "./unpack-session-id";

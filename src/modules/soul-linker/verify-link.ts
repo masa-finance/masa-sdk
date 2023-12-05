@@ -2,6 +2,7 @@ import type { BigNumber, Contract } from "ethers";
 
 import { BaseErrorCodes } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 import { Link, loadLinks } from "./list-links";
 
 export type VerifyLinkResult = BaseResult & { verified?: boolean };
@@ -24,7 +25,8 @@ export const verifyLink = async (
 
   if (!readerIdentityId) {
     result.message = "Cant find reader identity";
-    console.error(result.message);
+    logger("error", result);
+
     return result;
   }
 
@@ -40,7 +42,8 @@ export const verifyLink = async (
 
   if (!readerAddress) {
     result.message = `No Identity address found for Identity ${readerIdentityId}`;
-    console.error(result.message);
+    logger("error", result);
+
     return result;
   }
 
@@ -52,21 +55,25 @@ export const verifyLink = async (
 
     if (!ownerIdentityId) {
       result.message = "Owner identity not found";
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
-    console.log(
+    logger(
+      "log",
       `Verifying link for '${await contract.name()}' (${
         contract.address
       }) ID: ${tokenId.toString()}`,
     );
-    console.log(
+    logger(
+      "log",
       `from Identity ${ownerIdentityId.toString()} (${ownerAddress}) ${
         ownerIdentityId.toString() === identityId?.toString() ? "You" : ""
       }`,
     );
-    console.log(
+    logger(
+      "log",
       `to Identity ${readerIdentityId.toString()} (${readerAddress}) ${
         readerIdentityId.toString() === identityId?.toString() ? "You" : ""
       }\n`,
@@ -74,7 +81,8 @@ export const verifyLink = async (
 
     if (readerIdentityId.toString() === ownerIdentityId.toString()) {
       result.message = "Reader and owner identity must be different!";
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
@@ -105,7 +113,7 @@ export const verifyLink = async (
             result.message = "Link expired!";
             break;
           default:
-            console.error((error as { errorName: string }).errorName);
+            logger("error", (error as { errorName: string }).errorName);
         }
       }
     }
@@ -114,13 +122,13 @@ export const verifyLink = async (
       result.message = "Link not found!";
       result.errorCode = BaseErrorCodes.NotFound;
 
-      console.error(result.message);
+      logger("error", result);
     }
 
-    console.log({ validateLinkResult: result });
+    logger("dir", { validateLinkResult: result });
   } catch {
     result.message = `Token ${tokenId.toString()} does not exist!`;
-    console.error(result.message);
+    logger("error", result);
   }
 
   return result;

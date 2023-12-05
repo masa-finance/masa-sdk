@@ -6,7 +6,7 @@ import type {
   IIdentity,
   MasaInterface,
 } from "../../interface";
-import { isBigNumber, patchMetadataUrl } from "../../utils";
+import { isBigNumber, logger, patchMetadataUrl } from "../../utils";
 import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (
@@ -27,7 +27,7 @@ export const loadIdentityByAddress = async (
     }
 
     if (!identityId && masa.config.verbose) {
-      console.error(Messages.NoIdentity(address));
+      logger("error", Messages.NoIdentity(address));
     }
   } catch {
     // ignore
@@ -62,7 +62,7 @@ export const loadIdentityDetails = async (
   );
 
   if (masa.config.verbose) {
-    console.info(`Identity Metadata URL: '${tokenUri}'`);
+    logger("info", `Identity Metadata URL: '${tokenUri}'`);
   }
 
   const metadata: IIdentity | undefined = <IIdentity | undefined>(
@@ -88,7 +88,7 @@ export const loadIdentity = async (
   if (identityId) {
     result = await loadIdentityDetails(masa, identityId);
   } else {
-    console.error(Messages.NoIdentity(address));
+    logger("error", Messages.NoIdentity(address));
   }
 
   return result;

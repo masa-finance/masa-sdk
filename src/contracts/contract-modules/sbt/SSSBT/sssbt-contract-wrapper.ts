@@ -13,6 +13,7 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../../../utils";
 import { parseEthersError } from "../../ethers";
@@ -107,14 +108,7 @@ export class SSSBTContractWrapper<
     const sssbtMintPriceInfo = await this.getPrice(paymentMethod, slippage);
 
     if (this.masa.config.verbose) {
-      console.dir(
-        {
-          sssbtMintPriceInfo,
-        },
-        {
-          depth: null,
-        },
-      );
+      logger("dir", { sssbtMintPriceInfo });
     }
 
     return sssbtMintPriceInfo;
@@ -147,7 +141,7 @@ export class SSSBTContractWrapper<
       limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
-        console.info("Loading limit failed, falling back to 1!");
+        logger("info", "Loading limit failed, falling back to 1!");
       }
     }
 
@@ -157,7 +151,8 @@ export class SSSBTContractWrapper<
       if (limit > 0 && balance.gte(limit)) {
         result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
         result.errorCode = BaseErrorCodes.LimitOutOfBounds;
-        console.error(result.message);
+        logger("error", result);
+
         return result;
       }
     } catch (error: unknown) {
@@ -168,7 +163,7 @@ export class SSSBTContractWrapper<
       result.message += message;
       result.errorCode = errorCode;
 
-      console.warn(result.message, { errorCode });
+      logger("warn", result);
 
       return result;
     }
@@ -206,15 +201,10 @@ export class SSSBTContractWrapper<
     );
 
     if (this.masa.config.verbose) {
-      console.dir(
-        {
-          mintSSSBTArguments,
-          mintSSSBTOverrides,
-        },
-        {
-          depth: null,
-        },
-      );
+      logger("dir", {
+        mintSSSBTArguments,
+        mintSSSBTOverrides,
+      });
     }
 
     const {
@@ -236,7 +226,8 @@ export class SSSBTContractWrapper<
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -253,7 +244,8 @@ export class SSSBTContractWrapper<
 
       if (mintEvent) {
         const { args } = mintEvent;
-        console.log(
+        logger(
+          "log",
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
@@ -269,7 +261,7 @@ export class SSSBTContractWrapper<
       result.message += message;
       result.errorCode = errorCode;
 
-      console.error(result.message, { errorCode });
+      logger("error", result);
     }
 
     return result;

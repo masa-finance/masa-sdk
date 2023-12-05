@@ -1,4 +1,5 @@
 import type { ISession, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 
 export const getSession = async (
   masa: MasaInterface,
@@ -6,9 +7,9 @@ export const getSession = async (
   const session = await masa.client.session.check();
 
   if (session) {
-    console.log("User: ", session.user);
-    console.log(`Signer Address: '${await masa.config.signer.getAddress()}'`);
-    console.log("\n");
+    logger("log", `User: ${session.user}`);
+    logger("log", `Signer Address: '${await masa.config.signer.getAddress()}'`);
+    logger("log", "\n");
   }
 
   return session;

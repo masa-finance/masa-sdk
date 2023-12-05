@@ -4,6 +4,7 @@ import type { BaseContract } from "ethers";
 
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { MasaBase } from "../masa-base";
+import { logger } from "../utils";
 import { CreditScore } from "./contract-modules/credit-score";
 import { Green } from "./contract-modules/green";
 import { Identity } from "./contract-modules/identity";
@@ -127,7 +128,7 @@ export class MasaContracts extends MasaBase {
               result = contract.interface.parseLog(log);
             } catch (error: unknown) {
               if (error instanceof Error) {
-                console.warn(error.message);
+                logger("warn", `Parsing logs failed! ${error.message}`);
               }
             }
 

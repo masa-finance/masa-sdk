@@ -7,17 +7,13 @@ import type {
   SoulLinker,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
-import type {
-  ContractReceipt,
-  PayableOverrides,
-  TypedDataDomain,
-  TypedDataField,
-} from "ethers";
+import type { PayableOverrides, TypedDataDomain, TypedDataField } from "ethers";
 import { constants, utils } from "ethers";
 import { verifyTypedData } from "ethers/lib/utils";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
+  BaseResult,
   IIdentityContracts,
   MasaInterface,
   PaymentMethod,
@@ -25,7 +21,7 @@ import type {
 import { MasaBase } from "../../masa-base";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
-import { isERC20Currency, isNativeCurrency } from "../../utils";
+import { isERC20Currency, isNativeCurrency, logger } from "../../utils";
 import { parseEthersError } from "./ethers";
 
 const DEFAULT_GAS_LIMIT: number = 750_000;
@@ -51,8 +47,11 @@ export abstract class MasaModuleBase extends MasaBase {
     paymentMethod: PaymentMethod,
     spenderAddress: string,
     price: BigNumber,
-  ): Promise<ContractReceipt | undefined> => {
-    let contractReceipt;
+  ): Promise<BaseResult> => {
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     if (isERC20Currency(paymentMethod)) {
       const tokenContract: ERC20 = ERC20__factory.connect(
@@ -73,7 +72,8 @@ export abstract class MasaModuleBase extends MasaBase {
         // yes, lets set the allowance to the price
 
         if (this.masa.config.verbose) {
-          console.info(
+          logger(
+            "info",
             `Creating allowance for ${spenderAddress}: ${price.toString()}`,
           );
         }
@@ -98,7 +98,8 @@ export abstract class MasaModuleBase extends MasaBase {
           );
 
           if (this.masa.config.verbose) {
-            console.info(
+            logger(
+              "info",
               Messages.WaitingToFinalize(
                 hash,
                 this.masa.config.network?.blockExplorerUrls?.[0],
@@ -106,16 +107,24 @@ export abstract class MasaModuleBase extends MasaBase {
             );
           }
 
-          contractReceipt = await wait();
+          await wait();
+
+          result.success = true;
+          delete result.errorCode;
         } catch (error: unknown) {
-          if (error instanceof Error) {
-            console.error(`approve failed ${error.message}`);
-          }
+          result.message = "Approve failed! ";
+
+          const { message, errorCode } = parseEthersError(error);
+
+          result.message += message;
+          result.errorCode = errorCode;
+
+          logger("error", result);
         }
       }
     }
 
-    return contractReceipt;
+    return result;
   };
 
   /**
@@ -129,7 +138,8 @@ export abstract class MasaModuleBase extends MasaBase {
       : this.masa.config.network?.addresses?.tokens?.[paymentMethod];
 
     if (!paymentAddress) {
-      console.error(
+      logger(
+        "error",
         `Payment address not found for payment method: ${paymentMethod} falling back to native currency!`,
       );
       paymentAddress = constants.AddressZero;
@@ -176,18 +186,11 @@ export abstract class MasaModuleBase extends MasaBase {
       feeData = await this.masa.config.signer.provider?.getFeeData();
 
       if (this.masa.config.verbose) {
-        console.dir(
-          {
-            networkFeeInformation: feeData,
-          },
-          {
-            depth: null,
-          },
-        );
+        logger("dir", { networkFeeInformation: feeData });
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn("Unable to get network fee data!", error.message);
+        logger("warn", `Unable to get network fee data! ${error.message}`);
       }
     }
 
@@ -255,11 +258,16 @@ export abstract class MasaModuleBase extends MasaBase {
 
       message += ethersMessage;
 
-      console.error(message, { errorCode });
+      logger("error", {
+        success: false,
+        message,
+        errorCode,
+      });
 
       if (this.masa.config.forceTransactions) {
         // don't throw if we force this
-        console.warn(
+        logger(
+          "warn",
           `Forcing transaction for ${DEFAULT_GAS_LIMIT.toLocaleString()} gas!`,
         );
         gasLimit = BigNumber.from(DEFAULT_GAS_LIMIT);
@@ -296,7 +304,7 @@ export abstract class MasaModuleBase extends MasaBase {
     authorityAddress: string,
   ): Promise<void> => {
     if (this.masa.config.verbose) {
-      console.log({
+      logger("dir", {
         domain,
         types: JSON.stringify(types),
         value,
@@ -320,7 +328,7 @@ export abstract class MasaModuleBase extends MasaBase {
     const recoveredAddress = verifyTypedData(domain, types, value, signature);
 
     if (this.masa.config.verbose) {
-      console.info({
+      logger("dir", {
         recoveredAddress,
         authorityAddress,
       });
@@ -340,13 +348,11 @@ export abstract class MasaModuleBase extends MasaBase {
           await contract.authorities(recoveredAddress);
       } catch (error: unknown) {
         if (error instanceof Error)
-          console.error(`Retrieving authorities failed! ${error.message}.`);
+          logger("error", `Retrieving authorities failed! ${error.message}.`);
       }
 
       if (this.masa.config.verbose) {
-        console.info({
-          recoveredAddressIsAuthority,
-        });
+        logger("dir", { recoveredAddressIsAuthority });
       }
 
       // we check that the recovered address is within the authorities

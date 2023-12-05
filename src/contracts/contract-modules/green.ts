@@ -15,6 +15,7 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../utils";
 import { parseEthersError } from "./ethers";
@@ -119,7 +120,7 @@ export class Green extends MasaSBTModuleBase {
       await this.getPrice(paymentMethod, slippage);
 
     if (this.masa.config.verbose) {
-      console.log({
+      logger("dir", {
         price: price.toString(),
         mintTransactionFee: mintTransactionFee.toString(),
         paymentAddress,
@@ -147,7 +148,10 @@ export class Green extends MasaSBTModuleBase {
     );
 
     if (this.masa.config.verbose) {
-      console.log({ greenMintParameters, greenMintOverrides });
+      logger("dir", {
+        greenMintParameters,
+        greenMintOverrides,
+      });
     }
 
     // connect
@@ -227,7 +231,7 @@ export class Green extends MasaSBTModuleBase {
       errorCode: BaseErrorCodes.UnknownError,
     };
 
-    console.log(`Burning Green with ID '${greenId}'!`);
+    logger("log", `Burning Green with ID '${greenId}'!`);
 
     const {
       estimateGas: { burn: estimateGas },
@@ -243,7 +247,8 @@ export class Green extends MasaSBTModuleBase {
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -252,7 +257,7 @@ export class Green extends MasaSBTModuleBase {
 
       await wait();
 
-      console.log(`Burned Green with ID '${greenId}'!`);
+      logger("log", `Burned Green with ID '${greenId}'!`);
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {
@@ -263,7 +268,7 @@ export class Green extends MasaSBTModuleBase {
       result.message += message;
       result.errorCode = errorCode;
 
-      console.error(result.message, { errorCode });
+      logger("error", result);
     }
 
     return result;

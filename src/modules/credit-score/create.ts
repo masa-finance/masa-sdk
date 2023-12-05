@@ -1,9 +1,11 @@
 import { BaseErrorCodes, Messages } from "../../collections";
+import { parseEthersError } from "../../contracts/contract-modules/ethers";
 import type {
   GenerateCreditScoreResult,
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
+import { logger } from "../../utils";
 
 export const createCreditScore = async (
   masa: MasaInterface,
@@ -21,7 +23,7 @@ export const createCreditScore = async (
       return result;
     }
 
-    console.log("Creating Credit Score ...");
+    logger("log", "Creating Credit Score ...");
 
     const { identityId, address } = (await masa.identity.load()) || {};
     if (!identityId) {
@@ -60,7 +62,8 @@ export const createCreditScore = async (
             creditScoreResponse.signature,
           );
 
-          console.log(
+          logger(
+            "log",
             Messages.WaitingToFinalize(
               hash,
               masa.config.network?.blockExplorerUrls?.[0],
@@ -69,12 +72,13 @@ export const createCreditScore = async (
 
           const { transactionHash } = await wait();
 
-          console.log("Updating Credit Score Record!");
+          logger("log", "Updating Credit Score Record!");
+
           const creditScoreUpdateResponse =
             await masa.client.creditScore.update(transactionHash);
 
           if (masa.config.verbose) {
-            console.log({ creditScoreUpdateResponse });
+            logger("dir", { creditScoreUpdateResponse });
           }
 
           result = {
@@ -82,17 +86,19 @@ export const createCreditScore = async (
             ...creditScoreUpdateResponse,
           };
         } catch (error: unknown) {
-          result.success = false;
+          result.message = "Unexpected error: ";
 
-          if (error instanceof Error) {
-            result.message = `Unexpected error: ${error.message}`;
-            console.error(result.message);
-          }
+          const { message, errorCode } = parseEthersError(error);
+          result.message += message;
+          result.errorCode = errorCode;
+
+          logger("error", result);
         }
       }
     }
   } else {
     result.message = Messages.NotLoggedIn();
+    result.errorCode = BaseErrorCodes.NotLoggedIn;
   }
 
   return result;

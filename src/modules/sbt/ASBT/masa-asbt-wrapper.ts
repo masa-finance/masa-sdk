@@ -1,6 +1,7 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
 import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
+import { logger } from "../../../utils";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaASBTWrapper<
@@ -20,11 +21,11 @@ export class MasaASBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Minting ASBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receiver}'`);
+    logger("log", `Minting ASBT on: '${this.masa.config.networkName}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const { mint } = this.masa.contracts.asbt.attach(this.contract);
 
@@ -45,11 +46,11 @@ export class MasaASBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Bulk Minting ASBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receivers}'`);
+    logger("log", `Bulk Minting ASBT on: '${this.masa.config.networkName}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receiver: '${receivers}'`);
 
     const { bulkMint } = this.masa.contracts.asbt.attach(this.contract);
 

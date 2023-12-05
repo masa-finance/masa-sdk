@@ -1,4 +1,5 @@
 import type { MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 import { calculateSoulNameLength } from "./helpers";
 
 export const validateSoulName = (
@@ -37,7 +38,7 @@ export const validateSoulName = (
     .join("")}]+$`;
 
   if (verbose) {
-    console.info(validatorSource);
+    logger("info", validatorSource);
   }
 
   // combine validator

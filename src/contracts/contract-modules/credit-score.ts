@@ -15,6 +15,7 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../utils";
 import { parseEthersError } from "./ethers";
@@ -143,7 +144,7 @@ export class CreditScore extends MasaSBTModuleBase {
     };
 
     if (this.masa.config.verbose) {
-      console.info({
+      logger("dir", {
         creditScoreMintParameters,
         creditScoreMintOverridesWithGasLimit,
       });
@@ -214,7 +215,7 @@ export class CreditScore extends MasaSBTModuleBase {
       errorCode: BaseErrorCodes.UnknownError,
     };
 
-    console.log(`Burning Credit Score with ID '${creditScoreId}'!`);
+    logger("log", `Burning Credit Score with ID '${creditScoreId}'!`);
 
     const {
       estimateGas: { burn: estimateGas },
@@ -230,7 +231,8 @@ export class CreditScore extends MasaSBTModuleBase {
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -239,7 +241,7 @@ export class CreditScore extends MasaSBTModuleBase {
 
       await wait();
 
-      console.log(`Burned Credit Score with ID '${creditScoreId}'!`);
+      logger("log", `Burned Credit Score with ID '${creditScoreId}'!`);
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {
@@ -250,7 +252,7 @@ export class CreditScore extends MasaSBTModuleBase {
       result.message += message;
       result.errorCode = errorCode;
 
-      console.error(result.message, { errorCode });
+      logger("error", result);
     }
 
     return result;

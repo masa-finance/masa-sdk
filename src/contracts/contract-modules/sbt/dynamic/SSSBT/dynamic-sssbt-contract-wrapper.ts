@@ -9,8 +9,10 @@ import type { BaseResult, PaymentMethod } from "../../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../../../../utils";
+import { parseEthersError } from "../../../ethers";
 import { DynamicSBTContractWrapper } from "../dynamic-sbt-contract-wrapper";
 
 export class DynamicSSSBTContractWrapper<
@@ -137,7 +139,8 @@ export class DynamicSSSBTContractWrapper<
 
     if (stateAlreadySet) {
       result.message = `State '${state}' already set on ${name} for ${receiver}`;
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
@@ -147,7 +150,8 @@ export class DynamicSSSBTContractWrapper<
         .includes(state.toLowerCase())
     ) {
       result.message = `State '${state}' unknown to contract ${name}`;
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
@@ -204,7 +208,8 @@ export class DynamicSSSBTContractWrapper<
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -212,13 +217,17 @@ export class DynamicSSSBTContractWrapper<
       );
 
       await wait();
+
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Setting state failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Setting state failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;
@@ -245,7 +254,7 @@ export class DynamicSSSBTContractWrapper<
       limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
-        console.info("Loading limit failed, falling back to 1!");
+        logger("info", "Loading limit failed, falling back to 1!");
       }
     }
 
@@ -254,12 +263,13 @@ export class DynamicSSSBTContractWrapper<
 
       if (limit > 0 && balance.gte(limit)) {
         result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
-        console.error(result.message);
+        logger("error", result);
+
         return result;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn(`Unable to load balance ${error.message}`);
+        logger("warn", `Unable to load balance ${error.message}`);
       }
     }
 
@@ -275,15 +285,10 @@ export class DynamicSSSBTContractWrapper<
     );
 
     if (this.masa.config.verbose) {
-      console.dir(
-        {
-          mintSSSBTArguments,
-          mintSSSBTOverrides,
-        },
-        {
-          depth: null,
-        },
-      );
+      logger("dir", {
+        mintSSSBTArguments,
+        mintSSSBTOverrides,
+      });
     }
 
     const {
@@ -303,7 +308,8 @@ export class DynamicSSSBTContractWrapper<
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -320,7 +326,8 @@ export class DynamicSSSBTContractWrapper<
 
       if (mintEvent) {
         const { args } = mintEvent;
-        console.log(
+        logger(
+          "log",
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
@@ -328,10 +335,14 @@ export class DynamicSSSBTContractWrapper<
         delete result.errorCode;
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Minting failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Minting failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;

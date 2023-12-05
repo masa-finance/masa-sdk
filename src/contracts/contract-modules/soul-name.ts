@@ -15,8 +15,10 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../utils";
+import { parseEthersError } from "./ethers";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class SoulName extends MasaModuleBase {
@@ -136,7 +138,10 @@ export class SoulName extends MasaModuleBase {
     );
 
     if (this.masa.config.verbose) {
-      console.log({ purchaseNameParameters, purchaseNameOverrides });
+      logger("dir", {
+        purchaseNameParameters,
+        purchaseNameOverrides,
+      });
     }
 
     // connect
@@ -323,7 +328,8 @@ export class SoulName extends MasaModuleBase {
     ]);
 
     if (soulNameData.exists) {
-      console.log(
+      logger(
+        "log",
         `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
       );
 
@@ -348,7 +354,8 @@ export class SoulName extends MasaModuleBase {
           gasLimit,
         });
 
-        console.log(
+        logger(
+          "log",
           Messages.WaitingToFinalize(
             hash,
             this.masa.config.network?.blockExplorerUrls?.[0],
@@ -357,21 +364,25 @@ export class SoulName extends MasaModuleBase {
 
         await wait();
 
-        console.log(
+        logger(
+          "log",
           `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
         );
 
         result.success = true;
         delete result.errorCode;
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          result.message = `Sending of Soul Name Failed! ${error.message}`;
-          console.error(result.message);
-        }
+        result.message = "Sending of Soul Name Failed! ";
+
+        const { message, errorCode } = parseEthersError(error);
+        result.message += message;
+        result.errorCode = errorCode;
+
+        logger("error", result);
       }
     } else {
       result.message = `Soulname '${soulName}${extension}' does not exist!`;
-      console.error(result.message);
+      logger("error", result);
     }
 
     return result;
@@ -393,7 +404,8 @@ export class SoulName extends MasaModuleBase {
     ]);
 
     if (soulNameData.exists) {
-      console.log(
+      logger(
+        "log",
         `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`,
       );
 
@@ -412,7 +424,8 @@ export class SoulName extends MasaModuleBase {
           gasLimit,
         });
 
-        console.log(
+        logger(
+          "log",
           Messages.WaitingToFinalize(
             hash,
             this.masa.config.network?.blockExplorerUrls?.[0],
@@ -421,21 +434,26 @@ export class SoulName extends MasaModuleBase {
 
         await wait();
 
-        console.log(
+        logger(
+          "log",
           `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
         );
 
         result.success = true;
         delete result.errorCode;
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          result.message = `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`;
-          console.error(result.message);
-        }
+        result.message = `Burning Soulname '${soulName}${extension}' Failed! `;
+
+        const { message, errorCode } = parseEthersError(error);
+        result.message += message;
+        result.errorCode = errorCode;
+
+        logger("error", result);
       }
     } else {
       result.message = `Soulname '${soulName}${extension}' does not exist!`;
-      console.error(result.message);
+      result.errorCode = BaseErrorCodes.NotFound;
+      logger("error", result);
     }
 
     return result;
@@ -473,7 +491,8 @@ export class SoulName extends MasaModuleBase {
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -485,10 +504,13 @@ export class SoulName extends MasaModuleBase {
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `renewal failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Renewal failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;

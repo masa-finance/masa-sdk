@@ -3,6 +3,7 @@ import type { BigNumber, Contract } from "ethers";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 
 export type Link = {
   readerIdentityId: BigNumber;
@@ -67,7 +68,8 @@ export const listLinks = async (
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Listing links for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
@@ -79,8 +81,8 @@ export const listLinks = async (
   } catch (error: unknown) {
     result.message = `Token ${tokenId.toString()} does not exist!`;
     result.errorCode = BaseErrorCodes.DoesNotExist;
+    logger("error", result);
 
-    console.error(result.message);
     return result;
   }
 
@@ -88,46 +90,51 @@ export const listLinks = async (
 
   let index = 1;
   for (const linkDetail of result.links) {
-    console.log(`\nLink #${index}`);
-    console.log(
-      "Owner Identity",
-      linkDetail.ownerIdentityId.toString(),
-      linkDetail.ownerIdentityId.toString() === identityId.toString()
-        ? "(you)"
-        : "",
+    logger("log", `\nLink #${index}`);
+    logger(
+      "error",
+      `Owner Identity ${linkDetail.ownerIdentityId.toString()} ${
+        linkDetail.ownerIdentityId.toString() === identityId.toString()
+          ? "(you)"
+          : ""
+      }`,
     );
-    console.log(
-      "Reader Identity",
-      linkDetail.readerIdentityId.toString(),
-      linkDetail.readerIdentityId.toString() === identityId.toString()
-        ? "(you)"
-        : "",
+    logger(
+      "error",
+      `Reader Identity ${linkDetail.readerIdentityId.toString()} ${
+        linkDetail.readerIdentityId.toString() === identityId.toString()
+          ? "(you)"
+          : ""
+      }`,
     );
-    console.log(
-      "Signature Date",
-      new Date(linkDetail.signatureDate.toNumber() * 1000).toUTCString(),
-      linkDetail.signatureDate.toNumber(),
+    logger(
+      "error",
+      `Signature Date ${new Date(
+        linkDetail.signatureDate.toNumber() * 1000,
+      ).toUTCString()} ${linkDetail.signatureDate.toNumber()}`,
     );
-    console.log(
-      "Expiration Date",
-      new Date(linkDetail.expirationDate.toNumber() * 1000).toUTCString(),
-      linkDetail.expirationDate.toNumber(),
+    logger(
+      "error",
+      `Expiration Date ${new Date(
+        linkDetail.expirationDate.toNumber() * 1000,
+      ).toUTCString()} ${linkDetail.expirationDate.toNumber()}`,
     );
-    console.log(
+    logger(
+      "log",
       `Link expired?: ${
         new Date() > new Date(linkDetail.expirationDate.toNumber() * 1000)
           ? "Yes"
           : "No"
       }`,
     );
-    console.log(`Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
-    console.log(`Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);
+    logger("log", `Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
+    logger("log", `Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);
     index++;
   }
 
   if (result.links.length === 0) {
     result.message = `No link for ${tokenId.toString()}`;
-    console.error(result.message);
+    logger("error", result);
     return result;
   }
 

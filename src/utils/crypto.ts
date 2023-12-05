@@ -10,6 +10,8 @@ import type {
 } from "ethers";
 import { utils } from "ethers";
 
+import { logger } from "./logger";
+
 /**
  *
  * @param data
@@ -35,7 +37,7 @@ export const signMessage = async (
     signature = await signer.signMessage(utils.arrayify(hash));
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Sign message failed!", error.message);
+      logger("error", `Sign message failed! ${error.message}`);
     }
   }
 
@@ -99,7 +101,7 @@ export const signTypedData = async ({
       eip712Domain = await contract.eip712Domain();
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.info(`Could not load eip712Domain ${error.message}`);
+        logger("info", `Could not load eip712Domain ${error.message}`);
       }
     }
   }
@@ -148,7 +150,7 @@ export const recoverAddress = (
     );
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Address recovery failed! ${error.message}`);
+      logger("error", `Address recovery failed! ${error.message}`);
     }
   }
 

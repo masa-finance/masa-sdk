@@ -1,6 +1,7 @@
 import type { BigNumber } from "ethers";
 
 import type { MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 
 /**
  * Resolves identity id into address
@@ -22,7 +23,7 @@ export const resolveIdentity = async (
   }
 
   if (!address) {
-    console.error(`Identity '${identityId}' does not exist!`);
+    logger("error", `Identity '${identityId}' does not exist!`);
   }
 
   return address;
@@ -44,7 +45,7 @@ export const resolveReverseIdentity = async (
   }
 
   if (!identityId) {
-    console.error(`Address '${address}' does not have an identity!`);
+    logger("error", `Address '${address}' does not have an identity!`);
   }
 
   return identityId;

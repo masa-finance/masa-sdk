@@ -1,5 +1,9 @@
 export enum BaseErrorCodes {
   /**
+   * @description Not logged in
+   */
+  NotLoggedIn = "NotLoggedIn",
+  /**
    * @description General Network related Error
    */
   NetworkError = "NetworkError",

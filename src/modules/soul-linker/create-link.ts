@@ -2,6 +2,7 @@ import type { BigNumber, Contract } from "ethers";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, IPassport, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 import { resolveIdentity } from "../identity/resolve";
 
 export type CreateLinkResult = BaseResult & { passport?: string };
@@ -32,13 +33,15 @@ export const createLink = async (
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Creating link for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
   );
-  console.log(`from Identity ${identityId.toString()} (${address})`);
-  console.log(
+  logger("log", `from Identity ${identityId.toString()} (${address})`);
+  logger(
+    "log",
     `to Identity ${readerIdentityId.toString()} (${receiverAddress})\n`,
   );
 
@@ -55,8 +58,9 @@ export const createLink = async (
       24 * 60 * 60,
     );
 
-  console.log(`Signature Date: ${currentDate.toUTCString()}`);
-  console.log(
+  logger("log", `Signature Date: ${currentDate.toUTCString()}`);
+  logger(
+    "log",
     `Expiration Date: ${new Date(expirationDate * 1000).toUTCString()}`,
   );
 
@@ -69,7 +73,7 @@ export const createLink = async (
   };
 
   result.passport = btoa(JSON.stringify(passport, null, 2));
-  console.log("\nLink passport:", result.passport, "\n");
+  logger("log", `Link passport: ${passport}\n`);
 
   result.success = true;
   delete result.errorCode;

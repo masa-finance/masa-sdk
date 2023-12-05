@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 
 import { BaseErrorCodes } from "../../collections";
+import { logger } from "../../utils";
 
 export const RETURN_VALUE_ERROR_CODES = {
   TRANSACTION_RAN_OUT_OF_GAS: "TRANSACTION_RAN_OUT_OF_GAS",
@@ -91,7 +92,11 @@ export const parseEthersError = (
   }
 
   if (verbose) {
-    console.log(message, { errorCode });
+    logger("error", {
+      success: false,
+      message,
+      errorCode,
+    });
   }
 
   return {

@@ -1,7 +1,7 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { isBigNumber, patchMetadataUrl } from "../../../utils";
+import { isBigNumber, logger, patchMetadataUrl } from "../../../utils";
 import { MasaLinkable } from "../../masa-linkable";
 
 export class MasaSBTWrapper<
@@ -17,7 +17,8 @@ export class MasaSBTWrapper<
     const SBTs = await this.loadSBTs(address);
 
     if (SBTs.length === 0) {
-      console.log(
+      logger(
+        "log",
         `No SBTs found on contract '${await this.contract.name()}' (${
           this.contract.address
         })`,
@@ -26,9 +27,9 @@ export class MasaSBTWrapper<
 
     let i = 1;
     for (const SBT of SBTs) {
-      console.log(`Token: ${i}`);
-      console.log(`Token ID: ${SBT.tokenId}`);
-      console.log(`Metadata: ${SBT.tokenUri}`);
+      logger("log", `Token: ${i}`);
+      logger("log", `Token ID: ${SBT.tokenId}`);
+      logger("log", `Metadata: ${SBT.tokenUri}`);
 
       i++;
     }
@@ -95,7 +96,7 @@ export class MasaSBTWrapper<
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Loading SBTs failed! ${error.message}`);
+        logger("error", `Loading SBTs failed! ${error.message}`);
       }
     }
 
@@ -127,14 +128,14 @@ export class MasaSBTWrapper<
    * @param SBTId
    */
   public burn = async (SBTId: BigNumber) => {
-    console.log(`Burning SBT with ID '${SBTId}'!`);
+    logger("log", `Burning SBT with ID '${SBTId}'!`);
 
     const { burn } = this.masa.contracts.sbt.attach(this.contract);
 
     const burned = await burn(SBTId);
 
     if (burned) {
-      console.log(`Burned SBT with ID '${SBTId.toNumber()}'!`);
+      logger("log", `Burned SBT with ID '${SBTId.toNumber()}'!`);
     }
     return burned;
   };
