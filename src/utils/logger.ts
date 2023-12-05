@@ -16,14 +16,14 @@ export const logger = (
   const fn = console[method];
 
   if (method === "dir") {
-    return fn(message, { depth: null });
-  }
-
-  if (isBaseResult(message)) {
-    message.errorCode
-      ? fn(`${message.errorCode}: ${message.message}`)
-      : fn(message.message);
+    fn(message, { depth: null });
   } else {
-    fn(message);
+    if (isBaseResult(message)) {
+      message.errorCode
+        ? fn(`${message.errorCode}: ${message.message}`)
+        : fn(message.message);
+    } else {
+      fn(message);
+    }
   }
 };
