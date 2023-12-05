@@ -31,11 +31,11 @@ export class MasaClient extends MasaBase {
   private _middlewareClient: AxiosInstance;
   private _cookie?: string;
 
-  get cookie(): string | undefined {
+  public get cookie(): string | undefined {
     return this._cookie;
   }
 
-  constructor({
+  public constructor({
     masa,
     apiUrl,
     cookie,
@@ -54,7 +54,7 @@ export class MasaClient extends MasaBase {
     });
   }
 
-  session = {
+  public session = {
     /**
      * Check session is still alive
      */
@@ -181,7 +181,7 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  metadata = {
+  public metadata = {
     /**
      * Retrieve metadata
      * @param uri
@@ -219,7 +219,7 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  soulName = {
+  public soulName = {
     /**
      * Store metadata
      * @param soulName
@@ -258,7 +258,7 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  green = {
+  public green = {
     /**
      * Generates a new masa green request
      * @param phoneNumber
@@ -337,7 +337,7 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  creditScore = {
+  public creditScore = {
     /**
      * Generates a new credit score
      */
@@ -426,7 +426,7 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  post = async <Payload, Result>(
+  public post = async <Payload, Result>(
     endpoint: string,
     data: Payload,
     silent: boolean = false,
@@ -470,7 +470,7 @@ export class MasaClient extends MasaBase {
     };
   };
 
-  patch = async <Payload, Result>(
+  public patch = async <Payload, Result>(
     endpoint: string,
     data: Payload,
     silent: boolean = false,
@@ -506,7 +506,7 @@ export class MasaClient extends MasaBase {
     return patchData;
   };
 
-  get = async <Result>(
+  public get = async <Result>(
     endpoint: string,
     silent: boolean = false,
   ): Promise<Result | undefined> => {

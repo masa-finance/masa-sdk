@@ -1,7 +1,10 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
-import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
-import { BaseResult } from "../../../interface";
+import type {
+  BaseResult,
+  BaseResultWithTokenId,
+  PaymentMethod,
+} from "../../../interface";
 import { logger } from "../../../utils";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
@@ -13,7 +16,7 @@ export class MasaASBTWrapper<
    * @param receiver
    * @param paymentMethod
    */
-  mint = async (
+  public mint = async (
     receiver: string,
     paymentMethod: PaymentMethod = "ETH",
   ): Promise<BaseResultWithTokenId> => {
@@ -38,7 +41,7 @@ export class MasaASBTWrapper<
    * @param receivers
    * @param paymentMethod
    */
-  bulkMint = async (
+  public bulkMint = async (
     receivers: string[],
     paymentMethod: PaymentMethod = "ETH",
   ): Promise<BaseResult[]> => {

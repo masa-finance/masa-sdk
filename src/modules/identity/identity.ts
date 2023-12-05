@@ -1,10 +1,11 @@
 import { BigNumber } from "@ethersproject/bignumber";
 
-import type { BaseResult, PaymentMethod } from "../../interface";
-import {
+import type {
+  BaseResult,
   BaseResultWithTokenId,
   CreateSoulNameResult,
   IdentityDetails,
+  PaymentMethod,
 } from "../../interface";
 import { MasaBase } from "../../masa-base";
 import { burnIdentity } from "./burn";
@@ -13,8 +14,9 @@ import { loadIdentityByAddress } from "./load";
 import { showIdentity } from "./show";
 
 export class MasaIdentity extends MasaBase {
-  create = (): Promise<BaseResultWithTokenId> => createIdentity(this.masa);
-  createWithSoulName = (
+  public create = (): Promise<BaseResultWithTokenId> =>
+    createIdentity(this.masa);
+  public createWithSoulName = (
     paymentMethod: PaymentMethod,
     soulName: string,
     duration: number,
@@ -31,13 +33,13 @@ export class MasaIdentity extends MasaBase {
       duration,
       style,
     );
-  load = (
+  public load = (
     address?: string,
   ): Promise<{
     identityId?: BigNumber;
     address: string;
   }> => loadIdentityByAddress(this.masa, address);
-  burn = (): Promise<BaseResult> => burnIdentity(this.masa);
-  show = (address?: string): Promise<IdentityDetails | undefined> =>
+  public burn = (): Promise<BaseResult> => burnIdentity(this.masa);
+  public show = (address?: string): Promise<IdentityDetails | undefined> =>
     showIdentity(this.masa, address);
 }

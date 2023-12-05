@@ -7,14 +7,14 @@ import type { MasaConfig } from "../../interface";
 import { logger } from "../logger";
 
 export class MasaArweave extends Arweave {
-  constructor(
+  public constructor(
     config: ApiConfig,
     private masaConfig: MasaConfig,
   ) {
     super({ ...config, logging: masaConfig.verbose });
   }
 
-  async loadTransactionData(
+  public async loadTransactionData(
     txId: string,
     isString: boolean = true,
   ): Promise<object | Uint8Array | undefined> {

@@ -11,7 +11,7 @@ export class MasaSSSBTWrapper<
    *
    * @param receiver
    */
-  sign = async (
+  public sign = async (
     receiver: string,
   ): Promise<
     | {
@@ -86,7 +86,7 @@ export class MasaSSSBTWrapper<
    * @param signature
    * @param paymentMethod
    */
-  mint = async (
+  public mint = async (
     authorityAddress: string,
     signatureDate: number,
     signature: string,

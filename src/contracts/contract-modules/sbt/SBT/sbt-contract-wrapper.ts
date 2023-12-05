@@ -16,7 +16,7 @@ import { MasaSBTModuleBase } from "../masa-sbt-module-base";
 export class SBTContractWrapper<
   Contract extends MasaSBT,
 > extends MasaSBTModuleBase {
-  constructor(
+  public constructor(
     masa: MasaInterface,
     instances: IIdentityContracts,
     public readonly contract: Contract,

@@ -28,28 +28,28 @@ export class MasaSoulName extends MasaBase {
    *
    * @param address
    */
-  list = (address?: string): Promise<SoulNameDetails[]> =>
+  public list = (address?: string): Promise<SoulNameDetails[]> =>
     listSoulNames(this.masa, address);
 
   /**
    *
    * @param limit
    */
-  tail = (limit?: number): Promise<SoulNameDetails[]> =>
+  public tail = (limit?: number): Promise<SoulNameDetails[]> =>
     tailSoulNames(this.masa, limit);
 
   /**
    *
    * @param soulName
    */
-  resolve = (soulName: string): Promise<string | undefined> =>
+  public resolve = (soulName: string): Promise<string | undefined> =>
     resolveSoulName(this.masa, soulName);
 
   /**
    *
    * @param identityIdOrAddress
    */
-  loadSoulNames = (
+  public loadSoulNames = (
     identityIdOrAddress: BigNumber | string,
   ): Promise<string[]> => loadSoulNames(this.masa, identityIdOrAddress);
 
@@ -57,7 +57,7 @@ export class MasaSoulName extends MasaBase {
    *
    * @param soulName
    */
-  loadSoulNameByName = (
+  public loadSoulNameByName = (
     soulName: string,
   ): Promise<SoulNameDetails | undefined> =>
     loadSoulNameByName(this.masa, soulName);
@@ -66,7 +66,7 @@ export class MasaSoulName extends MasaBase {
    *
    * @param tokenId
    */
-  loadSoulNameByTokenId = (
+  public loadSoulNameByTokenId = (
     tokenId: string | BigNumber,
   ): Promise<SoulNameDetails | undefined> =>
     loadSoulNameByTokenId(this.masa, tokenId);
@@ -79,7 +79,7 @@ export class MasaSoulName extends MasaBase {
    * @param receiver
    * @param style
    */
-  create = (
+  public create = (
     paymentMethod: PaymentMethod = "ETH",
     soulName: string,
     duration: number,
@@ -99,7 +99,7 @@ export class MasaSoulName extends MasaBase {
    *
    * @param soulName
    */
-  burn = (soulName: string): Promise<BaseResult> =>
+  public burn = (soulName: string): Promise<BaseResult> =>
     burnSoulName(this.masa, soulName);
 
   /**
@@ -107,7 +107,7 @@ export class MasaSoulName extends MasaBase {
    * @param soulName
    * @param years
    */
-  renew = (soulName: string, years: number): Promise<BaseResult> =>
+  public renew = (soulName: string, years: number): Promise<BaseResult> =>
     renewSoulName(this.masa, soulName, years);
 
   /**
@@ -115,21 +115,21 @@ export class MasaSoulName extends MasaBase {
    * @param soulName
    * @param receiver
    */
-  send = (soulName: string, receiver: string): Promise<BaseResult> =>
+  public send = (soulName: string, receiver: string): Promise<BaseResult> =>
     sendSoulName(this.masa, soulName, receiver);
 
   /**
    *
    * @param soulName
    */
-  verify = (soulName: string): Promise<VerifyResult> =>
+  public verify = (soulName: string): Promise<VerifyResult> =>
     verifyByName(this.masa, soulName);
 
   /**
    *
    * @param soulName
    */
-  validate = (
+  public validate = (
     soulName: string,
   ): {
     isValid: boolean;
@@ -140,6 +140,6 @@ export class MasaSoulName extends MasaBase {
   /**
    *
    */
-  getSoulNameMetadataPrefix = (): string =>
+  public getSoulNameMetadataPrefix = (): string =>
     getSoulNameMetadataPrefix(this.masa);
 }

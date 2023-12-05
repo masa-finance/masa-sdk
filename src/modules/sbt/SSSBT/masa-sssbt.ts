@@ -2,7 +2,7 @@ import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-ide
 import { ReferenceSBTSelfSovereign__factory } from "@masa-finance/masa-contracts-identity";
 import { PaymentGateway } from "@masa-finance/masa-contracts-identity/dist/typechain/contracts/SoulStore";
 
-import { DeployResult } from "../../../interface";
+import type { DeployResult } from "../../../interface";
 import type { ContractFactory } from "../../../interface/contract-factory";
 import { MasaBase } from "../../../masa-base";
 import { deploySSSBT } from "./deploy";
@@ -19,7 +19,7 @@ export class MasaSSSBT extends MasaBase {
    * @param limit
    * @param adminAddress
    */
-  deploy = ({
+  public deploy = ({
     name,
     symbol,
     baseTokenUri,

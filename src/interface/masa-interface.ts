@@ -3,6 +3,8 @@ import type {
   MasaAccount,
   MasaASBT,
   MasaCreditScore,
+  MasaDynamicSBTBase,
+  MasaDynamicSSSBT,
   MasaGreen,
   MasaIdentity,
   MasaSBTBase,
@@ -27,6 +29,8 @@ export interface MasaInterface {
   readonly sbt: MasaSBTBase;
   readonly asbt: MasaASBT;
   readonly sssbt: MasaSSSBT;
+  readonly ["dynamic-sbt"]: MasaDynamicSBTBase;
+  readonly ["dynamic-sssbt"]: MasaDynamicSSSBT;
   readonly utils: {
     readonly version: () => { sdkVersion: string; contractsVersion: string };
   };

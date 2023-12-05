@@ -29,6 +29,10 @@ export enum BaseErrorCodes {
   DoesNotExist = "DoesNotExist",
   NotFound = "NotFound",
   /**
+   * @description General crypto error
+   */
+  CryptoError = "CryptoError",
+  /**
    * @description Unknown Error
    */
   UnknownError = 1337,

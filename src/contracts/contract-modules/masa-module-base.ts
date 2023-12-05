@@ -27,7 +27,7 @@ import { parseEthersError } from "./ethers";
 const DEFAULT_GAS_LIMIT: number = 750_000;
 
 export abstract class MasaModuleBase extends MasaBase {
-  constructor(
+  public constructor(
     masa: MasaInterface,
     protected instances: IIdentityContracts,
   ) {

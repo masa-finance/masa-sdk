@@ -12,19 +12,19 @@ import { queryLinkFromPassport } from "./query-link";
 import { verifyLink, VerifyLinkResult } from "./verify-link";
 
 export class MasaSoulLinker extends MasaBase {
-  constructor(
+  public constructor(
     masa: MasaInterface,
     private contract: ILinkableSBT,
   ) {
     super(masa);
   }
 
-  create = (
+  public create = (
     tokenId: BigNumber,
     readerIdentityId: BigNumber,
   ): Promise<CreateLinkResult> =>
     createLink(this.masa, this.contract, tokenId, readerIdentityId);
-  establish = (
+  public establish = (
     paymentMethod: PaymentMethod = "ETH",
     passport: string,
   ): Promise<BaseResult> =>
@@ -34,14 +34,14 @@ export class MasaSoulLinker extends MasaBase {
       this.contract,
       passport,
     );
-  verify = (
+  public verify = (
     tokenId: BigNumber,
     readerIdentityId?: BigNumber,
   ): Promise<VerifyLinkResult> =>
     verifyLink(this.masa, this.contract, tokenId, readerIdentityId);
-  list = (tokenId: BigNumber): Promise<ListLinksResult> =>
+  public list = (tokenId: BigNumber): Promise<ListLinksResult> =>
     listLinks(this.masa, this.contract, tokenId);
-  break = (
+  public break = (
     tokenId: BigNumber,
     readerIdentityId: BigNumber,
   ): Promise<BreakLinkResult> =>
@@ -50,7 +50,7 @@ export class MasaSoulLinker extends MasaBase {
       tokenId,
       readerIdentityId,
     );
-  query = (
+  public query = (
     paymentMethod: PaymentMethod,
     passport: string,
   ): Promise<BaseResult> =>

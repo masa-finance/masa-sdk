@@ -19,26 +19,26 @@ import { getNetworkNameByChainId, MasaArweave, MasaClient } from "./utils";
 
 export class Masa implements MasaInterface {
   // config
-  readonly config: MasaConfig;
+  public readonly config: MasaConfig;
   // clients
-  readonly arweave: MasaArweave;
-  readonly client: MasaClient;
+  public readonly arweave: MasaArweave;
+  public readonly client: MasaClient;
   // contracts
-  readonly contracts: MasaContracts;
+  public readonly contracts: MasaContracts;
   // modules
-  readonly account: MasaAccount;
-  readonly session: MasaSession;
-  readonly identity: MasaIdentity;
-  readonly soulName: MasaSoulName;
-  readonly creditScore: MasaCreditScore;
-  readonly green: MasaGreen;
+  public readonly account: MasaAccount;
+  public readonly session: MasaSession;
+  public readonly identity: MasaIdentity;
+  public readonly soulName: MasaSoulName;
+  public readonly creditScore: MasaCreditScore;
+  public readonly green: MasaGreen;
   // SBTs
-  readonly sbt: MasaSBTBase;
-  readonly asbt: MasaASBT;
-  readonly sssbt: MasaSSSBT;
+  public readonly sbt: MasaSBTBase;
+  public readonly asbt: MasaASBT;
+  public readonly sssbt: MasaSSSBT;
   // Dynamic SBTs
-  readonly ["dynamic-sbt"]: MasaDynamicSBTBase;
-  readonly ["dynamic-sssbt"]: MasaDynamicSSSBT;
+  public readonly ["dynamic-sbt"]: MasaDynamicSBTBase;
+  public readonly ["dynamic-sssbt"]: MasaDynamicSSSBT;
 
   public constructor({
     cookie,
@@ -103,7 +103,7 @@ export class Masa implements MasaInterface {
     this["dynamic-sssbt"] = new MasaDynamicSSSBT(this);
   }
 
-  utils = {
+  public utils = {
     version,
   };
 
