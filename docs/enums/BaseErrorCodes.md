@@ -1,5 +1,5 @@
 [# Masa SDK
- - v3.14.4](../README.md) / [Exports](../modules.md) / BaseErrorCodes
+ - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / BaseErrorCodes
 
 # Enumeration: BaseErrorCodes
 
@@ -8,6 +8,7 @@
 ### Enumeration Members
 
 - [AlreadyExists](BaseErrorCodes.md#alreadyexists)
+- [CryptoError](BaseErrorCodes.md#cryptoerror)
 - [DoesNotExist](BaseErrorCodes.md#doesnotexist)
 - [EstimateGasFailed](BaseErrorCodes.md#estimategasfailed)
 - [GeneralGasIssue](BaseErrorCodes.md#generalgasissue)
@@ -25,6 +26,16 @@
 ### AlreadyExists
 
 • **AlreadyExists** = ``"AlreadyExists"``
+
+___
+
+### CryptoError
+
+• **CryptoError** = ``"CryptoError"``
+
+**`Description`**
+
+General crypto error
 
 ___
 
