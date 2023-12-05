@@ -4,7 +4,7 @@ import { BaseErrorCodes } from "../collections";
 
 export interface BaseResult {
   success: boolean;
-  errorCode?: BaseErrorCodes;
+  errorCode?: BaseErrorCodes | string | number;
   message?: string;
 }
 

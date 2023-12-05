@@ -43,7 +43,7 @@ export interface SoulNameDetails {
 
 export interface SoulNameResultBase
   extends Omit<BaseResultWithTokenId, "errorCode"> {
-  errorCode?: CreateSoulNameErrorCodes;
+  errorCode?: CreateSoulNameErrorCodes | number | string;
 }
 
 export interface CreateSoulNameResult extends SoulNameResultBase {
