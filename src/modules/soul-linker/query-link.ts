@@ -81,7 +81,7 @@ export const queryLink = async (
 
   logger("log", `tx hash for middleware ${transactionHash}`);
 
-  const { tokenURI: tokenURI } = contract;
+  const { tokenURI } = contract;
 
   const tokenUri = patchMetadataUrl(masa, await tokenURI(tokenId));
 
