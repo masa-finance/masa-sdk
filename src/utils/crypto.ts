@@ -91,7 +91,7 @@ export const signTypedData = async ({
   contract: BaseContract | EIP712;
   signer: Signer;
   name?: string;
-  types: Record<string, Array<TypedDataField>>;
+  types: Record<string, TypedDataField[]>;
   value: Record<string, string | BigNumber | number | boolean>;
 }): Promise<{ signature: string; domain: TypedDataDomain }> => {
   let eip712Domain;

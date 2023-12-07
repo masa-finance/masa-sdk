@@ -1,18 +1,22 @@
-import type { SoulLinker } from "@masa-finance/masa-contracts-identity";
+import type {
+  ILinkableSBT,
+  MasaSBT,
+  SoulLinker,
+} from "@masa-finance/masa-contracts-identity";
 import type { BigNumber, Contract } from "ethers";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
 import { logger } from "../../utils";
 
-export type Link = {
+export interface Link {
   readerIdentityId: BigNumber;
   signatureDate: BigNumber;
   exists: boolean;
   ownerIdentityId: BigNumber;
   expirationDate: BigNumber;
   isRevoked: boolean;
-};
+}
 
 export type ListLinksResult = BaseResult & {
   links: Link[];
@@ -51,7 +55,7 @@ export const loadLinks = async (
 
 export const listLinks = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   tokenId: BigNumber,
 ): Promise<ListLinksResult> => {
   const result: ListLinksResult = {

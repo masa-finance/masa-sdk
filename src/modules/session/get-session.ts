@@ -7,7 +7,7 @@ export const getSession = async (
   const session = await masa.client.session.check();
 
   if (session) {
-    logger("log", `User: ${session.user}`);
+    logger("log", `User: ${session.user.userId}`);
     logger("log", `Signer Address: '${await masa.config.signer.getAddress()}'`);
     logger("log", "\n");
   }

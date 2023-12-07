@@ -20,7 +20,7 @@ export class SoulLinker extends MasaModuleBase {
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     Link: [
       { name: "readerIdentityId", type: "uint256" },
       { name: "ownerIdentityId", type: "uint256" },
@@ -129,8 +129,8 @@ export class SoulLinker extends MasaModuleBase {
     expirationDate: number,
     signature: string,
     slippage: number | undefined = 250,
-  ): Promise<BaseResult> => {
-    const result: BaseResult = {
+  ): Promise<BaseResult & { transactionHash?: string }> => {
+    const result: BaseResult & { transactionHash?: string } = {
       success: false,
       errorCode: BaseErrorCodes.UnknownError,
     };
@@ -197,9 +197,10 @@ export class SoulLinker extends MasaModuleBase {
         ),
       );
 
-      await wait();
+      const { transactionHash } = await wait();
 
       result.success = true;
+      result.transactionHash = transactionHash;
       delete result.errorCode;
     } catch (error: unknown) {
       result.message = "Adding link failed! ";

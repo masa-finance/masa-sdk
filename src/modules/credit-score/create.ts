@@ -25,7 +25,8 @@ export const createCreditScore = async (
 
     logger("log", "Creating Credit Score ...");
 
-    const { identityId, address } = (await masa.identity.load()) || {};
+    const { identityId, address } = (await masa.identity.load()) ?? {};
+
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
       result.errorCode = BaseErrorCodes.DoesNotExist;

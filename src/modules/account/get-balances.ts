@@ -38,7 +38,7 @@ export const getBalances = async (
   address?: string,
 ): Promise<Balances> => {
   const addressToLoad: string =
-    address || (await masa.config.signer.getAddress());
+    address ?? (await masa.config.signer.getAddress());
 
   const loadERC20Balance = async (
     userAddress: string,

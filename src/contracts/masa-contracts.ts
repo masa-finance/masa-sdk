@@ -112,17 +112,17 @@ export class MasaContracts extends MasaBase {
     const parsedLogs: LogDescription[] = [];
 
     for (const contract of [
-      ...Object.values(this.instances),
+      ...(Object.values(this.instances) as BaseContract[]),
       ...additionalContracts,
     ]) {
       parsedLogs.push(
-        ...logs
+        ...(logs
           .filter(
             (log: Log) =>
               log.address.toLowerCase() === contract.address.toLowerCase(),
           )
           .map((log: Log) => {
-            let result;
+            let result: LogDescription | undefined;
 
             try {
               result = contract.interface.parseLog(log);
@@ -133,7 +133,10 @@ export class MasaContracts extends MasaBase {
             }
 
             return result;
-          }),
+          })
+          .filter((log: LogDescription | undefined) =>
+            Boolean(log),
+          ) as LogDescription[]),
       );
     }
 

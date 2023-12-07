@@ -21,7 +21,7 @@ export class DynamicSSSBTContractWrapper<
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     SetState: [
       { name: "account", type: "address" },
       { name: "state", type: "string" },
@@ -37,7 +37,7 @@ export class DynamicSSSBTContractWrapper<
    * @param value
    */
   public signSetState = async (
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number | boolean>,
   ): Promise<{
     signature: string;
@@ -73,7 +73,7 @@ export class DynamicSSSBTContractWrapper<
    * @param authorityAddress
    */
   protected prepareSetState = async (
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,

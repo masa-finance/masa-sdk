@@ -1,4 +1,4 @@
-import type { Addresses, Network, NetworkName } from "../interface";
+import type { Network, NetworkName } from "../interface";
 import { addresses } from "../networks";
 
 // bsc
@@ -25,7 +25,7 @@ const bsc: Network = {
   },
   blockExplorerUrls: ["https://bscscan.com"],
   blockExplorerApiUrls: ["https://api.bscscan.com/api"],
-  addresses: addresses["bsc"] as Addresses,
+  addresses: addresses.bsc!,
 };
 const bsctest: Network = {
   networkName: "bsctest",
@@ -50,7 +50,7 @@ const bsctest: Network = {
   },
   blockExplorerUrls: ["https://testnet.bscscan.com"],
   blockExplorerApiUrls: ["https://api-testnet.bscscan.com/api"],
-  addresses: addresses["bsctest"] as Addresses,
+  addresses: addresses.bsctest!,
 };
 
 // op bnb
@@ -76,7 +76,7 @@ const opbnb: Network = {
     decimals: 18,
   },
   blockExplorerUrls: ["https://opbnbscan.com"],
-  addresses: addresses["opbnb"] as Addresses,
+  addresses: addresses.opbnb!,
 };
 const opbnbtest: Network = {
   networkName: "opbnbtest",
@@ -100,7 +100,7 @@ const opbnbtest: Network = {
     decimals: 18,
   },
   blockExplorerUrls: ["https://testnet.opbnbscan.com"],
-  addresses: addresses["opbnbtest"] as Addresses,
+  addresses: addresses.opbnbtest!,
 };
 
 // celo
@@ -127,7 +127,7 @@ const celo: Network = {
   },
   blockExplorerUrls: ["https://celoscan.io"],
   blockExplorerApiUrls: ["https://api.celoscan.io/api"],
-  addresses: addresses["celo"] as Addresses,
+  addresses: addresses.celo!,
 };
 const alfajores: Network = {
   networkName: "alfajores",
@@ -152,7 +152,7 @@ const alfajores: Network = {
   },
   blockExplorerUrls: ["https://alfajores.celoscan.io"],
   blockExplorerApiUrls: ["https://api-alfajores.celoscan.io/api"],
-  addresses: addresses["alfajores"] as Addresses,
+  addresses: addresses.alfajores!,
 };
 
 // polygon
@@ -179,7 +179,7 @@ const polygon: Network = {
   ],
   blockExplorerUrls: ["https://polygonscan.com"],
   blockExplorerApiUrls: ["https://api.polygonscan.com/api"],
-  addresses: addresses["polygon"] as Addresses,
+  addresses: addresses.polygon!,
   // https://github.com/maticnetwork/bor/issues/384
   skipEip1559: true,
 };
@@ -206,7 +206,7 @@ const mumbai: Network = {
   ],
   blockExplorerUrls: ["https://mumbai.polygonscan.com"],
   blockExplorerApiUrls: ["https://api-mumbai.polygonscan.com/api"],
-  addresses: addresses["mumbai"] as Addresses,
+  addresses: addresses.mumbai!,
   gasSlippagePercentage: 5000,
 };
 
@@ -234,7 +234,7 @@ const ethereum: Network = {
   ],
   blockExplorerUrls: ["https://etherscan.io"],
   blockExplorerApiUrls: ["https://api.etherscan.io/api"],
-  addresses: addresses["ethereum"] as Addresses,
+  addresses: addresses.ethereum!,
 };
 // @deprecated: use sepolia instead
 const goerli: Network = {
@@ -260,7 +260,7 @@ const goerli: Network = {
   ],
   blockExplorerUrls: ["https://goerli.etherscan.io"],
   blockExplorerApiUrls: ["https://api-goerli.etherscan.io/api"],
-  addresses: addresses["goerli"] as Addresses,
+  addresses: addresses.goerli!,
 };
 const sepolia: Network = {
   networkName: "sepolia",
@@ -276,7 +276,7 @@ const sepolia: Network = {
   rpcUrls: ["https://rpc.sepolia.org", "https://rpc2.sepolia.org"],
   blockExplorerUrls: ["https://sepolia.etherscan.io"],
   blockExplorerApiUrls: ["https://api-sepolia.etherscan.io/api"],
-  addresses: addresses["sepolia"] as Addresses,
+  addresses: addresses.sepolia!,
 };
 
 // base mainnet
@@ -303,7 +303,7 @@ const base: Network = {
   ],
   blockExplorerUrls: ["https://basescan.org"],
   blockExplorerApiUrls: ["https://api.basescan.org/api"],
-  addresses: addresses["base"] as Addresses,
+  addresses: addresses.base!,
 };
 // @deprecated: use base sepolia instead
 const basegoerli: Network = {
@@ -329,7 +329,7 @@ const basegoerli: Network = {
   ],
   blockExplorerUrls: ["https://goerli.basescan.org"],
   blockExplorerApiUrls: ["https://api-goerli.basescan.org/api"],
-  addresses: addresses["basegoerli"] as Addresses,
+  addresses: addresses.basegoerli!,
 };
 const basesepolia: Network = {
   networkName: "basesepolia",
@@ -348,7 +348,7 @@ const basesepolia: Network = {
   ],
   blockExplorerUrls: ["https://base-sepolia.blockscout.com"],
   blockExplorerApiUrls: ["https://api-sepolia.basescan.org/api"],
-  addresses: addresses["basesepolia"] as Addresses,
+  addresses: addresses.basesepolia!,
 };
 
 // scroll mainnet
@@ -374,7 +374,7 @@ const scroll: Network = {
     undefined,
   ],
   blockExplorerUrls: ["https://scrollscan.com"],
-  addresses: addresses["scroll"] as Addresses,
+  addresses: addresses.scroll!,
 };
 const scrollsepolia: Network = {
   networkName: "scrollsepolia",
@@ -398,7 +398,7 @@ const scrollsepolia: Network = {
     undefined,
   ],
   blockExplorerUrls: ["https://sepolia.scrollscan.com"],
-  addresses: addresses["scrollsepolia"] as Addresses,
+  addresses: addresses.scrollsepolia!,
 };
 
 export const SupportedNetworks: Partial<{

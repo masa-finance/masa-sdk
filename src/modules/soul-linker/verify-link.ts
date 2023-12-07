@@ -1,4 +1,5 @@
-import type { BigNumber, Contract } from "ethers";
+import { ILinkableSBT, SBT } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
 import { BaseErrorCodes } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
@@ -9,7 +10,7 @@ export type VerifyLinkResult = BaseResult & { verified?: boolean };
 
 export const verifyLink = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & SBT,
   tokenId: BigNumber,
   readerIdentityId?: BigNumber,
 ): Promise<VerifyLinkResult> => {
@@ -41,13 +42,14 @@ export const verifyLink = async (
   }
 
   if (!readerAddress) {
-    result.message = `No Identity address found for Identity ${readerIdentityId}`;
+    result.message = `No Identity address found for Identity ${readerIdentityId.toNumber()}`;
     logger("error", result);
 
     return result;
   }
 
-  let ownerAddress;
+  let ownerAddress: string;
+
   try {
     const { identityId: ownerIdentityId } = await masa.identity.load(
       (ownerAddress = await contract.ownerOf(tokenId)),

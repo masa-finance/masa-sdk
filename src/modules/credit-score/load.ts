@@ -22,9 +22,9 @@ export const loadCreditScoreDetails = async (
           logger("info", `Credit Score Metadata URL: '${tokenUri}'`);
         }
 
-        const metadata = <ICreditScore | undefined>(
-          await masa.client.metadata.get(tokenUri)
-        );
+        const metadata = (await masa.client.metadata.get(tokenUri)) as
+          | ICreditScore
+          | undefined;
 
         return {
           tokenId,
@@ -70,7 +70,7 @@ export const loadCreditScores = async (
             "ownerOf(uint256)"
           ](identityIdOrAddress);
       } else {
-        identityAddress = identityIdOrAddress as string;
+        identityAddress = identityIdOrAddress;
       }
 
       const balance: number = (

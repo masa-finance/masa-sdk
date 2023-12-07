@@ -23,7 +23,7 @@ export const resolveIdentity = async (
   }
 
   if (!address) {
-    logger("error", `Identity '${identityId}' does not exist!`);
+    logger("error", `Identity '${identityId.toNumber()}' does not exist!`);
   }
 
   return address;

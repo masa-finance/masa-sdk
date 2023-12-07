@@ -1,4 +1,5 @@
-import type { BigNumber, Contract } from "ethers";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, IPassport, MasaInterface } from "../../interface";
@@ -9,7 +10,7 @@ export type CreateLinkResult = BaseResult & { passport?: string };
 
 export const createLink = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
 ): Promise<CreateLinkResult> => {
@@ -28,7 +29,7 @@ export const createLink = async (
   const receiverAddress = await resolveIdentity(masa, readerIdentityId);
 
   if (!receiverAddress) {
-    result.message = `Receiver identity not found! ${readerIdentityId}`;
+    result.message = `Receiver identity not found! ${readerIdentityId.toNumber()}`;
     result.errorCode = BaseErrorCodes.NotFound;
     return result;
   }
@@ -73,7 +74,7 @@ export const createLink = async (
   };
 
   result.passport = btoa(JSON.stringify(passport, null, 2));
-  logger("log", `Link passport: ${passport}\n`);
+  logger("log", `Link passport: ${JSON.stringify(passport)}\n`);
 
   result.success = true;
   delete result.errorCode;

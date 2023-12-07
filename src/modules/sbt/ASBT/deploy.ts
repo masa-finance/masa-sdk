@@ -32,7 +32,7 @@ export const deployASBT = async ({
 }): Promise<DeployResult<PaymentParamsStruct> | undefined> => {
   let result: DeployResult<PaymentParamsStruct> | undefined;
 
-  adminAddress = adminAddress || (await masa.config.signer.getAddress());
+  adminAddress = adminAddress ?? (await masa.config.signer.getAddress());
 
   logger(
     "log",
@@ -66,7 +66,7 @@ export const deployASBT = async ({
     name,
     symbol,
     baseTokenUri,
-    masa.contracts.instances.SoulboundIdentityContract.address ||
+    masa.contracts.instances.SoulboundIdentityContract.address ??
       constants.AddressZero,
     {
       // get this from the sdk
@@ -76,9 +76,9 @@ export const deployASBT = async ({
       // get this from the sdk
       stableCoin: constants.AddressZero,
       masaToken:
-        masa.config.network?.addresses.tokens?.MASA || constants.AddressZero,
+        masa.config.network?.addresses.tokens?.MASA ?? constants.AddressZero,
       projectFeeReceiver:
-        paymentOptions?.projectFeeReceiver || constants.AddressZero,
+        paymentOptions?.projectFeeReceiver ?? constants.AddressZero,
       // get this from the sdk
       protocolFeeReceiver: constants.AddressZero,
       protocolFeeAmount: 0,

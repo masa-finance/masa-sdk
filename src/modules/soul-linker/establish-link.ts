@@ -1,4 +1,5 @@
-import { BigNumber, Contract } from "ethers";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
+import { BigNumber } from "ethers";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import type {
@@ -15,7 +16,7 @@ export type EstablishLinkResult = BaseResult;
 export const establishLink = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
   signature: string,
@@ -40,7 +41,7 @@ export const establishLink = async (
     return result;
   }
 
-  let ownerAddress;
+  let ownerAddress: string;
   const { identityId: ownerIdentityId } = await masa.identity.load(
     (ownerAddress = await contract.ownerOf(tokenId)),
   );
@@ -85,7 +86,7 @@ export const establishLink = async (
 export const establishLinkFromPassport = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   passport: string,
 ): Promise<BaseResult> => {
   const unpackedPassport: IPassport = parsePassport(passport);

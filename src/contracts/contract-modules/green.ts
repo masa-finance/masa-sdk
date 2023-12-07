@@ -25,7 +25,7 @@ export class Green extends MasaSBTModuleBase {
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     MintGreen: [
       { name: "to", type: "address" },
       { name: "authorityAddress", type: "address" },
@@ -231,7 +231,7 @@ export class Green extends MasaSBTModuleBase {
       errorCode: BaseErrorCodes.UnknownError,
     };
 
-    logger("log", `Burning Green with ID '${greenId}'!`);
+    logger("log", `Burning Green with ID '${greenId.toNumber()}'!`);
 
     const {
       estimateGas: { burn: estimateGas },
@@ -257,7 +257,7 @@ export class Green extends MasaSBTModuleBase {
 
       await wait();
 
-      logger("log", `Burned Green with ID '${greenId}'!`);
+      logger("log", `Burned Green with ID '${greenId.toNumber()}'!`);
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {

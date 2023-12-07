@@ -54,7 +54,7 @@ export const purchaseIdentity = async (
         logger("dir", { identityMintEvent });
       }
 
-      tokenId = identityMintEvent.args._tokenId.toString();
+      tokenId = (identityMintEvent.args._tokenId as BigNumber).toString();
       logger("log", `Identity with ID: '${tokenId}' created.`);
     }
 
@@ -101,7 +101,7 @@ export const createIdentity = async (
   const { identityId } = await masa.identity.load();
 
   if (identityId) {
-    result.message = `Identity already created! '${identityId}'`;
+    result.message = `Identity already created! '${identityId.toNumber()}'`;
     result.errorCode = BaseErrorCodes.AlreadyExists;
     logger("error", result);
 
@@ -190,7 +190,9 @@ export const purchaseIdentityWithSoulName = async (
                 logger("dir", { identityMintEvent });
               }
 
-              identityId = identityMintEvent.args._tokenId.toString();
+              identityId = (
+                identityMintEvent.args._tokenId as BigNumber
+              ).toString();
               logger("log", `Identity with ID: '${identityId}' created.`);
             }
 
@@ -204,7 +206,9 @@ export const purchaseIdentityWithSoulName = async (
                 logger("dir", { soulnameTransferEventArgs });
               }
 
-              tokenId = soulnameTransferEventArgs.tokenId.toString();
+              tokenId = (
+                soulnameTransferEventArgs.tokenId as BigNumber
+              ).toString();
               logger("log", `SoulName with ID: '${tokenId}' created.`);
             }
 
@@ -295,7 +299,7 @@ export const createIdentityWithSoulName = async (
     const { identityId } = await masa.identity.load(address);
 
     if (identityId) {
-      result.message = `Identity already created! '${identityId}'`;
+      result.message = `Identity already created! '${identityId.toNumber()}'`;
       result.errorCode = SoulNameErrorCodes.SoulNameError;
       logger("error", result);
 

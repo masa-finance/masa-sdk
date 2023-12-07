@@ -1,4 +1,5 @@
 import { LogDescription } from "@ethersproject/abi";
+import { BigNumber } from "ethers";
 
 import {
   BaseErrorCodes,
@@ -35,7 +36,7 @@ const purchaseSoulName = async (
   ]);
 
   if (isAvailable) {
-    receiver = receiver || (await masa.config.signer.getAddress());
+    receiver = receiver ?? (await masa.config.signer.getAddress());
 
     const storeMetadataResponse:
       | SoulNameMetadataStoreResult
@@ -81,17 +82,21 @@ const purchaseSoulName = async (
           {
             let tokenId: string | undefined;
 
-            const soulnameTransferEvent = parsedLogs.find(
-              (event: LogDescription) => event.name === "Transfer",
-            );
+            const soulnameTransferEvent: LogDescription | undefined =
+              parsedLogs.find(
+                (event: LogDescription) => event.name === "Transfer",
+              );
 
             if (soulnameTransferEvent) {
               const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
+
               if (masa.config.verbose) {
                 logger("dir", { soulnameTransferEventArgs });
               }
 
-              tokenId = soulnameTransferEventArgs.tokenId.toString();
+              tokenId = (
+                soulnameTransferEventArgs.tokenId as BigNumber
+              ).toString();
               logger("log", `SoulName with ID: '${tokenId}' created.`);
             }
 

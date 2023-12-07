@@ -25,7 +25,7 @@ export class SSSBTContractWrapper<
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     Mint: [
       { name: "to", type: "address" },
       { name: "authorityAddress", type: "address" },
@@ -41,7 +41,7 @@ export class SSSBTContractWrapper<
    */
   public sign = async (
     name: string,
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number>,
   ): Promise<{
     signature: string;
@@ -83,7 +83,7 @@ export class SSSBTContractWrapper<
   protected prepareMint = async (
     paymentMethod: PaymentMethod,
     name: string,
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number>,
     signature: string,
     authorityAddress: string,
@@ -251,7 +251,7 @@ export class SSSBTContractWrapper<
 
         result.success = true;
         delete result.errorCode;
-        result.tokenId = args._tokenId;
+        result.tokenId = args._tokenId as BigNumber;
       }
     } catch (error: unknown) {
       result.message = "Minting SSSBT failed! ";

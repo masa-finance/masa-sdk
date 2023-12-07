@@ -7,9 +7,6 @@ import type {
   ChallengeResultWithCookie,
   GenerateCreditScoreResult,
   GenerateGreenResult,
-  ICreditScore,
-  IGreen,
-  IIdentity,
   ISession,
   LogoutResult,
   MasaInterface,
@@ -75,7 +72,7 @@ export class MasaClient extends MasaBase {
     ): Promise<SessionUser | undefined> => {
       let result;
 
-      const cookieToUse = cookie || this.cookie;
+      const cookieToUse = cookie ?? this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
         .post<
@@ -101,7 +98,7 @@ export class MasaClient extends MasaBase {
         });
 
       const { data: checkSignatureResponseData, status } =
-        checkSignatureResponse || {};
+        checkSignatureResponse ?? {};
 
       if (this.masa.config.verbose) {
         logger("dir", {
@@ -148,7 +145,7 @@ export class MasaClient extends MasaBase {
         }
 
         const { data: getChallengeResponseData, status } =
-          getChallengeResponse || {};
+          getChallengeResponse ?? {};
 
         if (this.masa.config.verbose) {
           logger("dir", {
@@ -190,21 +187,21 @@ export class MasaClient extends MasaBase {
     get: async (
       uri: string,
       additionalHeaders?: Record<string, string>,
-    ): Promise<IIdentity | ICreditScore | IGreen | undefined> => {
+    ): Promise<object | undefined> => {
       const headers = {
         cookie: this.cookie ? [this.cookie] : undefined,
         ...additionalHeaders,
       };
 
       const metadataResponse = await this._middlewareClient
-        .get(uri, {
+        .get<object>(uri, {
           headers,
         })
         .catch((error: Error | AxiosError) => {
           logger("error", `Failed to load Metadata! ${error.message} ${uri}`);
         });
 
-      const { data: metadataResponseData, status } = metadataResponse || {};
+      const { data: metadataResponseData, status } = metadataResponse ?? {};
 
       if (this.masa.config.verbose) {
         logger("dir", {
@@ -452,7 +449,7 @@ export class MasaClient extends MasaBase {
         }
       });
 
-    const { data: postResponseData, status, statusText } = postResponse || {};
+    const { data: postResponseData, status, statusText } = postResponse ?? {};
 
     if (this.masa.config.verbose) {
       logger("dir", {
@@ -492,7 +489,7 @@ export class MasaClient extends MasaBase {
         }
       });
 
-    const { data: patchData, status } = patchResponse || {};
+    const { data: patchData, status } = patchResponse ?? {};
 
     if (this.masa.config.verbose) {
       logger("dir", {
@@ -527,7 +524,7 @@ export class MasaClient extends MasaBase {
         }
       });
 
-    const { data: getData, status } = getResponse || {};
+    const { data: getData, status } = getResponse ?? {};
 
     if (this.masa.config.verbose) {
       logger("dir", {

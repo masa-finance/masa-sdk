@@ -106,6 +106,8 @@
   },
   "include": [
     "src/**/*",
+    "webpack.*.ts",
+    "test/**/*",
     "package.json"
-  ]
+    ]
 }

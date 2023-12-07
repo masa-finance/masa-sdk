@@ -1,11 +1,11 @@
-import { ILinkableSBT } from "@masa-finance/masa-contracts-identity";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
 
 import type { MasaInterface } from "../interface";
 import { MasaBase } from "../masa-base";
 import { MasaSoulLinker } from "./soul-linker";
 
 export abstract class MasaLinkable<
-  LinkContract extends ILinkableSBT,
+  LinkContract extends ILinkableSBT & MasaSBT,
 > extends MasaBase {
   public readonly links: MasaSoulLinker;
 

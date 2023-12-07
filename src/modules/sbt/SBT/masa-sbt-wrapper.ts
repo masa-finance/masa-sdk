@@ -20,7 +20,7 @@ export class MasaSBTWrapper<
       tokenUri: string;
     }[]
   > => {
-    address = address || (await this.masa.config.signer.getAddress());
+    address = address ?? (await this.masa.config.signer.getAddress());
 
     const SBTs = await this.loadSBTs(address);
 
@@ -36,7 +36,7 @@ export class MasaSBTWrapper<
     let i = 1;
     for (const SBT of SBTs) {
       logger("log", `Token: ${i}`);
-      logger("log", `Token ID: ${SBT.tokenId}`);
+      logger("log", `Token ID: ${SBT.tokenId.toNumber()}`);
       logger("log", `Metadata: ${SBT.tokenUri}`);
 
       i++;
@@ -87,7 +87,7 @@ export class MasaSBTWrapper<
               "ownerOf(uint256)"
             ](identityIdOrAddress);
         } else {
-          identityAddress = identityIdOrAddress as string;
+          identityAddress = identityIdOrAddress;
         }
 
         const balance: number = (
@@ -143,7 +143,7 @@ export class MasaSBTWrapper<
    * @param SBTId
    */
   public burn = async (SBTId: BigNumber): Promise<BaseResult> => {
-    logger("log", `Burning SBT with ID '${SBTId}'!`);
+    logger("log", `Burning SBT with ID '${SBTId.toNumber()}'!`);
 
     const { burn } = this.masa.contracts.sbt.attach(this.contract);
 

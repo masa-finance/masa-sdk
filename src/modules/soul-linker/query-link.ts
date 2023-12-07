@@ -1,5 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "ethers";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import type {
@@ -15,7 +15,7 @@ export type QueryLinkResult = BaseResult;
 
 export const queryLink = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   paymentMethod: PaymentMethod,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
@@ -68,7 +68,7 @@ export const queryLink = async (
   );
   logger("log", `to Identity ${readerIdentityId.toString()} (${address})\n`);
 
-  const txHash = await masa.contracts.soulLinker.addLink(
+  const { transactionHash } = await masa.contracts.soulLinker.addLink(
     contract.address,
     paymentMethod,
     readerIdentityId,
@@ -79,9 +79,9 @@ export const queryLink = async (
     signature,
   );
 
-  logger("log", `tx hash for middleware ${txHash}`);
+  logger("log", `tx hash for middleware ${transactionHash}`);
 
-  const { "tokenURI(uint256)": tokenURI } = contract;
+  const { tokenURI: tokenURI } = contract;
 
   const tokenUri = patchMetadataUrl(masa, await tokenURI(tokenId));
 
@@ -96,7 +96,7 @@ export const queryLink = async (
 export const queryLinkFromPassport = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   passport: string,
 ): Promise<BaseResult> => {
   const unpackedPassport: IPassport = parsePassport(passport);

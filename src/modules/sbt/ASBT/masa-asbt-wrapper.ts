@@ -54,7 +54,7 @@ export class MasaASBTWrapper<
     logger("log", `Contract Name: '${name}'`);
     logger("log", `Contract Symbol: '${symbol}'`);
     logger("log", `Contract Address: '${this.contract.address}'`);
-    logger("log", `To receiver: '${receivers}'`);
+    logger("log", `To receivers: '${receivers.join(", ")}'`);
 
     const { bulkMint } = this.masa.contracts.asbt.attach(this.contract);
 

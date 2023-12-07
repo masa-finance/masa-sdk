@@ -150,7 +150,7 @@ export class Identity extends MasaSBTModuleBase {
       errorCode: BaseErrorCodes.UnknownError,
     };
 
-    logger("log", `Burning Identity with ID '${identityId}'!`);
+    logger("log", `Burning Identity with ID '${identityId.toNumber()}'!`);
 
     const {
       estimateGas: { burn: estimateGas },
@@ -175,7 +175,7 @@ export class Identity extends MasaSBTModuleBase {
 
       await wait();
 
-      logger("log", `Burned Identity with ID '${identityId}'!`);
+      logger("log", `Burned Identity with ID '${identityId.toNumber()}'!`);
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {

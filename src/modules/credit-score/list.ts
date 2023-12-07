@@ -7,14 +7,14 @@ export const listCreditScores = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<CreditScoreDetails[]> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
 
   const { identityId } = await masa.identity.load(address);
   if (!identityId) {
     logger("warn", Messages.NoIdentity(address));
   }
 
-  return await loadCreditScores(masa, identityId || address);
+  return await loadCreditScores(masa, identityId ?? address);
 };
 
 export const listCreditScoresAndPrint = async (
@@ -30,7 +30,7 @@ export const listCreditScoresAndPrint = async (
   let i = 1;
   for (const creditScore of creditScores) {
     logger("log", `Token: ${i}`);
-    logger("log", `Token ID: ${creditScore.tokenId}`);
+    logger("log", `Token ID: ${creditScore.tokenId.toNumber()}`);
     i++;
     if (creditScore.metadata && masa.config.verbose) {
       logger(

@@ -25,7 +25,7 @@ export class SoulName extends MasaModuleBase {
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     MintSoulName: [
       { name: "to", type: "address" },
       { name: "name", type: "string" },
@@ -68,7 +68,7 @@ export class SoulName extends MasaModuleBase {
     signature: string,
     receiver?: string,
   ): Promise<ContractTransaction> => {
-    const to = receiver || (await this.masa.config.signer.getAddress());
+    const to = receiver ?? (await this.masa.config.signer.getAddress());
 
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
@@ -330,7 +330,7 @@ export class SoulName extends MasaModuleBase {
     if (soulNameData.exists) {
       logger(
         "log",
-        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
+        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId.toNumber()}' to '${receiver}'!`,
       );
 
       const {
@@ -366,7 +366,7 @@ export class SoulName extends MasaModuleBase {
 
         logger(
           "log",
-          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
+          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId.toNumber()}' sent!`,
         );
 
         result.success = true;
@@ -406,7 +406,7 @@ export class SoulName extends MasaModuleBase {
     if (soulNameData.exists) {
       logger(
         "log",
-        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`,
+        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId.toNumber()}'!`,
       );
 
       const {
@@ -436,7 +436,7 @@ export class SoulName extends MasaModuleBase {
 
         logger(
           "log",
-          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
+          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId.toNumber()}'!`,
         );
 
         result.success = true;

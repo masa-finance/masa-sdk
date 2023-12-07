@@ -13,7 +13,7 @@ export const listSoulNames = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<SoulNameDetails[]> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
   return await loadSoulNameDetailsByAddress(masa, address);
 };
 
@@ -27,7 +27,7 @@ export const listSoulNamesAndPrint = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<SoulNameDetails[]> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
   const soulNames = await listSoulNames(masa, address);
 
   if (soulNames.length > 0) {

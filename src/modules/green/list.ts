@@ -6,7 +6,7 @@ export const listGreens = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<GreenDetails[]> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
   return loadGreens(masa, address);
 };
 
@@ -23,7 +23,7 @@ export const listGreensAndPrint = async (
   let i = 1;
   for (const green of greens) {
     logger("log", `Token: ${i}`);
-    logger("log", `Token ID: ${green.tokenId}`);
+    logger("log", `Token ID: ${green.tokenId.toNumber()}`);
     i++;
     if (green.metadata) {
       logger("log", `Metadata: ${JSON.stringify(green.metadata, null, 2)}`);

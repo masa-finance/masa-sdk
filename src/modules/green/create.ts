@@ -1,4 +1,5 @@
 import { LogDescription } from "@ethersproject/abi";
+import { BigNumber } from "ethers";
 
 import { BaseErrorCodes, Messages } from "../../collections";
 import { parseEthersError } from "../../contracts/contract-modules/ethers";
@@ -174,7 +175,7 @@ export const mintGreen = async (
         logger("dir", { greenMintEvent });
       }
 
-      tokenId = greenMintEvent.args._tokenId.toString();
+      tokenId = (greenMintEvent.args._tokenId as BigNumber).toString();
       logger("log", `Green with ID: '${tokenId}' created.`);
     }
 

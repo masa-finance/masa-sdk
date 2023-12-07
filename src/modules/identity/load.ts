@@ -16,7 +16,7 @@ export const loadIdentityByAddress = async (
   identityId?: BigNumber;
   address: string;
 }> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
   let identityId;
 
   try {
@@ -68,9 +68,9 @@ export const loadIdentityDetails = async (
     logger("info", `Identity Metadata URL: '${tokenUri}'`);
   }
 
-  const metadata: IIdentity | undefined = <IIdentity | undefined>(
-    await masa.client.metadata.get(tokenUri)
-  );
+  const metadata: IIdentity | undefined = (await masa.client.metadata.get(
+    tokenUri,
+  )) as IIdentity | undefined;
 
   return {
     tokenId: identityId,
@@ -85,7 +85,7 @@ export const loadIdentity = async (
 ): Promise<IdentityDetails | undefined> => {
   let result;
 
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
 
   const { identityId } = await masa.identity.load(address);
   if (identityId) {

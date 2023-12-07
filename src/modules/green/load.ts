@@ -21,9 +21,9 @@ export const loadGreenDetails = async (
           logger("info", `Green Metadata URL: '${tokenUri}'`);
         }
 
-        const metadata = <IGreen | undefined>(
-          await masa.client.metadata.get(tokenUri)
-        );
+        const metadata = (await masa.client.metadata.get(tokenUri)) as
+          | IGreen
+          | undefined;
 
         return {
           tokenId,
@@ -69,7 +69,7 @@ export const loadGreens = async (
             "ownerOf(uint256)"
           ](identityIdOrAddress);
       } else {
-        identityAddress = identityIdOrAddress as string;
+        identityAddress = identityIdOrAddress;
       }
 
       const balance: number = (

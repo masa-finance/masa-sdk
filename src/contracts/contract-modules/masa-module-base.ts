@@ -304,7 +304,7 @@ export abstract class MasaModuleBase extends MasaBase {
       | SoulStore
       | SoulLinker,
     domain: TypedDataDomain,
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number | boolean>,
     signature: string,
     authorityAddress: string,

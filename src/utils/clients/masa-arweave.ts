@@ -18,7 +18,7 @@ export class MasaArweave extends Arweave {
     txId: string,
     isString: boolean = true,
   ): Promise<object | Uint8Array | undefined> {
-    let data;
+    let data: object | Uint8Array | undefined;
 
     try {
       const { status } = await this.transactions.getStatus(txId);
@@ -37,7 +37,7 @@ export class MasaArweave extends Arweave {
         );
 
         data = isString
-          ? JSON.parse(dataResponse as string)
+          ? (JSON.parse(dataResponse as string) as object)
           : (dataResponse as Uint8Array);
       }
     } catch (error: unknown) {
@@ -57,7 +57,7 @@ export class MasaArweave extends Arweave {
         );
       }
 
-      const { data: dataResponse } = await axios.get(
+      const { data: dataResponse } = await axios.get<object | Uint8Array>(
         url,
         isString
           ? {}

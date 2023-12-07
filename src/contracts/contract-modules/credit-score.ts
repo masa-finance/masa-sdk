@@ -25,7 +25,7 @@ export class CreditScore extends MasaSBTModuleBase {
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     MintCreditScore: [
       { name: "identityId", type: "uint256" },
       { name: "authorityAddress", type: "address" },
@@ -215,7 +215,10 @@ export class CreditScore extends MasaSBTModuleBase {
       errorCode: BaseErrorCodes.UnknownError,
     };
 
-    logger("log", `Burning Credit Score with ID '${creditScoreId}'!`);
+    logger(
+      "log",
+      `Burning Credit Score with ID '${creditScoreId.toNumber()}'!`,
+    );
 
     const {
       estimateGas: { burn: estimateGas },
@@ -241,7 +244,10 @@ export class CreditScore extends MasaSBTModuleBase {
 
       await wait();
 
-      logger("log", `Burned Credit Score with ID '${creditScoreId}'!`);
+      logger(
+        "log",
+        `Burned Credit Score with ID '${creditScoreId.toNumber()}'!`,
+      );
       result.success = true;
       delete result.errorCode;
     } catch (error: unknown) {

@@ -4,7 +4,7 @@ import { Masa, NetworkName, SupportedNetworks } from "../../src";
 
 export const getTestMasa = (networkName: NetworkName): Masa => {
   const provider = new providers.JsonRpcProvider(
-    SupportedNetworks[networkName].rpcUrls[0],
+    SupportedNetworks[networkName]?.rpcUrls[0],
   );
 
   return new Masa({
