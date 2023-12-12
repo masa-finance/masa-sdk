@@ -2,7 +2,7 @@ import { BaseErrorCodes } from "./base-error-codes";
 
 export enum SoulNameErrorCodes {
   /**
-   * Arweave related issues
+   * @description Arweave related issues
    */
   ArweaveError = "ArweaveError",
   /**
