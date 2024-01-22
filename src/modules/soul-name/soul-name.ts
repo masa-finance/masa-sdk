@@ -10,6 +10,7 @@ import {
   loadSoulNameByName,
   loadSoulNameByTokenId,
   loadSoulNames,
+  loadSoulNamesWithExpired,
 } from "./load";
 import { renewSoulName } from "./renew";
 import { resolveSoulName } from "./resolve";
@@ -43,6 +44,13 @@ export class MasaSoulName extends MasaBase {
    */
   loadSoulNames = (identityIdOrAddress: BigNumber | string) =>
     loadSoulNames(this.masa, identityIdOrAddress);
+
+  /**
+   *
+   * @param identityIdOrAddress
+   */
+  loadSoulNamesWithExpired = (identityIdOrAddress: BigNumber | string) =>
+    loadSoulNamesWithExpired(this.masa, identityIdOrAddress);
 
   /**
    *
