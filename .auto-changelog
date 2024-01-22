@@ -1,0 +1,7 @@
+{
+  "commitLimit": false,
+  "ignoreCommitPattern": "^(build|Bump|chore|ci|docs|refactor|style|test|Initial.*|Merge.*)",
+  "output": "CHANGELOG.md",
+  "template": "compact",
+  "unreleased": false
+}
