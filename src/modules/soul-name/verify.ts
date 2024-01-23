@@ -1,7 +1,8 @@
 import { utils } from "ethers";
 
-import type { MasaInterface } from "../../interface";
-import { recoverAddress } from "../../utils";
+import { BaseErrorCodes } from "../../collections";
+import type { BaseResult, MasaInterface } from "../../interface";
+import { logger, recoverAddress } from "../../utils";
 
 const minters = [
   // testnets service account
@@ -16,18 +17,22 @@ const arAccounts = [
   "xDKpdiZ7H9n_SsdX_CMpkybMGIdin5AUciM00mQgxRE",
 ];
 
-export const verifyByName = async (
-  masa: MasaInterface,
-  soulName: string,
-): Promise<{
+export interface VerifyResult extends BaseResult {
   nameMatch: boolean;
   imageOwnerIsMasaAccount: boolean;
   imageHashMatch: boolean;
   imageSignatureMatch: boolean;
   metadataSignatureMatch: boolean;
   metadataOwnerIsMasaAccount: boolean;
-}> => {
-  const result = {
+}
+
+export const verifyByName = async (
+  masa: MasaInterface,
+  soulName: string,
+): Promise<VerifyResult> => {
+  const result: VerifyResult = {
+    success: false,
+    errorCode: BaseErrorCodes.UnknownError,
     nameMatch: false,
     imageOwnerIsMasaAccount: false,
     imageHashMatch: false,
@@ -58,9 +63,9 @@ export const verifyByName = async (
         result.metadataOwnerIsMasaAccount =
           Boolean(metadataOwner) && arAccounts.indexOf(metadataOwner) > -1;
       } catch {
-        console.error(
-          "Failed to load metadata transaction!",
-          soulNameMetadataTxId,
+        logger(
+          "error",
+          `Failed to load metadata transaction! ${soulNameMetadataTxId}`,
         );
       }
     }
@@ -79,7 +84,7 @@ export const verifyByName = async (
         result.imageOwnerIsMasaAccount =
           Boolean(imageDataOwner) && arAccounts.indexOf(imageDataOwner) > -1;
       } catch {
-        console.error("Failed to load image transaction!", imageTxId);
+        logger("error", `Failed to load image transaction! ${imageTxId}`);
       }
 
       try {
@@ -108,7 +113,10 @@ export const verifyByName = async (
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error("Failed to load image data!", imageTxId, error.message);
+          logger(
+            "error",
+            `Failed to load image data! ${imageTxId} ${error.message}`,
+          );
         }
       }
     }
@@ -131,8 +139,19 @@ export const verifyByName = async (
           minters.indexOf(recoveredMetadataAddress) > -1,
       );
     }
+
+    result.success =
+      result.nameMatch &&
+      result.imageOwnerIsMasaAccount &&
+      result.imageHashMatch &&
+      result.imageSignatureMatch &&
+      result.metadataSignatureMatch &&
+      result.metadataOwnerIsMasaAccount;
   } else {
-    console.error(`Soul Name '${soulName}' not found!`);
+    result.message = `Soul Name '${soulName}' not found!`;
+    result.errorCode = BaseErrorCodes.NotFound;
+
+    logger("error", result);
   }
 
   return result;

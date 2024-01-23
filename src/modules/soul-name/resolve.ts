@@ -1,4 +1,5 @@
 import type { MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 
 /**
  *
@@ -22,7 +23,7 @@ export const resolveSoulName = async (
     owner = masa.contracts.instances.SoulNameContract.ownerOf(tokenId);
   } catch (error: unknown) {
     if (error instanceof Error && masa.config.verbose) {
-      console.error(`Resolving soul name failed: ${error.message}`);
+      logger("error", `Resolving soul name failed: ${error.message}`);
     }
   }
 

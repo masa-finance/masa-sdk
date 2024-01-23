@@ -1,6 +1,11 @@
 import type { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 
-import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
+import type {
+  BaseResult,
+  BaseResultWithTokenId,
+  PaymentMethod,
+} from "../../../interface";
+import { logger } from "../../../utils";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaASBTWrapper<
@@ -11,7 +16,7 @@ export class MasaASBTWrapper<
    * @param receiver
    * @param paymentMethod
    */
-  mint = async (
+  public mint = async (
     receiver: string,
     paymentMethod: PaymentMethod = "ETH",
   ): Promise<BaseResultWithTokenId> => {
@@ -20,11 +25,11 @@ export class MasaASBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Minting ASBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receiver}'`);
+    logger("log", `Minting ASBT on: '${this.masa.config.networkName}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const { mint } = this.masa.contracts.asbt.attach(this.contract);
 
@@ -36,20 +41,20 @@ export class MasaASBTWrapper<
    * @param receivers
    * @param paymentMethod
    */
-  bulkMint = async (
+  public bulkMint = async (
     receivers: string[],
     paymentMethod: PaymentMethod = "ETH",
-  ) => {
+  ): Promise<BaseResult[]> => {
     const [name, symbol] = await Promise.all([
       this.contract.name(),
       this.contract.symbol(),
     ]);
 
-    console.log(`Bulk Minting ASBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receivers}'`);
+    logger("log", `Bulk Minting ASBT on: '${this.masa.config.networkName}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receivers: '${receivers.join(", ")}'`);
 
     const { bulkMint } = this.masa.contracts.asbt.attach(this.contract);
 

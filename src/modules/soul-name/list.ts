@@ -1,4 +1,5 @@
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { logger } from "../../utils";
 import { printSoulName } from "./helpers";
 import { loadSoulNameDetailsByAddress } from "./load";
 
@@ -12,7 +13,7 @@ export const listSoulNames = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<SoulNameDetails[]> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
   return await loadSoulNameDetailsByAddress(masa, address);
 };
 
@@ -26,7 +27,7 @@ export const listSoulNamesAndPrint = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<SoulNameDetails[]> => {
-  address = address || (await masa.config.signer.getAddress());
+  address = address ?? (await masa.config.signer.getAddress());
   const soulNames = await listSoulNames(masa, address);
 
   if (soulNames.length > 0) {
@@ -36,7 +37,7 @@ export const listSoulNamesAndPrint = async (
       index++;
     }
   } else {
-    console.error(`No soulnames found for '${address}'`);
+    logger("error", `No soulnames found for '${address}'`);
   }
 
   return soulNames;

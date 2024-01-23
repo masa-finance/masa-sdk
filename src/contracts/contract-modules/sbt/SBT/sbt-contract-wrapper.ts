@@ -1,7 +1,7 @@
 import { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import { BigNumber } from "ethers";
 
-import { Messages } from "../../../../collections";
+import { BaseErrorCodes, Messages } from "../../../../collections";
 import type {
   BaseResult,
   IIdentityContracts,
@@ -9,12 +9,14 @@ import type {
   PaymentMethod,
   PriceInformation,
 } from "../../../../interface";
+import { logger } from "../../../../utils";
+import { parseEthersError } from "../../ethers";
 import { MasaSBTModuleBase } from "../masa-sbt-module-base";
 
 export class SBTContractWrapper<
   Contract extends MasaSBT,
 > extends MasaSBTModuleBase {
-  constructor(
+  public constructor(
     masa: MasaInterface,
     instances: IIdentityContracts,
     public readonly contract: Contract,
@@ -38,7 +40,10 @@ export class SBTContractWrapper<
    * @param tokenId
    */
   public burn = async (tokenId: BigNumber): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const {
       estimateGas: { burn: estimateGas },
@@ -52,7 +57,8 @@ export class SBTContractWrapper<
 
       const { wait, hash } = await burn(tokenId, { gasLimit });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -62,11 +68,15 @@ export class SBTContractWrapper<
       await wait();
 
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Burning SBT Failed! '${error.message}'`;
-        console.error(result.message);
-      }
+      result.message = "Burning SBT Failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;

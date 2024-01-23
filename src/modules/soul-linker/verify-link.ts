@@ -1,19 +1,22 @@
-import type { BigNumber, Contract } from "ethers";
+import { ILinkableSBT, SBT } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
+import { BaseErrorCodes } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 import { Link, loadLinks } from "./list-links";
 
 export type VerifyLinkResult = BaseResult & { verified?: boolean };
 
 export const verifyLink = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & SBT,
   tokenId: BigNumber,
   readerIdentityId?: BigNumber,
 ): Promise<VerifyLinkResult> => {
   const result: VerifyLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId } = await masa.identity.load();
@@ -23,7 +26,8 @@ export const verifyLink = async (
 
   if (!readerIdentityId) {
     result.message = "Cant find reader identity";
-    console.error(result.message);
+    logger("error", result);
+
     return result;
   }
 
@@ -38,12 +42,14 @@ export const verifyLink = async (
   }
 
   if (!readerAddress) {
-    result.message = `No Identity address found for Identity ${readerIdentityId}`;
-    console.error(result.message);
+    result.message = `No Identity address found for Identity ${readerIdentityId.toNumber()}`;
+    logger("error", result);
+
     return result;
   }
 
-  let ownerAddress;
+  let ownerAddress: string;
+
   try {
     const { identityId: ownerIdentityId } = await masa.identity.load(
       (ownerAddress = await contract.ownerOf(tokenId)),
@@ -51,21 +57,25 @@ export const verifyLink = async (
 
     if (!ownerIdentityId) {
       result.message = "Owner identity not found";
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
-    console.log(
+    logger(
+      "log",
       `Verifying link for '${await contract.name()}' (${
         contract.address
       }) ID: ${tokenId.toString()}`,
     );
-    console.log(
+    logger(
+      "log",
       `from Identity ${ownerIdentityId.toString()} (${ownerAddress}) ${
         ownerIdentityId.toString() === identityId?.toString() ? "You" : ""
       }`,
     );
-    console.log(
+    logger(
+      "log",
       `to Identity ${readerIdentityId.toString()} (${readerAddress}) ${
         readerIdentityId.toString() === identityId?.toString() ? "You" : ""
       }\n`,
@@ -73,7 +83,8 @@ export const verifyLink = async (
 
     if (readerIdentityId.toString() === ownerIdentityId.toString()) {
       result.message = "Reader and owner identity must be different!";
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
@@ -94,8 +105,8 @@ export const verifyLink = async (
           );
 
         if (result.verified) {
-          result.message = "";
           result.success = true;
+          delete result.errorCode;
           break;
         }
       } catch (error: unknown) {
@@ -104,20 +115,22 @@ export const verifyLink = async (
             result.message = "Link expired!";
             break;
           default:
-            console.error((error as { errorName: string }).errorName);
+            logger("error", (error as { errorName: string }).errorName);
         }
       }
     }
 
     if (links.length < 1) {
       result.message = "Link not found!";
-      console.error(result.message);
+      result.errorCode = BaseErrorCodes.NotFound;
+
+      logger("error", result);
     }
 
-    console.log({ validateLinkResult: result });
+    logger("dir", { validateLinkResult: result });
   } catch {
     result.message = `Token ${tokenId.toString()} does not exist!`;
-    console.error(result.message);
+    logger("error", result);
   }
 
   return result;

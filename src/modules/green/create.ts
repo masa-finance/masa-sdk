@@ -1,6 +1,8 @@
 import { LogDescription } from "@ethersproject/abi";
+import { BigNumber } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
+import { parseEthersError } from "../../contracts/contract-modules/ethers";
 import type {
   BaseResultWithTokenId,
   GenerateGreenResult,
@@ -9,6 +11,7 @@ import type {
   PaymentMethod,
   VerifyGreenResult,
 } from "../../interface";
+import { logger } from "../../utils";
 
 /**
  *
@@ -19,14 +22,15 @@ export const generateGreen = async (
   masa: MasaInterface,
   phoneNumber: string,
 ): Promise<GenerateGreenResult> => {
-  const result: GenerateGreenResult = {
+  let result: GenerateGreenResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   if (await masa.session.checkLogin()) {
     if (!masa.contracts.instances.SoulboundGreenContract.hasAddress) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
@@ -41,25 +45,30 @@ export const generateGreen = async (
           await masa.client.green.generate(phoneNumber);
 
         if (masa.config.verbose) {
-          console.dir({ greenGenerateResult }, { depth: null });
+          logger("dir", { greenGenerateResult });
         }
 
         return greenGenerateResult;
       } else {
         const message = "Masa Green already created!";
-        return {
-          success: false,
+        result = {
+          ...result,
           message,
           status: "failed",
+          errorCode: BaseErrorCodes.AlreadyExists,
         };
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = error.message;
-      }
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message = message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
   } else {
     result.message = Messages.NotLoggedIn();
+    result.errorCode = BaseErrorCodes.NotLoggedIn;
   }
 
   return result;
@@ -75,22 +84,23 @@ export const verifyGreen = async (
   masa: MasaInterface,
   phoneNumber: string,
   code: string,
-): Promise<VerifyGreenResult | undefined> => {
+): Promise<VerifyGreenResult> => {
   const result: VerifyGreenResult = {
     success: false,
-    message: "Unknown Verify Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   // try to verify with the code
   const greenVerifyResult = await masa.client.green.verify(phoneNumber, code);
 
   if (masa.config.verbose) {
-    console.log({ greenVerifyResult });
+    logger("dir", { greenVerifyResult });
   }
 
   // we got a verification result
   if (greenVerifyResult) {
     result.success = greenVerifyResult.success;
+    delete result.errorCode;
     result.status = greenVerifyResult.status;
     result.message = greenVerifyResult.message;
 
@@ -104,6 +114,7 @@ export const verifyGreen = async (
       result.signatureDate = greenVerifyResult.signatureDate;
       result.authorityAddress = greenVerifyResult.authorityAddress;
     } else if (greenVerifyResult.errorCode) {
+      result.message = "Unknown Verify Error";
       // error code, unpack the error code
       result.errorCode = greenVerifyResult.errorCode;
     }
@@ -127,51 +138,63 @@ export const mintGreen = async (
   signatureDate: number,
   signature: string,
 ): Promise<BaseResultWithTokenId> => {
-  const result = {
+  let result: BaseResultWithTokenId = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
-  const { wait, hash } = await masa.contracts.green.mint(
-    paymentMethod,
-    await masa.config.signer.getAddress(),
-    authorityAddress,
-    signatureDate,
-    signature,
-  );
+  try {
+    const { wait, hash } = await masa.contracts.green.mint(
+      paymentMethod,
+      await masa.config.signer.getAddress(),
+      authorityAddress,
+      signatureDate,
+      signature,
+    );
 
-  console.log(
-    Messages.WaitingToFinalize(
-      hash,
-      masa.config.network?.blockExplorerUrls?.[0],
-    ),
-  );
+    logger(
+      "log",
+      Messages.WaitingToFinalize(
+        hash,
+        masa.config.network?.blockExplorerUrls?.[0],
+      ),
+    );
 
-  const { logs } = await wait();
+    const { logs } = await wait();
 
-  const parsedLogs = masa.contracts.parseLogs(logs);
+    const parsedLogs = masa.contracts.parseLogs(logs);
 
-  let tokenId: string | undefined;
+    let tokenId: string | undefined;
 
-  const greenMintEvent = parsedLogs.find(
-    (event: LogDescription) => event.name === "Mint",
-  );
+    const greenMintEvent = parsedLogs.find(
+      (event: LogDescription) => event.name === "Mint",
+    );
 
-  if (greenMintEvent) {
-    if (masa.config.verbose) {
-      console.dir({ greenMintEvent }, { depth: null });
+    if (greenMintEvent) {
+      if (masa.config.verbose) {
+        logger("dir", { greenMintEvent });
+      }
+
+      tokenId = (greenMintEvent.args._tokenId as BigNumber).toString();
+      logger("log", `Green with ID: '${tokenId}' created.`);
     }
 
-    tokenId = greenMintEvent.args._tokenId.toString();
-    console.log(`Green with ID: '${tokenId}' created.`);
-  }
+    if (tokenId) {
+      result = {
+        ...result,
+        success: true,
+        tokenId,
+      };
+    }
+  } catch (error: unknown) {
+    result.message = "Minting green failed! ";
 
-  if (tokenId) {
-    return {
-      success: true,
-      message: "",
-      tokenId,
-    };
+    const { message, errorCode } = parseEthersError(error);
+
+    result.message += message;
+    result.errorCode = errorCode;
+
+    logger("error", result);
   }
 
   return result;
@@ -192,18 +215,18 @@ export const createGreen = async (
 ): Promise<GreenBaseResult> => {
   const result: GreenBaseResult = {
     success: false,
-    message: "Unknown Create Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   // verify
-  const verifyGreenResult: VerifyGreenResult | undefined = await verifyGreen(
+  const verifyGreenResult: VerifyGreenResult = await verifyGreen(
     masa,
     phoneNumber,
     code,
   );
 
   if (masa.config.verbose) {
-    console.log({ verifyGreenResult });
+    logger("dir", { verifyGreenResult });
   }
 
   if (verifyGreenResult) {
@@ -225,12 +248,12 @@ export const createGreen = async (
       );
 
       if (masa.config.verbose) {
-        console.log({ mintGreenResult });
+        logger("dir", { mintGreenResult });
       }
 
       if (mintGreenResult) {
         result.success = true;
-        result.message = "";
+        delete result.errorCode;
         result.tokenId = mintGreenResult.tokenId;
       }
     } else {

@@ -2,6 +2,7 @@ import { TransferEvent } from "@masa-finance/masa-contracts-identity/dist/typech
 import { constants } from "ethers";
 
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { logger } from "../../utils";
 import { printSoulName } from "./helpers";
 import { loadSoulNameByTokenId } from "./load";
 
@@ -9,15 +10,20 @@ export const tailSoulNames = async (
   masa: MasaInterface,
   limit: number = 5,
 ): Promise<SoulNameDetails[]> => {
-  const soulNameMintEventsFilter =
-    masa.contracts.instances.SoulNameContract.filters.Transfer(
-      constants.AddressZero,
-    );
+  const { hasAddress, filters, queryFilter } =
+    masa.contracts.instances.SoulNameContract;
+
+  if (!hasAddress) {
+    logger("error", "SoulName Contract is not deployed to this network!");
+    return [];
+  }
+
+  const soulNameMintEventsFilter = filters.Transfer(constants.AddressZero);
 
   const { number } =
-    (await masa.config.signer.provider?.getBlock("latest")) || {};
+    (await masa.config.signer.provider?.getBlock("latest")) ?? {};
 
-  const lastBlockNumber = await number;
+  const lastBlockNumber = number;
   const soulNameMintEvents = [];
 
   const offset = 2_500;
@@ -28,11 +34,7 @@ export const tailSoulNames = async (
     const toBlock = lastBlockNumber ? lastBlockNumber - offset * x : "latest";
 
     soulNameMintEvents.push(
-      ...(await masa.contracts.instances.SoulNameContract.queryFilter(
-        soulNameMintEventsFilter,
-        fromBlock,
-        toBlock,
-      )),
+      ...(await queryFilter(soulNameMintEventsFilter, fromBlock, toBlock)),
     );
     x++;
   } while (soulNameMintEvents.length <= limit);
@@ -65,7 +67,7 @@ export const tailSoulNamesAndPrint = async (
       index++;
     }
   } else {
-    console.error("No soulnames found!");
+    logger("error", "No soulnames found!");
   }
 
   return soulNames;

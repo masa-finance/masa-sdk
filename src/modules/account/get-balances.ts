@@ -13,6 +13,7 @@ import type {
 } from "../../interface";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
+import { logger } from "../../utils";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
@@ -37,7 +38,7 @@ export const getBalances = async (
   address?: string,
 ): Promise<Balances> => {
   const addressToLoad: string =
-    address || (await masa.config.signer.getAddress());
+    address ?? (await masa.config.signer.getAddress());
 
   const loadERC20Balance = async (
     userAddress: string,
@@ -64,7 +65,8 @@ export const getBalances = async (
         result = parseFloat(utils.formatUnits(balance, decimals));
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(
+          logger(
+            "error",
             `Token: ${tokenAddress} Wallet Address: ${addressToLoad} ${error.message}`,
           );
         }
@@ -85,7 +87,8 @@ export const getBalances = async (
         result = (await contract.balanceOf(addressToLoad)).toNumber();
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(
+          logger(
+            "error",
             `Contract: ${await contract
               .name()
               .catch(

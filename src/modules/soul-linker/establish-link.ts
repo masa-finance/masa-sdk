@@ -1,12 +1,14 @@
-import { BigNumber, Contract } from "ethers";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
+import { BigNumber } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   IPassport,
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
+import { logger } from "../../utils";
 import { parsePassport } from "./parse-passport";
 
 export type EstablishLinkResult = BaseResult;
@@ -14,7 +16,7 @@ export type EstablishLinkResult = BaseResult;
 export const establishLink = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
   signature: string,
@@ -23,7 +25,7 @@ export const establishLink = async (
 ): Promise<EstablishLinkResult> => {
   const result: EstablishLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId, address } = await masa.identity.load();
@@ -34,28 +36,35 @@ export const establishLink = async (
 
   if (identityId.toString() !== readerIdentityId.toString()) {
     result.message = `Reader identity mismatch! This passport was issued for ${readerIdentityId.toString()}`;
-    console.error(result.message);
+    logger("error", result);
+
     return result;
   }
 
-  let ownerAddress;
+  let ownerAddress: string;
   const { identityId: ownerIdentityId } = await masa.identity.load(
     (ownerAddress = await contract.ownerOf(tokenId)),
   );
 
   if (!ownerIdentityId) {
     result.message = "Owner identity not found";
-    console.error(result.message);
+    result.errorCode = BaseErrorCodes.NotFound;
+    logger("error", result);
+
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Establishing link for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
   );
-  console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
-  console.log(`to Identity ${identityId.toString()} (${address})\n`);
+  logger(
+    "log",
+    `from Identity ${ownerIdentityId.toString()} (${ownerAddress})`,
+  );
+  logger("log", `to Identity ${identityId.toString()} (${address})\n`);
 
   await masa.contracts.soulLinker.addLink(
     contract.address,
@@ -69,6 +78,7 @@ export const establishLink = async (
   );
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };
@@ -76,9 +86,9 @@ export const establishLink = async (
 export const establishLinkFromPassport = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   passport: string,
-) => {
+): Promise<BaseResult> => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
   return await establishLink(

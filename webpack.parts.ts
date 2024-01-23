@@ -5,7 +5,7 @@ import { merge } from "webpack-merge";
 import { development } from "./webpack.development";
 import { production } from "./webpack.production";
 
-export const paths: { [index: string]: string } = {
+export const paths: Record<string, string> = {
   entry: resolve(__dirname, "./dist/src/index.js"),
   bundle: resolve(__dirname, "./dist/browser"),
 };
@@ -13,7 +13,7 @@ export const paths: { [index: string]: string } = {
 export const outputs = (
   base: Configuration,
   environment: string,
-  mappings: { [index: string]: string },
+  mappings: Record<string, string>,
   overrides: Configuration,
 ): Configuration[] => {
   const configurations: Configuration[] = [];

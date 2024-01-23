@@ -1,14 +1,12 @@
 import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axios from "axios";
 
+import { BaseErrorCodes } from "../../collections";
 import type {
   ChallengeResult,
   ChallengeResultWithCookie,
   GenerateCreditScoreResult,
   GenerateGreenResult,
-  ICreditScore,
-  IGreen,
-  IIdentity,
   ISession,
   LogoutResult,
   MasaInterface,
@@ -20,6 +18,7 @@ import type {
   VerifyGreenResult,
 } from "../../interface";
 import { MasaBase } from "../../masa-base";
+import { logger } from "../logger";
 
 const headers = {
   "Content-Type": "application/json",
@@ -29,11 +28,11 @@ export class MasaClient extends MasaBase {
   private _middlewareClient: AxiosInstance;
   private _cookie?: string;
 
-  get cookie() {
+  public get cookie(): string | undefined {
     return this._cookie;
   }
 
-  constructor({
+  public constructor({
     masa,
     apiUrl,
     cookie,
@@ -52,7 +51,7 @@ export class MasaClient extends MasaBase {
     });
   }
 
-  session = {
+  public session = {
     /**
      * Check session is still alive
      */
@@ -73,7 +72,7 @@ export class MasaClient extends MasaBase {
     ): Promise<SessionUser | undefined> => {
       let result;
 
-      const cookieToUse = cookie || this.cookie;
+      const cookieToUse = cookie ?? this.cookie;
 
       const checkSignatureResponse = await this._middlewareClient
         .post<
@@ -95,14 +94,14 @@ export class MasaClient extends MasaBase {
           },
         )
         .catch((error: Error | AxiosError) => {
-          console.error("Check signature failed!", error.message);
+          logger("error", `Check signature failed! ${error.message}`);
         });
 
       const { data: checkSignatureResponseData, status } =
-        checkSignatureResponse || {};
+        checkSignatureResponse ?? {};
 
       if (this.masa.config.verbose) {
-        console.info({
+        logger("dir", {
           checkSignatureResponse: {
             status,
             checkSignatureResponseData,
@@ -132,7 +131,7 @@ export class MasaClient extends MasaBase {
       const getChallengeResponse = await this._middlewareClient
         .get<ChallengeResult>("/session/get-challenge")
         .catch((error: Error | AxiosError) => {
-          console.error("Get Challenge failed!", error.message);
+          logger("error", `Get Challenge failed! ${error.message}`);
         });
 
       if (getChallengeResponse) {
@@ -140,16 +139,16 @@ export class MasaClient extends MasaBase {
 
         let cookie;
         if (!cookies || cookies.length < 1) {
-          console.warn("No cookies in response!");
+          logger("warn", "No cookies in response!");
         } else {
           cookie = cookies[0];
         }
 
         const { data: getChallengeResponseData, status } =
-          getChallengeResponse || {};
+          getChallengeResponse ?? {};
 
         if (this.masa.config.verbose) {
-          console.info({
+          logger("dir", {
             getChallengeResponse: {
               status,
               getChallengeResponseData,
@@ -179,7 +178,7 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  metadata = {
+  public metadata = {
     /**
      * Retrieve metadata
      * @param uri
@@ -188,41 +187,36 @@ export class MasaClient extends MasaBase {
     get: async (
       uri: string,
       additionalHeaders?: Record<string, string>,
-    ): Promise<IIdentity | ICreditScore | IGreen | undefined> => {
+    ): Promise<object | undefined> => {
       const headers = {
         cookie: this.cookie ? [this.cookie] : undefined,
         ...additionalHeaders,
       };
 
       const metadataResponse = await this._middlewareClient
-        .get(uri, {
+        .get<object>(uri, {
           headers,
         })
         .catch((error: Error | AxiosError) => {
-          console.error("Failed to load Metadata!", error.message, uri);
+          logger("error", `Failed to load Metadata! ${error.message} ${uri}`);
         });
 
-      const { data: metadataResponseData, status } = metadataResponse || {};
+      const { data: metadataResponseData, status } = metadataResponse ?? {};
 
       if (this.masa.config.verbose) {
-        console.dir(
-          {
-            metadataResponse: {
-              status,
-              metadataResponseData,
-            },
+        logger("dir", {
+          metadataResponse: {
+            status,
+            metadataResponseData,
           },
-          {
-            depth: null,
-          },
-        );
+        });
       }
 
       return metadataResponseData;
     },
   };
 
-  soulName = {
+  public soulName = {
     /**
      * Store metadata
      * @param soulName
@@ -238,7 +232,7 @@ export class MasaClient extends MasaBase {
     ): Promise<
       SoulNameMetadataStoreResult | SoulNameResultBase | undefined
     > => {
-      console.log(`Writing metadata for '${soulName}'`);
+      logger("log", `Writing metadata for '${soulName}'`);
 
       const { data: soulNameMetadataStoreResult } = await this.post<
         {
@@ -261,16 +255,16 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  green = {
+  public green = {
     /**
      * Generates a new masa green request
      * @param phoneNumber
      */
     generate: async (phoneNumber: string): Promise<GenerateGreenResult> => {
-      const result = {
+      const result: GenerateGreenResult = {
         success: false,
         status: "failed",
-        message: "Generating green failed",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
       const { data: greenGenerateResponseData } = await this.post<
@@ -284,12 +278,16 @@ export class MasaClient extends MasaBase {
 
       if (greenGenerateResponseData) {
         result.success = true;
-        result.message = "";
+        delete result.errorCode;
         result.status = "success";
-        return { ...result, ...greenGenerateResponseData };
+
+        return {
+          ...result,
+          ...greenGenerateResponseData,
+        };
       } else {
         result.message = `Generating green failed! ${result.message}`;
-        console.error(result.message);
+        logger("error", result);
       }
 
       return result;
@@ -298,11 +296,11 @@ export class MasaClient extends MasaBase {
     verify: async (
       phoneNumber: string,
       code: string,
-    ): Promise<VerifyGreenResult | undefined> => {
-      const result = {
+    ): Promise<VerifyGreenResult> => {
+      const result: VerifyGreenResult = {
         success: false,
         status: "failed",
-        message: "Verifying green failed",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
       const { data: greenVerifyResponseData } = await this.post<
@@ -320,47 +318,62 @@ export class MasaClient extends MasaBase {
 
       if (greenVerifyResponseData) {
         result.success = true;
-        result.message = "";
+        delete result.errorCode;
         result.status = "success";
-        return { ...result, ...greenVerifyResponseData };
+
+        return {
+          ...result,
+          ...greenVerifyResponseData,
+        };
       } else {
-        result.message = `Verifying green failed! ${result.message}`;
-        console.error(result.message);
+        result.message = "Verifying green failed!";
+        logger("error", result);
       }
 
       return result;
     },
   };
 
-  creditScore = {
+  public creditScore = {
     /**
      * Generates a new credit score
      */
-    generate: async (): Promise<GenerateCreditScoreResult | undefined> => {
-      const result = {
+    generate: async (): Promise<GenerateCreditScoreResult> => {
+      let result: GenerateCreditScoreResult = {
         success: false,
-        status: "failed",
-        message: "Generating Credit Score failed!",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
-      const generateCreditScoreResponseData = await this.post<
-        {
-          network: NetworkName;
-        },
-        GenerateCreditScoreResult
-      >("/credit-score/generate", {
-        network: this.masa.config.networkName,
-      });
+      try {
+        const generateCreditScoreResponseData = await this.post<
+          {
+            network: NetworkName;
+          },
+          GenerateCreditScoreResult
+        >("/credit-score/generate", {
+          network: this.masa.config.networkName,
+        });
 
-      if (generateCreditScoreResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...generateCreditScoreResponseData };
-      } else {
-        console.error(result.message);
-        return result;
+        if (generateCreditScoreResponseData) {
+          result.success = true;
+          delete result.errorCode;
+
+          result = {
+            ...result,
+            ...generateCreditScoreResponseData,
+          };
+        }
+      } catch (error: unknown) {
+        result.message = "Generating Credit Score failed! ";
+
+        if (error instanceof Error) {
+          result.message += error.message;
+        }
+
+        logger("error", result);
       }
+
+      return result;
     },
 
     /**
@@ -369,38 +382,48 @@ export class MasaClient extends MasaBase {
      */
     update: async (
       transactionHash: string,
-    ): Promise<UpdateCreditScoreResult | undefined> => {
-      const result = {
+    ): Promise<UpdateCreditScoreResult> => {
+      let result: UpdateCreditScoreResult = {
         success: false,
         status: "failed",
-        message: "Updating of credit score failed!",
+        errorCode: BaseErrorCodes.UnknownError,
       };
 
-      const { data: updateCreditScoreResponseData } = await this.post<
-        {
-          transactionHash: string;
-          network: NetworkName;
-        },
-        UpdateCreditScoreResult
-      >("/credit-score/update", {
-        transactionHash,
-        network: this.masa.config.networkName,
-      });
+      try {
+        const { data: updateCreditScoreResponseData } = await this.post<
+          {
+            transactionHash: string;
+            network: NetworkName;
+          },
+          UpdateCreditScoreResult
+        >("/credit-score/update", {
+          transactionHash,
+          network: this.masa.config.networkName,
+        });
 
-      if (updateCreditScoreResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...updateCreditScoreResponseData };
-      } else {
-        console.error(result.message);
+        if (updateCreditScoreResponseData) {
+          result.success = true;
+          delete result.errorCode;
+          result.status = "success";
+
+          result = {
+            ...result,
+            ...updateCreditScoreResponseData,
+          };
+        }
+      } catch (error: unknown) {
+        result.message = "Updating of credit score failed! ";
+
+        if (error instanceof Error) {
+          result.message += error.message;
+        }
       }
 
       return result;
     },
   };
 
-  post = async <Payload, Result>(
+  public post = async <Payload, Result>(
     endpoint: string,
     data: Payload,
     silent: boolean = false,
@@ -410,7 +433,7 @@ export class MasaClient extends MasaBase {
     statusText: string | undefined;
   }> => {
     if (this.masa.config.verbose) {
-      console.log(`Posting '${JSON.stringify(data)}' to '${endpoint}'`);
+      logger("log", `Posting '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
     const postResponse = await this._middlewareClient
@@ -422,14 +445,14 @@ export class MasaClient extends MasaBase {
       })
       .catch((error: Error | AxiosError) => {
         if (!silent) {
-          console.error(`Post '${endpoint}' failed!`, error.message);
+          logger("error", `Post '${endpoint}' failed! ${error.message}`);
         }
       });
 
-    const { data: postResponseData, status, statusText } = postResponse || {};
+    const { data: postResponseData, status, statusText } = postResponse ?? {};
 
     if (this.masa.config.verbose) {
-      console.info({
+      logger("dir", {
         postResponse: {
           status,
           postResponseData,
@@ -444,13 +467,13 @@ export class MasaClient extends MasaBase {
     };
   };
 
-  patch = async <Payload, Result>(
+  public patch = async <Payload, Result>(
     endpoint: string,
     data: Payload,
     silent: boolean = false,
   ): Promise<Result | undefined> => {
     if (this.masa.config.verbose) {
-      console.log(`Patching '${JSON.stringify(data)}' to '${endpoint}'`);
+      logger("log", `Patching '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
     const patchResponse = await this._middlewareClient
@@ -462,14 +485,14 @@ export class MasaClient extends MasaBase {
       })
       .catch((error: Error | AxiosError) => {
         if (!silent) {
-          console.error(`Patch '${endpoint}' failed!`, error.message);
+          logger("error", `Patch '${endpoint}' failed! ${error.message}`);
         }
       });
 
-    const { data: patchData, status } = patchResponse || {};
+    const { data: patchData, status } = patchResponse ?? {};
 
     if (this.masa.config.verbose) {
-      console.info({
+      logger("dir", {
         patchResponse: {
           status,
           patchData,
@@ -480,12 +503,12 @@ export class MasaClient extends MasaBase {
     return patchData;
   };
 
-  get = async <Result>(
+  public get = async <Result>(
     endpoint: string,
     silent: boolean = false,
   ): Promise<Result | undefined> => {
     if (this.masa.config.verbose) {
-      console.log(`Getting '${endpoint}'`);
+      logger("log", `Getting '${endpoint}'`);
     }
 
     const getResponse = await this._middlewareClient
@@ -497,24 +520,19 @@ export class MasaClient extends MasaBase {
       })
       .catch((error: Error | AxiosError) => {
         if (!silent) {
-          console.error(`Get '${endpoint}' failed!`, error.message);
+          logger("error", `Get '${endpoint}' failed! ${error.message}`);
         }
       });
 
-    const { data: getData, status } = getResponse || {};
+    const { data: getData, status } = getResponse ?? {};
 
     if (this.masa.config.verbose) {
-      console.dir(
-        {
-          getResponse: {
-            status,
-            getData,
-          },
+      logger("dir", {
+        getResponse: {
+          status,
+          getData,
         },
-        {
-          depth: null,
-        },
-      );
+      });
     }
 
     return getData;

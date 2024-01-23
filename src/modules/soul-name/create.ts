@@ -1,6 +1,12 @@
 import { LogDescription } from "@ethersproject/abi";
+import { BigNumber } from "ethers";
 
-import { Messages, SoulNameErrorCodes } from "../../collections";
+import {
+  BaseErrorCodes,
+  Messages,
+  SoulNameErrorCodes,
+} from "../../collections";
+import { parseEthersError } from "../../contracts/contract-modules/ethers";
 import type {
   CreateSoulNameResult,
   MasaInterface,
@@ -8,7 +14,7 @@ import type {
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
 } from "../../interface";
-import { isSoulNameMetadataStoreResult } from "../../utils";
+import { isSoulNameMetadataStoreResult, logger } from "../../utils";
 
 const purchaseSoulName = async (
   masa: MasaInterface,
@@ -21,8 +27,7 @@ const purchaseSoulName = async (
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
-    errorCode: SoulNameErrorCodes.UnknownError,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const [extension, isAvailable] = await Promise.all([
@@ -31,7 +36,7 @@ const purchaseSoulName = async (
   ]);
 
   if (isAvailable) {
-    receiver = receiver || (await masa.config.signer.getAddress());
+    receiver = receiver ?? (await masa.config.signer.getAddress());
 
     const storeMetadataResponse:
       | SoulNameMetadataStoreResult
@@ -49,7 +54,7 @@ const purchaseSoulName = async (
           const soulNameMetadataUrl = `${masa.soulName.getSoulNameMetadataPrefix()}${
             storeMetadataResponse.metadataTransaction.id
           }`;
-          console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
+          logger("log", `Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
           const { wait, hash } = await masa.contracts.soulName.purchase(
             paymentMethod,
@@ -62,7 +67,8 @@ const purchaseSoulName = async (
             receiver,
           );
 
-          console.log(
+          logger(
+            "log",
             Messages.WaitingToFinalize(
               hash,
               masa.config.network?.blockExplorerUrls?.[0],
@@ -76,33 +82,39 @@ const purchaseSoulName = async (
           {
             let tokenId: string | undefined;
 
-            const soulnameTransferEvent = parsedLogs.find(
-              (event: LogDescription) => event.name === "Transfer",
-            );
+            const soulnameTransferEvent: LogDescription | undefined =
+              parsedLogs.find(
+                (event: LogDescription) => event.name === "Transfer",
+              );
 
             if (soulnameTransferEvent) {
               const { args: soulnameTransferEventArgs } = soulnameTransferEvent;
+
               if (masa.config.verbose) {
-                console.dir({ soulnameTransferEventArgs }, { depth: null });
+                logger("dir", { soulnameTransferEventArgs });
               }
 
-              tokenId = soulnameTransferEventArgs.tokenId.toString();
-              console.log(`SoulName with ID: '${tokenId}' created.`);
+              tokenId = (
+                soulnameTransferEventArgs.tokenId as BigNumber
+              ).toString();
+              logger("log", `SoulName with ID: '${tokenId}' created.`);
             }
 
             if (tokenId) {
               result.success = true;
-              result.message = "";
-              result.errorCode = SoulNameErrorCodes.NoError;
+              delete result.errorCode;
               result.tokenId = tokenId;
               result.soulName = soulName;
             }
           }
         } catch (error: unknown) {
-          result.errorCode = SoulNameErrorCodes.NetworkError;
-          if (error instanceof Error) {
-            result.message = `Creating Soul Name failed! ${error.message}`;
-          }
+          result.message = "Creating Soul Name failed! ";
+
+          const { message, errorCode } = parseEthersError(error);
+          result.message += message;
+          result.errorCode = errorCode;
+
+          logger("error", result);
         }
       } else {
         result.success = storeMetadataResponse.success;
@@ -128,8 +140,7 @@ export const createSoulName = async (
 ): Promise<CreateSoulNameResult> => {
   const result: CreateSoulNameResult = {
     success: false,
-    errorCode: SoulNameErrorCodes.UnknownError,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   if (await masa.session.checkLogin()) {
@@ -138,6 +149,7 @@ export const createSoulName = async (
       !masa.contracts.instances.SoulNameContract.hasAddress
     ) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
@@ -153,18 +165,20 @@ export const createSoulName = async (
     if (!isValid) {
       result.message = "Soulname not valid!";
       result.errorCode = SoulNameErrorCodes.SoulNameError;
-      console.error(result.message);
+      logger("error", result);
+
       return result;
     }
 
     const { identityId, address } = await masa.identity.load();
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
+      result.errorCode = BaseErrorCodes.DoesNotExist;
       return result;
     }
 
     if (masa.config.verbose) {
-      console.info("Purchasing Soulname");
+      logger("info", "Purchasing Soulname");
     }
 
     return await purchaseSoulName(
@@ -178,6 +192,7 @@ export const createSoulName = async (
     );
   } else {
     result.message = Messages.NotLoggedIn();
+    result.errorCode = BaseErrorCodes.NotLoggedIn;
   }
 
   return result;

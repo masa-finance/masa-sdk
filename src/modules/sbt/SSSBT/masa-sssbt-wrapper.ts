@@ -1,6 +1,7 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
 import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
+import { logger } from "../../../utils";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaSSSBTWrapper<
@@ -10,7 +11,16 @@ export class MasaSSSBTWrapper<
    *
    * @param receiver
    */
-  sign = async (receiver: string) => {
+  public sign = async (
+    receiver: string,
+  ): Promise<
+    | {
+        authorityAddress: string;
+        signatureDate: number;
+        signature: string;
+      }
+    | undefined
+  > => {
     let result:
       | {
           authorityAddress: string;
@@ -24,11 +34,11 @@ export class MasaSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Signing SSSBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receiver}'`);
+    logger("log", `Signing SSSBT on: '${this.masa.config.networkName}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const signatureDate = Date.now();
 
@@ -50,13 +60,15 @@ export class MasaSSSBTWrapper<
 
     if (signResult) {
       const { signature, authorityAddress } = signResult;
+
       if (this.masa.config.verbose) {
-        console.info({
+        logger("dir", {
           signature,
           authorityAddress,
           signatureDate,
         });
       }
+
       result = {
         authorityAddress,
         signatureDate,
@@ -74,7 +86,7 @@ export class MasaSSSBTWrapper<
    * @param signature
    * @param paymentMethod
    */
-  mint = async (
+  public mint = async (
     authorityAddress: string,
     signatureDate: number,
     signature: string,
@@ -87,11 +99,11 @@ export class MasaSSSBTWrapper<
       this.contract.symbol(),
     ]);
 
-    console.log(`Minting SSSBT on: '${this.masa.config.networkName}'`);
-    console.log(`Contract Name: '${name}'`);
-    console.log(`Contract Symbol: '${symbol}'`);
-    console.log(`Contract Address: '${this.contract.address}'`);
-    console.log(`To receiver: '${receiver}'`);
+    logger("log", `Minting SSSBT on: '${this.masa.config.networkName}'`);
+    logger("log", `Contract Name: '${name}'`);
+    logger("log", `Contract Symbol: '${symbol}'`);
+    logger("log", `Contract Address: '${this.contract.address}'`);
+    logger("log", `To receiver: '${receiver}'`);
 
     const { mint } = this.masa.contracts.sssbt.attach(this.contract);
 

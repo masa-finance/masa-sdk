@@ -1,21 +1,21 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import type { Contract } from "ethers";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   IPassport,
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
-import { patchMetadataUrl } from "../../utils";
+import { logger, patchMetadataUrl } from "../../utils";
 import { parsePassport } from "./parse-passport";
 
 export type QueryLinkResult = BaseResult;
 
 export const queryLink = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   paymentMethod: PaymentMethod,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
@@ -25,18 +25,21 @@ export const queryLink = async (
 ): Promise<QueryLinkResult> => {
   const result: QueryLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId, address } = await masa.identity.load();
+
   if (!identityId) {
     result.message = Messages.NoIdentity(address);
+    result.errorCode = BaseErrorCodes.DoesNotExist;
     return result;
   }
 
   if (identityId.toString() !== readerIdentityId.toString()) {
     result.message = `Reader identity mismatch! This passport was issued for ${readerIdentityId.toString()}`;
-    console.error(result.message);
+    logger("error", result);
+
     return result;
   }
 
@@ -47,19 +50,25 @@ export const queryLink = async (
 
   if (!ownerIdentityId) {
     result.message = "Owner identity not found";
-    console.error(result.message);
+    result.errorCode = BaseErrorCodes.NotFound;
+    logger("error", result);
+
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Querying link for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
   );
-  console.log(`from Identity ${ownerIdentityId.toString()} (${ownerAddress})`);
-  console.log(`to Identity ${readerIdentityId.toString()} (${address})\n`);
+  logger(
+    "log",
+    `from Identity ${ownerIdentityId.toString()} (${ownerAddress})`,
+  );
+  logger("log", `to Identity ${readerIdentityId.toString()} (${address})\n`);
 
-  const txHash = await masa.contracts.soulLinker.addLink(
+  const { transactionHash } = await masa.contracts.soulLinker.addLink(
     contract.address,
     paymentMethod,
     readerIdentityId,
@@ -70,15 +79,16 @@ export const queryLink = async (
     signature,
   );
 
-  console.log("tx hash for middleware", txHash);
+  logger("log", `tx hash for middleware ${transactionHash}`);
 
-  const { "tokenURI(uint256)": tokenURI } = contract;
+  const { tokenURI } = contract;
 
   const tokenUri = patchMetadataUrl(masa, await tokenURI(tokenId));
 
-  console.log({ tokenUri });
+  logger("dir", { tokenUri });
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };
@@ -86,9 +96,9 @@ export const queryLink = async (
 export const queryLinkFromPassport = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   passport: string,
-) => {
+): Promise<BaseResult> => {
   const unpackedPassport: IPassport = parsePassport(passport);
 
   return await queryLink(

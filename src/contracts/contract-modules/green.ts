@@ -6,7 +6,7 @@ import type {
 } from "ethers";
 import { TypedDataField } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   PaymentMethod,
@@ -15,15 +15,17 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../utils";
+import { parseEthersError } from "./ethers";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class Green extends MasaSBTModuleBase {
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     MintGreen: [
       { name: "to", type: "address" },
       { name: "authorityAddress", type: "address" },
@@ -118,7 +120,7 @@ export class Green extends MasaSBTModuleBase {
       await this.getPrice(paymentMethod, slippage);
 
     if (this.masa.config.verbose) {
-      console.log({
+      logger("dir", {
         price: price.toString(),
         mintTransactionFee: mintTransactionFee.toString(),
         paymentAddress,
@@ -146,7 +148,10 @@ export class Green extends MasaSBTModuleBase {
     );
 
     if (this.masa.config.verbose) {
-      console.log({ greenMintParameters, greenMintOverrides });
+      logger("dir", {
+        greenMintParameters,
+        greenMintOverrides,
+      });
     }
 
     // connect
@@ -223,9 +228,10 @@ export class Green extends MasaSBTModuleBase {
   public burn = async (greenId: BigNumber): Promise<BaseResult> => {
     const result: BaseResult = {
       success: false,
+      errorCode: BaseErrorCodes.UnknownError,
     };
 
-    console.log(`Burning Green with ID '${greenId}'!`);
+    logger("log", `Burning Green with ID '${greenId.toNumber()}'!`);
 
     const {
       estimateGas: { burn: estimateGas },
@@ -241,7 +247,8 @@ export class Green extends MasaSBTModuleBase {
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -250,13 +257,18 @@ export class Green extends MasaSBTModuleBase {
 
       await wait();
 
-      console.log(`Burned Green with ID '${greenId}'!`);
+      logger("log", `Burned Green with ID '${greenId.toNumber()}'!`);
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Burning Green Failed! '${error.message}'`;
-        console.error(result.message);
-      }
+      result.message = "Burning Green Failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;

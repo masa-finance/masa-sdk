@@ -1,33 +1,36 @@
 import GraphemeSplitter from "grapheme-splitter";
 
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { logger } from "../../utils";
 
 export const printSoulName = (
   soulName: SoulNameDetails,
   index?: number,
   verbose: boolean = false,
 ): void => {
-  console.log("\n");
+  logger("log", "\n");
 
   if (index) {
-    console.log(`Token: ${index + 1}`);
+    logger("log", `Token: ${index + 1}`);
   }
 
-  console.log(`Token ID: '${soulName.tokenDetails.tokenId.toNumber()}'`);
-  console.log(`Name: '${soulName.tokenDetails.sbtName}'`);
-  console.log(`Extension: '${soulName.tokenDetails.extension}'`);
-  console.log(`Owner Address: '${soulName.owner}'`);
-  console.log(
+  logger("log", `Token ID: '${soulName.tokenDetails.tokenId.toNumber()}'`);
+  logger("log", `Name: '${soulName.tokenDetails.sbtName}'`);
+  logger("log", `Extension: '${soulName.tokenDetails.extension}'`);
+  logger("log", `Owner Address: '${soulName.owner}'`);
+  logger(
+    "log",
     `Owner Identity ID: '${soulName.tokenDetails.identityId.toNumber()}'`,
   );
-  console.log(`Active: ${soulName.tokenDetails.active}`);
-  console.log(`Metadata URL: '${soulName.tokenUri}'`);
+  logger("log", `Active: ${soulName.tokenDetails.active}`);
+  logger("log", `Metadata URL: '${soulName.tokenUri}'`);
 
   if (soulName.metadata && verbose) {
-    console.log(`Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`);
+    logger("log", `Metadata: ${JSON.stringify(soulName.metadata, null, 2)}`);
   }
 
-  console.log(
+  logger(
+    "log",
     `Expiry Date: ${new Date(
       soulName.tokenDetails.expirationDate.toNumber() * 1000,
     ).toUTCString()}`,

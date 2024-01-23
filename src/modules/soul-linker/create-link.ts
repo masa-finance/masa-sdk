@@ -1,20 +1,22 @@
-import type { BigNumber, Contract } from "ethers";
+import { ILinkableSBT, MasaSBT } from "@masa-finance/masa-contracts-identity";
+import type { BigNumber } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, IPassport, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 import { resolveIdentity } from "../identity/resolve";
 
 export type CreateLinkResult = BaseResult & { passport?: string };
 
 export const createLink = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   tokenId: BigNumber,
   readerIdentityId: BigNumber,
 ): Promise<CreateLinkResult> => {
   const result: CreateLinkResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   const { identityId, address } = await masa.identity.load();
@@ -27,17 +29,20 @@ export const createLink = async (
   const receiverAddress = await resolveIdentity(masa, readerIdentityId);
 
   if (!receiverAddress) {
-    result.message = `Receiver identity not found! ${readerIdentityId}`;
+    result.message = `Receiver identity not found! ${readerIdentityId.toNumber()}`;
+    result.errorCode = BaseErrorCodes.NotFound;
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Creating link for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
   );
-  console.log(`from Identity ${identityId.toString()} (${address})`);
-  console.log(
+  logger("log", `from Identity ${identityId.toString()} (${address})`);
+  logger(
+    "log",
     `to Identity ${readerIdentityId.toString()} (${receiverAddress})\n`,
   );
 
@@ -54,8 +59,9 @@ export const createLink = async (
       24 * 60 * 60,
     );
 
-  console.log(`Signature Date: ${currentDate.toUTCString()}`);
-  console.log(
+  logger("log", `Signature Date: ${currentDate.toUTCString()}`);
+  logger(
+    "log",
     `Expiration Date: ${new Date(expirationDate * 1000).toUTCString()}`,
   );
 
@@ -68,9 +74,10 @@ export const createLink = async (
   };
 
   result.passport = btoa(JSON.stringify(passport, null, 2));
-  console.log("\nLink passport:", result.passport, "\n");
+  logger("log", `Link passport: ${JSON.stringify(passport)}\n`);
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };

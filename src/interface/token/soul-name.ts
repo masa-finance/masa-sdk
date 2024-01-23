@@ -1,6 +1,6 @@
 import type { BigNumber } from "ethers";
 
-import { SoulNameErrorCodes } from "../../collections";
+import { CreateSoulNameErrorCodes } from "../../collections";
 import type { BaseResultWithTokenId } from "../base-result";
 
 export interface Attribute {
@@ -41,8 +41,9 @@ export interface SoulNameDetails {
   metadata: ISoulName;
 }
 
-export interface SoulNameResultBase extends BaseResultWithTokenId {
-  errorCode: SoulNameErrorCodes;
+export interface SoulNameResultBase
+  extends Omit<BaseResultWithTokenId, "errorCode"> {
+  errorCode?: CreateSoulNameErrorCodes | number | string;
 }
 
 export interface CreateSoulNameResult extends SoulNameResultBase {

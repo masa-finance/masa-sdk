@@ -1,30 +1,35 @@
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
+import { parseEthersError } from "../../contracts/contract-modules/ethers";
 import type {
   GenerateCreditScoreResult,
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
+import { logger } from "../../utils";
 
 export const createCreditScore = async (
   masa: MasaInterface,
   paymentMethod: PaymentMethod,
 ): Promise<GenerateCreditScoreResult> => {
-  const result: GenerateCreditScoreResult = {
+  let result: GenerateCreditScoreResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
   };
 
   if (await masa.session.checkLogin()) {
     if (!masa.contracts.instances.SoulboundCreditScoreContract.hasAddress) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
+      result.errorCode = BaseErrorCodes.NetworkError;
       return result;
     }
 
-    console.log("Creating Credit Score ...");
+    logger("log", "Creating Credit Score ...");
 
-    const { identityId, address } = (await masa.identity.load()) || {};
+    const { identityId, address } = (await masa.identity.load()) ?? {};
+
     if (!identityId) {
       result.message = Messages.NoIdentity(address);
+      result.errorCode = BaseErrorCodes.DoesNotExist;
       return result;
     }
 
@@ -35,6 +40,7 @@ export const createCreditScore = async (
 
     if (balance.toNumber() > 0) {
       result.message = "Credit Score already created!";
+      result.errorCode = BaseErrorCodes.AlreadyExists;
       return result;
     }
 
@@ -57,7 +63,8 @@ export const createCreditScore = async (
             creditScoreResponse.signature,
           );
 
-          console.log(
+          logger(
+            "log",
             Messages.WaitingToFinalize(
               hash,
               masa.config.network?.blockExplorerUrls?.[0],
@@ -66,27 +73,33 @@ export const createCreditScore = async (
 
           const { transactionHash } = await wait();
 
-          console.log("Updating Credit Score Record!");
+          logger("log", "Updating Credit Score Record!");
+
           const creditScoreUpdateResponse =
             await masa.client.creditScore.update(transactionHash);
 
           if (masa.config.verbose) {
-            console.log({ creditScoreUpdateResponse });
+            logger("dir", { creditScoreUpdateResponse });
           }
 
-          return { ...result, ...creditScoreUpdateResponse };
+          result = {
+            ...result,
+            ...creditScoreUpdateResponse,
+          };
         } catch (error: unknown) {
-          result.success = false;
+          result.message = "Unexpected error: ";
 
-          if (error instanceof Error) {
-            result.message = `Unexpected error: ${error.message}`;
-            console.error(result.message);
-          }
+          const { message, errorCode } = parseEthersError(error);
+          result.message += message;
+          result.errorCode = errorCode;
+
+          logger("error", result);
         }
       }
     }
   } else {
     result.message = Messages.NotLoggedIn();
+    result.errorCode = BaseErrorCodes.NotLoggedIn;
   }
 
   return result;

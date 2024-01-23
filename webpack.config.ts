@@ -6,7 +6,7 @@ import { outputs } from "./webpack.parts";
 const { NODE_ENV } = process.env;
 const isProduction = NODE_ENV === "production";
 
-const outputMappings: { [index: string]: string } = {
+const outputMappings: Record<string, string> = {
   amd: "amd",
   commonjs: "cjs",
   commonjs2: "cjs2",

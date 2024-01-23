@@ -1,12 +1,21 @@
 import type { MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 import { calculateSoulNameLength } from "./helpers";
 
 export const validateSoulName = (
   masa: MasaInterface,
   soulName: string,
   verbose?: boolean,
-): { isValid: boolean; length: number; message?: string } => {
-  const result: { isValid: boolean; length: number; message?: string } = {
+): {
+  isValid: boolean;
+  length: number;
+  message?: string;
+} => {
+  const result: {
+    isValid: boolean;
+    length: number;
+    message?: string;
+  } = {
     isValid: false,
     length: calculateSoulNameLength(soulName),
   };
@@ -37,7 +46,7 @@ export const validateSoulName = (
     .join("")}]+$`;
 
   if (verbose) {
-    console.info(validatorSource);
+    logger("info", validatorSource);
   }
 
   // combine validator

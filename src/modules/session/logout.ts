@@ -1,5 +1,6 @@
 import { Messages } from "../../collections";
 import type { MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 
 export const logout = async (
   masa: MasaInterface,
@@ -11,20 +12,20 @@ export const logout = async (
 > => {
   let result;
 
-  console.log("Logging out");
+  logger("log", "Logging out");
 
   if (await masa.session.checkLogin()) {
     const logoutData = await masa.session.sessionLogout();
 
     if (logoutData) {
-      console.log(`Logout: ${logoutData.status}`);
+      logger("log", `Logout: ${logoutData.status}`);
 
       result = {
         status: logoutData.status,
       };
     }
   } else {
-    console.error(Messages.NotLoggedIn());
+    logger("error", Messages.NotLoggedIn());
   }
 
   return result;

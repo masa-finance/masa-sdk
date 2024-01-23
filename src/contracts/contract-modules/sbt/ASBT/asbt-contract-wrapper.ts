@@ -3,13 +3,14 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { ReferenceSBTAuthority } from "@masa-finance/masa-contracts-identity";
 import { PayableOverrides } from "ethers";
 
-import { Messages } from "../../../../collections";
+import { BaseErrorCodes, Messages } from "../../../../collections";
 import type {
   BaseResult,
   BaseResultWithTokenId,
   PaymentMethod,
 } from "../../../../interface";
-import { isNativeCurrency } from "../../../../utils";
+import { isNativeCurrency, logger } from "../../../../utils";
+import { parseEthersError } from "../../ethers";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class ASBTContractWrapper<
@@ -24,7 +25,10 @@ export class ASBTContractWrapper<
     paymentMethod: PaymentMethod,
     receiver: string,
   ): Promise<BaseResultWithTokenId> => {
-    const result: BaseResultWithTokenId = { success: false };
+    const result: BaseResultWithTokenId = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     // current limit for ASBT is 1 on the default installation
     let limit: number = 1;
@@ -33,7 +37,7 @@ export class ASBTContractWrapper<
       limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
-        console.info("Loading limit failed, falling back to 1!");
+        logger("info", "Loading limit failed, falling back to 1!");
       }
     }
 
@@ -42,12 +46,13 @@ export class ASBTContractWrapper<
 
       if (limit > 0 && balance.gte(limit)) {
         result.message = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
-        console.error(result.message);
+        logger("error", result);
+
         return result;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.warn(`Loading SBT balance failed! ${error.message}`);
+        logger("warn", `Loading SBT balance failed! ${error.message}`);
       }
     }
 
@@ -63,7 +68,10 @@ export class ASBTContractWrapper<
     );
 
     if (this.masa.config.verbose) {
-      console.info(mintASBTArguments, mintASBTOverrides);
+      logger("dir", {
+        mintASBTArguments,
+        mintASBTOverrides,
+      });
     }
 
     const {
@@ -83,7 +91,8 @@ export class ASBTContractWrapper<
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -100,17 +109,22 @@ export class ASBTContractWrapper<
 
       if (mintEvent) {
         const { args } = mintEvent;
-        console.log(
+        logger(
+          "log",
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
         result.success = true;
+        delete result.errorCode;
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Minting ASBT failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Minting ASBT failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;
@@ -134,7 +148,7 @@ export class ASBTContractWrapper<
       limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
-        console.info("Loading limit failed, falling back to 1!");
+        logger("info", "Loading limit failed, falling back to 1!");
       }
     }
 
@@ -144,12 +158,16 @@ export class ASBTContractWrapper<
 
         if (limit > 0 && balance.gte(limit)) {
           const errorMessage = `Minting of ASBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
-          console.error(errorMessage);
-          result.push({ success: false, message: errorMessage });
+          logger("error", errorMessage);
+          result.push({
+            success: false,
+            errorCode: BaseErrorCodes.LimitOutOfBounds,
+            message: errorMessage,
+          });
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.warn(`Loading SBT balance failed! ${error.message}`);
+          logger("warn", `Loading SBT balance failed! ${error.message}`);
         }
       }
     }
@@ -166,7 +184,10 @@ export class ASBTContractWrapper<
     );
 
     if (this.masa.config.verbose) {
-      console.info(mintASBTArguments, mintASBTOverrides);
+      logger("dir", {
+        mintASBTArguments,
+        mintASBTOverrides,
+      });
     }
 
     const {
@@ -174,39 +195,56 @@ export class ASBTContractWrapper<
       estimateGas: { "mint(address,address[])": estimateGas },
     } = this.contract;
 
-    const gasLimit = await this.estimateGasWithSlippage(
-      estimateGas,
-      mintASBTArguments,
-      mintASBTOverrides,
-    );
-
-    const { wait, hash } = await mint(...mintASBTArguments, {
-      ...mintASBTOverrides,
-      gasLimit,
-    });
-
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        this.masa.config.network?.blockExplorerUrls?.[0],
-      ),
-    );
-
-    const { logs } = await wait();
-
-    const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
-
-    const mintEvent = parsedLogs.find(
-      (log: LogDescription) => log.name === "Mint",
-    );
-
-    if (mintEvent) {
-      const { args } = mintEvent;
-      console.log(
-        `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
+    try {
+      const gasLimit = await this.estimateGasWithSlippage(
+        estimateGas,
+        mintASBTArguments,
+        mintASBTOverrides,
       );
 
-      result.push({ success: true });
+      const { wait, hash } = await mint(...mintASBTArguments, {
+        ...mintASBTOverrides,
+        gasLimit,
+      });
+
+      logger(
+        "log",
+        Messages.WaitingToFinalize(
+          hash,
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      const { logs } = await wait();
+
+      const parsedLogs = this.masa.contracts.parseLogs(logs, [this.contract]);
+
+      const mintEvent = parsedLogs.find(
+        (log: LogDescription) => log.name === "Mint",
+      );
+
+      if (mintEvent) {
+        const { args } = mintEvent;
+        logger(
+          "log",
+          `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
+        );
+
+        result.push({
+          success: true,
+        });
+      }
+    } catch (error: unknown) {
+      let msg = "Bulk mint failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      msg += message;
+
+      result.push({
+        success: false,
+        message: msg,
+        errorCode,
+      });
     }
 
     return result;

@@ -1,17 +1,22 @@
-import type { SoulLinker } from "@masa-finance/masa-contracts-identity";
+import type {
+  ILinkableSBT,
+  MasaSBT,
+  SoulLinker,
+} from "@masa-finance/masa-contracts-identity";
 import type { BigNumber, Contract } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
+import { logger } from "../../utils";
 
-export type Link = {
+export interface Link {
   readerIdentityId: BigNumber;
   signatureDate: BigNumber;
   exists: boolean;
   ownerIdentityId: BigNumber;
   expirationDate: BigNumber;
   isRevoked: boolean;
-};
+}
 
 export type ListLinksResult = BaseResult & {
   links: Link[];
@@ -50,12 +55,12 @@ export const loadLinks = async (
 
 export const listLinks = async (
   masa: MasaInterface,
-  contract: Contract,
+  contract: ILinkableSBT & MasaSBT,
   tokenId: BigNumber,
 ): Promise<ListLinksResult> => {
   const result: ListLinksResult = {
     success: false,
-    message: "Unknown Error",
+    errorCode: BaseErrorCodes.UnknownError,
     links: [],
   };
 
@@ -63,20 +68,25 @@ export const listLinks = async (
 
   if (!identityId) {
     result.message = Messages.NoIdentity(address);
+    result.errorCode = BaseErrorCodes.DoesNotExist;
     return result;
   }
 
-  console.log(
+  logger(
+    "log",
     `Listing links for '${await contract.name()}' (${
       contract.address
     }) ID: ${tokenId.toString()}`,
   );
 
   try {
-    await contract.ownerOf(tokenId);
-  } catch {
+    const { ownerOf } = contract;
+    await ownerOf(tokenId);
+  } catch (error: unknown) {
     result.message = `Token ${tokenId.toString()} does not exist!`;
-    console.error(result.message);
+    result.errorCode = BaseErrorCodes.DoesNotExist;
+    logger("error", result);
+
     return result;
   }
 
@@ -84,50 +94,56 @@ export const listLinks = async (
 
   let index = 1;
   for (const linkDetail of result.links) {
-    console.log(`\nLink #${index}`);
-    console.log(
-      "Owner Identity",
-      linkDetail.ownerIdentityId.toString(),
-      linkDetail.ownerIdentityId.toString() === identityId.toString()
-        ? "(you)"
-        : "",
+    logger("log", `\nLink #${index}`);
+    logger(
+      "error",
+      `Owner Identity ${linkDetail.ownerIdentityId.toString()} ${
+        linkDetail.ownerIdentityId.toString() === identityId.toString()
+          ? "(you)"
+          : ""
+      }`,
     );
-    console.log(
-      "Reader Identity",
-      linkDetail.readerIdentityId.toString(),
-      linkDetail.readerIdentityId.toString() === identityId.toString()
-        ? "(you)"
-        : "",
+    logger(
+      "error",
+      `Reader Identity ${linkDetail.readerIdentityId.toString()} ${
+        linkDetail.readerIdentityId.toString() === identityId.toString()
+          ? "(you)"
+          : ""
+      }`,
     );
-    console.log(
-      "Signature Date",
-      new Date(linkDetail.signatureDate.toNumber() * 1000).toUTCString(),
-      linkDetail.signatureDate.toNumber(),
+    logger(
+      "error",
+      `Signature Date ${new Date(
+        linkDetail.signatureDate.toNumber() * 1000,
+      ).toUTCString()} ${linkDetail.signatureDate.toNumber()}`,
     );
-    console.log(
-      "Expiration Date",
-      new Date(linkDetail.expirationDate.toNumber() * 1000).toUTCString(),
-      linkDetail.expirationDate.toNumber(),
+    logger(
+      "error",
+      `Expiration Date ${new Date(
+        linkDetail.expirationDate.toNumber() * 1000,
+      ).toUTCString()} ${linkDetail.expirationDate.toNumber()}`,
     );
-    console.log(
+    logger(
+      "log",
       `Link expired?: ${
         new Date() > new Date(linkDetail.expirationDate.toNumber() * 1000)
           ? "Yes"
           : "No"
       }`,
     );
-    console.log(`Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
-    console.log(`Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);
+    logger("log", `Link exists?: ${linkDetail.exists ? "Yes" : "No"}`);
+    logger("log", `Link revoked?: ${linkDetail.isRevoked ? "Yes" : "No"}`);
     index++;
   }
 
   if (result.links.length === 0) {
     result.message = `No link for ${tokenId.toString()}`;
-    console.error(result.message);
+    logger("error", result);
     return result;
   }
 
   result.success = true;
+  delete result.errorCode;
 
   return result;
 };

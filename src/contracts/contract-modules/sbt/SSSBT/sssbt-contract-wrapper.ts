@@ -4,7 +4,7 @@ import { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity
 import type { TypedDataField } from "ethers";
 import { PayableOverrides, TypedDataDomain } from "ethers";
 
-import { Messages } from "../../../../collections";
+import { BaseErrorCodes, Messages } from "../../../../collections";
 import type {
   BaseResultWithTokenId,
   PaymentMethod,
@@ -13,8 +13,10 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../../../utils";
+import { parseEthersError } from "../../ethers";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
 
 export class SSSBTContractWrapper<
@@ -23,7 +25,7 @@ export class SSSBTContractWrapper<
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     Mint: [
       { name: "to", type: "address" },
       { name: "authorityAddress", type: "address" },
@@ -39,7 +41,7 @@ export class SSSBTContractWrapper<
    */
   public sign = async (
     name: string,
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number>,
   ): Promise<{
     signature: string;
@@ -81,7 +83,7 @@ export class SSSBTContractWrapper<
   protected prepareMint = async (
     paymentMethod: PaymentMethod,
     name: string,
-    types: Record<string, Array<TypedDataField>>,
+    types: Record<string, TypedDataField[]>,
     value: Record<string, string | BigNumber | number>,
     signature: string,
     authorityAddress: string,
@@ -106,14 +108,7 @@ export class SSSBTContractWrapper<
     const sssbtMintPriceInfo = await this.getPrice(paymentMethod, slippage);
 
     if (this.masa.config.verbose) {
-      console.dir(
-        {
-          sssbtMintPriceInfo,
-        },
-        {
-          depth: null,
-        },
-      );
+      logger("dir", { sssbtMintPriceInfo });
     }
 
     return sssbtMintPriceInfo;
@@ -134,7 +129,10 @@ export class SSSBTContractWrapper<
     signatureDate: number,
     authorityAddress: string,
   ): Promise<BaseResultWithTokenId> => {
-    const result: BaseResultWithTokenId = { success: false };
+    const result: BaseResultWithTokenId = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     // current limit for SSSBT is 1 on the default installation
     let limit: number = 1;
@@ -143,7 +141,7 @@ export class SSSBTContractWrapper<
       limit = (await this.contract.maxSBTToMint()).toNumber();
     } catch {
       if (this.masa.config.verbose) {
-        console.info("Loading limit failed, falling back to 1!");
+        logger("info", "Loading limit failed, falling back to 1!");
       }
     }
 
@@ -152,13 +150,22 @@ export class SSSBTContractWrapper<
 
       if (limit > 0 && balance.gte(limit)) {
         result.message = `Minting of SSSBT failed: '${receiver}' exceeded the limit of '${limit}'!`;
-        console.error(result.message);
+        result.errorCode = BaseErrorCodes.LimitOutOfBounds;
+        logger("error", result);
+
         return result;
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.warn(`Loading SBT balance failed! ${error.message}`);
-      }
+      result.message = "Loading SBT balance failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("warn", result);
+
+      return result;
     }
 
     // fill the collection with data
@@ -194,15 +201,10 @@ export class SSSBTContractWrapper<
     );
 
     if (this.masa.config.verbose) {
-      console.dir(
-        {
-          mintSSSBTArguments,
-          mintSSSBTOverrides,
-        },
-        {
-          depth: null,
-        },
-      );
+      logger("dir", {
+        mintSSSBTArguments,
+        mintSSSBTOverrides,
+      });
     }
 
     const {
@@ -224,7 +226,8 @@ export class SSSBTContractWrapper<
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -241,18 +244,24 @@ export class SSSBTContractWrapper<
 
       if (mintEvent) {
         const { args } = mintEvent;
-        console.log(
+        logger(
+          "log",
           `Minted to token with ID: ${args._tokenId} receiver '${args._owner}'`,
         );
 
         result.success = true;
-        result.tokenId = args._tokenId;
+        delete result.errorCode;
+        result.tokenId = args._tokenId as BigNumber;
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Minting SSSBT failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Minting SSSBT failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;

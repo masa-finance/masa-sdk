@@ -4,6 +4,7 @@ import type { BaseContract } from "ethers";
 
 import type { IIdentityContracts, MasaInterface } from "../interface";
 import { MasaBase } from "../masa-base";
+import { logger } from "../utils";
 import { CreditScore } from "./contract-modules/credit-score";
 import { Green } from "./contract-modules/green";
 import { Identity } from "./contract-modules/identity";
@@ -111,28 +112,31 @@ export class MasaContracts extends MasaBase {
     const parsedLogs: LogDescription[] = [];
 
     for (const contract of [
-      ...Object.values(this.instances),
+      ...(Object.values(this.instances) as BaseContract[]),
       ...additionalContracts,
     ]) {
       parsedLogs.push(
-        ...logs
+        ...(logs
           .filter(
             (log: Log) =>
               log.address.toLowerCase() === contract.address.toLowerCase(),
           )
           .map((log: Log) => {
-            let result;
+            let result: LogDescription | undefined;
 
             try {
               result = contract.interface.parseLog(log);
             } catch (error: unknown) {
               if (error instanceof Error) {
-                console.warn(error.message);
+                logger("warn", `Parsing logs failed! ${error.message}`);
               }
             }
 
             return result;
-          }),
+          })
+          .filter((log: LogDescription | undefined) =>
+            Boolean(log),
+          ) as LogDescription[]),
       );
     }
 

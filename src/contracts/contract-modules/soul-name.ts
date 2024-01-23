@@ -6,7 +6,7 @@ import type {
 } from "ethers";
 import { TypedDataField } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type {
   BaseResult,
   PaymentMethod,
@@ -15,15 +15,17 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  logger,
   signTypedData,
 } from "../../utils";
+import { parseEthersError } from "./ethers";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class SoulName extends MasaModuleBase {
   /**
    *
    */
-  public readonly types: Record<string, Array<TypedDataField>> = {
+  public readonly types: Record<string, TypedDataField[]> = {
     MintSoulName: [
       { name: "to", type: "address" },
       { name: "name", type: "string" },
@@ -66,7 +68,7 @@ export class SoulName extends MasaModuleBase {
     signature: string,
     receiver?: string,
   ): Promise<ContractTransaction> => {
-    const to = receiver || (await this.masa.config.signer.getAddress());
+    const to = receiver ?? (await this.masa.config.signer.getAddress());
 
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
@@ -136,7 +138,10 @@ export class SoulName extends MasaModuleBase {
     );
 
     if (this.masa.config.verbose) {
-      console.log({ purchaseNameParameters, purchaseNameOverrides });
+      logger("dir", {
+        purchaseNameParameters,
+        purchaseNameOverrides,
+      });
     }
 
     // connect
@@ -312,7 +317,10 @@ export class SoulName extends MasaModuleBase {
     soulName: string,
     receiver: string,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const [soulNameData, extension] = await Promise.all([
       this.getSoulnameData(soulName),
@@ -320,8 +328,9 @@ export class SoulName extends MasaModuleBase {
     ]);
 
     if (soulNameData.exists) {
-      console.log(
-        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
+      logger(
+        "log",
+        `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId.toNumber()}' to '${receiver}'!`,
       );
 
       const {
@@ -345,7 +354,8 @@ export class SoulName extends MasaModuleBase {
           gasLimit,
         });
 
-        console.log(
+        logger(
+          "log",
           Messages.WaitingToFinalize(
             hash,
             this.masa.config.network?.blockExplorerUrls?.[0],
@@ -354,20 +364,25 @@ export class SoulName extends MasaModuleBase {
 
         await wait();
 
-        console.log(
-          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId}' sent!`,
+        logger(
+          "log",
+          `Soulname '${soulName}${extension}' with token ID '${soulNameData.tokenId.toNumber()}' sent!`,
         );
 
         result.success = true;
+        delete result.errorCode;
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          result.message = `Sending of Soul Name Failed! ${error.message}`;
-          console.error(result.message);
-        }
+        result.message = "Sending of Soul Name Failed! ";
+
+        const { message, errorCode } = parseEthersError(error);
+        result.message += message;
+        result.errorCode = errorCode;
+
+        logger("error", result);
       }
     } else {
       result.message = `Soulname '${soulName}${extension}' does not exist!`;
-      console.error(result.message);
+      logger("error", result);
     }
 
     return result;
@@ -380,6 +395,7 @@ export class SoulName extends MasaModuleBase {
   public burn = async (soulName: string): Promise<BaseResult> => {
     const result: BaseResult = {
       success: false,
+      errorCode: BaseErrorCodes.UnknownError,
     };
 
     const [soulNameData, extension] = await Promise.all([
@@ -388,8 +404,9 @@ export class SoulName extends MasaModuleBase {
     ]);
 
     if (soulNameData.exists) {
-      console.log(
-        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId}'!`,
+      logger(
+        "log",
+        `Burning '${soulName}${extension}' with token ID '${soulNameData.tokenId.toNumber()}'!`,
       );
 
       const {
@@ -407,7 +424,8 @@ export class SoulName extends MasaModuleBase {
           gasLimit,
         });
 
-        console.log(
+        logger(
+          "log",
           Messages.WaitingToFinalize(
             hash,
             this.masa.config.network?.blockExplorerUrls?.[0],
@@ -416,20 +434,26 @@ export class SoulName extends MasaModuleBase {
 
         await wait();
 
-        console.log(
-          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId}'!`,
+        logger(
+          "log",
+          `Burned Soulname '${soulName}${extension}' with ID '${soulNameData.tokenId.toNumber()}'!`,
         );
 
         result.success = true;
+        delete result.errorCode;
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          result.message = `Burning Soulname '${soulName}${extension}' Failed! ${error.message}`;
-          console.error(result.message);
-        }
+        result.message = `Burning Soulname '${soulName}${extension}' Failed! `;
+
+        const { message, errorCode } = parseEthersError(error);
+        result.message += message;
+        result.errorCode = errorCode;
+
+        logger("error", result);
       }
     } else {
       result.message = `Soulname '${soulName}${extension}' does not exist!`;
-      console.error(result.message);
+      result.errorCode = BaseErrorCodes.NotFound;
+      logger("error", result);
     }
 
     return result;
@@ -444,7 +468,10 @@ export class SoulName extends MasaModuleBase {
     soulName: string,
     years: number,
   ): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
     const tokenId =
       await this.masa.contracts.instances.SoulNameContract.getTokenId(soulName);
@@ -464,7 +491,8 @@ export class SoulName extends MasaModuleBase {
         gasLimit,
       });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -472,12 +500,17 @@ export class SoulName extends MasaModuleBase {
       );
 
       await wait();
+
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `renewal failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Renewal failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;

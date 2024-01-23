@@ -21,7 +21,6 @@ export interface GreenDetails {
 
 export interface GreenBaseResult extends BaseResultWithTokenId {
   status?: string;
-  errorCode?: number;
 }
 
 export interface GenerateGreenResult extends GreenBaseResult {

@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 
 import type { GreenDetails, IGreen, MasaInterface } from "../../interface";
-import { isBigNumber, patchMetadataUrl } from "../../utils";
+import { isBigNumber, logger, patchMetadataUrl } from "../../utils";
 
 export const loadGreenDetails = async (
   masa: MasaInterface,
@@ -18,12 +18,12 @@ export const loadGreenDetails = async (
         );
 
         if (masa.config.verbose) {
-          console.info(`Green Metadata URL: '${tokenUri}'`);
+          logger("info", `Green Metadata URL: '${tokenUri}'`);
         }
 
-        const metadata = <IGreen | undefined>(
-          await masa.client.metadata.get(tokenUri)
-        );
+        const metadata = (await masa.client.metadata.get(tokenUri)) as
+          | IGreen
+          | undefined;
 
         return {
           tokenId,
@@ -69,7 +69,7 @@ export const loadGreens = async (
             "ownerOf(uint256)"
           ](identityIdOrAddress);
       } else {
-        identityAddress = identityIdOrAddress as string;
+        identityAddress = identityIdOrAddress;
       }
 
       const balance: number = (
@@ -91,7 +91,7 @@ export const loadGreens = async (
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Loading green failed! ${error.message}`);
+      logger("error", `Loading green failed! ${error.message}`);
     }
   }
 

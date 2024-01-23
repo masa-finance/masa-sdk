@@ -4,20 +4,21 @@ import type { ApiConfig } from "arweave/node/lib/api";
 import axios from "axios";
 
 import type { MasaConfig } from "../../interface";
+import { logger } from "../logger";
 
 export class MasaArweave extends Arweave {
-  constructor(
+  public constructor(
     config: ApiConfig,
     private masaConfig: MasaConfig,
   ) {
     super({ ...config, logging: masaConfig.verbose });
   }
 
-  async loadTransactionData(
+  public async loadTransactionData(
     txId: string,
     isString: boolean = true,
   ): Promise<object | Uint8Array | undefined> {
-    let data;
+    let data: object | Uint8Array | undefined;
 
     try {
       const { status } = await this.transactions.getStatus(txId);
@@ -36,12 +37,12 @@ export class MasaArweave extends Arweave {
         );
 
         data = isString
-          ? JSON.parse(dataResponse as string)
+          ? (JSON.parse(dataResponse as string) as object)
           : (dataResponse as Uint8Array);
       }
     } catch (error: unknown) {
       if (error instanceof Error && this.masaConfig.verbose) {
-        console.error("Arweave getData failed!", error.message);
+        logger("error", `Arweave getData failed! ${error.message}`);
       }
     }
 
@@ -50,12 +51,13 @@ export class MasaArweave extends Arweave {
       const url = `${config.api.protocol}://${config.api.host}:${config.api.port}/${txId}`;
 
       if (this.masaConfig.verbose) {
-        console.error(
+        logger(
+          "error",
           `Failed to load arweave tx id: ${txId} getting ${url} instead`,
         );
       }
 
-      const { data: dataResponse } = await axios.get(
+      const { data: dataResponse } = await axios.get<object | Uint8Array>(
         url,
         isString
           ? {}

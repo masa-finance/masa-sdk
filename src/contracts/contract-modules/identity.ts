@@ -5,9 +5,10 @@ import {
   TypedDataDomain,
 } from "ethers";
 
-import { Messages } from "../../collections";
+import { BaseErrorCodes, Messages } from "../../collections";
 import type { BaseResult, PaymentMethod } from "../../interface";
-import { generateSignatureDomain, isNativeCurrency } from "../../utils";
+import { generateSignatureDomain, isNativeCurrency, logger } from "../../utils";
+import { parseEthersError } from "./ethers";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class Identity extends MasaSBTModuleBase {
@@ -113,7 +114,7 @@ export class Identity extends MasaSBTModuleBase {
       );
 
     if (this.masa.config.verbose) {
-      console.log({
+      logger("dir", {
         purchaseIdentityAndNameParameters,
         purchaseIdentityAndNameOverrides,
       });
@@ -144,9 +145,12 @@ export class Identity extends MasaSBTModuleBase {
    * @param identityId
    */
   public burn = async (identityId: BigNumber): Promise<BaseResult> => {
-    const result: BaseResult = { success: false };
+    const result: BaseResult = {
+      success: false,
+      errorCode: BaseErrorCodes.UnknownError,
+    };
 
-    console.log(`Burning Identity with ID '${identityId}'!`);
+    logger("log", `Burning Identity with ID '${identityId.toNumber()}'!`);
 
     const {
       estimateGas: { burn: estimateGas },
@@ -161,7 +165,8 @@ export class Identity extends MasaSBTModuleBase {
 
       const { wait, hash } = await burn(identityId, { gasLimit });
 
-      console.log(
+      logger(
+        "log",
         Messages.WaitingToFinalize(
           hash,
           this.masa.config.network?.blockExplorerUrls?.[0],
@@ -170,13 +175,17 @@ export class Identity extends MasaSBTModuleBase {
 
       await wait();
 
-      console.log(`Burned Identity with ID '${identityId}'!`);
+      logger("log", `Burned Identity with ID '${identityId.toNumber()}'!`);
       result.success = true;
+      delete result.errorCode;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        result.message = `Burning Identity Failed! ${error.message}`;
-        console.error(result.message);
-      }
+      result.message = "Burning Identity Failed! ";
+
+      const { message, errorCode } = parseEthersError(error);
+      result.message += message;
+      result.errorCode = errorCode;
+
+      logger("error", result);
     }
 
     return result;
