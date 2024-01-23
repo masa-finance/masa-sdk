@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / SBTContractWrapper
+ - v3.15.0](../README.md) / [Exports](../modules.md) / SBTContractWrapper
 
 # Class: SBTContractWrapper\<Contract\>
 
@@ -120,7 +120,7 @@ ___
 
 ### checkOrGiveAllowance
 
-▸ **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+▸ **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<`undefined` \| `ContractReceipt`\>
 
 Checks or gives allowance on ERC20 tokens
 
@@ -135,7 +135,7 @@ Checks or gives allowance on ERC20 tokens
 
 #### Returns
 
-`Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+`Promise`\<`undefined` \| `ContractReceipt`\>
 
 #### Inherited from
 

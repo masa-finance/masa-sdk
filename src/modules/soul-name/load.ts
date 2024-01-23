@@ -89,6 +89,12 @@ export const loadSoulNamesByNames = async (
   ) as SoulNameDetails[];
 };
 
+/**
+ * loads active soul names
+ *
+ * @param masa
+ * @param identityIdOrAddress
+ */
 export const loadSoulNames = async (
   masa: MasaInterface,
   identityIdOrAddress: BigNumber | string,
@@ -104,6 +110,55 @@ export const loadSoulNames = async (
     soulNames = await (isBigNumber(identityIdOrAddress)
       ? getSoulNamesByIdentity(identityIdOrAddress)
       : getSoulNamesByAddress(identityIdOrAddress));
+  } catch {
+    // ignore
+  }
+
+  return soulNames;
+};
+
+/**
+ * loads all soul names even expired ones
+ *
+ * @param masa
+ * @param identityIdOrAddress
+ */
+export const loadSoulNamesWithExpired = async (
+  masa: MasaInterface,
+  identityIdOrAddress: BigNumber | string,
+): Promise<string[]> => {
+  let soulNames: string[] = [];
+
+  try {
+    const { "ownerOf(uint256)": ownerOfIdentity } =
+      masa.contracts.instances.SoulboundIdentityContract;
+
+    const address = isBigNumber(identityIdOrAddress)
+      ? await ownerOfIdentity(identityIdOrAddress)
+      : identityIdOrAddress;
+
+    const { balanceOf, tokenOfOwnerByIndex, tokenData } =
+      masa.contracts.instances.SoulNameContract;
+
+    const [loadedSoulnames, balance] = await Promise.all([
+      loadSoulNames(masa, address),
+      balanceOf(address),
+    ]);
+
+    soulNames = loadedSoulnames;
+
+    // getSoulNames does not return expired soul names, this means if we encounter such a name
+    // we might load it in a different way
+    if (balance.toNumber() !== soulNames.length) {
+      for (let i = 0; i < balance.toNumber(); i++) {
+        const soulnameTokenId = await tokenOfOwnerByIndex(address, i);
+        const { name } = await tokenData(soulnameTokenId);
+
+        if (soulNames.indexOf(name) === -1) {
+          soulNames = [...soulNames, name];
+        }
+      }
+    }
   } catch {
     // ignore
   }

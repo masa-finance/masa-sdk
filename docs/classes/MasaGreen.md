@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / MasaGreen
+ - v3.15.0](../README.md) / [Exports](../modules.md) / MasaGreen
 
 # Class: MasaGreen
 
@@ -198,7 +198,7 @@ ___
 
 ### verify
 
-▸ **verify**(`phoneNumber`, `code`): `Promise`\<[`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
+▸ **verify**(`phoneNumber`, `code`): `Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
 
 Tries to verify the current verification attempt
 
@@ -211,4 +211,4 @@ Tries to verify the current verification attempt
 
 #### Returns
 
-`Promise`\<[`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
+`Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>

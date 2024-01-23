@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / GenerateCreditScoreResult
+ - v3.15.0](../README.md) / [Exports](../modules.md) / GenerateCreditScoreResult
 
 # Interface: GenerateCreditScoreResult
 
@@ -14,7 +14,6 @@
 ### Properties
 
 - [authorityAddress](GenerateCreditScoreResult.md#authorityaddress)
-- [errorCode](GenerateCreditScoreResult.md#errorcode)
 - [message](GenerateCreditScoreResult.md#message)
 - [signature](GenerateCreditScoreResult.md#signature)
 - [signatureDate](GenerateCreditScoreResult.md#signaturedate)
@@ -25,16 +24,6 @@
 ### authorityAddress
 
 • `Optional` **authorityAddress**: `string`
-
-___
-
-### errorCode
-
-• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
-
-#### Inherited from
-
-[BaseResult](BaseResult.md).[errorCode](BaseResult.md#errorcode)
 
 ___
 

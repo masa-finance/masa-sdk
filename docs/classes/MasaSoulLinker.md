@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / MasaSoulLinker
+ - v3.15.0](../README.md) / [Exports](../modules.md) / MasaSoulLinker
 
 # Class: MasaSoulLinker
 
@@ -40,7 +40,7 @@
 | Name | Type |
 | :------ | :------ |
 | `masa` | [`MasaInterface`](../interfaces/MasaInterface.md) |
-| `contract` | `ILinkableSBT` |
+| `contract` | `Contract` |
 
 #### Returns
 
@@ -54,7 +54,7 @@ MasaBase.constructor
 
 ### contract
 
-• `Private` **contract**: `ILinkableSBT`
+• `Private` **contract**: `Contract`
 
 ___
 

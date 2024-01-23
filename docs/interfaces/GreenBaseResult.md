@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / GreenBaseResult
+ - v3.15.0](../README.md) / [Exports](../modules.md) / GreenBaseResult
 
 # Interface: GreenBaseResult
 
@@ -27,11 +27,7 @@
 
 ### errorCode
 
-• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
-
-#### Inherited from
-
-[BaseResultWithTokenId](BaseResultWithTokenId.md).[errorCode](BaseResultWithTokenId.md#errorcode)
+• `Optional` **errorCode**: `number`
 
 ___
 

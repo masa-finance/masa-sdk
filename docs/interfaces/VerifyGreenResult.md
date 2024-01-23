@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / VerifyGreenResult
+ - v3.15.0](../README.md) / [Exports](../modules.md) / VerifyGreenResult
 
 # Interface: VerifyGreenResult
 
@@ -32,7 +32,7 @@ ___
 
 ### errorCode
 
-• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
+• `Optional` **errorCode**: `number`
 
 #### Inherited from
 

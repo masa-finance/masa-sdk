@@ -1,14 +1,13 @@
 [# Masa SDK
- - v4.0.0-alpha.2](README.md) / Exports
+ - v3.15.0](README.md) / Exports
 
 # # Masa SDK
- - v4.0.0-alpha.2
+ - v3.15.0
 
 ## Table of contents
 
 ### Enumerations
 
-- [BaseErrorCodes](enums/BaseErrorCodes.md)
 - [SoulNameErrorCodes](enums/SoulNameErrorCodes.md)
 
 ### Classes
@@ -92,7 +91,6 @@
 - [UpdateCreditScoreResult](interfaces/UpdateCreditScoreResult.md)
 - [User](interfaces/User.md)
 - [VerifyGreenResult](interfaces/VerifyGreenResult.md)
-- [VerifyResult](interfaces/VerifyResult.md)
 
 ### Type Aliases
 
@@ -102,7 +100,6 @@
 - [Balances](modules.md#balances)
 - [BreakLinkResult](modules.md#breaklinkresult)
 - [CreateLinkResult](modules.md#createlinkresult)
-- [CreateSoulNameErrorCodes](modules.md#createsoulnameerrorcodes)
 - [ERC20Currencies](modules.md#erc20currencies)
 - [Environment](modules.md#environment)
 - [EnvironmentName](modules.md#environmentname)
@@ -161,7 +158,6 @@
 - [getNetworkNameByChainId](modules.md#getnetworknamebychainid)
 - [getSession](modules.md#getsession)
 - [getSoulNameMetadataPrefix](modules.md#getsoulnamemetadataprefix)
-- [isBaseResult](modules.md#isbaseresult)
 - [isBigNumber](modules.md#isbignumber)
 - [isERC20Currency](modules.md#iserc20currency)
 - [isNativeCurrency](modules.md#isnativecurrency)
@@ -187,7 +183,7 @@
 - [loadSoulNameDetailsByAddress](modules.md#loadsoulnamedetailsbyaddress)
 - [loadSoulNames](modules.md#loadsoulnames)
 - [loadSoulNamesByNames](modules.md#loadsoulnamesbynames)
-- [logger](modules.md#logger)
+- [loadSoulNamesWithExpired](modules.md#loadsoulnameswithexpired)
 - [login](modules.md#login)
 - [logout](modules.md#logout)
 - [mintGreen](modules.md#mintgreen)
@@ -251,12 +247,6 @@ ___
 ### CreateLinkResult
 
 Ƭ **CreateLinkResult**: [`BaseResult`](interfaces/BaseResult.md) & \{ `passport?`: `string`  }
-
-___
-
-### CreateSoulNameErrorCodes
-
-Ƭ **CreateSoulNameErrorCodes**: [`SoulNameErrorCodes`](enums/SoulNameErrorCodes.md) \| [`BaseErrorCodes`](enums/BaseErrorCodes.md)
 
 ___
 
@@ -388,9 +378,9 @@ ___
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `loginTemplate` | (`challenge`: `string`, `expires`: `string`) => `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `loginTemplate` | (`challenge`: `string`, `expires`: `string`) => `string` | The Masa Finance Login Template used for authenticating with the middleware |
 
 ___
 
@@ -661,17 +651,17 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | `Object` |
-| › `adminAddress?` | `string` |
-| › `baseTokenUri` | `string` |
-| › `limit?` | `number` |
-| › `masa` | [`MasaInterface`](interfaces/MasaInterface.md) |
-| › `name` | `string` |
-| › `paymentOptions?` | `Object` |
-| › `paymentOptions.projectFeeReceiver` | `string` |
-| › `symbol` | `string` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `«destructured»` | `Object` | `undefined` |
+| › `adminAddress?` | `string` | `undefined` |
+| › `baseTokenUri` | `string` | `undefined` |
+| › `limit?` | `number` | `1` |
+| › `masa` | [`MasaInterface`](interfaces/MasaInterface.md) | `undefined` |
+| › `name` | `string` | `undefined` |
+| › `paymentOptions?` | `Object` | `undefined` |
+| › `paymentOptions.projectFeeReceiver` | `string` | `undefined` |
+| › `symbol` | `string` | `undefined` |
 
 #### Returns
 
@@ -685,18 +675,18 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | `Object` |
-| › `adminAddress?` | `string` |
-| › `authorityAddress?` | `string` |
-| › `baseTokenUri` | `string` |
-| › `limit` | `number` |
-| › `masa` | [`MasaInterface`](interfaces/MasaInterface.md) |
-| › `name` | `string` |
-| › `paymentOptions?` | `Object` |
-| › `paymentOptions.projectFeeReceiver` | `string` |
-| › `symbol` | `string` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `«destructured»` | `Object` | `undefined` |
+| › `adminAddress?` | `string` | `undefined` |
+| › `authorityAddress?` | `string` | `undefined` |
+| › `baseTokenUri` | `string` | `undefined` |
+| › `limit` | `number` | `1` |
+| › `masa` | [`MasaInterface`](interfaces/MasaInterface.md) | `undefined` |
+| › `name` | `string` | `undefined` |
+| › `paymentOptions?` | `Object` | `undefined` |
+| › `paymentOptions.projectFeeReceiver` | `string` | `undefined` |
+| › `symbol` | `string` | `undefined` |
 
 #### Returns
 
@@ -846,22 +836,6 @@ try to evaluate the right prefix
 #### Returns
 
 `string`
-
-___
-
-### isBaseResult
-
-▸ **isBaseResult**(`message`): message is BaseResult
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `message` | `unknown` |
-
-#### Returns
-
-message is BaseResult
 
 ___
 
@@ -1261,6 +1235,8 @@ ___
 
 ▸ **loadSoulNames**(`masa`, `identityIdOrAddress`): `Promise`\<`string`[]\>
 
+loads active soul names
+
 #### Parameters
 
 | Name | Type |
@@ -1291,20 +1267,22 @@ ___
 
 ___
 
-### logger
+### loadSoulNamesWithExpired
 
-▸ **logger**(`method`, `message`): `void`
+▸ **loadSoulNamesWithExpired**(`masa`, `identityIdOrAddress`): `Promise`\<`string`[]\>
+
+loads all soul names even expired ones
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `method` | ``"warn"`` \| ``"error"`` \| ``"log"`` \| ``"info"`` \| ``"dir"`` |
-| `message` | `unknown` |
+| `masa` | [`MasaInterface`](interfaces/MasaInterface.md) |
+| `identityIdOrAddress` | `string` \| `BigNumber` |
 
 #### Returns
 
-`void`
+`Promise`\<`string`[]\>
 
 ___
 
@@ -1735,7 +1713,7 @@ ___
 
 ### verifyByName
 
-▸ **verifyByName**(`masa`, `soulName`): `Promise`\<[`VerifyResult`](interfaces/VerifyResult.md)\>
+▸ **verifyByName**(`masa`, `soulName`): `Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
 
 #### Parameters
 
@@ -1746,13 +1724,13 @@ ___
 
 #### Returns
 
-`Promise`\<[`VerifyResult`](interfaces/VerifyResult.md)\>
+`Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
 
 ___
 
 ### verifyGreen
 
-▸ **verifyGreen**(`masa`, `phoneNumber`, `code`): `Promise`\<[`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
+▸ **verifyGreen**(`masa`, `phoneNumber`, `code`): `Promise`\<`undefined` \| [`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
 
 #### Parameters
 
@@ -1764,7 +1742,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
+`Promise`\<`undefined` \| [`VerifyGreenResult`](interfaces/VerifyGreenResult.md)\>
 
 ___
 

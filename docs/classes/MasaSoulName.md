@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / MasaSoulName
+ - v3.15.0](../README.md) / [Exports](../modules.md) / MasaSoulName
 
 # Class: MasaSoulName
 
@@ -28,6 +28,7 @@
 - [loadSoulNameByName](MasaSoulName.md#loadsoulnamebyname)
 - [loadSoulNameByTokenId](MasaSoulName.md#loadsoulnamebytokenid)
 - [loadSoulNames](MasaSoulName.md#loadsoulnames)
+- [loadSoulNamesWithExpired](MasaSoulName.md#loadsoulnameswithexpired)
 - [renew](MasaSoulName.md#renew)
 - [resolve](MasaSoulName.md#resolve)
 - [send](MasaSoulName.md#send)
@@ -177,6 +178,22 @@ ___
 
 ___
 
+### loadSoulNamesWithExpired
+
+▸ **loadSoulNamesWithExpired**(`identityIdOrAddress`): `Promise`\<`string`[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `identityIdOrAddress` | `string` \| `BigNumber` |
+
+#### Returns
+
+`Promise`\<`string`[]\>
+
+___
+
 ### renew
 
 ▸ **renew**(`soulName`, `years`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
@@ -267,7 +284,7 @@ ___
 
 ### verify
 
-▸ **verify**(`soulName`): `Promise`\<[`VerifyResult`](../interfaces/VerifyResult.md)\>
+▸ **verify**(`soulName`): `Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>
 
 #### Parameters
 
@@ -277,4 +294,4 @@ ___
 
 #### Returns
 
-`Promise`\<[`VerifyResult`](../interfaces/VerifyResult.md)\>
+`Promise`\<\{ `imageHashMatch`: `boolean` ; `imageOwnerIsMasaAccount`: `boolean` ; `imageSignatureMatch`: `boolean` ; `metadataOwnerIsMasaAccount`: `boolean` ; `metadataSignatureMatch`: `boolean` ; `nameMatch`: `boolean`  }\>

@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / SoulNameMetadataStoreResult
+ - v3.15.0](../README.md) / [Exports](../modules.md) / SoulNameMetadataStoreResult
 
 # Interface: SoulNameMetadataStoreResult
 
@@ -32,7 +32,7 @@ ___
 
 ### errorCode
 
-• `Optional` **errorCode**: [`CreateSoulNameErrorCodes`](../modules.md#createsoulnameerrorcodes)
+• **errorCode**: [`SoulNameErrorCodes`](../enums/SoulNameErrorCodes.md)
 
 #### Inherited from
 

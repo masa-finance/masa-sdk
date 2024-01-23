@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / SoulNameErrorCodes
+ - v3.15.0](../README.md) / [Exports](../modules.md) / SoulNameErrorCodes
 
 # Enumeration: SoulNameErrorCodes
 
@@ -8,22 +8,44 @@
 ### Enumeration Members
 
 - [ArweaveError](SoulNameErrorCodes.md#arweaveerror)
+- [CryptoError](SoulNameErrorCodes.md#cryptoerror)
+- [NetworkError](SoulNameErrorCodes.md#networkerror)
+- [NoError](SoulNameErrorCodes.md#noerror)
 - [SoulNameError](SoulNameErrorCodes.md#soulnameerror)
+- [UnknownError](SoulNameErrorCodes.md#unknownerror)
 
 ## Enumeration Members
 
 ### ArweaveError
 
-• **ArweaveError** = ``"ArweaveError"``
+• **ArweaveError** = ``1``
 
-Arweave related issues
+___
+
+### CryptoError
+
+• **CryptoError** = ``3``
+
+___
+
+### NetworkError
+
+• **NetworkError** = ``2``
+
+___
+
+### NoError
+
+• **NoError** = ``0``
 
 ___
 
 ### SoulNameError
 
-• **SoulNameError** = ``"SoulNameError"``
+• **SoulNameError** = ``4``
 
-**`Description`**
+___
 
-Soulname Already taken or does not exists
+### UnknownError
+
+• **UnknownError** = ``1337``

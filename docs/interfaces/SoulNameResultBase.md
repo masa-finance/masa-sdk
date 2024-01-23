@@ -1,11 +1,11 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / SoulNameResultBase
+ - v3.15.0](../README.md) / [Exports](../modules.md) / SoulNameResultBase
 
 # Interface: SoulNameResultBase
 
 ## Hierarchy
 
-- `Omit`\<[`BaseResultWithTokenId`](BaseResultWithTokenId.md), ``"errorCode"``\>
+- [`BaseResultWithTokenId`](BaseResultWithTokenId.md)
 
   ↳ **`SoulNameResultBase`**
 
@@ -26,7 +26,7 @@
 
 ### errorCode
 
-• `Optional` **errorCode**: [`CreateSoulNameErrorCodes`](../modules.md#createsoulnameerrorcodes)
+• **errorCode**: [`SoulNameErrorCodes`](../enums/SoulNameErrorCodes.md)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Inherited from
 
-Omit.message
+[BaseResultWithTokenId](BaseResultWithTokenId.md).[message](BaseResultWithTokenId.md#message)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Inherited from
 
-Omit.success
+[BaseResultWithTokenId](BaseResultWithTokenId.md).[success](BaseResultWithTokenId.md#success)
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Inherited from
 
-Omit.tokenId
+[BaseResultWithTokenId](BaseResultWithTokenId.md).[tokenId](BaseResultWithTokenId.md#tokenid)

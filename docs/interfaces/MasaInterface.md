@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / MasaInterface
+ - v3.15.0](../README.md) / [Exports](../modules.md) / MasaInterface
 
 # Interface: MasaInterface
 
@@ -18,8 +18,6 @@
 - [config](MasaInterface.md#config)
 - [contracts](MasaInterface.md#contracts)
 - [creditScore](MasaInterface.md#creditscore)
-- [dynamic-sbt](MasaInterface.md#dynamic-sbt)
-- [dynamic-sssbt](MasaInterface.md#dynamic-sssbt)
 - [green](MasaInterface.md#green)
 - [identity](MasaInterface.md#identity)
 - [sbt](MasaInterface.md#sbt)
@@ -69,18 +67,6 @@ ___
 ### creditScore
 
 • `Readonly` **creditScore**: [`MasaCreditScore`](../classes/MasaCreditScore.md)
-
-___
-
-### dynamic-sbt
-
-• `Readonly` **dynamic-sbt**: [`MasaDynamicSBTBase`](../classes/MasaDynamicSBTBase.md)
-
-___
-
-### dynamic-sssbt
-
-• `Readonly` **dynamic-sssbt**: [`MasaDynamicSSSBT`](../classes/MasaDynamicSSSBT.md)
 
 ___
 

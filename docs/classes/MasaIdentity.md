@@ -1,11 +1,11 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / MasaIdentity
+ - v3.15.0](../README.md) / [Exports](../modules.md) / MasaIdentity
 
 # Class: MasaIdentity
 
 ## Hierarchy
 
-- `MasaBase`
+- `MasaLinkable`\<`SoulboundIdentity`\>
 
   ↳ **`MasaIdentity`**
 
@@ -17,6 +17,8 @@
 
 ### Properties
 
+- [contract](MasaIdentity.md#contract)
+- [links](MasaIdentity.md#links)
 - [masa](MasaIdentity.md#masa)
 
 ### Methods
@@ -43,11 +45,31 @@
 
 [`MasaIdentity`](MasaIdentity.md)
 
-#### Inherited from
+#### Overrides
 
-MasaBase.constructor
+MasaLinkable\&lt;SoulboundIdentity\&gt;.constructor
 
 ## Properties
+
+### contract
+
+• `Readonly` **contract**: `SoulboundIdentity`
+
+#### Inherited from
+
+MasaLinkable.contract
+
+___
+
+### links
+
+• `Readonly` **links**: [`MasaSoulLinker`](MasaSoulLinker.md)
+
+#### Inherited from
+
+MasaLinkable.links
+
+___
 
 ### masa
 
@@ -55,7 +77,7 @@ MasaBase.constructor
 
 #### Inherited from
 
-MasaBase.masa
+MasaLinkable.masa
 
 ## Methods
 

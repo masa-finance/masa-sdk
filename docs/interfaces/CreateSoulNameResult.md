@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / CreateSoulNameResult
+ - v3.15.0](../README.md) / [Exports](../modules.md) / CreateSoulNameResult
 
 # Interface: CreateSoulNameResult
 
@@ -23,7 +23,7 @@
 
 ### errorCode
 
-• `Optional` **errorCode**: [`CreateSoulNameErrorCodes`](../modules.md#createsoulnameerrorcodes)
+• **errorCode**: [`SoulNameErrorCodes`](../enums/SoulNameErrorCodes.md)
 
 #### Inherited from
 

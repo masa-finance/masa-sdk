@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / Masa
+ - v3.15.0](../README.md) / [Exports](../modules.md) / Masa
 
 # Class: Masa
 
@@ -128,19 +128,11 @@ ___
 
 • `Readonly` **dynamic-sbt**: [`MasaDynamicSBTBase`](MasaDynamicSBTBase.md)
 
-#### Implementation of
-
-[MasaInterface](../interfaces/MasaInterface.md).[dynamic-sbt](../interfaces/MasaInterface.md#dynamic-sbt)
-
 ___
 
 ### dynamic-sssbt
 
 • `Readonly` **dynamic-sssbt**: [`MasaDynamicSSSBT`](MasaDynamicSSSBT.md)
-
-#### Implementation of
-
-[MasaInterface](../interfaces/MasaInterface.md).[dynamic-sssbt](../interfaces/MasaInterface.md#dynamic-sssbt)
 
 ___
 

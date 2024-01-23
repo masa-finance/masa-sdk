@@ -1,5 +1,5 @@
 [# Masa SDK
- - v4.0.0-alpha.2](../README.md) / [Exports](../modules.md) / UpdateCreditScoreResult
+ - v3.15.0](../README.md) / [Exports](../modules.md) / UpdateCreditScoreResult
 
 # Interface: UpdateCreditScoreResult
 
@@ -13,7 +13,6 @@
 
 ### Properties
 
-- [errorCode](UpdateCreditScoreResult.md#errorcode)
 - [message](UpdateCreditScoreResult.md#message)
 - [signature](UpdateCreditScoreResult.md#signature)
 - [status](UpdateCreditScoreResult.md#status)
@@ -21,16 +20,6 @@
 - [tokenId](UpdateCreditScoreResult.md#tokenid)
 
 ## Properties
-
-### errorCode
-
-• `Optional` **errorCode**: [`BaseErrorCodes`](../enums/BaseErrorCodes.md)
-
-#### Inherited from
-
-[BaseResultWithTokenId](BaseResultWithTokenId.md).[errorCode](BaseResultWithTokenId.md#errorcode)
-
-___
 
 ### message
 
