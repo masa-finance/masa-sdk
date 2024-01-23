@@ -58,7 +58,9 @@ export class MasaSoulName extends MasaBase {
    *
    * @param identityIdOrAddress
    */
-  loadSoulNamesWithExpired = (identityIdOrAddress: BigNumber | string) =>
+  public loadSoulNamesWithExpired = (
+    identityIdOrAddress: BigNumber | string,
+  ): Promise<string[]> =>
     loadSoulNamesWithExpired(this.masa, identityIdOrAddress);
 
   /**
