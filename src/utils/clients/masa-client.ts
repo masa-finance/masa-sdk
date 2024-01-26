@@ -1,5 +1,5 @@
-import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import axios from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 
 import type {
   ChallengeResult,
@@ -57,7 +57,7 @@ export class MasaClient extends MasaBase {
      * Check session is still alive
      */
     check: async (): Promise<ISession | undefined> => {
-      return await this.get<ISession>("/session/check", true);
+      return (await this.get<ISession>("/session/check", true)).data;
     },
 
     /**
@@ -400,9 +400,9 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  post = async <Payload, Result>(
+  post = async <Request, Result>(
     endpoint: string,
-    data: Payload,
+    data: Request,
     silent: boolean = false,
   ): Promise<{
     data: Result | undefined;
@@ -414,7 +414,7 @@ export class MasaClient extends MasaBase {
     }
 
     const postResponse = await this._middlewareClient
-      .post<Payload, AxiosResponse<Result>>(endpoint, data, {
+      .post<Request, AxiosResponse<Result>>(endpoint, data, {
         withCredentials: true,
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
@@ -423,6 +423,10 @@ export class MasaClient extends MasaBase {
       .catch((error: Error | AxiosError) => {
         if (!silent) {
           console.error(`Post '${endpoint}' failed!`, error.message);
+        }
+
+        if (error instanceof AxiosError) {
+          return error.response as AxiosResponse<Result>;
         }
       });
 
@@ -444,17 +448,21 @@ export class MasaClient extends MasaBase {
     };
   };
 
-  patch = async <Payload, Result>(
+  patch = async <Request, Result>(
     endpoint: string,
-    data: Payload,
+    data: Request,
     silent: boolean = false,
-  ): Promise<Result | undefined> => {
+  ): Promise<{
+    data: Result | undefined;
+    status: number | undefined;
+    statusText: string | undefined;
+  }> => {
     if (this.masa.config.verbose) {
       console.log(`Patching '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
     const patchResponse = await this._middlewareClient
-      .patch<Payload, AxiosResponse<Result>>(endpoint, data, {
+      .patch<Request, AxiosResponse<Result>>(endpoint, data, {
         withCredentials: true,
         headers: {
           cookie: this.cookie ? [this.cookie] : undefined,
@@ -464,9 +472,13 @@ export class MasaClient extends MasaBase {
         if (!silent) {
           console.error(`Patch '${endpoint}' failed!`, error.message);
         }
+
+        if (error instanceof AxiosError) {
+          return error.response as AxiosResponse<Result>;
+        }
       });
 
-    const { data: patchData, status } = patchResponse || {};
+    const { data: patchData, status, statusText } = patchResponse || {};
 
     if (this.masa.config.verbose) {
       console.info({
@@ -477,13 +489,21 @@ export class MasaClient extends MasaBase {
       });
     }
 
-    return patchData;
+    return {
+      data: patchData,
+      status,
+      statusText,
+    };
   };
 
   get = async <Result>(
     endpoint: string,
     silent: boolean = false,
-  ): Promise<Result | undefined> => {
+  ): Promise<{
+    data: Result | undefined;
+    status: number | undefined;
+    statusText: string | undefined;
+  }> => {
     if (this.masa.config.verbose) {
       console.log(`Getting '${endpoint}'`);
     }
@@ -499,9 +519,13 @@ export class MasaClient extends MasaBase {
         if (!silent) {
           console.error(`Get '${endpoint}' failed!`, error.message);
         }
+
+        if (error instanceof AxiosError) {
+          return error.response as AxiosResponse<Result>;
+        }
       });
 
-    const { data: getData, status } = getResponse || {};
+    const { data: getData, status, statusText } = getResponse || {};
 
     if (this.masa.config.verbose) {
       console.dir(
@@ -517,6 +541,10 @@ export class MasaClient extends MasaBase {
       );
     }
 
-    return getData;
+    return {
+      data: getData,
+      status,
+      statusText,
+    };
   };
 }
