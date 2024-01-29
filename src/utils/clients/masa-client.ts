@@ -2,6 +2,7 @@ import type { AxiosInstance, AxiosResponse } from "axios";
 import axios, { AxiosError } from "axios";
 
 import type {
+  BaseResult,
   ChallengeResult,
   ChallengeResultWithCookie,
   GenerateCreditScoreResult,
@@ -57,7 +58,12 @@ export class MasaClient extends MasaBase {
      * Check session is still alive
      */
     check: async (): Promise<ISession | undefined> => {
-      return (await this.get<ISession>("/session/check", true)).data;
+      const { data: session } = await this.get<ISession | BaseResult>(
+        "/session/check",
+        true,
+      );
+
+      return session && "user" in session ? session : undefined;
     },
 
     /**
@@ -81,7 +87,7 @@ export class MasaClient extends MasaBase {
             address: string;
             signature: string;
           },
-          AxiosResponse<SessionUser>
+          AxiosResponse<SessionUser | BaseResult>
         >(
           "/session/check-signature",
           {
@@ -110,7 +116,10 @@ export class MasaClient extends MasaBase {
         });
       }
 
-      if (checkSignatureResponseData) {
+      if (
+        checkSignatureResponseData &&
+        "userId" in checkSignatureResponseData
+      ) {
         // set the cookie here, so we can reuse it during the lifespan of the
         // masa object if it is not set yet
         if (cookie && !this.cookie) {
@@ -169,6 +178,9 @@ export class MasaClient extends MasaBase {
       return result;
     },
 
+    /**
+     * Logout the current user
+     */
     logout: async (): Promise<LogoutResult | undefined> => {
       const { data: logoutResult } = await this.post<undefined, LogoutResult>(
         "/session/logout",
