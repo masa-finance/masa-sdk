@@ -1,4 +1,7 @@
 export type NetworkName =
+  // masa
+  | "masatest"
+  | "masa"
   // eth
   | "goerli" // testnet
   | "sepolia" // testnet

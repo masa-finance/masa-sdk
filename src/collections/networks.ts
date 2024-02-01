@@ -1,6 +1,32 @@
 import type { Addresses, Network, NetworkName } from "../interface";
 import { addresses } from "../networks";
 
+// masa
+const masatest: Network = {
+  networkName: "masatest",
+  chainName: "Masa Testnet",
+  chainNameShort: "Masa Test",
+  isTestnet: true,
+  chainId: 56,
+  rpcUrls: [
+    // default https
+    "https://subnets.avax.network/masatestne/testnet/rpc",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  nativeCurrency: {
+    name: "tMASA Token",
+    symbol: "tMASA",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://subnets-test.avax.network/masatestnet"],
+  addresses: addresses["masatest"] as Addresses,
+};
+
 // bsc
 const bsc: Network = {
   networkName: "bsc",
@@ -404,6 +430,8 @@ const scrollsepolia: Network = {
 export const SupportedNetworks: Partial<{
   [key in NetworkName]: Network;
 }> = {
+  // masa
+  masatest,
   // ETH
   ethereum,
   // @deprecated: use sepolia instead
