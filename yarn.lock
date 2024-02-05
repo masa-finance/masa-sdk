@@ -453,9 +453,9 @@
     ethers "~5.7.2"
 
 "@masa-finance/masa-token@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-token/-/masa-token-2.0.0.tgz#b87635ab55de166183ad1535199a1a848016d5eb"
-  integrity sha512-2k4nXBZTVfguJunYXNpQ9EreHW1EVOTmo+U1+OKnnX6lh69MWgoZsWMmSBjyZwJQ2R21QmoVCP57p+LpY0vM1A==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-token/-/masa-token-2.0.2.tgz#5d3dd891d465379931e2c9f04589f3e61a0bb3fa"
+  integrity sha512-mh844dJ3XQIfn8qBTiGyc/4XtqWffotoFdDazglUkOjjAqygR8vjW1JUStxHUcdQ6bj1su8MOY1zNng1LNpk7A==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
