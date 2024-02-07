@@ -5,7 +5,7 @@ import {
   MasaToken__factory,
   MasaTokenAdapter__factory,
   MasaTokenOFT__factory,
-} from "@masa-finance/masa-token/typechain";
+} from "@masa-finance/masa-token/dist/typechain";
 import { BigNumber, ethers, utils } from "ethers";
 
 import { Messages, SupportedNetworks } from "../../collections";
@@ -26,7 +26,7 @@ export const swap = async (
   masa: MasaInterface,
   to: NetworkName,
   amount: string,
-  slippage = 250,
+  slippage: number = 250,
 ) => {
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 
