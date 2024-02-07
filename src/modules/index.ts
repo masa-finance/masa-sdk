@@ -6,4 +6,5 @@ export * from "./sbt";
 export * from "./session";
 export * from "./soul-linker";
 export * from "./soul-name";
+export * from "./token";
 export * from "./version";

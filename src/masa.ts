@@ -13,6 +13,7 @@ import {
   MasaSession,
   MasaSoulName,
   MasaSSSBT,
+  MasaToken,
   version,
 } from "./modules";
 import { getNetworkNameByChainId, MasaArweave, MasaClient } from "./utils";
@@ -36,6 +37,8 @@ export class Masa implements MasaInterface {
   readonly sbt: MasaSBTBase;
   readonly asbt: MasaASBT;
   readonly sssbt: MasaSSSBT;
+  // token
+  readonly token: MasaToken;
   // Dynamic SBTs
   readonly ["dynamic-sbt"]: MasaDynamicSBTBase;
   readonly ["dynamic-sssbt"]: MasaDynamicSSSBT;
@@ -98,6 +101,7 @@ export class Masa implements MasaInterface {
     this.asbt = new MasaASBT(this);
     // SSSBT Handler
     this.sssbt = new MasaSSSBT(this);
+    this.token = new MasaToken(this);
     // dynamic sbt
     this["dynamic-sbt"] = new MasaDynamicSBTBase(this);
     this["dynamic-sssbt"] = new MasaDynamicSSSBT(this);

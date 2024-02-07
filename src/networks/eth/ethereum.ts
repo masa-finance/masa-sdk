@@ -1,7 +1,7 @@
 // identity
 import { mainnet as ethereumAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
 // token
-import { address as MASA } from "@masa-finance/masa-token/deployments/mainnet/MasaToken.json";
+import { mainnet as ethereumAddressesMasaToken } from "@masa-finance/masa-token/addresses.json";
 
 import type { Addresses } from "../../interface";
 
@@ -16,7 +16,7 @@ const {
 
 export const ethereum: Addresses = {
   tokens: {
-    MASA,
+    MASA: ethereumAddressesMasaToken.MasaToken,
     USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
   },
   SoulboundIdentityAddress,

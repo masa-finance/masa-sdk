@@ -1,3 +1,5 @@
+import { EndpointId } from "@layerzerolabs/lz-definitions";
+
 import type { Addresses } from "./addresses";
 import type { NetworkName } from "./network-name";
 
@@ -57,4 +59,8 @@ export interface Network {
    * skip eip1559 gas price calculation for this network
    */
   skipEip1559?: boolean;
+  /**
+   * LayerZero Endpoint ID
+   */
+  lzEndpointId?: EndpointId;
 }

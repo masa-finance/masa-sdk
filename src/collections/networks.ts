@@ -1,3 +1,5 @@
+import { EndpointId } from "@layerzerolabs/lz-definitions";
+
 import type { Addresses, Network, NetworkName } from "../interface";
 import { addresses } from "../networks";
 
@@ -52,6 +54,7 @@ const bsc: Network = {
   blockExplorerUrls: ["https://bscscan.com"],
   blockExplorerApiUrls: ["https://api.bscscan.com/api"],
   addresses: addresses["bsc"] as Addresses,
+  lzEndpointId: EndpointId.BSC_V2_MAINNET,
 };
 const bsctest: Network = {
   networkName: "bsctest",
@@ -77,6 +80,7 @@ const bsctest: Network = {
   blockExplorerUrls: ["https://testnet.bscscan.com"],
   blockExplorerApiUrls: ["https://api-testnet.bscscan.com/api"],
   addresses: addresses["bsctest"] as Addresses,
+  lzEndpointId: EndpointId.BSC_V2_TESTNET,
 };
 
 // op bnb
@@ -103,6 +107,7 @@ const opbnb: Network = {
   },
   blockExplorerUrls: ["https://opbnbscan.com"],
   addresses: addresses["opbnb"] as Addresses,
+  lzEndpointId: EndpointId.OPBNB_V2_MAINNET,
 };
 const opbnbtest: Network = {
   networkName: "opbnbtest",
@@ -127,6 +132,7 @@ const opbnbtest: Network = {
   },
   blockExplorerUrls: ["https://testnet.opbnbscan.com"],
   addresses: addresses["opbnbtest"] as Addresses,
+  lzEndpointId: EndpointId.OPBNB_V2_TESTNET,
 };
 
 // celo
@@ -154,6 +160,7 @@ const celo: Network = {
   blockExplorerUrls: ["https://celoscan.io"],
   blockExplorerApiUrls: ["https://api.celoscan.io/api"],
   addresses: addresses["celo"] as Addresses,
+  lzEndpointId: EndpointId.CELO_V2_MAINNET,
 };
 const alfajores: Network = {
   networkName: "alfajores",
@@ -179,6 +186,7 @@ const alfajores: Network = {
   blockExplorerUrls: ["https://alfajores.celoscan.io"],
   blockExplorerApiUrls: ["https://api-alfajores.celoscan.io/api"],
   addresses: addresses["alfajores"] as Addresses,
+  lzEndpointId: EndpointId.CELO_V2_TESTNET,
 };
 
 // polygon
@@ -208,6 +216,7 @@ const polygon: Network = {
   addresses: addresses["polygon"] as Addresses,
   // https://github.com/maticnetwork/bor/issues/384
   skipEip1559: true,
+  lzEndpointId: EndpointId.POLYGON_V2_MAINNET,
 };
 const mumbai: Network = {
   networkName: "mumbai",
@@ -234,6 +243,7 @@ const mumbai: Network = {
   blockExplorerApiUrls: ["https://api-mumbai.polygonscan.com/api"],
   addresses: addresses["mumbai"] as Addresses,
   gasSlippagePercentage: 5000,
+  lzEndpointId: EndpointId.POLYGON_V2_TESTNET,
 };
 
 // ethereum
@@ -261,6 +271,7 @@ const ethereum: Network = {
   blockExplorerUrls: ["https://etherscan.io"],
   blockExplorerApiUrls: ["https://api.etherscan.io/api"],
   addresses: addresses["ethereum"] as Addresses,
+  lzEndpointId: EndpointId.ETHEREUM_V2_MAINNET,
 };
 // @deprecated: use sepolia instead
 const goerli: Network = {
@@ -303,6 +314,7 @@ const sepolia: Network = {
   blockExplorerUrls: ["https://sepolia.etherscan.io"],
   blockExplorerApiUrls: ["https://api-sepolia.etherscan.io/api"],
   addresses: addresses["sepolia"] as Addresses,
+  lzEndpointId: EndpointId.SEPOLIA_V2_TESTNET,
 };
 
 // base mainnet
@@ -330,6 +342,7 @@ const base: Network = {
   blockExplorerUrls: ["https://basescan.org"],
   blockExplorerApiUrls: ["https://api.basescan.org/api"],
   addresses: addresses["base"] as Addresses,
+  lzEndpointId: EndpointId.BASE_V2_MAINNET,
 };
 // @deprecated: use base sepolia instead
 const basegoerli: Network = {
@@ -375,6 +388,7 @@ const basesepolia: Network = {
   blockExplorerUrls: ["https://base-sepolia.blockscout.com"],
   blockExplorerApiUrls: ["https://api-sepolia.basescan.org/api"],
   addresses: addresses["basesepolia"] as Addresses,
+  lzEndpointId: EndpointId.BASE_V2_TESTNET,
 };
 
 // scroll mainnet
@@ -401,6 +415,7 @@ const scroll: Network = {
   ],
   blockExplorerUrls: ["https://scrollscan.com"],
   addresses: addresses["scroll"] as Addresses,
+  lzEndpointId: EndpointId.SCROLL_V2_MAINNET,
 };
 const scrollsepolia: Network = {
   networkName: "scrollsepolia",
@@ -425,6 +440,7 @@ const scrollsepolia: Network = {
   ],
   blockExplorerUrls: ["https://sepolia.scrollscan.com"],
   addresses: addresses["scrollsepolia"] as Addresses,
+  lzEndpointId: EndpointId.SCROLL_V2_MAINNET,
 };
 
 export const SupportedNetworks: Partial<{
