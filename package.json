@@ -1,7 +1,7 @@
 {
   "name": "@masa-finance/masa-sdk",
   "version": "3.18.1",
-  "description": "Brand new Masa SDK",
+  "description": "A brand new Masa SDK for De-fi applications",
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
   "unpkg": "./dist/browser/masa-sdk.cjs2.min.js",
