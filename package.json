@@ -55,7 +55,7 @@
     "@types/chai": "^4.3.11",
     "@types/circular-dependency-plugin": "^5.0.8",
     "@types/mocha": "^10.0.6",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^6.21.0",
     "chai": "~4.4.1",
     "circular-dependency-plugin": "^5.2.2",
