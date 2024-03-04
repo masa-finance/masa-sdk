@@ -305,7 +305,7 @@
     elliptic "6.5.4"
     hash.js "1.1.7"
 
-"@ethersproject/solidity@5.7.0":
+"@ethersproject/solidity@5.7.0", "@ethersproject/solidity@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/solidity/-/solidity-5.7.0.tgz#5e9c911d8a2acce2a5ebb48a5e2e0af20b631cb8"
   integrity sha512-HmabMd2Dt/raavyaGukF4XxizWKhKQ24DoLtdNbBmNKUOPqwjsKQSdV9GQtj9CBEea9DlzETlVER1gYeXXBGaA==
@@ -452,6 +452,13 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@layerzerolabs/evm-sdks-core@^2.1.13":
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.1.13.tgz#fbf1e99c6b506966f8bd82c845dd63154fd25d35"
+  integrity sha512-vvie6LtJnfRL//Hj1s/WCzxHeTscJaDZp4V+O+mzlNc3llNP4kz2+6XFjzoFq3MFJbb78MYqyNbXmAfy46f2wg==
+  dependencies:
+    ethers "^5.7.2"
+
 "@layerzerolabs/lz-definitions@^2.0.25":
   version "2.0.25"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.0.25.tgz#3724980871102d826bd70ca99f56d19202e9c06c"
@@ -459,21 +466,27 @@
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-evm-sdk-v2@^2.0.25":
-  version "2.0.25"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.0.25.tgz#12acfb3a294b4fc137ffb99faaf73a7a8c7e762c"
-  integrity sha512-+gObJPrep4vwADzUA8m64NG8DOg2EqgxUhd5BqYYos70ezbHRILYgjqnRC86U6BUJuhP3yrVfZvdrpWL3N+Iig==
+"@layerzerolabs/lz-evm-sdk-v2@^2.1.13":
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.1.13.tgz#9eeb816d4cc797c8bbeb5df422be143b6d5bb3d4"
+  integrity sha512-UavJj0cbIgLErllrL+wWR1LGqS3ABgVQf3Xg8+QPelIdBKXVws/Wd5ITWuA+R9NNaJK8l5FxxoO3zTh1IJEPTw==
   dependencies:
+    "@layerzerolabs/evm-sdks-core" "^2.1.13"
     ethers "^5.7.2"
 
 "@layerzerolabs/lz-v2-utilities@^2.0.25":
-  version "2.0.25"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.0.25.tgz#eb654679a2790a4c580dd7670978e00668471199"
-  integrity sha512-11pnTdiOlPKXoMh/QjqvCCt5F5BxcsaThi1wj867JOqg88+TAnCYu0K2AOZv7U/pINU5a2GZxaAulEFWr/hhlA==
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.1.13.tgz#670e28ec95dd2c79505a91f1ec6432d56fb7fa94"
+  integrity sha512-hoc94zjM8ePCQTLubsIASNkBLFpY+YlbX2HIKmORLuZ4thCV+PlQSHZBsgjDLp799Lc71zBFzODRu4XCHay3Tg==
   dependencies:
-    "@layerzerolabs/lz-evm-sdk-v2" "^2.0.25"
+    "@ethersproject/abi" "^5.7.0"
+    "@ethersproject/address" "^5.7.0"
+    "@ethersproject/bignumber" "^5.7.0"
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/keccak256" "^5.7.0"
+    "@ethersproject/solidity" "^5.7.0"
+    "@layerzerolabs/lz-evm-sdk-v2" "^2.1.13"
     "@solana/web3.js" "^1.87.6"
-    ethers "^5.7.2"
     tiny-invariant "^1.3.1"
 
 "@masa-finance/masa-contracts-identity@^1.12.0":
