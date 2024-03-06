@@ -1,56 +1,30 @@
-import type {
-  SoulboundCreditScore,
-  SoulboundGreen,
-  SoulLinker,
-  SoulName,
-  SoulStore,
-} from "@masa-finance/masa-contracts-identity";
 import {
+  type SoulboundCreditScore,
   SoulboundCreditScore__factory,
+  type SoulboundGreen,
   SoulboundGreen__factory,
   SoulboundIdentity,
   SoulboundIdentity__factory,
+  type SoulLinker,
   SoulLinker__factory,
+  type SoulName,
   SoulName__factory,
+  type SoulStore,
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
-import { BaseContract, constants, ContractFactory, Signer } from "ethers";
+import { Signer } from "ethers";
 
-import type { ContractInfo, IIdentityContracts } from "../interface";
-import { NetworkName } from "../interface";
+import { ContractInfo, IIdentityContracts, NetworkName } from "../interface";
 import { addresses } from "../networks";
-
-export interface LoadIdentityContractsArgs {
-  signer: Signer;
-  networkName?: NetworkName;
-}
-
-const loadContract = <T extends BaseContract & ContractInfo>({
-  address,
-  factory,
-  signer,
-}: {
-  address?: string;
-  factory: ContractFactory;
-  signer: Signer;
-}): T => {
-  const addr = address ?? constants.AddressZero;
-
-  let contract: T = factory.attach(addr) as T;
-
-  contract.hasAddress = addr !== constants.AddressZero;
-
-  if (contract.hasAddress) {
-    contract = { ...contract, ...contract.connect(signer) } as T;
-  }
-
-  return contract;
-};
+import { loadContract } from "./load-contract";
 
 export const loadIdentityContracts = ({
   signer,
   networkName = "ethereum",
-}: LoadIdentityContractsArgs): IIdentityContracts => {
+}: {
+  signer: Signer;
+  networkName?: NetworkName;
+}): IIdentityContracts => {
   // Identity
   const SoulboundIdentityContract = loadContract<
     SoulboundIdentity & ContractInfo

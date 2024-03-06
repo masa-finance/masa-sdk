@@ -5,6 +5,7 @@ import type {
   MasaCreditScore,
   MasaGreen,
   MasaIdentity,
+  MasaMarketplace,
   MasaSBTBase,
   MasaSession,
   MasaSoulName,
@@ -21,6 +22,7 @@ export interface MasaInterface {
   readonly account: MasaAccount;
   readonly session: MasaSession;
   readonly identity: MasaIdentity;
+  readonly marketplace: MasaMarketplace;
   readonly soulName: MasaSoulName;
   readonly creditScore: MasaCreditScore;
   readonly green: MasaGreen;

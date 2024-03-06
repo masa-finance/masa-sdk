@@ -8,4 +8,5 @@ export interface Addresses {
   SoulStoreAddress?: string;
   SoulLinkerAddress?: string;
   SoulboundGreenAddress?: string;
+  DataStaking?: string;
 }

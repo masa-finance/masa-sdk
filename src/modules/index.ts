@@ -2,6 +2,7 @@ export * from "./account";
 export * from "./credit-score";
 export * from "./green";
 export * from "./identity";
+export * from "./marketplace";
 export * from "./sbt";
 export * from "./session";
 export * from "./soul-linker";

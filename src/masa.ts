@@ -9,6 +9,7 @@ import {
   MasaDynamicSSSBT,
   MasaGreen,
   MasaIdentity,
+  MasaMarketplace,
   MasaSBTBase,
   MasaSession,
   MasaSoulName,
@@ -39,6 +40,8 @@ export class Masa implements MasaInterface {
   readonly sssbt: MasaSSSBT;
   // token
   readonly token: MasaToken;
+  // marketplace
+  readonly marketplace: MasaMarketplace;
   // Dynamic SBTs
   readonly ["dynamic-sbt"]: MasaDynamicSBTBase;
   readonly ["dynamic-sssbt"]: MasaDynamicSSSBT;
@@ -101,7 +104,10 @@ export class Masa implements MasaInterface {
     this.asbt = new MasaASBT(this);
     // SSSBT Handler
     this.sssbt = new MasaSSSBT(this);
+    // token
     this.token = new MasaToken(this);
+    // marketplace
+    this.marketplace = new MasaMarketplace(this);
     // dynamic sbt
     this["dynamic-sbt"] = new MasaDynamicSBTBase(this);
     this["dynamic-sssbt"] = new MasaDynamicSSSBT(this);

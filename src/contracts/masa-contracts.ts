@@ -2,8 +2,13 @@ import type { LogDescription } from "@ethersproject/abi";
 import type { Log } from "@ethersproject/abstract-provider";
 import type { BaseContract } from "ethers";
 
-import type { IIdentityContracts, MasaInterface } from "../interface";
+import type {
+  IIdentityContracts,
+  IMarketplaceContracts,
+  MasaInterface,
+} from "../interface";
 import { MasaBase } from "../masa-base";
+import { Marketplace } from "./contract-modules";
 import { CreditScore } from "./contract-modules/credit-score";
 import { Green } from "./contract-modules/green";
 import { Identity } from "./contract-modules/identity";
@@ -15,12 +20,13 @@ import { SSSBTContract } from "./contract-modules/sbt/SSSBT/sssbt-contract";
 import { SoulLinker } from "./contract-modules/soul-linker";
 import { SoulName } from "./contract-modules/soul-name";
 import { loadIdentityContracts } from "./load-Identity-contracts";
+import { loadMarketplaceContracts } from "./load-marketplace-contracts";
 
 export class MasaContracts extends MasaBase {
   /**
    * direct contract access
    */
-  public instances: IIdentityContracts;
+  public instances: IIdentityContracts & IMarketplaceContracts;
   /**
    * SBTs
    */
@@ -51,6 +57,11 @@ export class MasaContracts extends MasaBase {
    */
   public identity: Identity;
 
+  /**
+   * Marketplace
+   */
+  public marketplace: Marketplace;
+
   public constructor({
     masa,
     contractOverrides,
@@ -62,6 +73,10 @@ export class MasaContracts extends MasaBase {
 
     this.instances = {
       ...loadIdentityContracts({
+        signer: this.masa.config.signer,
+        networkName: this.masa.config.networkName,
+      }),
+      ...loadMarketplaceContracts({
         signer: this.masa.config.signer,
         networkName: this.masa.config.networkName,
       }),
@@ -97,6 +112,10 @@ export class MasaContracts extends MasaBase {
      * Greens
      */
     this.green = new Green(this.masa, this.instances);
+    /**
+     * Marketplace
+     */
+    this.marketplace = new Marketplace(this.masa, this.instances);
   }
 
   /**
