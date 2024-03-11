@@ -9,17 +9,15 @@ export class Marketplace extends MasaModuleBase {
     const result: BaseResult = { success: false };
 
     const {
-      estimateGas: { stake: estimateGas },
-      stake,
+      estimateGas: { stakeAll: estimateGas },
+      stakeAll,
     } = this.masa.contracts.instances.DataStakingDynamic;
 
     try {
       // estimate gas
-      const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
-        tokenId,
-      ]);
+      const gasLimit = await this.estimateGasWithSlippage(estimateGas, []);
 
-      const { wait, hash } = await stake(tokenId, { gasLimit });
+      const { wait, hash } = await stakeAll({ gasLimit });
 
       console.log(
         Messages.WaitingToFinalize(
@@ -44,8 +42,8 @@ export class Marketplace extends MasaModuleBase {
     const result: BaseResult = { success: false };
 
     const {
-      estimateGas: { stake: estimateGas },
-      claimRewards,
+      estimateGas: { claimAllRewards: estimateGas },
+      claimAllRewards,
     } = this.masa.contracts.instances.DataStakingDynamic;
 
     try {
@@ -54,7 +52,7 @@ export class Marketplace extends MasaModuleBase {
         tokenId,
       ]);
 
-      const { wait, hash } = await claimRewards(tokenId, { gasLimit });
+      const { wait, hash } = await claimAllRewards({ gasLimit });
 
       console.log(
         Messages.WaitingToFinalize(
