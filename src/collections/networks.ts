@@ -279,6 +279,7 @@ const goerli: Network = {
   chainName: "Goerli Testnet",
   chainNameShort: "Goerli",
   isTestnet: true,
+  isDeprecated: true,
   chainId: 5,
   nativeCurrency: {
     name: "ETH",
@@ -350,6 +351,7 @@ const basegoerli: Network = {
   chainName: "Base Goerli Testnet",
   chainNameShort: "Base Goerli",
   isTestnet: true,
+  isDeprecated: true,
   chainId: 84531,
   nativeCurrency: {
     name: "ETH",
