@@ -4,6 +4,30 @@ import type { Addresses, Network, NetworkName } from "../interface";
 import { addresses } from "../networks";
 
 // masa
+const masa: Network = {
+  networkName: "masa",
+  chainName: "Masa",
+  chainNameShort: "Masa",
+  isTestnet: false,
+  chainId: 3454,
+  rpcUrls: [
+    // default https
+    "https://subnets.avax.network/masa/mainnet/rpc",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  nativeCurrency: {
+    name: "MASA Token",
+    symbol: "MASA",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://subnets.avax.network/masa"],
+  addresses: addresses["masa"] as Addresses,
+};
 const masatest: Network = {
   networkName: "masatest",
   chainName: "Masa Testnet",
@@ -449,6 +473,7 @@ export const SupportedNetworks: Partial<{
   [key in NetworkName]: Network;
 }> = {
   // masa
+  masa,
   masatest,
   // ETH
   ethereum,
