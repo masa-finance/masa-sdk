@@ -1,2 +1,3 @@
+export * from "./claimAllRewards";
 export * from "./marketplace";
-export * from "./stake";
+export * from "./stakeAll";

@@ -8,7 +8,7 @@ import type {
 } from "@masa-finance/masa-contracts-identity";
 import type {
   DataPointsMulti,
-  DataStaking,
+  DataStakingDynamicNative,
 } from "@masa-finance/masa-contracts-marketplace";
 
 export interface ContractInfo {
@@ -16,8 +16,8 @@ export interface ContractInfo {
 }
 
 export interface IMarketplaceContracts {
-  DataPointsMultiContract: DataPointsMulti & ContractInfo;
-  DataStakingContract: DataStaking & ContractInfo;
+  DataStakingDynamic: DataStakingDynamicNative & ContractInfo;
+  DataPointsMulti: DataPointsMulti & ContractInfo;
 }
 
 export interface IIdentityContracts {

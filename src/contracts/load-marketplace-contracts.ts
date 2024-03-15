@@ -1,8 +1,8 @@
 import {
   DataPointsMulti,
   DataPointsMulti__factory,
-  DataStaking,
-  DataStaking__factory,
+  DataStakingDynamicNative,
+  DataStakingDynamicNative__factory,
 } from "@masa-finance/masa-contracts-marketplace";
 import { Signer } from "ethers";
 
@@ -18,21 +18,23 @@ export const loadMarketplaceContracts = ({
   networkName?: NetworkName;
 }): IMarketplaceContracts => {
   // Data Staking
-  const DataStakingContract = loadContract<DataStaking & ContractInfo>({
-    factory: new DataStaking__factory(),
+  const DataStakingDynamic = loadContract<
+    DataStakingDynamicNative & ContractInfo
+  >({
+    factory: new DataStakingDynamicNative__factory(),
     address: addresses[networkName]?.DataStakingAddress,
     signer,
   });
 
-  // DataPoints Multi
-  const DataPointsMultiContract = loadContract<DataPointsMulti & ContractInfo>({
+  // DataPointsMulti
+  const DataPointsMulti = loadContract<DataPointsMulti & ContractInfo>({
     factory: new DataPointsMulti__factory(),
     address: addresses[networkName]?.DataPointsMultiAddress,
     signer,
   });
 
   return {
-    DataStakingContract,
-    DataPointsMultiContract,
+    DataStakingDynamic,
+    DataPointsMulti,
   };
 };

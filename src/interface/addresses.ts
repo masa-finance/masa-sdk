@@ -9,7 +9,7 @@ export interface Addresses {
   SoulStoreAddress?: string;
   SoulLinkerAddress?: string;
   SoulboundGreenAddress?: string;
-  // marketplace
+  // Marketplace
   DataStakingAddress?: string;
   DataPointsMultiAddress?: string;
 }
