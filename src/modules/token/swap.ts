@@ -3,7 +3,7 @@ import { Options } from "@layerzerolabs/lz-v2-utilities";
 import addressesRaw from "@masa-finance/masa-token/addresses.json";
 import {
   MasaToken__factory,
-  MasaTokenAdapter__factory,
+  MasaTokenNativeOFT__factory,
   MasaTokenOFT__factory,
 } from "@masa-finance/masa-token/dist/typechain";
 import { BigNumber, ethers, utils } from "ethers";
@@ -85,7 +85,7 @@ export const swap = async (
 
   // origin
   const oft = fromAddresses.MasaTokenAdapter
-    ? MasaTokenAdapter__factory.connect(
+    ? MasaTokenNativeOFT__factory.connect(
         fromAddresses.MasaTokenAdapter,
         masa.config.signer,
       )

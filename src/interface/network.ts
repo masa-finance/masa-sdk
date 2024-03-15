@@ -27,6 +27,10 @@ export interface Network {
    */
   isTestnet: boolean;
   /**
+   * is this network deprecated
+   */
+  isDeprecated?: boolean;
+  /**
    * The list of available rpc urls, required for adding the network
    * to the wallet
    */

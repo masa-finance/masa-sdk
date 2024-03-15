@@ -1,6 +1,6 @@
 {
   "name": "@masa-finance/masa-sdk",
-  "version": "3.19.1",
+  "version": "3.21.2",
   "description": "Brand new Masa SDK",
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -45,19 +45,19 @@
     "@layerzerolabs/lz-v2-utilities": "^2.0.25",
     "@masa-finance/masa-contracts-identity": "^1.12.0",
     "@masa-finance/masa-contracts-marketplace": "^2.1.2",
-    "@masa-finance/masa-token": "^2.0.8",
+    "@masa-finance/masa-token": "^2.1.1",
     "arweave": "1.11.8",
     "axios": "^1.6.7",
     "ethers": "~5.7.2",
     "grapheme-splitter": "^1.0.4",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "devDependencies": {
     "@types/chai": "^4.3.12",
     "@types/circular-dependency-plugin": "^5.0.8",
     "@types/mocha": "^10.0.6",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
     "chai": "~4.4.1",
     "circular-dependency-plugin": "^5.2.2",
     "cross-env": "^7.0.3",
