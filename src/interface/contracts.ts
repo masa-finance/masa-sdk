@@ -6,14 +6,15 @@ import type {
   SoulName,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
-import type { DataStakingDynamic } from "@masa-finance/masa-contracts-marketplace";
+import type { DataPointsMulti, DataStakingDynamicNative } from "@masa-finance/masa-contracts-marketplace";
 
 export interface ContractInfo {
   hasAddress?: boolean;
 }
 
 export interface IMarketplaceContracts {
-  DataStakingDynamic: DataStakingDynamic & ContractInfo;
+  DataStakingDynamic: DataStakingDynamicNative & ContractInfo;
+  DataPointsMulti: DataPointsMulti & ContractInfo;
 }
 
 export interface IIdentityContracts {

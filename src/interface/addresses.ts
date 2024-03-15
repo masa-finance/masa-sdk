@@ -9,4 +9,5 @@ export interface Addresses {
   SoulLinkerAddress?: string;
   SoulboundGreenAddress?: string;
   DataStaking?: string;
+  DataPointsMulti?: string;
 }
