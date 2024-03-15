@@ -1,8 +1,8 @@
-import { BigNumber } from "ethers";
-
 import { MasaBase } from "../../masa-base";
-import { stake } from "./stake";
+import { stakeAll } from "./stakeAll";
+import { claimAllRewards } from "./claimAllRewards";
 
 export class MasaMarketplace extends MasaBase {
-  stake = (tokenId: BigNumber) => stake(this.masa, tokenId);
+  stakeAll = () => stakeAll(this.masa);
+  claimAllRewards = () => claimAllRewards(this.masa);
 }
