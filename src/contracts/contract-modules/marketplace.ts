@@ -5,7 +5,7 @@ import type { BaseResult } from "../../interface";
 import { MasaModuleBase } from "./masa-module-base";
 
 export class Marketplace extends MasaModuleBase {
-  public stake = async (tokenId: BigNumber): Promise<BaseResult> => {
+  public stakeAll = async (tokenId: BigNumber): Promise<BaseResult> => {
     const result: BaseResult = { success: false };
 
     const {
@@ -38,7 +38,7 @@ export class Marketplace extends MasaModuleBase {
     return result;
   };
 
-  public claimRewards = async (tokenId: BigNumber): Promise<BaseResult> => {
+  public claimAllRewards = async (tokenId: BigNumber): Promise<BaseResult> => {
     const result: BaseResult = { success: false };
 
     const {
