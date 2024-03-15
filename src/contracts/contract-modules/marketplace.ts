@@ -151,25 +151,6 @@ export class Marketplace extends MasaModuleBase {
     return result;
   };
 
-  public rewardsToken = async (): Promise<BaseResult> => {
-    const result: BaseResult = { success: false, message: "" };
-
-    try {
-      const rewardsToken =
-        await this.masa.contracts.instances.DataStakingDynamic.rewardsToken();
-
-      result.success = true;
-      result.message = `Rewards token address: ${rewardsToken}`;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        result.message = error.message;
-      }
-    }
-
-    return result;
-  };
-
   public stakeInfos = async (tokenId: BigNumber): Promise<BaseResult> => {
     const result: BaseResult = { success: false, message: "" };
 
