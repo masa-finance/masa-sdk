@@ -22,8 +22,8 @@ export class Marketplace extends MasaModuleBase {
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();
@@ -55,8 +55,8 @@ export class Marketplace extends MasaModuleBase {
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          this.masa.config.network?.blockExplorerUrls?.[0]
-        )
+          this.masa.config.network?.blockExplorerUrls?.[0],
+        ),
       );
 
       await wait();
@@ -155,7 +155,7 @@ export class Marketplace extends MasaModuleBase {
     try {
       const stakeInfo =
         await this.masa.contracts.instances.DataStakingDynamic.stakeInfos(
-          tokenId
+          tokenId,
         );
 
       result.success = true;
@@ -191,7 +191,7 @@ export class Marketplace extends MasaModuleBase {
 
   public userStakes = async (
     userAddress: string,
-    tokenId: BigNumber
+    tokenId: BigNumber,
   ): Promise<BaseResult> => {
     const result: BaseResult = { success: false, message: "" };
 
@@ -199,7 +199,7 @@ export class Marketplace extends MasaModuleBase {
       const userStake =
         await this.masa.contracts.instances.DataStakingDynamic.userStakes(
           userAddress,
-          tokenId
+          tokenId,
         );
 
       result.success = true;

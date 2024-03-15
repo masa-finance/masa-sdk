@@ -2,8 +2,8 @@ import { masatest as masatestAddresses } from "@masa-finance/masa-contracts-mark
 
 import type { Addresses } from "../../interface";
 
-const { DataPointsMulti: DataPointsMulti } = masatestAddresses;
+const { DataPointsMulti: DataPointsMultiAddress } = masatestAddresses;
 
 export const masatest: Addresses = {
-  DataPointsMulti,
+  DataPointsMultiAddress,
 };

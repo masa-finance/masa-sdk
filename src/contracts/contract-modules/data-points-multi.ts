@@ -1,6 +1,9 @@
-import { BigNumber, ContractTransaction, Signer, CallOverrides, Overrides, BytesLike } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import { DataPointsMulti as DataPointsMultiContractInterface, DataPointsMulti } from "@masa-finance/masa-contracts-marketplace/dist/typechain/contracts/DataPointsMulti";
+import {
+  DataPointsMulti,
+  DataPointsMulti as DataPointsMultiContractInterface,
+} from "@masa-finance/masa-contracts-marketplace/dist/typechain/contracts/DataPointsMulti";
+import { BigNumber, BytesLike, ContractTransaction, Signer } from "ethers";
 
 export class DataPointsMultiContract {
   private contract: DataPointsMultiContractInterface;
@@ -15,13 +18,13 @@ export class DataPointsMultiContract {
 
   public async balanceOfBatch(
     accounts: string[],
-    ids: BigNumber[]
+    ids: BigNumber[],
   ): Promise<BigNumber[]> {
     return this.contract.balanceOfBatch(accounts, ids);
   }
 
   public async getUserBalances(
-    user: string
+    user: string,
   ): Promise<DataPointsMulti.TokenBalanceStructOutput[]> {
     return this.contract.getUserBalances(user);
   }
@@ -33,7 +36,7 @@ export class DataPointsMultiContract {
   public async setTokenName(
     id: BigNumber,
     name: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).setTokenName(id, name);
   }
@@ -42,14 +45,14 @@ export class DataPointsMultiContract {
     toAddresses: string[],
     ids: BigNumber[],
     uuids: BigNumber[],
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).batchMint(toAddresses, ids, uuids);
   }
 
   public async getAccountTokenUUIDs(
     account: string,
-    id: BigNumber
+    id: BigNumber,
   ): Promise<BigNumber[]> {
     return this.contract.getAccountTokenUUIDs(account, id);
   }
@@ -61,7 +64,7 @@ export class DataPointsMultiContract {
   public async grantRole(
     role: BytesLike,
     account: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).grantRole(role, account);
   }
@@ -73,7 +76,7 @@ export class DataPointsMultiContract {
   public async renounceRole(
     role: BytesLike,
     account: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).renounceRole(role, account);
   }
@@ -81,7 +84,7 @@ export class DataPointsMultiContract {
   public async revokeRole(
     role: BytesLike,
     account: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).revokeRole(role, account);
   }
@@ -89,14 +92,14 @@ export class DataPointsMultiContract {
   public async setApprovalForAll(
     operator: string,
     approved: boolean,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).setApprovalForAll(operator, approved);
   }
 
   public async setBaseURI(
     newBaseURI: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).setBaseURI(newBaseURI);
   }
@@ -106,7 +109,7 @@ export class DataPointsMultiContract {
     name: string,
     image: string,
     description: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract
       .connect(signer)
@@ -116,7 +119,7 @@ export class DataPointsMultiContract {
   public async setupRole(
     role: BytesLike,
     account: string,
-    signer: Signer
+    signer: Signer,
   ): Promise<ContractTransaction> {
     return this.contract.connect(signer).setupRole(role, account);
   }
@@ -131,16 +134,16 @@ export class DataPointsMultiContract {
 
   public attach(address: string): DataPointsMultiContract {
     const attachedContract = this.contract.attach(
-      address
+      address,
     ) as DataPointsMultiContractInterface;
     return new DataPointsMultiContract(attachedContract);
   }
 
   public connect(
-    signerOrProvider: Signer | Provider | string
+    signerOrProvider: Signer | Provider | string,
   ): DataPointsMultiContract {
     const connectedContract = this.contract.connect(
-      signerOrProvider
+      signerOrProvider,
     ) as DataPointsMultiContractInterface;
     return new DataPointsMultiContract(connectedContract);
   }

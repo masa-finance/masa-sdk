@@ -1,6 +1,6 @@
 import { MasaBase } from "../../masa-base";
-import { stakeAll } from "./stakeAll";
 import { claimAllRewards } from "./claimAllRewards";
+import { stakeAll } from "./stakeAll";
 
 export class MasaMarketplace extends MasaBase {
   stakeAll = () => stakeAll(this.masa);
