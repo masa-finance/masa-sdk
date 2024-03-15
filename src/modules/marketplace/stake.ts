@@ -5,7 +5,6 @@ import type { BaseResult, MasaInterface } from "../../interface";
 export const stake = async (
   masa: MasaInterface,
   tokenId: BigNumber,
-  amount: BigNumber,
 ): Promise<BaseResult> => {
-  return masa.contracts.marketplace.stake(tokenId, amount);
+  return masa.contracts.marketplace.stake(tokenId);
 };
