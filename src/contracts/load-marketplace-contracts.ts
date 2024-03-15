@@ -1,4 +1,6 @@
 import {
+  DataPointsMulti,
+  DataPointsMulti__factory,
   DataStaking,
   DataStaking__factory,
 } from "@masa-finance/masa-contracts-marketplace";
@@ -16,13 +18,21 @@ export const loadMarketplaceContracts = ({
   networkName?: NetworkName;
 }): IMarketplaceContracts => {
   // Data Staking
-  const DataStaking = loadContract<DataStaking & ContractInfo>({
+  const DataStakingContract = loadContract<DataStaking & ContractInfo>({
     factory: new DataStaking__factory(),
-    address: addresses[networkName]?.DataStaking,
+    address: addresses[networkName]?.DataStakingAddress,
+    signer,
+  });
+
+  // DataPoints Multi
+  const DataPointsMultiContract = loadContract<DataPointsMulti & ContractInfo>({
+    factory: new DataPointsMulti__factory(),
+    address: addresses[networkName]?.DataPointsMultiAddress,
     signer,
   });
 
   return {
-    DataStaking,
+    DataStakingContract,
+    DataPointsMultiContract,
   };
 };

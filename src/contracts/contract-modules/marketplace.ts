@@ -14,7 +14,7 @@ export class Marketplace extends MasaModuleBase {
     const {
       estimateGas: { stake: estimateGas },
       stake,
-    } = this.masa.contracts.instances.DataStaking;
+    } = this.masa.contracts.instances.DataStakingContract;
 
     try {
       // estimate gas
