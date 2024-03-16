@@ -66,5 +66,5 @@ export interface Network {
   /**
    * LayerZero Endpoint ID
    */
-  lzEndpointId?: EndpointId;
+  lzEndpointId?: EndpointId | number;
 }
