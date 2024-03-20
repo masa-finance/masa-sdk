@@ -11,7 +11,7 @@ export class Marketplace extends MasaModuleBase {
     const {
       estimateGas: { stakeAll: estimateGas },
       stakeAll,
-    } = this.masa.contracts.instances.DataStakingDynamic;
+    } = this.masa.contracts.instances.DataStakingDynamicNative;
 
     try {
       // estimate gas
@@ -44,7 +44,7 @@ export class Marketplace extends MasaModuleBase {
     const {
       estimateGas: { claimAllRewards: estimateGas },
       claimAllRewards,
-    } = this.masa.contracts.instances.DataStakingDynamic;
+    } = this.masa.contracts.instances.DataStakingDynamicNative;
 
     try {
       // estimate gas
@@ -75,7 +75,7 @@ export class Marketplace extends MasaModuleBase {
     const result: BaseResult = { success: false, message: "" };
 
     const { getRemainingRewards } =
-      this.masa.contracts.instances.DataStakingDynamic;
+      this.masa.contracts.instances.DataStakingDynamicNative;
 
     try {
       const remainingRewards = await getRemainingRewards();
@@ -97,7 +97,7 @@ export class Marketplace extends MasaModuleBase {
 
     try {
       const dataPointsMulti =
-        await this.masa.contracts.instances.DataStakingDynamic.dataPointsMulti();
+        await this.masa.contracts.instances.DataStakingDynamicNative.dataPointsMulti();
 
       result.success = true;
       result.message = `DataPointsMulti address: ${dataPointsMulti}`;
@@ -116,7 +116,7 @@ export class Marketplace extends MasaModuleBase {
 
     try {
       const name =
-        await this.masa.contracts.instances.DataStakingDynamic.name();
+        await this.masa.contracts.instances.DataStakingDynamicNative.name();
 
       result.success = true;
       result.message = `Staking pool name: ${name}`;
@@ -135,7 +135,7 @@ export class Marketplace extends MasaModuleBase {
 
     try {
       const owner =
-        await this.masa.contracts.instances.DataStakingDynamic.owner();
+        await this.masa.contracts.instances.DataStakingDynamicNative.owner();
 
       result.success = true;
       result.message = `Owner address: ${owner}`;
@@ -154,7 +154,7 @@ export class Marketplace extends MasaModuleBase {
 
     try {
       const stakeInfo =
-        await this.masa.contracts.instances.DataStakingDynamic.stakeInfos(
+        await this.masa.contracts.instances.DataStakingDynamicNative.stakeInfos(
           tokenId,
         );
 
@@ -175,7 +175,7 @@ export class Marketplace extends MasaModuleBase {
 
     try {
       const totalRewardsPool =
-        await this.masa.contracts.instances.DataStakingDynamic.totalRewardsPool();
+        await this.masa.contracts.instances.DataStakingDynamicNative.totalRewardsPool();
 
       result.success = true;
       result.message = `Total rewards pool: ${totalRewardsPool.toString()}`;
@@ -197,7 +197,7 @@ export class Marketplace extends MasaModuleBase {
 
     try {
       const userStake =
-        await this.masa.contracts.instances.DataStakingDynamic.userStakes(
+        await this.masa.contracts.instances.DataStakingDynamicNative.userStakes(
           userAddress,
           tokenId,
         );
