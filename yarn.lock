@@ -496,10 +496,10 @@
   dependencies:
     ethers "~5.7.2"
 
-"@masa-finance/masa-contracts-marketplace@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-marketplace/-/masa-contracts-marketplace-2.1.3.tgz#30e5d098930fd26f28d6bb17ed5fc94f964d69f7"
-  integrity sha512-GoHHFJImejaY+VYPscR5+I0zlGT75Qp+wha4hpUggetB6WSr1O9jGHSLWSghNYGfDIG9FRs2/rYALGGgQ93D5Q==
+"@masa-finance/masa-contracts-marketplace@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-marketplace/-/masa-contracts-marketplace-2.1.4.tgz#8ca42acf157560ac59b25b77b6c968216338797c"
+  integrity sha512-eeNsPcxrJdfmddcrXwcwSZkkU+3cb6cdNJYMzzJqIyLw66PPbYTgNGKxotqFOHGlT4L+U8eTM0okBrUKUNL9Sg==
   dependencies:
     ethers "~5.7.2"
 
