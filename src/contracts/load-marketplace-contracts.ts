@@ -18,11 +18,11 @@ export const loadMarketplaceContracts = ({
   networkName?: NetworkName;
 }): IMarketplaceContracts => {
   // Data Staking
-  const DataStakingDynamic = loadContract<
+  const DataStakingDynamicNative = loadContract<
     DataStakingDynamicNative & ContractInfo
   >({
     factory: new DataStakingDynamicNative__factory(),
-    address: addresses[networkName]?.DataStakingAddress,
+    address: addresses[networkName]?.DataStakingDynamicNativeAddress,
     signer,
   });
 
@@ -34,7 +34,7 @@ export const loadMarketplaceContracts = ({
   });
 
   return {
-    DataStakingDynamic,
+    DataStakingDynamicNative,
     DataPointsMulti,
   };
 };

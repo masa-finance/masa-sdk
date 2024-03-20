@@ -1,4 +1,4 @@
-import { assert } from "chai";
+import { expect } from "chai";
 import { before, describe } from "mocha";
 
 import type { Masa } from "../../src";
@@ -8,13 +8,13 @@ let masa: Masa;
 
 describe("Soul Name", () => {
   before(() => {
-    masa = getTestMasa("goerli");
+    masa = getTestMasa("alfajores");
   });
 
   describe("load", () => {
-  //   it("should load a soul name properly", async () => {
-  //     const soulnameDetails = await masa.soulName.loadSoulNameByTokenId("0");
-  //     assert.equal(soulnameDetails?.metadata.name, "h34d.soul");
-  //   }).timeout(10000);
+    it("should load a soul name properly", async () => {
+      const soulnameDetails = await masa.soulName.loadSoulNameByTokenId("12");
+      expect(soulnameDetails?.metadata.name).to.equal("h34d.celo");
+    }).timeout(10000);
   });
 });
