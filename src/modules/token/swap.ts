@@ -1,19 +1,17 @@
 import { EndpointId } from "@layerzerolabs/lz-definitions";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
-import addressesRaw from "@masa-finance/masa-token/addresses.json";
 import {
+  MasaToken,
   MasaToken__factory,
+  MasaTokenNativeOFT,
   MasaTokenNativeOFT__factory,
+  MasaTokenOFT,
   MasaTokenOFT__factory,
 } from "@masa-finance/masa-token/dist/typechain";
 import { BigNumber, ethers, utils } from "ethers";
 
 import { Messages, SupportedNetworks } from "../../collections";
 import { MasaInterface, NetworkName } from "../../interface";
-
-const addresses = addressesRaw as Partial<{
-  [key in NetworkName]: { [key: string]: string };
-}>;
 
 /**
  *
@@ -27,27 +25,25 @@ export const swap = async (
   to: NetworkName,
   amount: string,
   slippage: number = 250,
-) => {
+): Promise<void> => {
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 
-  // add 2,5% slippage
+  // add 2.5% slippage
   const tokenAmountWithSlippage = tokenAmount.add(
     tokenAmount.mul(slippage).div(10000),
   );
 
   console.log(
-    `Swapping ${parseFloat(amount).toLocaleString()} MASA from ${masa.config.networkName} to ${to}!`,
+    `Swapping ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
   );
 
   // current wallet
   const address = await masa.config.signer.getAddress();
 
-  const fromAddresses = addresses[masa.config.networkName];
-  const toAddresses = addresses[to];
+  const toNetwork = SupportedNetworks[to];
+  const toEID = toNetwork?.lzEndpointId;
 
-  const toEID = SupportedNetworks[to]?.lzEndpointId;
-
-  if (!fromAddresses || !toAddresses || !toEID) {
+  if (!masa.config.network?.addresses.tokens?.MASA || !toNetwork || !toEID) {
     console.log(`Unable to swap from ${masa.config.networkName} to ${to}!`);
     return;
   }
@@ -84,56 +80,52 @@ export const swap = async (
   );
 
   // origin
-  const oft = fromAddresses.MasaTokenAdapter
-    ? MasaTokenNativeOFT__factory.connect(
-        fromAddresses.MasaTokenAdapter,
-        masa.config.signer,
-      )
-    : MasaTokenOFT__factory.connect(
-        fromAddresses.MasaTokenOFT,
-        masa.config.signer,
-      );
+  let oft: MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined;
+
+  if (
+    masa.config.networkName === "ethereum" ||
+    masa.config.networkName === "sepolia"
+  ) {
+    oft = MasaToken__factory.connect(
+      masa.config.network.addresses.tokens.MASA,
+      masa.config.signer,
+    );
+  } else if (
+    masa.config.networkName === "masa" ||
+    masa.config.networkName === "masatest"
+  ) {
+    oft = MasaTokenNativeOFT__factory.connect(
+      masa.config.network.addresses.tokens.MASA,
+      masa.config.signer,
+    );
+  } else {
+    oft = MasaTokenOFT__factory.connect(
+      masa.config.network.addresses.tokens.MASA,
+      masa.config.signer,
+    );
+  }
+
+  if (!oft) {
+    console.error("Unable to load token");
+    return;
+  }
 
   try {
     const { quoteSend, send } = oft;
 
     const isPeer = await oft.isPeer(
       toEID,
-      utils.zeroPad(
-        toAddresses.MasaTokenAdapter ?? toAddresses.MasaTokenOFT,
-        32,
-      ),
+      utils.zeroPad(toNetwork.addresses.tokens?.MASA ?? "", 32),
     );
 
     if (!isPeer) {
       console.error("No peer found");
     }
 
-    const [nativeFee] = await quoteSend(sendParam as never, false);
-
-    if (fromAddresses.MasaToken) {
-      const masaToken = MasaToken__factory.connect(
-        fromAddresses.MasaToken,
-        masa.config.signer,
-      );
-
-      const currentAllowance = await masaToken.allowance(address, oft.address);
-
-      if (currentAllowance.lt(tokenAmountWithSlippage)) {
-        const newAllowance = tokenAmountWithSlippage.sub(currentAllowance);
-
-        console.log(`Increasing allowance: ${utils.formatEther(newAllowance)}`);
-
-        const { wait, hash } = await masaToken.increaseAllowance(
-          oft.address,
-          newAllowance,
-        );
-
-        console.log(Messages.WaitingToFinalize(hash));
-
-        await wait();
-      }
-    }
+    const { nativeFee, lzTokenFee } = await quoteSend(
+      sendParam as never,
+      false,
+    );
 
     console.log("Swapping ...");
 
@@ -141,17 +133,30 @@ export const swap = async (
       sendParam as never,
       {
         nativeFee,
-        lzTokenFee: 0,
+        lzTokenFee,
       },
       address,
       {
-        value: nativeFee,
+        value:
+          masa.config.networkName === "masa" ||
+          masa.config.networkName === "masatest"
+            ? nativeFee.add(tokenAmountWithSlippage)
+            : nativeFee,
       },
     );
 
-    console.log(Messages.WaitingToFinalize(hash));
+    console.log(
+      Messages.WaitingToFinalize(
+        hash,
+        masa.config.network.blockExplorerUrls?.[0],
+      ),
+    );
 
     await wait();
+
+    console.log(
+      "Swap done! Please note: it can take some times (20-30 mins) for the token to show up on the target network!",
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error.message);
