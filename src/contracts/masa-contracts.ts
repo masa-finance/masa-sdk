@@ -8,7 +8,7 @@ import type {
   MasaInterface,
 } from "../interface";
 import { MasaBase } from "../masa-base";
-import { Marketplace } from "./contract-modules";
+import { Marketplace } from "./contract-modules/marketplace";
 import { CreditScore } from "./contract-modules/credit-score";
 import { Green } from "./contract-modules/green";
 import { Identity } from "./contract-modules/identity";

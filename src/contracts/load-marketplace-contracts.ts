@@ -17,16 +17,20 @@ export const loadMarketplaceContracts = ({
   signer: Signer;
   networkName?: NetworkName;
 }): IMarketplaceContracts => {
-  // Data Staking
-  const DataStakingDynamicNative = loadContract<
-    DataStakingDynamicNative & ContractInfo
-  >({
-    factory: new DataStakingDynamicNative__factory(),
-    address: addresses[networkName]?.DataStakingDynamicNativeAddress,
-    signer,
-  });
+  // Data Staking - now expecting an array of addresses
+  const DataStakingDynamicNativeAddresses = addresses[networkName]?.DataStakingDynamicNativeAddress;
+  if (!Array.isArray(DataStakingDynamicNativeAddresses)) {
+    throw new Error('Expected an array of DataStakingDynamicNative addresses');
+  }
+  const DataStakingDynamicNative = DataStakingDynamicNativeAddresses.map(address =>
+    loadContract<DataStakingDynamicNative & ContractInfo>({
+      factory: new DataStakingDynamicNative__factory(),
+      address,
+      signer,
+    })
+  );
 
-  // DataPointsMulti
+  // DataPointsMulti - unchanged
   const DataPointsMulti = loadContract<DataPointsMulti & ContractInfo>({
     factory: new DataPointsMulti__factory(),
     address: addresses[networkName]?.DataPointsMultiAddress,

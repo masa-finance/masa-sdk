@@ -10,6 +10,6 @@ export interface Addresses {
   SoulLinkerAddress?: string;
   SoulboundGreenAddress?: string;
   // Marketplace
-  DataStakingDynamicNativeAddress?: string;
+  DataStakingDynamicNativeAddress?: string[]; // Now an array of strings
   DataPointsMultiAddress?: string;
 }
