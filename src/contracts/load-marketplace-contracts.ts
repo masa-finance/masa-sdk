@@ -17,20 +17,25 @@ export const loadMarketplaceContracts = ({
   signer: Signer;
   networkName?: NetworkName;
 }): IMarketplaceContracts => {
-  let DataStakingDynamicNative: Array<DataStakingDynamicNative & ContractInfo> = [];
+  let DataStakingDynamicNative: Array<DataStakingDynamicNative & ContractInfo> =
+    [];
 
   // Only load DataStakingDynamicNative contracts if the networkName is 'masatest'
-  if (networkName === 'masatest') {
-    const DataStakingDynamicNativeAddresses = addresses[networkName]?.DataStakingDynamicNativeAddress;
+  if (networkName === "masatest") {
+    const DataStakingDynamicNativeAddresses =
+      addresses[networkName]?.DataStakingDynamicNativeAddress;
     if (!Array.isArray(DataStakingDynamicNativeAddresses)) {
-      throw new Error('Expected an array of DataStakingDynamicNative addresses');
+      throw new Error(
+        "Expected an array of DataStakingDynamicNative addresses",
+      );
     }
-    DataStakingDynamicNative = DataStakingDynamicNativeAddresses.map(address =>
-      loadContract<DataStakingDynamicNative & ContractInfo>({
-        factory: new DataStakingDynamicNative__factory(),
-        address,
-        signer,
-      })
+    DataStakingDynamicNative = DataStakingDynamicNativeAddresses.map(
+      (address) =>
+        loadContract<DataStakingDynamicNative & ContractInfo>({
+          factory: new DataStakingDynamicNative__factory(),
+          address,
+          signer,
+        }),
     );
   }
   // Note: For other networks, DataStakingDynamicNative remains an empty array

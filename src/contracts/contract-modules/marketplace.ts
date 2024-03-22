@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+// import { BigNumber } from "ethers";
 
 import { Messages } from "../../collections";
 import type { BaseResult } from "../../interface";
@@ -9,12 +9,16 @@ export class Marketplace extends MasaModuleBase {
     const results: BaseResult[] = [];
 
     // Assuming this.masa.contracts.instances.DataStakingDynamicNative is an array
-    for (const instance of this.masa.contracts.instances.DataStakingDynamicNative) {
+    for (const instance of this.masa.contracts.instances
+      .DataStakingDynamicNative) {
       const result: BaseResult = { success: false };
 
       try {
         // estimate gas
-        const gasLimit = await this.estimateGasWithSlippage(instance.estimateGas.stakeAll, []);
+        const gasLimit = await this.estimateGasWithSlippage(
+          instance.estimateGas.stakeAll,
+          [],
+        );
 
         const { wait, hash } = await instance.stakeAll({ gasLimit });
 
@@ -40,17 +44,21 @@ export class Marketplace extends MasaModuleBase {
 
     return results;
   };
-  
+
   public claimAllRewards = async (): Promise<BaseResult[]> => {
     const results: BaseResult[] = [];
 
     // Assuming this.masa.contracts.instances.DataStakingDynamicNative is an array
-    for (const instance of this.masa.contracts.instances.DataStakingDynamicNative) {
+    for (const instance of this.masa.contracts.instances
+      .DataStakingDynamicNative) {
       const result: BaseResult = { success: false };
 
       try {
         // estimate gas
-        const gasLimit = await this.estimateGasWithSlippage(instance.estimateGas.stakeAll, []);
+        const gasLimit = await this.estimateGasWithSlippage(
+          instance.estimateGas.stakeAll,
+          [],
+        );
 
         const { wait, hash } = await instance.claimAllRewards({ gasLimit });
 

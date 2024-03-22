@@ -8,10 +8,10 @@ import type {
   MasaInterface,
 } from "../interface";
 import { MasaBase } from "../masa-base";
-import { Marketplace } from "./contract-modules/marketplace";
 import { CreditScore } from "./contract-modules/credit-score";
 import { Green } from "./contract-modules/green";
 import { Identity } from "./contract-modules/identity";
+import { Marketplace } from "./contract-modules/marketplace";
 import { ASBTContract } from "./contract-modules/sbt/ASBT";
 import { DynamicSBTContract } from "./contract-modules/sbt/dynamic";
 import { DynamicSSSBTContract } from "./contract-modules/sbt/dynamic/SSSBT";

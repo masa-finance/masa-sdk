@@ -2,7 +2,7 @@ import type { BaseResult, MasaInterface } from "../../interface";
 
 export const stakeAll = async (masa: MasaInterface): Promise<BaseResult> => {
   let success = true;
-  let messages: string[] = [];
+  const messages: string[] = [];
 
   for (const contractInstance of Object.values(masa.marketplace)) {
     try {
@@ -21,6 +21,6 @@ export const stakeAll = async (masa: MasaInterface): Promise<BaseResult> => {
 
   return {
     success,
-    message: messages.join('\n'), // Combine all messages with a newline
+    message: messages.join("\n"), // Combine all messages with a newline
   };
 };
