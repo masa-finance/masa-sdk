@@ -45,8 +45,8 @@ const masatest: Network = {
     undefined,
   ],
   nativeCurrency: {
-    name: "tMASA Token",
-    symbol: "tMASA",
+    name: "MASA Token",
+    symbol: "MASA",
     decimals: 18,
   },
   blockExplorerUrls: ["https://subnets-test.avax.network/masatestnet"],
@@ -337,7 +337,12 @@ const sepolia: Network = {
     symbol: "ETH", // 2-6 characters long
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.sepolia.org", "https://rpc2.sepolia.org"],
+  rpcUrls: [
+    // default https
+    "https://rpc.sepolia.org",
+    // alternative https
+    "https://rpc2.sepolia.org",
+  ],
   blockExplorerUrls: ["https://sepolia.etherscan.io"],
   blockExplorerApiUrls: ["https://api-sepolia.etherscan.io/api"],
   addresses: addresses["sepolia"] as Addresses,
