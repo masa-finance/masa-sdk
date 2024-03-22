@@ -8,76 +8,18 @@ import {
   MasaTokenOFT,
   MasaTokenOFT__factory,
 } from "@masa-finance/masa-token/dist/typechain";
-import { BigNumber, ethers, utils } from "ethers";
+import { SendParamStruct as SendParamStructMasaToken } from "@masa-finance/masa-token/dist/typechain/contracts/MasaToken";
+import { SendParamStruct as SendParamStructMasaTokenNativeOFT } from "@masa-finance/masa-token/dist/typechain/contracts/MasaTokenNativeOFT";
+import { SendParamStruct as SendParamStructMasaTokenOFT } from "@masa-finance/masa-token/dist/typechain/contracts/MasaTokenOFT";
+import { BigNumber, utils } from "ethers";
 
 import { Messages, SupportedNetworks } from "../../collections";
 import { MasaInterface, NetworkName } from "../../interface";
 
-/**
- *
- * @param masa
- * @param to
- * @param amount
- * @param slippage
- */
-export const swap = async (
+const loadOFTContract = (
   masa: MasaInterface,
-  to: NetworkName,
-  amount: string,
-  slippage: number = 250,
-): Promise<void> => {
-  const tokenAmount = BigNumber.from(utils.parseEther(amount));
-
-  // add 2.5% slippage
-  const tokenAmountWithSlippage = tokenAmount.add(
-    tokenAmount.mul(slippage).div(10000),
-  );
-
-  console.log(
-    `Swapping ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
-  );
-
-  // current wallet
-  const address = await masa.config.signer.getAddress();
-
-  const toNetwork = SupportedNetworks[to];
-  const toEID = toNetwork?.lzEndpointId;
-
-  if (!masa.config.network?.addresses.tokens?.MASA || !toNetwork || !toEID) {
-    console.log(`Unable to swap from ${masa.config.networkName} to ${to}!`);
-    return;
-  }
-
-  // console.log(masa.config.networkName, fromAddresses, to, toAddresses);
-
-  const options = Options.newOptions()
-    .addExecutorLzReceiveOption(200000, 0)
-    .toHex()
-    .toString();
-
-  // console.log(utils.hexlify(utils.zeroPad(toAddresses.MasaTokenAdapter, 32)));
-
-  const sendParam: [
-    EndpointId,
-    Uint8Array,
-    BigNumber,
-    BigNumber,
-    string,
-    string,
-    string,
-  ] = [
-    toEID, // Destination endpoint ID.
-    utils.zeroPad(address, 32), // Recipient address.
-    tokenAmountWithSlippage, // Amount to send in local decimals.
-    tokenAmount, // Minimum amount to send in local decimals.
-    options, // Additional options supplied by the caller to be used in the LayerZero message.
-    "0x", // The composed message for the send() operation.
-    "0x", // The OFT command to be executed, unused in default OFT implementations.
-  ];
-
-  console.log(
-    `Tokens: ${ethers.utils.formatEther(tokenAmount)} Tokens with Slippage: ${ethers.utils.formatEther(tokenAmountWithSlippage)}`,
-  );
+): MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined => {
+  if (!masa.config.network?.addresses.tokens?.MASA) return;
 
   // origin
   let oft: MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined;
@@ -105,45 +47,164 @@ export const swap = async (
     );
   }
 
+  return oft;
+};
+
+export const getSwapQuote = async (
+  masa: MasaInterface,
+  sendParameters:
+    | SendParamStructMasaToken
+    | SendParamStructMasaTokenNativeOFT
+    | SendParamStructMasaTokenOFT,
+): Promise<
+  | {
+      nativeFee: BigNumber;
+      lzTokenFee: BigNumber;
+    }
+  | undefined
+> => {
+  const oft = loadOFTContract(masa);
+
   if (!oft) {
-    console.error("Unable to load token");
+    console.error("Unable to load OFT!");
     return;
   }
 
   try {
-    const { quoteSend, send } = oft;
+    const { quoteSend } = oft;
+
+    const { nativeFee, lzTokenFee } = await quoteSend(sendParameters, false);
+
+    return {
+      nativeFee,
+      lzTokenFee,
+    };
+  } catch {
+    console.error("Failed to quote send!");
+  }
+};
+
+export const getSwapParameters = (
+  eid: EndpointId,
+  receiverAddress: string,
+  tokenAmount: BigNumber,
+  slippage: number = 250,
+): {
+  sendParameters:
+    | SendParamStructMasaToken
+    | SendParamStructMasaTokenNativeOFT
+    | SendParamStructMasaTokenOFT;
+  slippage: number;
+} => {
+  const options = Options.newOptions()
+    .addExecutorLzReceiveOption(200000, 0)
+    .toHex()
+    .toString();
+
+  // add 2.5% slippage
+  const tokenAmountWithSlippage = tokenAmount.add(
+    tokenAmount.mul(slippage).div(10000),
+  );
+
+  const sendParameters:
+    | SendParamStructMasaToken
+    | SendParamStructMasaTokenNativeOFT
+    | SendParamStructMasaTokenOFT = {
+    dstEid: eid, // Destination endpoint ID.
+    to: utils.zeroPad(receiverAddress, 32), // Recipient address.
+    amountLD: tokenAmountWithSlippage, // Amount to send in local decimals.
+    minAmountLD: tokenAmount, // Minimum amount to send in local decimals.
+    extraOptions: options, // Additional options supplied by the caller to be used in the LayerZero message.
+    composeMsg: "0x", // The composed message for the send() operation.
+    oftCmd: "0x", // The OFT command to be executed, unused in default OFT implementations.
+  };
+
+  return {
+    sendParameters,
+    slippage,
+  };
+};
+
+/**
+ *
+ * @param masa
+ * @param to
+ * @param amount
+ * @param slippage
+ */
+export const swap = async (
+  masa: MasaInterface,
+  to: NetworkName,
+  amount: string,
+  slippage?: number,
+): Promise<void> => {
+  console.log(
+    `Swapping ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
+  );
+
+  // current wallet
+  const address = await masa.config.signer.getAddress();
+
+  const toNetwork = SupportedNetworks[to];
+  const toEID = toNetwork?.lzEndpointId;
+
+  if (!masa.config.network?.addresses.tokens?.MASA || !toNetwork || !toEID) {
+    console.log(`Unable to swap from ${masa.config.networkName} to ${to}!`);
+    return;
+  }
+
+  const tokenAmount = BigNumber.from(utils.parseEther(amount));
+
+  const { sendParameters, slippage: actualSlippage } = getSwapParameters(
+    toEID,
+    address,
+    tokenAmount,
+    slippage,
+  );
+
+  console.log(
+    `Tokens: ${utils.formatEther(sendParameters.minAmountLD)} Tokens with Slippage: ${utils.formatEther(sendParameters.amountLD)} (${actualSlippage / 100}%)`,
+  );
+
+  const oft = loadOFTContract(masa);
+
+  if (!oft) {
+    console.error("Unable to load OFT!");
+    return;
+  }
+
+  try {
+    const { send } = oft;
 
     const isPeer = await oft.isPeer(
       toEID,
-      utils.zeroPad(toNetwork.addresses.tokens?.MASA ?? "", 32),
+      utils.zeroPad(toNetwork.addresses?.tokens?.MASA ?? "", 32),
     );
 
     if (!isPeer) {
-      console.error("No peer found");
+      console.error("No peer found!");
     }
 
-    const { nativeFee, lzTokenFee } = await quoteSend(
-      sendParam as never,
-      false,
+    const fees = await getSwapQuote(masa, sendParameters);
+
+    if (!fees) {
+      console.error("Unable to load fees!");
+      return;
+    }
+
+    console.log(
+      `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
     );
 
     console.log("Swapping ...");
 
-    const { wait, hash } = await send(
-      sendParam as never,
-      {
-        nativeFee,
-        lzTokenFee,
-      },
-      address,
-      {
-        value:
-          masa.config.networkName === "masa" ||
-          masa.config.networkName === "masatest"
-            ? nativeFee.add(tokenAmountWithSlippage)
-            : nativeFee,
-      },
-    );
+    const { wait, hash } = await send(sendParameters, fees, address, {
+      value:
+        masa.config.networkName === "masa" ||
+        masa.config.networkName === "masatest"
+          ? fees.nativeFee.add(sendParameters.amountLD)
+          : fees.nativeFee,
+    });
 
     console.log(
       Messages.WaitingToFinalize(
