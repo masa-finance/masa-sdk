@@ -45,8 +45,8 @@ const masatest: Network = {
     undefined,
   ],
   nativeCurrency: {
-    name: "tMASA Token",
-    symbol: "tMASA",
+    name: "MASA Token",
+    symbol: "MASA",
     decimals: 18,
   },
   blockExplorerUrls: ["https://subnets-test.avax.network/masatestnet"],
