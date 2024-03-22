@@ -16,7 +16,7 @@ export interface ContractInfo {
 }
 
 export interface IMarketplaceContracts {
-  DataStakingDynamicNative: DataStakingDynamicNative & ContractInfo;
+  DataStakingDynamicNative: Array<DataStakingDynamicNative & ContractInfo>;
   DataPointsMulti: DataPointsMulti & ContractInfo;
 }
 

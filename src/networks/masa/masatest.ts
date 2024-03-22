@@ -3,9 +3,10 @@ import { masatest as masatestAddressesMasaToken } from "@masa-finance/masa-token
 
 import type { Addresses } from "../../interface";
 
+// Assuming masatestAddresses.DataStakingDynamicNative is an array of addresses
 const {
   DataPointsMulti: DataPointsMultiAddress,
-  DataStakingDynamicNative: DataStakingDynamicNativeAddress,
+  DataStakingDynamicNative: DataStakingDynamicNativeAddresses,
 } = masatestAddresses;
 
 export const masatest: Addresses = {
@@ -13,5 +14,5 @@ export const masatest: Addresses = {
     MASA: masatestAddressesMasaToken.MasaTokenNativeOFT,
   },
   DataPointsMultiAddress,
-  DataStakingDynamicNativeAddress,
+  DataStakingDynamicNativeAddress: DataStakingDynamicNativeAddresses, // Assign the array here
 };
