@@ -1,5 +1,26 @@
 import type { BaseResult, MasaInterface } from "../../interface";
 
 export const stakeAll = async (masa: MasaInterface): Promise<BaseResult> => {
-  return masa.contracts.marketplace.stakeAll();
+  let success = true;
+  const messages: string[] = [];
+
+  for (const contractInstance of Object.values(masa.marketplace)) {
+    try {
+      const result = await contractInstance.stakeAll();
+      if (!result.success) {
+        success = false;
+      }
+      messages.push(result.message);
+    } catch (error) {
+      success = false;
+      if (error instanceof Error) {
+        messages.push(error.message);
+      }
+    }
+  }
+
+  return {
+    success,
+    message: messages.join("\n"), // Combine all messages with a newline
+  };
 };
