@@ -460,9 +460,9 @@
     ethers "^5.7.2"
 
 "@layerzerolabs/lz-definitions@^2.1.23":
-  version "2.1.23"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.1.23.tgz#1111a0d39a8a1321e48308e87ef36911ec51cb10"
-  integrity sha512-m+VJy72IIb3p32Z/7KRV84KDRqjo2LLuH/cxtUi75EJKofSVRsCNJmAI+7GJK5ZMfTCqe3M3Z2tDf2XTwRO0ew==
+  version "2.1.24"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.1.24.tgz#69e9875a7446f896619e6b44ca0a2bf738e5c104"
+  integrity sha512-Uj6tgrKp02vIP2pmZQm2qbWtHnfo8M3EeTeIOF00ChaHzFBzO9EX2pp3+6nscNPM6MyWNrgmo/RLy6YS8h9g1Q==
   dependencies:
     tiny-invariant "^1.3.1"
 
