@@ -64,7 +64,7 @@ export class MasaClient extends MasaBase {
         true,
       );
 
-      return session && isSession(session) ? session : undefined;
+      return isSession(session) ? session : undefined;
     },
 
     /**

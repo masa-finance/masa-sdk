@@ -1,4 +1,5 @@
 export const isSession = (session: unknown): session is ISession =>
+  !!session &&
   (session as ISession).user !== undefined &&
   (session as ISession).cookie !== undefined;
 
