@@ -20,6 +20,7 @@ import type {
   UpdateCreditScoreResult,
   VerifyGreenResult,
 } from "../../interface";
+import { isSession } from "../../interface";
 import { MasaBase } from "../../masa-base";
 
 const headers = {
@@ -63,7 +64,7 @@ export class MasaClient extends MasaBase {
         true,
       );
 
-      return session && "user" in session ? session : undefined;
+      return session && isSession(session) ? session : undefined;
     },
 
     /**
