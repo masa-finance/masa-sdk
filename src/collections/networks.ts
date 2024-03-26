@@ -51,7 +51,6 @@ const masatest: Network = {
   },
   blockExplorerUrls: ["https://subnets-test.avax.network/masatestnet"],
   addresses: addresses["masatest"] as Addresses,
-  // https://docs.layerzero.network/contracts/endpoint-addresses#masa-testnet
   lzEndpointId: EndpointId.MASA_V2_TESTNET,
 };
 
