@@ -30,7 +30,7 @@ export const loadMarketplaceContracts = ({
       );
     }
     DataStakingDynamicNative = DataStakingDynamicNativeAddresses.map(
-      (address) =>
+      (address: string) =>
         loadContract<DataStakingDynamicNative & ContractInfo>({
           factory: new DataStakingDynamicNative__factory(),
           address,
