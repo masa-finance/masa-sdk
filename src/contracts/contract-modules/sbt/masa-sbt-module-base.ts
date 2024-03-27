@@ -7,7 +7,7 @@ import type { ContractFactory } from "../../../interface/contract-factory";
 import { isNativeCurrency } from "../../../utils";
 import { MasaModuleBase } from "../masa-module-base";
 
-const checkExists = async (
+export const checkExists = async (
   address: string,
   signer: Signer,
 ): Promise<boolean> => {
