@@ -12,7 +12,7 @@ const masa: Network = {
   chainId: 0x3454,
   rpcUrls: [
     // default https
-    "https://subnets.avax.network/masa/mainnet/rpc",
+    "https://subnets.avax.network/masanetwork/mainnet/rpc",
     // alternative https
     undefined,
     // default wss
@@ -25,7 +25,7 @@ const masa: Network = {
     symbol: "MASA",
     decimals: 18,
   },
-  blockExplorerUrls: ["https://subnets.avax.network/masa"],
+  blockExplorerUrls: ["https://subnets.avax.network/masanetwork"],
   addresses: addresses["masa"] as Addresses,
 };
 const masatest: Network = {
