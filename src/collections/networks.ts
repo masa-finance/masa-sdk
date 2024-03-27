@@ -9,7 +9,7 @@ const masa: Network = {
   chainName: "Masa",
   chainNameShort: "Masa",
   isTestnet: false,
-  chainId: 0x3454,
+  chainId: 0x3454, // 13396
   rpcUrls: [
     // default https
     "https://subnets.avax.network/masanetwork/mainnet/rpc",
