@@ -31,7 +31,7 @@ const masa: Network = {
 const masatest: Network = {
   networkName: "masatest",
   chainName: "Masa Testnet",
-  chainNameShort: "Masa Test",
+  chainNameShort: "Masa Testnet",
   isTestnet: true,
   chainId: 103454,
   rpcUrls: [
