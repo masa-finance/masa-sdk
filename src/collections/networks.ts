@@ -25,7 +25,7 @@ const masa: Network = {
     symbol: "MASA",
     decimals: 18,
   },
-  blockExplorerUrls: ["https://subnets.avax.network/masanetwork"],
+  blockExplorerUrls: ["https://subnets.avax.network/masa"],
   addresses: addresses["masa"] as Addresses,
 };
 const masatest: Network = {
