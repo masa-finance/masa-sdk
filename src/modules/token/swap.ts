@@ -60,6 +60,8 @@ export const getSwapQuote = async (
   | {
       nativeFee: BigNumber;
       lzTokenFee: BigNumber;
+      gasLimit: BigNumber;
+      transactionCost: BigNumber;
     }
   | undefined
 > => {
@@ -71,13 +73,50 @@ export const getSwapQuote = async (
   }
 
   try {
-    const { quoteSend } = oft;
+    const {
+      quoteSend,
+      estimateGas: { send },
+    } = oft;
 
     const { nativeFee, lzTokenFee } = await quoteSend(sendParameters, false);
+
+    let gasPrice: BigNumber | undefined;
+
+    try {
+      const feeData = await masa.config.signer.getFeeData();
+      if (feeData.maxPriorityFeePerGas) {
+        gasPrice = feeData.maxPriorityFeePerGas;
+      }
+    } catch {
+      console.warn(
+        "Failed to get network fee information, falling back to gas price!",
+      );
+    }
+
+    if (!gasPrice) {
+      gasPrice = await masa.config.signer.getGasPrice();
+    }
+
+    const gasLimit = await send(
+      sendParameters,
+      { nativeFee, lzTokenFee },
+      await masa.config.signer.getAddress(),
+      {
+        value:
+          masa.config.networkName === "masa" ||
+          masa.config.networkName === "masatest"
+            ? nativeFee.add(sendParameters.amountLD)
+            : nativeFee,
+      },
+    );
+
+    const transactionCost = gasLimit.mul(gasPrice);
 
     return {
       nativeFee,
       lzTokenFee,
+      gasLimit,
+      transactionCost,
     };
   } catch {
     console.error("Failed to quote send!");
