@@ -226,6 +226,7 @@ export const swap = async (
       console.error(
         `'${toNetwork.addresses?.tokens?.MASA}' is not a registered peer for network ${toEID}!`,
       );
+      return;
     }
 
     const fees = await getSwapQuote(masa, sendParameters);
