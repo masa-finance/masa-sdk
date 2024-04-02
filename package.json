@@ -5,7 +5,6 @@
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
   "unpkg": "./dist/browser/masa-sdk.cjs2.min.js",
-  "module": "./dist/browser/masa-sdk.amd.min.js",
   "files": [
     "dist"
   ],
