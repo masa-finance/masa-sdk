@@ -118,8 +118,10 @@ export const getSwapQuote = async (
       gasLimit,
       transactionCost,
     };
-  } catch {
-    console.error("Failed to quote send!");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Failed to quote send! ${error.message}`);
+    }
   }
 };
 
