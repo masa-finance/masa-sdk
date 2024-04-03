@@ -16,7 +16,7 @@ import { BigNumber, utils } from "ethers";
 import { Messages, SupportedNetworks } from "../../collections";
 import { MasaInterface, NetworkName } from "../../interface";
 
-const loadOFTContract = (
+export const loadOFTContract = (
   masa: MasaInterface,
 ): MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined => {
   if (!masa.config.network?.addresses.tokens?.MASA) return;
