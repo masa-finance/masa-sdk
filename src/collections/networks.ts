@@ -65,7 +65,7 @@ const bsc: Network = {
     // default https
     "https://bsc-dataseed1.bnbchain.org",
     // alternative https
-    undefined,
+    "https://bsc.meowrpc.com",
     // default wss
     "wss://bsc.publicnode.com",
     // alternative wss
@@ -287,7 +287,7 @@ const ethereum: Network = {
     // default https
     "https://rpc.ankr.com/eth",
     // alternative https
-    undefined,
+    "https://eth.drpc.org",
     // default wss
     "wss://ethereum.publicnode.com",
     // alternative wss
@@ -341,6 +341,10 @@ const sepolia: Network = {
     "https://rpc.sepolia.org",
     // alternative https
     "https://rpc2.sepolia.org",
+    // default wss
+    "wss://sepolia.drpc.org",
+    // alternative wss
+    undefined,
   ],
   blockExplorerUrls: ["https://sepolia.etherscan.io"],
   blockExplorerApiUrls: ["https://api-sepolia.etherscan.io/api"],
