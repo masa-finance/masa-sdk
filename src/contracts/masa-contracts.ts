@@ -3,6 +3,7 @@ import type { Log } from "@ethersproject/abstract-provider";
 import type { BaseContract } from "ethers";
 
 import type {
+  ContractInfo,
   IIdentityContracts,
   IMarketplaceContracts,
   MasaInterface,
@@ -130,17 +131,19 @@ export class MasaContracts extends MasaBase {
     const parsedLogs: LogDescription[] = [];
 
     for (const contract of [
-      ...Object.values(this.instances),
+      ...Object.values(this.instances).filter(
+        (contract: BaseContract & ContractInfo) => contract.hasAddress,
+      ),
       ...additionalContracts,
     ]) {
       parsedLogs.push(
-        ...logs
+        ...(logs
           .filter(
             (log: Log) =>
               log.address.toLowerCase() === contract.address.toLowerCase(),
           )
           .map((log: Log) => {
-            let result;
+            let result: LogDescription | undefined;
 
             try {
               result = contract.interface.parseLog(log);
@@ -151,7 +154,10 @@ export class MasaContracts extends MasaBase {
             }
 
             return result;
-          }),
+          })
+          .filter(
+            (log: LogDescription | undefined) => !!log,
+          ) as LogDescription[]),
       );
     }
 
