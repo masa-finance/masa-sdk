@@ -63,7 +63,7 @@ const bsc: Network = {
   chainId: 56,
   rpcUrls: [
     // default https
-    "https://binance.llamarpc.com",
+    "https://bsc-dataseed1.bnbchain.org",
     // alternative https
     undefined,
     // default wss
