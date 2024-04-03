@@ -503,10 +503,10 @@
   dependencies:
     ethers "~5.7.2"
 
-"@masa-finance/masa-token@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-token/-/masa-token-2.4.0.tgz#c03dab89594d5540a9a6348caabc5db03bc5464f"
-  integrity sha512-H/cGifVlff/Ui1ATp72q7/tCzQbZx6n+w9F7ETbMHExVNtv6dHEG6IewexFYFjKbbI7hWP92oH9bGYRyI6KP6w==
+"@masa-finance/masa-token@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-token/-/masa-token-2.5.0.tgz#3afa223c223cdf56a9d10b80480a3c4ed69c06ce"
+  integrity sha512-s+ig3d6y+Z3Xdswdbbdv+U6P3e37gWYGCoLPgsIDi01Llg3T9ghOWaiNlYF1+C18ygSM8+DuRS3IwpAS4U70mw==
 
 "@noble/curves@^1.2.0":
   version "1.4.0"
