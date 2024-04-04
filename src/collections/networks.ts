@@ -27,6 +27,7 @@ const masa: Network = {
   },
   blockExplorerUrls: ["https://subnets.avax.network/masa"],
   addresses: addresses["masa"] as Addresses,
+  lzEndpointId: EndpointId.MASA_V2_MAINNET,
 };
 const masatest: Network = {
   networkName: "masatest",
