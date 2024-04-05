@@ -11,7 +11,7 @@ import {
 import { SendParamStruct as SendParamStructMasaToken } from "@masa-finance/masa-token/dist/typechain/contracts/MasaToken";
 import { SendParamStruct as SendParamStructMasaTokenNativeOFT } from "@masa-finance/masa-token/dist/typechain/contracts/MasaTokenNativeOFT";
 import { SendParamStruct as SendParamStructMasaTokenOFT } from "@masa-finance/masa-token/dist/typechain/contracts/MasaTokenOFT";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, constants, utils } from "ethers";
 
 import { Messages, SupportedNetworks } from "../../collections";
 import { MasaInterface, NetworkName } from "../../interface";
@@ -185,11 +185,9 @@ export const swap = async (
 
   // current wallet
   const address = await masa.config.signer.getAddress();
+  const { lzEndpointId: toEID } = SupportedNetworks[to] ?? {};
 
-  const toNetwork = SupportedNetworks[to];
-  const toEID = toNetwork?.lzEndpointId;
-
-  if (!masa.config.network?.addresses.tokens?.MASA || !toNetwork || !toEID) {
+  if (!masa.config.network?.addresses.tokens?.MASA || !toEID) {
     console.log(`Unable to swap from ${masa.config.networkName} to ${to}!`);
     return;
   }
@@ -217,14 +215,11 @@ export const swap = async (
   try {
     const { send } = oft;
 
-    const isPeer = await oft.isPeer(
-      toEID,
-      utils.zeroPad(toNetwork.addresses?.tokens?.MASA ?? "", 32),
-    );
+    const peer = await oft.peers(toEID);
 
-    if (!isPeer) {
+    if (peer === utils.hexZeroPad(constants.AddressZero, 32)) {
       console.error(
-        `'${toNetwork.addresses?.tokens?.MASA}' is not a registered peer for network ${toEID}!`,
+        `'${oft.address}' has no registered peer for network ${toEID}!`,
       );
       return;
     }
