@@ -1,7 +1,7 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 
-import type { PaymentMethod } from "../../interface";
-import { MasaBase } from "../../masa-base";
+import type { MasaInterface, PaymentMethod } from "../../interface";
+import { MasaModuleBase } from "../masa-module-base";
 import { burnSoulName } from "./burn";
 import { createSoulName } from "./create";
 import { getSoulNameMetadataPrefix } from "./helpers";
@@ -19,7 +19,11 @@ import { tailSoulNames } from "./tail";
 import { validateSoulName } from "./validate";
 import { verifyByName } from "./verify";
 
-export class MasaSoulName extends MasaBase {
+export class MasaSoulName extends MasaModuleBase {
+  constructor(masa: MasaInterface) {
+    super(masa, masa.contracts.instances.SoulNameContract);
+  }
+
   /**
    *
    * @param address
