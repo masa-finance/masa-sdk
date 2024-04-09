@@ -489,10 +489,10 @@
     "@solana/web3.js" "^1.87.6"
     tiny-invariant "^1.3.1"
 
-"@masa-finance/masa-contracts-identity@^1.13.1":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-1.13.1.tgz#79492caa8feaca0d8d42636d3c0bf028fc195d11"
-  integrity sha512-9tfF51vFwmPMv19q1ff1q9u96msDhAiqNFrS9awsP871XMQ1Jo6t8i4wBuWIB6NGJfdhrNX0qXQvAHaSklX2gw==
+"@masa-finance/masa-contracts-identity@^1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-identity/-/masa-contracts-identity-1.14.0.tgz#1c11e6a2bfbd85971e6cd68760aaf9b660172df8"
+  integrity sha512-d7OO9EzNUfRI3x5ptWWDMIyhrnuU07HsF9VMaDQU6kKUksZekzdK0ValptuuRnePEY6pPk54fjES2W2v72Uy/Q==
   dependencies:
     ethers "~5.7.2"
 

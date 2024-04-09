@@ -42,7 +42,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/lz-definitions": "^2.1.27",
     "@layerzerolabs/lz-v2-utilities": "^2.1.27",
-    "@masa-finance/masa-contracts-identity": "^1.13.1",
+    "@masa-finance/masa-contracts-identity": "^1.14.0",
     "@masa-finance/masa-contracts-marketplace": "^2.1.18",
     "@masa-finance/masa-token": "^2.6.1",
     "arweave": "1.11.8",
