@@ -1,5 +1,5 @@
 // identity
-import { mainnet as ethereumAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
+import { ethereum as ethereumAddresses } from "@masa-finance/masa-contracts-identity/addresses.json";
 // token
 import { ethereum as ethereumAddressesMasaToken } from "@masa-finance/masa-token/addresses.json";
 
