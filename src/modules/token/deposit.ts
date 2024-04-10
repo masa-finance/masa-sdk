@@ -5,7 +5,7 @@ import {
 import { BigNumber, utils } from "ethers";
 
 import { Messages } from "../../collections";
-import { MasaInterface } from "../../interface";
+import { BaseResult, MasaInterface } from "../../interface";
 
 /**
  *
@@ -15,7 +15,11 @@ import { MasaInterface } from "../../interface";
 export const deposit = async (
   masa: MasaInterface,
   amount: string,
-): Promise<void> => {
+): Promise<BaseResult> => {
+  const result: BaseResult = {
+    success: false,
+  };
+
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 
   console.log(`Depositing ${parseFloat(amount).toLocaleString()} MASA!`);
@@ -25,8 +29,10 @@ export const deposit = async (
     (masa.config.networkName !== "masa" &&
       masa.config.networkName !== "masatest")
   ) {
-    console.log(`Unable to deposit on ${masa.config.networkName}!`);
-    return;
+    result.message = `Unable to deposit on ${masa.config.networkName}!`;
+    console.error(result.message);
+
+    return result;
   }
 
   // origin
@@ -38,7 +44,7 @@ export const deposit = async (
   try {
     const { deposit } = oft;
 
-    console.log("Depositting ...");
+    console.log("Depositing ...");
 
     const { wait, hash } = await deposit({
       value: tokenAmount,
@@ -54,9 +60,14 @@ export const deposit = async (
     await wait();
 
     console.log("Deposit done!");
+
+    result.success = true;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(error.message);
+      result.message = `Deposit failed! ${error.message}`;
+      console.error(result.message);
     }
   }
+
+  return result;
 };

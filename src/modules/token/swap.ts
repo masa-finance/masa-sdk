@@ -14,8 +14,15 @@ import { SendParamStruct as SendParamStructMasaTokenOFT } from "@masa-finance/ma
 import { BigNumber, constants, utils } from "ethers";
 
 import { Messages, SupportedNetworks } from "../../collections";
-import { MasaInterface, NetworkName } from "../../interface";
+import { BaseResult, MasaInterface, NetworkName } from "../../interface";
 
+const lzUrl = (txHash: string, testnet: boolean = false) =>
+  `https://${testnet ? "testnet." : ""}layerzeroscan.com/tx/${txHash}`;
+
+/**
+ *
+ * @param masa
+ */
 export const loadOFTContract = (
   masa: MasaInterface,
 ): MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined => {
@@ -50,26 +57,35 @@ export const loadOFTContract = (
   return oft;
 };
 
+export interface QuoteResult extends BaseResult {
+  nativeFee: BigNumber;
+  lzTokenFee: BigNumber;
+  gasLimit: BigNumber;
+  transactionCost: BigNumber;
+}
+
+/**
+ *
+ * @param masa
+ * @param sendParameters
+ */
 export const getSwapQuote = async (
   masa: MasaInterface,
   sendParameters:
     | SendParamStructMasaToken
     | SendParamStructMasaTokenNativeOFT
     | SendParamStructMasaTokenOFT,
-): Promise<
-  | {
-      nativeFee: BigNumber;
-      lzTokenFee: BigNumber;
-      gasLimit: BigNumber;
-      transactionCost: BigNumber;
-    }
-  | undefined
-> => {
+): Promise<BaseResult | QuoteResult> => {
+  let result: BaseResult | QuoteResult = {
+    success: false,
+  };
+
   const oft = loadOFTContract(masa);
 
   if (!oft) {
-    console.error("Unable to load OFT!");
-    return;
+    result.message = "Unable to load OFT!";
+    console.error(result);
+    return result;
   }
 
   try {
@@ -112,7 +128,8 @@ export const getSwapQuote = async (
 
     const transactionCost = gasLimit.mul(gasPrice);
 
-    return {
+    result = {
+      success: true,
       nativeFee,
       lzTokenFee,
       gasLimit,
@@ -120,11 +137,21 @@ export const getSwapQuote = async (
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(`Failed to quote send! ${error.message}`);
+      result.message = `Failed to quote send! ${error.message}`;
+      console.error(result.message);
     }
   }
+
+  return result;
 };
 
+/**
+ *
+ * @param eid
+ * @param receiverAddress
+ * @param tokenAmount
+ * @param slippage
+ */
 export const getSwapParameters = (
   eid: EndpointId,
   receiverAddress: string,
@@ -166,6 +193,10 @@ export const getSwapParameters = (
   };
 };
 
+export interface SwapResult extends BaseResult {
+  layerZeroScanUrl?: string;
+}
+
 /**
  *
  * @param masa
@@ -178,7 +209,11 @@ export const swap = async (
   to: NetworkName,
   amount: string,
   slippage?: number,
-): Promise<void> => {
+): Promise<SwapResult> => {
+  const result: SwapResult = {
+    success: false,
+  };
+
   console.log(
     `Swapping ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
   );
@@ -188,8 +223,10 @@ export const swap = async (
   const { lzEndpointId: toEID } = SupportedNetworks[to] ?? {};
 
   if (!masa.config.network?.addresses.tokens?.MASA || !toEID) {
-    console.log(`Unable to swap from ${masa.config.networkName} to ${to}!`);
-    return;
+    result.message = `Unable to swap from ${masa.config.networkName} to ${to}!`;
+    console.error(result.message);
+
+    return result;
   }
 
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
@@ -208,8 +245,10 @@ export const swap = async (
   const oft = loadOFTContract(masa);
 
   if (!oft) {
-    console.error("Unable to load OFT!");
-    return;
+    result.message = "Unable to load OFT!";
+    console.error(result.message);
+
+    return result;
   }
 
   try {
@@ -218,48 +257,56 @@ export const swap = async (
     const peer = await oft.peers(toEID);
 
     if (peer === utils.hexZeroPad(constants.AddressZero, 32)) {
-      console.error(
-        `'${oft.address}' has no registered peer for network ${toEID}!`,
-      );
-      return;
+      result.message = `'${oft.address}' has no registered peer for network ${toEID}!`;
+      console.error(result.message);
+      return result;
     }
 
     const fees = await getSwapQuote(masa, sendParameters);
 
-    if (!fees) {
-      console.error("Unable to load fees!");
-      return;
+    if (!fees.success) {
+      result.message = `Unable to load fees! ${fees.message}`;
+      console.error(result.message);
+      return result;
     }
 
-    console.log(
-      `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
-    );
+    if ("nativeFee" in fees) {
+      console.log(
+        `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
+      );
 
-    console.log("Swapping ...");
+      console.log("Swapping ...");
 
-    const { wait, hash } = await send(sendParameters, fees, address, {
-      value:
-        masa.config.networkName === "masa" ||
-        masa.config.networkName === "masatest"
-          ? fees.nativeFee.add(sendParameters.amountLD)
-          : fees.nativeFee,
-    });
+      const { wait, hash } = await send(sendParameters, fees, address, {
+        value:
+          masa.config.networkName === "masa" ||
+          masa.config.networkName === "masatest"
+            ? fees.nativeFee.add(sendParameters.amountLD)
+            : fees.nativeFee,
+      });
 
-    console.log(
-      Messages.WaitingToFinalize(
-        hash,
-        masa.config.network.blockExplorerUrls?.[0],
-      ),
-    );
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          masa.config.network.blockExplorerUrls?.[0],
+        ),
+      );
 
-    await wait();
+      await wait();
 
-    console.log(
-      "Swap done! Please note: it can take some times (20-30 mins) for the token to show up on the target network!",
-    );
+      result.success = true;
+      result.layerZeroScanUrl = lzUrl(hash, masa.config.network.isTestnet);
+
+      console.log(
+        `Swap done! Please note: it can take some times (20-30 mins) for the token to show up on the target network! You can check the status on Layerzero scan: ${result.layerZeroScanUrl}`,
+      );
+    }
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(error.message);
+      result.message = `Swap failed! ${error.message}`;
+      console.error(result.message);
     }
   }
+
+  return result;
 };
