@@ -11,11 +11,11 @@ import type {
 import type { Link } from "../../modules";
 import { loadLinks } from "../../modules";
 import { isNativeCurrency, signTypedData } from "../../utils";
-import { MasaModuleBase } from "./masa-module-base";
+import { MasaContractModuleBase } from "./masa-contract-module-base";
 
 export type BreakLinkResult = BaseResult;
 
-export class SoulLinker extends MasaModuleBase {
+export class SoulLinker extends MasaContractModuleBase {
   /**
    *
    */

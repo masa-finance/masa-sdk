@@ -17,9 +17,9 @@ import {
   isNativeCurrency,
   signTypedData,
 } from "../../utils";
-import { MasaModuleBase } from "./masa-module-base";
+import { MasaContractModuleBase } from "./masa-contract-module-base";
 
-export class SoulName extends MasaModuleBase {
+export class SoulName extends MasaContractModuleBase {
   /**
    *
    */

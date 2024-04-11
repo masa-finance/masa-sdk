@@ -29,7 +29,7 @@ import { isERC20Currency, isNativeCurrency } from "../../utils";
 
 const DEFAULT_GAS_LIMIT: number = 750_000;
 
-export abstract class MasaModuleBase extends MasaBase {
+export abstract class MasaContractModuleBase extends MasaBase {
   constructor(
     masa: MasaInterface,
     protected instances: IIdentityContracts,
@@ -242,7 +242,7 @@ export abstract class MasaModuleBase extends MasaBase {
           : estimateGas());
 
       if (this.masa.config.network?.gasSlippagePercentage) {
-        gasLimit = MasaModuleBase.addSlippage(
+        gasLimit = MasaContractModuleBase.addSlippage(
           gasLimit,
           this.masa.config.network.gasSlippagePercentage,
         );

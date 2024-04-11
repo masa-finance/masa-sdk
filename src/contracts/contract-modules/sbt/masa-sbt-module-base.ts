@@ -5,7 +5,7 @@ import { Signer, utils } from "ethers";
 import type { PaymentMethod, PriceInformation } from "../../../interface";
 import type { ContractFactory } from "../../../interface/contract-factory";
 import { isNativeCurrency } from "../../../utils";
-import { MasaModuleBase } from "../masa-module-base";
+import { MasaContractModuleBase } from "../masa-contract-module-base";
 
 export const checkExists = async (
   address: string,
@@ -32,7 +32,7 @@ export const checkExists = async (
   return result;
 };
 
-export abstract class MasaSBTModuleBase extends MasaModuleBase {
+export abstract class MasaSBTModuleBase extends MasaContractModuleBase {
   /**
    *
    * @param paymentMethod
@@ -69,7 +69,7 @@ export abstract class MasaSBTModuleBase extends MasaModuleBase {
 
     if (slippage) {
       if (isNativeCurrency(paymentMethod)) {
-        price = MasaModuleBase.addSlippage(price, slippage);
+        price = MasaContractModuleBase.addSlippage(price, slippage);
       }
     }
 

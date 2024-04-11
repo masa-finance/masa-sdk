@@ -1,5 +1,5 @@
 // import { BigNumber } from "ethers";
 
-import { MasaModuleBase } from "./masa-module-base";
+import { MasaContractModuleBase } from "./masa-contract-module-base";
 
-export class Marketplace extends MasaModuleBase {}
+export class Marketplace extends MasaContractModuleBase {}

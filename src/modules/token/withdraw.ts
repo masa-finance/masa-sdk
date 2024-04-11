@@ -5,7 +5,7 @@ import {
 import { BigNumber, utils } from "ethers";
 
 import { Messages } from "../../collections";
-import { MasaInterface } from "../../interface";
+import { BaseResult, MasaInterface } from "../../interface";
 
 /**
  *
@@ -15,7 +15,11 @@ import { MasaInterface } from "../../interface";
 export const withdraw = async (
   masa: MasaInterface,
   amount: string,
-): Promise<void> => {
+): Promise<BaseResult> => {
+  const result: BaseResult = {
+    success: false,
+  };
+
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 
   console.log(`Withdrawing ${parseFloat(amount).toLocaleString()} MASA!`);
@@ -25,8 +29,9 @@ export const withdraw = async (
     (masa.config.networkName !== "masa" &&
       masa.config.networkName !== "masatest")
   ) {
-    console.log(`Unable to withdraw on ${masa.config.networkName}!`);
-    return;
+    result.message = `Unable to withdraw on ${masa.config.networkName}!`;
+    console.log(result.message);
+    return result;
   }
 
   // origin
@@ -52,9 +57,13 @@ export const withdraw = async (
     await wait();
 
     console.log("Withdraw done!");
+    result.success = true;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(error.message);
+      result.message = `Withdraw failed! ${error.message}`;
+      console.error(result.message);
     }
   }
+
+  return result;
 };
