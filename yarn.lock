@@ -452,32 +452,32 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@layerzerolabs/evm-sdks-core@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.2.2.tgz#e8a20789da0eff291bb22d1f4261b24a321248a2"
-  integrity sha512-9IjWGqqSOZ7AsZJZwxBFCeoJRzieBuy+tWDhLpE1T3AeKXFZP7HrYvd5BM0YwTrxubhYmjC6t+3fwsAjfXVPSQ==
+"@layerzerolabs/evm-sdks-core@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.2.4.tgz#13d3ca12a0b92615be0e9a1a441fa8128ba17482"
+  integrity sha512-LAjv2HUy227l3hLfXIPdflSUEOQ37RNXsDM5uOUlHQXie/VOLf9r0EHRDdentuaPfjS245y3pwKseffEKNrh+w==
   dependencies:
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-definitions@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.2.2.tgz#80c7c92436e0538453901ba42ab32e6890fbe01a"
-  integrity sha512-JUuOkbPVgZn7lbzFRCotKiGjOe6w05vXCpb0Fpx+Q+DY82ib1GATV6DMAIYmlk24lsmzOILjUmMa+nsnaGjbyQ==
+"@layerzerolabs/lz-definitions@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.2.4.tgz#716a679f0ae7ba429350974ec94c9459fa259ba1"
+  integrity sha512-c0aM5/W7xNOrhekuxZIyQXk183pjCxqzFBGxrTTiSBt61lZcSzfJSD6SUG/6lIkvjY9O+1ffT7SZy6/1hBCsiQ==
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-evm-sdk-v2@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.2.2.tgz#1f0aeed386add7b0783194bfad2355746adcf038"
-  integrity sha512-ye5Y9lV6h0T0pb+V40hEQdB3kECHReVl7MSjruDGk0NEenmvMsgI2H3MnjAeCG5LQ6QIHlBn2LGjjQnTpdsobw==
+"@layerzerolabs/lz-evm-sdk-v2@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.2.4.tgz#0af0234f4fe606aebdbe642ac6e290f43a685b70"
+  integrity sha512-VH13iAolSxC9f4qOC5/wmimMqHzlf/WoPyTuGJKLDgDragDjnfYfRAAl3PKsurXuVw+C+h0Ev7syvzjFdoyvyg==
   dependencies:
-    "@layerzerolabs/evm-sdks-core" "^2.2.2"
+    "@layerzerolabs/evm-sdks-core" "^2.2.4"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-v2-utilities@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.2.2.tgz#6391481724a5ec8236dea24745b6c6c2437b4283"
-  integrity sha512-0RIENoMwKpAJfaNELlzBrjki3iwJO9TR94ozFD0WETJw8UYzvJkozb/dri5yVtlcA0RSoJZpzNipf6sKWTyATA==
+"@layerzerolabs/lz-v2-utilities@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.2.4.tgz#cfd37b2d424908862e4c213b702f2732f3e5e56b"
+  integrity sha512-bqjB74iVbRoxhqbpAXDfWUw8/2+c3w9JzxS02lQ77c0lm2gUAtPj774YYQ+dOf8zViceVRIQSS/LGC8q0J1iPw==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/address" "^5.7.0"
@@ -485,7 +485,7 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/keccak256" "^5.7.0"
     "@ethersproject/solidity" "^5.7.0"
-    "@layerzerolabs/lz-evm-sdk-v2" "^2.2.2"
+    "@layerzerolabs/lz-evm-sdk-v2" "^2.2.4"
     "@solana/web3.js" "^1.87.6"
     tiny-invariant "^1.3.1"
 
@@ -503,10 +503,10 @@
   dependencies:
     ethers "~5.7.2"
 
-"@masa-finance/masa-token@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-token/-/masa-token-2.6.1.tgz#7b28ba29b496daa8e3a6252431afcc69834bab0c"
-  integrity sha512-pO4WY5hf0fUW+r6MR1f1L5hIYptLKj0lpwIlusaO2KO9mOY909nKae7xEpaNSjM2dgPTqNRVmB7XUxMKx/c8vA==
+"@masa-finance/masa-token@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-token/-/masa-token-2.7.0.tgz#43db7c8e0c996e717a24babf83e5b27c62c4d73d"
+  integrity sha512-N7U/xyoBgG8Td4BIszOyzsaJ/ylvu0/ipHHKdyr1PjedVUgOig0rAxXc1q68vqIdG9f2yHl8WdvAA5Kh7pC0ww==
 
 "@noble/curves@^1.2.0":
   version "1.4.0"
@@ -1768,10 +1768,10 @@ eslint-plugin-import@^2.29.0:
     semver "^6.3.1"
     tsconfig-paths "^3.15.0"
 
-eslint-plugin-simple-import-sort@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-12.0.0.tgz#3cfa05d74509bd4dc329a956938823812194dbb6"
-  integrity sha512-8o0dVEdAkYap0Cn5kNeklaKcT1nUsa3LITWEuFk3nJifOoD+5JQGoyDUW2W/iPWwBsNBJpyJS9y4je/BgxLcyQ==
+eslint-plugin-simple-import-sort@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-12.1.0.tgz#8186ad55474d2f5c986a2f1bf70625a981e30d05"
+  integrity sha512-Y2fqAfC11TcG/WP3TrI1Gi3p3nc8XJyEOJYHyEPEGI/UAgNx6akxxlX74p7SbAQdLcgASKhj8M0GKvH3vq/+ig==
 
 eslint-scope@5.1.1:
   version "5.1.1"
