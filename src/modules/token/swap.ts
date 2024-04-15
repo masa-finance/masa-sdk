@@ -165,13 +165,13 @@ export const getSwapParameters = (
   slippage: number;
 } => {
   const options = Options.newOptions()
-    .addExecutorLzReceiveOption(200000, 0)
+    .addExecutorLzReceiveOption(200_000, 0)
     .toHex()
     .toString();
 
   // add 2.5% slippage
   const tokenAmountWithSlippage = tokenAmount.add(
-    tokenAmount.mul(slippage).div(10000),
+    tokenAmount.mul(slippage).div(10_000),
   );
 
   const sendParameters:
