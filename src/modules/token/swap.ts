@@ -239,7 +239,7 @@ export const swap = async (
   );
 
   console.log(
-    `Tokens: ${utils.formatEther(sendParameters.minAmountLD)} Tokens with Slippage: ${utils.formatEther(sendParameters.amountLD)} (${actualSlippage / 100}%)`,
+    `Tokens: ${utils.formatEther(sendParameters.minAmountLD)} Tokens with Slippage: ${utils.formatEther(sendParameters.amountLD)} (${(actualSlippage / 100).toFixed(2)}%)`,
   );
 
   const oft = loadOFTContract(masa);
