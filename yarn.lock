@@ -452,32 +452,32 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@layerzerolabs/evm-sdks-core@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.2.4.tgz#13d3ca12a0b92615be0e9a1a441fa8128ba17482"
-  integrity sha512-LAjv2HUy227l3hLfXIPdflSUEOQ37RNXsDM5uOUlHQXie/VOLf9r0EHRDdentuaPfjS245y3pwKseffEKNrh+w==
+"@layerzerolabs/evm-sdks-core@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.2.5.tgz#f828c344cc3c028fd9fa1268b9552757ae7ee50e"
+  integrity sha512-J7VWUlQJema5mdM1ZwQFypEqCv39Bxwncy1/dLN1IGQbbX78QfwUFTpehxUY1l494cXqfr6OGCxiy5hM5+8P1g==
   dependencies:
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-definitions@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.2.4.tgz#716a679f0ae7ba429350974ec94c9459fa259ba1"
-  integrity sha512-c0aM5/W7xNOrhekuxZIyQXk183pjCxqzFBGxrTTiSBt61lZcSzfJSD6SUG/6lIkvjY9O+1ffT7SZy6/1hBCsiQ==
+"@layerzerolabs/lz-definitions@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.2.5.tgz#a50314ff2473c1d4bb4dc5e74f62b2676e69b921"
+  integrity sha512-F3MW2UO49BmRWHacF/wDL1gaMQ4tkO1D5T1F8zkjkXXlxAzPd6IjOYbDCByOgaeZU0Nuks41TjJWD5pKRsxwSw==
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-evm-sdk-v2@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.2.4.tgz#0af0234f4fe606aebdbe642ac6e290f43a685b70"
-  integrity sha512-VH13iAolSxC9f4qOC5/wmimMqHzlf/WoPyTuGJKLDgDragDjnfYfRAAl3PKsurXuVw+C+h0Ev7syvzjFdoyvyg==
+"@layerzerolabs/lz-evm-sdk-v2@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.2.5.tgz#9298fafaf4af92105babb68aac5c0a6eaf88a0f5"
+  integrity sha512-sygoloV48bBTIx606OBVS8XQ3dUrZQX0c8tuqQ7ioJ0rDAEwOGuI36hMPVqRHE5XRH/VeMJOOiSnarolJ66CkA==
   dependencies:
-    "@layerzerolabs/evm-sdks-core" "^2.2.4"
+    "@layerzerolabs/evm-sdks-core" "^2.2.5"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-v2-utilities@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.2.4.tgz#cfd37b2d424908862e4c213b702f2732f3e5e56b"
-  integrity sha512-bqjB74iVbRoxhqbpAXDfWUw8/2+c3w9JzxS02lQ77c0lm2gUAtPj774YYQ+dOf8zViceVRIQSS/LGC8q0J1iPw==
+"@layerzerolabs/lz-v2-utilities@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.2.5.tgz#e2805b3050103d334bea48bea989b277d3ce2262"
+  integrity sha512-Zu/BikHffiFv/uBfiwcAaOP0zCTHhDHFDtEDFVNuC95yBLrMjgNCwGLL6McAHEbXtvDFfvGzTRyWE/sTG+5yxg==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/address" "^5.7.0"
@@ -485,7 +485,7 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/keccak256" "^5.7.0"
     "@ethersproject/solidity" "^5.7.0"
-    "@layerzerolabs/lz-evm-sdk-v2" "^2.2.4"
+    "@layerzerolabs/lz-evm-sdk-v2" "^2.2.5"
     "@solana/web3.js" "^1.87.6"
     tiny-invariant "^1.3.1"
 
