@@ -63,10 +63,13 @@ export const deposit = async (
 
     result.success = true;
   } catch (error: unknown) {
+    result.message = "Deposit failed!";
+
     if (error instanceof Error) {
-      result.message = `Deposit failed! ${error.message}`;
-      console.error(result.message);
+      result.message = `${result.message}: ${error.message}`;
     }
+
+    console.error(result.message);
   }
 
   return result;

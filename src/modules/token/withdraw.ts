@@ -59,10 +59,13 @@ export const withdraw = async (
     console.log("Withdraw done!");
     result.success = true;
   } catch (error: unknown) {
+    result.message = "Withdraw failed!";
+
     if (error instanceof Error) {
-      result.message = `Withdraw failed! ${error.message}`;
-      console.error(result.message);
+      result.message = `${result.message}: ${error.message}`;
     }
+
+    console.error(result.message);
   }
 
   return result;

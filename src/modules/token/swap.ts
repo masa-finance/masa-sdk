@@ -136,10 +136,13 @@ export const getSwapQuote = async (
       transactionCost,
     };
   } catch (error: unknown) {
+    result.message = "Failed to quote send!";
+
     if (error instanceof Error) {
-      result.message = `Failed to quote send! ${error.message}`;
-      console.error(result.message);
+      result.message = `${result.message}: ${error.message}`;
     }
+
+    console.error(result.message);
   }
 
   return result;
@@ -302,10 +305,13 @@ export const swap = async (
       );
     }
   } catch (error: unknown) {
+    result.message = "Swap failed!";
+
     if (error instanceof Error) {
-      result.message = `Swap failed! ${error.message}`;
-      console.error(result.message);
+      result.message = `${result.message}: ${error.message}`;
     }
+
+    console.error(result.message);
   }
 
   return result;
