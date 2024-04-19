@@ -244,6 +244,33 @@ const polygon: Network = {
   skipEip1559: true,
   lzEndpointId: EndpointId.POLYGON_V2_MAINNET,
 };
+const amoy: Network = {
+  networkName: "amoy",
+  chainName: "Amoy Testnet",
+  chainNameShort: "Amoy",
+  isTestnet: true,
+  chainId: 80002,
+  nativeCurrency: {
+    name: "tMATIC",
+    symbol: "tMATIC", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: [
+    // default https
+    "https://rpc-amoy.polygon.technology",
+    // alternative https
+    undefined,
+    // default wss
+    "wss://polygon-amoy-bor-rpc.publicnode.com",
+    // alternative wss
+    undefined,
+  ],
+  blockExplorerUrls: ["https://amoy.polygonscan.com/"],
+  blockExplorerApiUrls: ["https://api-amoy.polygonscan.com/api"],
+  addresses: addresses["amoy"] as Addresses,
+  lzEndpointId: EndpointId.AMOY_V2_TESTNET,
+};
+// @deprecated: use amoy instead
 const mumbai: Network = {
   networkName: "mumbai",
   chainName: "Mumbai Testnet",
@@ -499,6 +526,8 @@ export const SupportedNetworks: Partial<{
   opbnbtest,
   // Polygon
   polygon,
+  amoy,
+  // @deprecated: use base amoy instead
   mumbai,
   // celo
   celo,

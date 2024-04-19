@@ -11,6 +11,7 @@ export type NetworkName =
   | "celo" // mainnet
   // polygon
   | "mumbai" // testnet
+  | "amoy" // testnet
   | "polygon" // mainnet
   // BSC
   | "bsctest" // testnet
