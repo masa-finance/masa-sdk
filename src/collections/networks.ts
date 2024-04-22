@@ -452,7 +452,7 @@ const basesepolia: Network = {
   blockExplorerUrls: ["https://base-sepolia.blockscout.com"],
   blockExplorerApiUrls: ["https://api-sepolia.basescan.org/api"],
   addresses: addresses["basesepolia"] as Addresses,
-  lzEndpointId: EndpointId.BASE_V2_TESTNET,
+  lzEndpointId: EndpointId.BASESEP_V2_TESTNET,
 };
 
 // scroll mainnet
