@@ -19,6 +19,17 @@ import { BaseResult, MasaInterface, NetworkName } from "../../interface";
 const lzUrl = (txHash: string, testnet: boolean = false) =>
   `https://${testnet ? "testnet." : ""}layerzeroscan.com/tx/${txHash}`;
 
+export interface QuoteResult extends BaseResult {
+  nativeFee: BigNumber;
+  lzTokenFee: BigNumber;
+  gasLimit?: BigNumber;
+  transactionCost?: BigNumber;
+}
+
+export interface SwapResult extends BaseResult {
+  layerZeroScanUrl?: string;
+}
+
 /**
  *
  * @param masa
@@ -57,12 +68,77 @@ export const loadOFTContract = (
   return oft;
 };
 
-export interface QuoteResult extends BaseResult {
-  nativeFee: BigNumber;
-  lzTokenFee: BigNumber;
-  gasLimit: BigNumber;
-  transactionCost: BigNumber;
-}
+/**
+ *
+ * @param masa
+ * @param oft
+ * @param sendParameters
+ * @param fees
+ */
+const loadTransactionCost = async (
+  masa: MasaInterface,
+  oft: MasaToken | MasaTokenOFT | MasaTokenNativeOFT,
+  sendParameters:
+    | SendParamStructMasaToken
+    | SendParamStructMasaTokenNativeOFT
+    | SendParamStructMasaTokenOFT,
+  fees: {
+    nativeFee: BigNumber;
+    lzTokenFee: BigNumber;
+  },
+): Promise<{
+  gasLimit?: BigNumber;
+  transactionCost?: BigNumber;
+}> => {
+  const { nativeFee, lzTokenFee } = fees;
+
+  const {
+    estimateGas: { send },
+  } = oft;
+
+  let gasPrice: BigNumber | undefined;
+
+  try {
+    const feeData = await masa.config.signer.getFeeData();
+    if (feeData.maxPriorityFeePerGas) {
+      gasPrice = feeData.maxPriorityFeePerGas;
+    }
+  } catch {
+    console.warn(
+      "Failed to get network fee information, falling back to gas price!",
+    );
+  }
+
+  if (!gasPrice) {
+    gasPrice = await masa.config.signer.getGasPrice();
+  }
+
+  let gasLimit, transactionCost;
+
+  try {
+    gasLimit = await send(
+      sendParameters,
+      { nativeFee, lzTokenFee },
+      await masa.config.signer.getAddress(),
+      {
+        value:
+          masa.config.networkName === "masa" ||
+          masa.config.networkName === "masatest"
+            ? nativeFee.add(sendParameters.amountLD)
+            : nativeFee,
+      },
+    );
+
+    transactionCost = gasLimit.mul(gasPrice);
+  } catch {
+    console.warn("Unable to load transaction cost!");
+  }
+
+  return {
+    gasLimit,
+    transactionCost,
+  };
+};
 
 /**
  *
@@ -89,44 +165,19 @@ export const getSwapQuote = async (
   }
 
   try {
-    const {
-      quoteSend,
-      estimateGas: { send },
-    } = oft;
+    const { quoteSend } = oft;
 
     const { nativeFee, lzTokenFee } = await quoteSend(sendParameters, false);
 
-    let gasPrice: BigNumber | undefined;
-
-    try {
-      const feeData = await masa.config.signer.getFeeData();
-      if (feeData.maxPriorityFeePerGas) {
-        gasPrice = feeData.maxPriorityFeePerGas;
-      }
-    } catch {
-      console.warn(
-        "Failed to get network fee information, falling back to gas price!",
-      );
-    }
-
-    if (!gasPrice) {
-      gasPrice = await masa.config.signer.getGasPrice();
-    }
-
-    const gasLimit = await send(
+    const { gasLimit, transactionCost } = await loadTransactionCost(
+      masa,
+      oft,
       sendParameters,
-      { nativeFee, lzTokenFee },
-      await masa.config.signer.getAddress(),
       {
-        value:
-          masa.config.networkName === "masa" ||
-          masa.config.networkName === "masatest"
-            ? nativeFee.add(sendParameters.amountLD)
-            : nativeFee,
+        nativeFee,
+        lzTokenFee,
       },
     );
-
-    const transactionCost = gasLimit.mul(gasPrice);
 
     result = {
       success: true,
@@ -195,10 +246,6 @@ export const getSwapParameters = (
     slippage,
   };
 };
-
-export interface SwapResult extends BaseResult {
-  layerZeroScanUrl?: string;
-}
 
 /**
  *
@@ -275,8 +322,14 @@ export const swap = async (
 
     if ("nativeFee" in fees) {
       console.log(
-        `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
+        `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} ${masa.config.network.nativeCurrency?.symbol} + LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
       );
+
+      if (fees.transactionCost) {
+        console.log(
+          `Transaction Cost: ${utils.formatEther(fees.transactionCost)} ${masa.config.network.nativeCurrency?.symbol}`,
+        );
+      }
 
       console.log("Swapping ...");
 
