@@ -276,6 +276,7 @@ const mumbai: Network = {
   chainName: "Mumbai Testnet",
   chainNameShort: "Mumbai",
   isTestnet: true,
+  isDeprecated: true,
   chainId: 80001,
   nativeCurrency: {
     name: "tMATIC",
