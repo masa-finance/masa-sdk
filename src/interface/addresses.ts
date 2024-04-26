@@ -11,4 +11,5 @@ export interface Addresses {
   SoulboundGreenAddress?: string;
   // Marketplace
   DataPointsMultiAddress?: string;
+  ProxyViewAggregatorAddress?: string;
 }

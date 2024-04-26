@@ -6,7 +6,7 @@ import type {
   SoulName,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
-import type { DataPointsMulti } from "@masa-finance/masa-contracts-marketplace";
+import type { DataPointsMulti, ProxyViewAggregator } from "@masa-finance/masa-contracts-marketplace";
 
 export interface ContractInfo {
   hasAddress?: boolean;
@@ -14,6 +14,7 @@ export interface ContractInfo {
 
 export interface IMarketplaceContracts {
   DataPointsMulti: DataPointsMulti & ContractInfo;
+  ProxyViewAggregator: ProxyViewAggregator & ContractInfo;
 }
 
 export interface IIdentityContracts {
