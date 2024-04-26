@@ -1,6 +1,8 @@
 import {
   DataPointsMulti,
   DataPointsMulti__factory,
+  ProxyViewAggregator,
+  ProxyViewAggregator__factory,
 } from "@masa-finance/masa-contracts-marketplace";
 import { Signer } from "ethers";
 
@@ -22,7 +24,15 @@ export const loadMarketplaceContracts = ({
     signer,
   });
 
+  // ProxyViewAggregator
+  const ProxyViewAggregator = loadContract<ProxyViewAggregator & ContractInfo>({
+    factory: new ProxyViewAggregator__factory(),
+    address: addresses[networkName]?.ProxyViewAggregatorAddress,
+    signer,
+  });
+
   return {
     DataPointsMulti,
+    ProxyViewAggregator,
   };
 };
