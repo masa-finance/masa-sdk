@@ -43,7 +43,7 @@
     "@layerzerolabs/lz-definitions": "^2.3.2",
     "@layerzerolabs/lz-v2-utilities": "^2.3.2",
     "@masa-finance/masa-contracts-identity": "^1.15.0",
-    "@masa-finance/masa-contracts-marketplace": "^2.1.25",
+    "@masa-finance/masa-contracts-marketplace": "^2.1.26",
     "@masa-finance/masa-token": "^2.9.0",
     "arweave": "1.11.8",
     "axios": "^1.6.8",
