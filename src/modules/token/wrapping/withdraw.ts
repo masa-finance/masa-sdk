@@ -4,15 +4,15 @@ import {
 } from "@masa-finance/masa-token/dist/typechain";
 import { BigNumber, utils } from "ethers";
 
-import { Messages } from "../../collections";
-import { BaseResult, MasaInterface } from "../../interface";
+import { Messages } from "../../../collections";
+import { BaseResult, MasaInterface } from "../../../interface";
 
 /**
  *
  * @param masa
  * @param amount
  */
-export const deposit = async (
+export const withdraw = async (
   masa: MasaInterface,
   amount: string,
 ): Promise<BaseResult> => {
@@ -22,16 +22,15 @@ export const deposit = async (
 
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 
-  console.log(`Depositing ${parseFloat(amount).toLocaleString()} MASA!`);
+  console.log(`Withdrawing ${parseFloat(amount).toLocaleString()} MASA!`);
 
   if (
     !masa.config.network?.addresses.tokens?.MASA ||
     (masa.config.networkName !== "masa" &&
       masa.config.networkName !== "masatest")
   ) {
-    result.message = `Unable to deposit on ${masa.config.networkName}!`;
-    console.error(result.message);
-
+    result.message = `Unable to withdraw on ${masa.config.networkName}!`;
+    console.log(result.message);
     return result;
   }
 
@@ -42,13 +41,11 @@ export const deposit = async (
   );
 
   try {
-    const { deposit } = oft;
+    const { withdraw } = oft;
 
-    console.log("Depositing ...");
+    console.log("Withdrawing ...");
 
-    const { wait, hash } = await deposit({
-      value: tokenAmount,
-    });
+    const { wait, hash } = await withdraw(tokenAmount);
 
     console.log(
       Messages.WaitingToFinalize(
@@ -59,11 +56,10 @@ export const deposit = async (
 
     await wait();
 
-    console.log("Deposit done!");
-
+    console.log("Withdraw done!");
     result.success = true;
   } catch (error: unknown) {
-    result.message = "Deposit failed!";
+    result.message = "Withdraw failed!";
 
     if (error instanceof Error) {
       result.message = `${result.message}: ${error.message}`;

@@ -6,6 +6,7 @@ import type {
   ContractInfo,
   IIdentityContracts,
   IMarketplaceContracts,
+  ITokenContracts,
   MasaInterface,
 } from "../interface";
 import { MasaBase } from "../masa-base";
@@ -22,12 +23,15 @@ import { SoulLinker } from "./contract-modules/soul-linker";
 import { SoulName } from "./contract-modules/soul-name";
 import { loadIdentityContracts } from "./load-Identity-contracts";
 import { loadMarketplaceContracts } from "./load-marketplace-contracts";
+import { loadTokenContracts } from "./load-token-contracts";
 
 export class MasaContracts extends MasaBase {
   /**
    * direct contract access
    */
-  public instances: IIdentityContracts & IMarketplaceContracts;
+  public instances: IIdentityContracts &
+    IMarketplaceContracts &
+    ITokenContracts;
   /**
    * SBTs
    */
@@ -78,6 +82,10 @@ export class MasaContracts extends MasaBase {
         networkName: this.masa.config.networkName,
       }),
       ...loadMarketplaceContracts({
+        signer: this.masa.config.signer,
+        networkName: this.masa.config.networkName,
+      }),
+      ...loadTokenContracts({
         signer: this.masa.config.signer,
         networkName: this.masa.config.networkName,
       }),

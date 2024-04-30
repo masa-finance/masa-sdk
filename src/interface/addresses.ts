@@ -12,4 +12,6 @@ export interface Addresses {
   // Marketplace
   DataPointsMultiAddress?: string;
   ProxyViewAggregatorAddress?: string;
+  // staking
+  MasaStakingAddress?: string;
 }

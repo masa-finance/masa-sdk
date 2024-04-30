@@ -6,7 +6,12 @@ import type {
   SoulName,
   SoulStore,
 } from "@masa-finance/masa-contracts-identity";
-import type { DataPointsMulti, ProxyViewAggregator } from "@masa-finance/masa-contracts-marketplace";
+import type {
+  DataPointsMulti,
+  ProxyViewAggregator,
+} from "@masa-finance/masa-contracts-marketplace";
+import { MasaStaking } from "@masa-finance/masa-contracts-staking";
+import { MasaToken } from "@masa-finance/masa-token";
 
 export interface ContractInfo {
   hasAddress?: boolean;
@@ -15,6 +20,11 @@ export interface ContractInfo {
 export interface IMarketplaceContracts {
   DataPointsMulti: DataPointsMulti & ContractInfo;
   ProxyViewAggregator: ProxyViewAggregator & ContractInfo;
+}
+
+export interface ITokenContracts {
+  MasaToken: MasaToken & ContractInfo;
+  MasaStaking: MasaStaking & ContractInfo;
 }
 
 export interface IIdentityContracts {
