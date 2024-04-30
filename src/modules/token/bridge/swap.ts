@@ -13,8 +13,8 @@ import { SendParamStruct as SendParamStructMasaTokenNativeOFT } from "@masa-fina
 import { SendParamStruct as SendParamStructMasaTokenOFT } from "@masa-finance/masa-token/dist/typechain/contracts/MasaTokenOFT";
 import { BigNumber, constants, utils } from "ethers";
 
-import { Messages, SupportedNetworks } from "../../collections";
-import { BaseResult, MasaInterface, NetworkName } from "../../interface";
+import { Messages, SupportedNetworks } from "../../../collections";
+import { BaseResult, MasaInterface, NetworkName } from "../../../interface";
 
 const lzUrl = (txHash: string, testnet: boolean = false) =>
   `https://${testnet ? "testnet." : ""}layerzeroscan.com/tx/${txHash}`;
@@ -156,7 +156,7 @@ export const getSwapQuote = async (
     success: false,
   };
 
-  const oft = loadOFTContract(masa);
+  const { MasaToken: oft } = masa.contracts.instances;
 
   if (!oft) {
     result.message = "Unable to load OFT!";
@@ -272,7 +272,7 @@ export const swap = async (
   const address = await masa.config.signer.getAddress();
   const { lzEndpointId: toEID } = SupportedNetworks[to] ?? {};
 
-  if (!masa.config.network?.addresses.tokens?.MASA || !toEID) {
+  if (!masa.contracts.instances.MasaToken.hasAddress || !toEID) {
     result.message = `Unable to swap from ${masa.config.networkName} to ${to}!`;
     console.error(result.message);
 
@@ -292,7 +292,7 @@ export const swap = async (
     `Tokens: ${utils.formatEther(sendParameters.minAmountLD)} Tokens with Slippage: ${utils.formatEther(sendParameters.amountLD)} (${(actualSlippage / 100).toFixed(2)}%)`,
   );
 
-  const oft = loadOFTContract(masa);
+  const { MasaToken: oft } = masa.contracts.instances;
 
   if (!oft) {
     result.message = "Unable to load OFT!";
@@ -322,12 +322,12 @@ export const swap = async (
 
     if ("nativeFee" in fees) {
       console.log(
-        `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} ${masa.config.network.nativeCurrency?.symbol} + LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
+        `Fees NativeFee: ${utils.formatEther(fees.nativeFee)} ${masa.config.network?.nativeCurrency?.symbol} + LZTokenFee: ${utils.formatEther(fees.lzTokenFee)}`,
       );
 
       if (fees.transactionCost) {
         console.log(
-          `Transaction Cost: ${utils.formatEther(fees.transactionCost)} ${masa.config.network.nativeCurrency?.symbol}`,
+          `Transaction Cost: ${utils.formatEther(fees.transactionCost)} ${masa.config.network?.nativeCurrency?.symbol}`,
         );
       }
 
@@ -344,14 +344,14 @@ export const swap = async (
       console.log(
         Messages.WaitingToFinalize(
           hash,
-          masa.config.network.blockExplorerUrls?.[0],
+          masa.config.network?.blockExplorerUrls?.[0],
         ),
       );
 
       await wait();
 
       result.success = true;
-      result.layerZeroScanUrl = lzUrl(hash, masa.config.network.isTestnet);
+      result.layerZeroScanUrl = lzUrl(hash, masa.config.network?.isTestnet);
 
       console.log(
         `Swap done! Please note: it can take some times (20-30 mins) for the token to show up on the target network! You can check the status on Layerzero scan: ${result.layerZeroScanUrl}`,
