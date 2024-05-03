@@ -1,13 +1,18 @@
+import { utils } from "ethers";
+
 import { BaseResult, MasaInterface } from "../../../interface";
 
 export interface Stake {
   amount: string;
   startTime: number;
+  endTime: number;
   period: number;
   interestRate: number;
   canWithdraw: boolean;
-  index: number;
+  position: number;
 }
+
+const secondsInMonth = 2_592_000;
 
 /**
  *
@@ -34,10 +39,12 @@ export const show = async (
   }
 
   try {
-    const { getUserStake, getUserStakeCount } =
+    const { getUserStake, getUserStakeCount, secondsForPeriod } =
       masa.contracts.instances.MasaStaking;
 
     const stakeCount = (await getUserStakeCount(address)).toNumber();
+    const periodSize = await secondsForPeriod();
+    const decimals = await masa.contracts.instances.MasaToken.decimals();
 
     result.stakes = [];
 
@@ -45,16 +52,28 @@ export const show = async (
       const { amount, startTime, period, interestRate, canWithdraw } =
         await getUserStake(address, i);
 
+      const duration = period.mul(periodSize);
+
       const stake: Stake = {
-        amount: amount.toString(),
+        amount: utils.formatUnits(amount, decimals).toString(),
         startTime: startTime.toNumber(),
+        endTime: startTime.add(duration).toNumber(),
         period: period.toNumber(),
         interestRate: interestRate.toNumber(),
         canWithdraw,
-        index: i,
+        position: i,
       };
 
-      console.log({ stake });
+      console.log("Position:", stake.position);
+      console.log("Amount:", stake.amount);
+      console.log(
+        "Start Date:",
+        new Date(stake.startTime * 1000).toLocaleString(),
+      );
+      console.log("End Date:", new Date(stake.endTime * 1000).toLocaleString());
+      console.log("Can withdraw:", stake.canWithdraw);
+      console.log("period:", duration.toNumber() / secondsInMonth, "months");
+      console.log("interest rate:", stake.interestRate, "%");
 
       result.stakes.push(stake);
     }
