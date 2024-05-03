@@ -26,7 +26,7 @@ export interface QuoteResult extends BaseResult {
   transactionCost?: BigNumber;
 }
 
-export interface SwapResult extends BaseResult {
+export interface SendResult extends BaseResult {
   layerZeroScanUrl?: string;
 }
 
@@ -145,7 +145,7 @@ const loadTransactionCost = async (
  * @param masa
  * @param sendParameters
  */
-export const getSwapQuote = async (
+export const getSendQuote = async (
   masa: MasaInterface,
   sendParameters:
     | SendParamStructMasaToken
@@ -206,7 +206,7 @@ export const getSwapQuote = async (
  * @param tokenAmount
  * @param slippage
  */
-export const getSwapParameters = (
+export const getSendParameters = (
   eid: EndpointId,
   receiverAddress: string,
   tokenAmount: BigNumber,
@@ -254,18 +254,18 @@ export const getSwapParameters = (
  * @param amount
  * @param slippage
  */
-export const swap = async (
+export const send = async (
   masa: MasaInterface,
   to: NetworkName,
   amount: string,
   slippage?: number,
-): Promise<SwapResult> => {
-  const result: SwapResult = {
+): Promise<SendResult> => {
+  const result: SendResult = {
     success: false,
   };
 
   console.log(
-    `Swapping ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
+    `Sending ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
   );
 
   // current wallet
@@ -273,7 +273,7 @@ export const swap = async (
   const { lzEndpointId: toEID } = SupportedNetworks[to] ?? {};
 
   if (!masa.contracts.instances.MasaToken.hasAddress || !toEID) {
-    result.message = `Unable to swap from ${masa.config.networkName} to ${to}!`;
+    result.message = `Unable to send from ${masa.config.networkName} to ${to}!`;
     console.error(result.message);
 
     return result;
@@ -281,7 +281,7 @@ export const swap = async (
 
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 
-  const { sendParameters, slippage: actualSlippage } = getSwapParameters(
+  const { sendParameters, slippage: actualSlippage } = getSendParameters(
     toEID,
     address,
     tokenAmount,
@@ -312,7 +312,7 @@ export const swap = async (
       return result;
     }
 
-    const fees = await getSwapQuote(masa, sendParameters);
+    const fees = await getSendQuote(masa, sendParameters);
 
     if (!fees.success) {
       result.message = `Unable to load fees! ${fees.message}`;
@@ -331,7 +331,7 @@ export const swap = async (
         );
       }
 
-      console.log("Swapping ...");
+      console.log("Sending ...");
 
       const { wait, hash } = await send(sendParameters, fees, address, {
         value:
@@ -354,11 +354,11 @@ export const swap = async (
       result.layerZeroScanUrl = lzUrl(hash, masa.config.network?.isTestnet);
 
       console.log(
-        `Swap done! Please note: it can take some times (20-30 mins) for the token to show up on the target network! You can check the status on Layerzero scan: ${result.layerZeroScanUrl}`,
+        `Send done! Please note: it can take some times (20-30 mins) for the token to show up on the target network! You can check the status on Layerzero scan: ${result.layerZeroScanUrl}`,
       );
     }
   } catch (error: unknown) {
-    result.message = "Swap failed!";
+    result.message = "Send failed!";
 
     if (error instanceof Error) {
       result.message = `${result.message}: ${error.message}`;

@@ -6,80 +6,83 @@ import { BigNumber } from "ethers";
 
 import { NetworkName } from "../../interface";
 import { MasaBase } from "../../masa-base";
-import { getSwapParameters, getSwapQuote, swap } from "./bridge/swap";
-import { show } from "./staking";
-import { stake } from "./staking/stake";
-import { unstake } from "./staking/unstake";
-import { deposit } from "./wrapping/deposit";
-import { withdraw } from "./wrapping/withdraw";
+import { getSendParameters, getSendQuote, send } from "./bridge";
+import { show, stake, unstake } from "./staking";
+import { deposit, withdraw } from "./wrapping";
 
 export class MasaToken extends MasaBase {
   // Bridge functions
-  /**
-   * Get swap parameters
-   * @param eid
-   * @param receiverAddress
-   * @param tokenAmount
-   * @param slippage
-   */
-  getSwapParameters = (
-    eid: EndpointId,
-    receiverAddress: string,
-    tokenAmount: BigNumber,
-    slippage?: number,
-  ) => getSwapParameters(eid, receiverAddress, tokenAmount, slippage);
+  bridge = {
+    /**
+     * Get send parameters
+     * @param eid
+     * @param receiverAddress
+     * @param tokenAmount
+     * @param slippage
+     */
+    getSendParameters: (
+      eid: EndpointId,
+      receiverAddress: string,
+      tokenAmount: BigNumber,
+      slippage?: number,
+    ) => getSendParameters(eid, receiverAddress, tokenAmount, slippage),
 
-  /**
-   * Get swap quote
-   * @param sendParameters
-   */
-  getSwapQuote = (
-    sendParameters:
-      | SendParamStructMasaToken
-      | SendParamStructMasaTokenNativeOFT
-      | SendParamStructMasaTokenOFT,
-  ) => getSwapQuote(this.masa, sendParameters);
+    /**
+     * Get send quote
+     * @param sendParameters
+     */
+    getSendQuote: (
+      sendParameters:
+        | SendParamStructMasaToken
+        | SendParamStructMasaTokenNativeOFT
+        | SendParamStructMasaTokenOFT,
+    ) => getSendQuote(this.masa, sendParameters),
 
-  /**
-   * Swap
-   * @param to
-   * @param amount
-   * @param slippage
-   */
-  swap = (to: NetworkName, amount: string, slippage?: number) =>
-    swap(this.masa, to, amount, slippage);
+    /**
+     * Send
+     * @param to
+     * @param amount
+     * @param slippage
+     */
+    send: (to: NetworkName, amount: string, slippage?: number) =>
+      send(this.masa, to, amount, slippage),
+  };
 
   // wMASA function
-  /**
-   * Deposit
-   * @param amount
-   */
-  deposit = (amount: string) => deposit(this.masa, amount);
+  wrap = {
+    /**
+     * Deposit
+     * @param amount
+     */
+    deposit: (amount: string) => deposit(this.masa, amount),
 
-  /**
-   * Withdraw
-   * @param amount
-   */
-  withdraw = (amount: string) => withdraw(this.masa, amount);
+    /**
+     * Withdraw
+     * @param amount
+     */
+    withdraw: (amount: string) => withdraw(this.masa, amount),
+  };
 
   // staking functions
-  /**
-   * Stake
-   * @param amount
-   * @param duration
-   */
-  stake = (amount: string, duration: number) =>
-    stake(this.masa, amount, duration);
+  staking = {
+    /**
+     * Stake
+     * @param amount
+     * @param duration
+     */
+    stake: (amount: string, duration: number) =>
+      stake(this.masa, amount, duration),
 
-  /**
-   * Unstake
-   * @param index
-   */
-  unstake = (index: number) => unstake(this.masa, index);
+    /**
+     * Unstake
+     * @param index
+     */
+    unstake: (index: number) => unstake(this.masa, index),
 
-  /**
-   * Show stakes
-   * @param address
-   */
-  show = (address?: string) => show(this.masa, address);
+    /**
+     * Show stakes
+     * @param address
+     */
+    show: (address?: string) => show(this.masa, address),
+  };
 }

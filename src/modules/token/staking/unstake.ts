@@ -4,17 +4,17 @@ import { BaseResult, MasaInterface } from "../../../interface";
 /**
  *
  * @param masa
- * @param index
+ * @param position
  */
 export const unstake = async (
   masa: MasaInterface,
-  index: number,
+  position: number,
 ): Promise<BaseResult> => {
   const result: BaseResult = {
     success: false,
   };
 
-  console.log(`Unstaking position ${index}!`);
+  console.log(`Unstaking position ${position}!`);
 
   if (!masa.contracts.instances.MasaStaking.hasAddress) {
     result.message = `Unable to unstake on ${masa.config.networkName}!`;
@@ -24,11 +24,20 @@ export const unstake = async (
   }
 
   try {
-    const { unstake } = masa.contracts.instances.MasaStaking;
+    const { unstake, canWithdrawStake } = masa.contracts.instances.MasaStaking;
+
+    if (
+      !(await canWithdrawStake(await masa.config.signer.getAddress(), position))
+    ) {
+      result.message = `Cannot unstake position ${position}`;
+      console.error(result.message);
+
+      return result;
+    }
 
     console.log("Unstaking ...");
 
-    const { wait, hash } = await unstake(index);
+    const { wait, hash } = await unstake(position);
 
     console.log(
       Messages.WaitingToFinalize(

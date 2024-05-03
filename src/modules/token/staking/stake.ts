@@ -3,6 +3,8 @@ import { BigNumber, utils } from "ethers";
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
 
+const secondsInMonth = 2_592_000;
+
 /**
  *
  * @param masa
@@ -18,12 +20,6 @@ export const stake = async (
     success: false,
   };
 
-  const tokenAmount = BigNumber.from(utils.parseEther(amount));
-
-  console.log(
-    `Staking ${parseFloat(amount).toLocaleString()} MASA for ${duration}!`,
-  );
-
   if (!masa.contracts.instances.MasaStaking.hasAddress) {
     result.message = `Unable to stake on ${masa.config.networkName}!`;
     console.error(result.message);
@@ -31,8 +27,50 @@ export const stake = async (
     return result;
   }
 
+  const tokenAmount = BigNumber.from(utils.parseEther(amount));
+
   try {
-    const { stake } = masa.contracts.instances.MasaStaking;
+    const address = await masa.config.signer.getAddress();
+
+    const { symbol, approve, allowance } = masa.contracts.instances.MasaToken;
+
+    const {
+      stake,
+      getPeriods,
+      secondsForPeriod,
+      address: masaStakingAddress,
+    } = masa.contracts.instances.MasaStaking;
+
+    const periodSize = (await secondsForPeriod()).toNumber();
+
+    console.log(
+      `Staking ${parseFloat(amount).toLocaleString()} ${await symbol()} for ${(duration * periodSize) / secondsInMonth} months!`,
+    );
+
+    const currentAllowance = await allowance(address, masaStakingAddress);
+
+    if (currentAllowance.lt(tokenAmount)) {
+      console.log("Approving ...");
+
+      const { wait, hash } = await approve(masaStakingAddress, tokenAmount);
+
+      console.log(
+        Messages.WaitingToFinalize(
+          hash,
+          masa.config.network?.blockExplorerUrls?.[0],
+        ),
+      );
+
+      await wait();
+    }
+
+    const periods = await getPeriods();
+
+    if (!periods.find((period: BigNumber) => period.toNumber() === duration)) {
+      result.message = `Duration ${duration} not configured on contract!`;
+      console.error(result.message);
+      return result;
+    }
 
     console.log("Staking ...");
 

@@ -1,6 +1,13 @@
-import { StakedEvent } from "@masa-finance/masa-contracts-staking/dist/typechain/contracts/MasaStaking";
-
 import { BaseResult, MasaInterface } from "../../../interface";
+
+export interface Stake {
+  amount: string;
+  startTime: number;
+  period: number;
+  interestRate: number;
+  canWithdraw: boolean;
+  index: number;
+}
 
 /**
  *
@@ -10,8 +17,8 @@ import { BaseResult, MasaInterface } from "../../../interface";
 export const show = async (
   masa: MasaInterface,
   address?: string,
-): Promise<BaseResult & { logs?: StakedEvent[] }> => {
-  const result: BaseResult & { logs?: StakedEvent[] } = {
+): Promise<BaseResult & { stakes?: Stake[] }> => {
+  const result: BaseResult & { stakes?: Stake[] } = {
     success: false,
   };
 
@@ -27,16 +34,31 @@ export const show = async (
   }
 
   try {
-    const {
-      queryFilter,
-      filters: { Staked },
-    } = masa.contracts.instances.MasaStaking;
+    const { getUserStake, getUserStakeCount } =
+      masa.contracts.instances.MasaStaking;
 
-    const logs = await queryFilter(Staked(address));
+    const stakeCount = (await getUserStakeCount(address)).toNumber();
 
-    console.log(logs);
+    result.stakes = [];
 
-    result.logs = logs;
+    for (let i = 0; i < stakeCount; i++) {
+      const { amount, startTime, period, interestRate, canWithdraw } =
+        await getUserStake(address, i);
+
+      const stake: Stake = {
+        amount: amount.toString(),
+        startTime: startTime.toNumber(),
+        period: period.toNumber(),
+        interestRate: interestRate.toNumber(),
+        canWithdraw,
+        index: i,
+      };
+
+      console.log({ stake });
+
+      result.stakes.push(stake);
+    }
+
     result.success = true;
   } catch (error: unknown) {
     result.message = "Show failed!";
