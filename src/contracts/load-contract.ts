@@ -2,7 +2,7 @@ import { BaseContract, constants, ContractFactory, Signer } from "ethers";
 
 import { type ContractInfo } from "../interface";
 
-export const loadContract = <T extends BaseContract & ContractInfo>({
+export const loadContract = <Contract extends BaseContract & ContractInfo>({
   address,
   factory,
   signer,
@@ -10,16 +10,19 @@ export const loadContract = <T extends BaseContract & ContractInfo>({
   address?: string;
   factory: ContractFactory;
   signer: Signer;
-}): T => {
+}): Contract => {
   const addr = address ?? constants.AddressZero;
+  const hasAddress = addr !== constants.AddressZero;
 
-  let contract: T = factory.attach(addr) as T;
+  let contract: Contract;
 
-  contract.hasAddress = addr !== constants.AddressZero;
+  contract = factory.attach(addr) as Contract;
 
-  if (contract.hasAddress) {
-    contract = { ...contract, ...contract.connect(signer) } as T;
+  if (hasAddress) {
+    contract = contract.connect(signer) as Contract;
   }
+
+  contract.hasAddress = hasAddress;
 
   return contract;
 };
