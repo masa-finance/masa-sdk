@@ -7,7 +7,7 @@ import { BigNumber } from "ethers";
 import { NetworkName } from "../../interface";
 import { MasaBase } from "../../masa-base";
 import { getSendParameters, getSendQuote, send } from "./bridge";
-import { show, stake, unstake } from "./staking";
+import { info, show, stake, unstake } from "./staking";
 import { deposit, withdraw } from "./wrapping";
 
 export class MasaToken extends MasaBase {
@@ -84,5 +84,10 @@ export class MasaToken extends MasaBase {
      * @param address
      */
     show: (address?: string) => show(this.masa, address),
+
+    /**
+     * Show taking info
+     */
+    info: () => info(this.masa),
   };
 }

@@ -4,6 +4,8 @@ import { BaseResult, MasaInterface } from "../../../interface";
 
 export interface Stake {
   amount: string;
+  reward: string;
+  claimable: string;
   startTime: number;
   endTime: number;
   period: number;
@@ -54,8 +56,11 @@ export const show = async (
 
       const duration = period.mul(periodSize);
 
+      const rewards = amount.mul(interestRate).div(100);
       const stake: Stake = {
-        amount: utils.formatUnits(amount, decimals).toString(),
+        amount: utils.formatUnits(amount, decimals),
+        reward: utils.formatUnits(rewards, 18),
+        claimable: utils.formatUnits(rewards.add(amount)),
         startTime: startTime.toNumber(),
         endTime: startTime.add(duration).toNumber(),
         period: period.toNumber(),
@@ -64,16 +69,21 @@ export const show = async (
         position: i,
       };
 
-      console.log("Position:", stake.position);
-      console.log("Amount:", stake.amount);
+      console.log("\n");
+      console.log(`Position: ${stake.position}`);
+      console.log(`Amount: ${stake.amount}`);
+      console.log(`Reward: ${stake.reward}`);
+      console.log(`Claimable: ${stake.claimable}`);
+
       console.log(
-        "Start Date:",
-        new Date(stake.startTime * 1000).toLocaleString(),
+        `Start Date: ${new Date(stake.startTime * 1000).toLocaleString()}`,
       );
-      console.log("End Date:", new Date(stake.endTime * 1000).toLocaleString());
-      console.log("Can withdraw:", stake.canWithdraw);
-      console.log("period:", duration.toNumber() / secondsInMonth, "months");
-      console.log("interest rate:", stake.interestRate, "%");
+      console.log(
+        `End Date: ${new Date(stake.endTime * 1000).toLocaleString()}`,
+      );
+      console.log(`Can withdraw: ${stake.canWithdraw}`);
+      console.log(`Period: ${duration.toNumber() / secondsInMonth} months`);
+      console.log(`Interest rate: ${stake.interestRate}%`);
 
       result.stakes.push(stake);
     }
