@@ -1,12 +1,9 @@
-# Masa SDK
-
 <!-- TOC -->
 
-- [Masa SDK](#masa-sdk)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Interface](#interface)
-  - [Configuration](#configuration)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Interface](#interface)
+- [Configuration](#configuration)
 
 <!-- TOC -->
 
