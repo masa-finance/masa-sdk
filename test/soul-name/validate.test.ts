@@ -9,7 +9,7 @@ let masa: Masa;
 
 describe("Soul Name", () => {
   before(() => {
-    masa = getTestMasa("goerli");
+    masa = getTestMasa("alfajores");
   });
 
   describe("validate", () => {
