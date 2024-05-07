@@ -48,16 +48,19 @@ export const list = async (
       getUserStakeCount,
       secondsForPeriod,
       cooldownPeriod,
+      INTEREST_PRECISSION,
     } = masa.contracts.instances.MasaStaking;
 
     const { decimals: getDecimals, symbol: getSymbol } =
       masa.contracts.instances.MasaToken;
 
-    const [stakeCount, periodSize, cooldownPeriodSize] = await Promise.all([
-      getUserStakeCount(address),
-      secondsForPeriod(),
-      cooldownPeriod(),
-    ]);
+    const [stakeCount, periodSize, cooldownPeriodSize, precision] =
+      await Promise.all([
+        getUserStakeCount(address),
+        secondsForPeriod(),
+        cooldownPeriod(),
+        INTEREST_PRECISSION(),
+      ]);
 
     const [decimals, symbol] = await Promise.all([getDecimals(), getSymbol()]);
 
@@ -71,8 +74,8 @@ export const list = async (
       } = await getUserStake(address, i);
 
       const duration = period.mul(periodSize);
+      const rewards = amount.mul(interestRate).div(100 * precision.toNumber());
 
-      const rewards = amount.mul(interestRate).div(100);
       const stake: Stake = {
         amount: utils.formatUnits(amount, decimals),
         reward: utils.formatUnits(rewards, 18),
@@ -83,7 +86,7 @@ export const list = async (
           ? unlockTime.add(cooldownPeriodSize).toNumber()
           : 0,
         period: period.toNumber(),
-        interestRate: interestRate.toNumber() / 1_000_000,
+        interestRate: interestRate.toNumber() / precision.toNumber(),
         canClaim,
         canUnlock,
         position: i,

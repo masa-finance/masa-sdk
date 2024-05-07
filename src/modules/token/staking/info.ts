@@ -3,7 +3,6 @@ import { BigNumber, utils } from "ethers";
 import { BaseResult, MasaInterface } from "../../../interface";
 
 const secondsInMonth = 2_592_000;
-const mil = 1_000_000;
 
 /**
  *
@@ -30,6 +29,7 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
       totalStaked,
       rewardsReserved,
       rewardsNotReserved,
+      INTEREST_PRECISSION,
       address,
     } = masa.contracts.instances.MasaStaking;
 
@@ -37,13 +37,14 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
 
     const [balance] = await Promise.all([balanceOf(address)]);
 
-    const [periods, periodSize, allStakes, reserved, notReserved] =
+    const [periods, periodSize, allStakes, reserved, notReserved, precision] =
       await Promise.all([
         getPeriods(),
         secondsForPeriod(),
         totalStaked(),
         rewardsReserved(),
         rewardsNotReserved(),
+        INTEREST_PRECISSION(),
       ]);
 
     let totalRewards = BigNumber.from(0);
@@ -58,10 +59,14 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
         totalStakedForPeriod(period),
       ]);
 
-      console.log(`Interest rate: ${interest.toNumber() / mil}%`);
+      console.log(
+        `Interest rate: ${interest.toNumber() / precision.toNumber()}%`,
+      );
       console.log(`Period total Staked: ${utils.formatEther(totalStaked)}`);
 
-      const periodRewards = totalStaked.mul(interest.div(mil));
+      const periodRewards = totalStaked
+        .mul(interest)
+        .div(100 * precision.toNumber());
 
       console.log(`Period total Rewards: ${utils.formatEther(periodRewards)}`);
 
@@ -78,7 +83,8 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
 
     const balanceClaimableRatio = claimable.eq(0)
       ? 0
-      : BigNumber.from(mil).mul(balance).div(claimable).toNumber() / mil;
+      : BigNumber.from(precision).mul(balance).div(claimable).toNumber() /
+        precision.toNumber();
 
     console.log(
       `Current Balance: ${utils.formatEther(balance)}, Balance / Claimable ratio: ${balanceClaimableRatio}`,
@@ -86,7 +92,8 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
 
     const reserveRatio = reserved.eq(0)
       ? 0
-      : BigNumber.from(mil).mul(reserved).div(notReserved).toNumber() / mil;
+      : BigNumber.from(precision).mul(reserved).div(notReserved).toNumber() /
+        precision.toNumber();
 
     console.log(`Reserve ratio: ${reserveRatio}`);
 
