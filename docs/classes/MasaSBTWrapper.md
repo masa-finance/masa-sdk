@@ -1,14 +1,20 @@
-[**Masa SDK v3.36.1**](../README.md) • **Docs**
+[**Masa SDK v3.38.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.36.1](../globals.md) / MasaSBTWrapper
+[Masa SDK v3.38.0](../globals.md) / MasaSBTWrapper
 
 # Class: MasaSBTWrapper\<Contract\>
 
 ## Extends
 
 - `MasaLinkable`\<`Contract`\>
+
+## Extended by
+
+- [`MasaASBTWrapper`](MasaASBTWrapper.md)
+- [`MasaDynamicSBTWrapper`](MasaDynamicSBTWrapper.md)
+- [`MasaSSSBTWrapper`](MasaSSSBTWrapper.md)
 
 ## Type parameters
 

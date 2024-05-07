@@ -1,8 +1,8 @@
-[**Masa SDK v3.36.1**](../README.md) • **Docs**
+[**Masa SDK v3.38.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.36.1](../globals.md) / MasaToken
+[Masa SDK v3.38.0](../globals.md) / MasaToken
 
 # Class: MasaToken
 
@@ -110,9 +110,33 @@ Send
 
 > **staking**: `object`
 
-#### show()
+#### claim()
 
-> **show**: (`address`?) => `Promise`\<[`BaseResult`](../interfaces/BaseResult.md) & `object`\>
+> **claim**: (`index`) => `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+
+Claim
+
+##### Parameters
+
+• **index**: `number`
+
+##### Returns
+
+`Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+
+#### info()
+
+> **info**: () => `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+
+Show taking info
+
+##### Returns
+
+`Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+
+#### list()
+
+> **list**: (`address`?) => `Promise`\<[`BaseResult`](../interfaces/BaseResult.md) & `object`\>
 
 Show stakes
 
@@ -140,11 +164,11 @@ Stake
 
 `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
-#### unstake()
+#### unlock()
 
-> **unstake**: (`index`) => `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+> **unlock**: (`index`) => `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
-Unstake
+Unlock
 
 ##### Parameters
 

@@ -1,8 +1,8 @@
-[**Masa SDK v3.36.1**](../README.md) • **Docs**
+[**Masa SDK v3.38.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.36.1](../globals.md) / Stake
+[Masa SDK v3.38.0](../globals.md) / Stake
 
 # Interface: Stake
 
@@ -14,9 +14,21 @@
 
 ***
 
-### canWithdraw
+### canClaim
 
-> **canWithdraw**: `boolean`
+> **canClaim**: `boolean`
+
+***
+
+### canUnlock
+
+> **canUnlock**: `boolean`
+
+***
+
+### claimable
+
+> **claimable**: `string`
 
 ***
 
@@ -44,6 +56,18 @@
 
 ***
 
+### reward
+
+> **reward**: `string`
+
+***
+
 ### startTime
 
 > **startTime**: `number`
+
+***
+
+### unlockTime
+
+> **unlockTime**: `number`

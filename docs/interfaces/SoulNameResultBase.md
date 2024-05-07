@@ -1,14 +1,19 @@
-[**Masa SDK v3.36.1**](../README.md) • **Docs**
+[**Masa SDK v3.38.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.36.1](../globals.md) / SoulNameResultBase
+[Masa SDK v3.38.0](../globals.md) / SoulNameResultBase
 
 # Interface: SoulNameResultBase
 
 ## Extends
 
 - [`BaseResultWithTokenId`](BaseResultWithTokenId.md)
+
+## Extended by
+
+- [`CreateSoulNameResult`](CreateSoulNameResult.md)
+- [`SoulNameMetadataStoreResult`](SoulNameMetadataStoreResult.md)
 
 ## Properties
 

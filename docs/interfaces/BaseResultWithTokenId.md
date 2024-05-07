@@ -1,14 +1,20 @@
-[**Masa SDK v3.36.1**](../README.md) • **Docs**
+[**Masa SDK v3.38.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.36.1](../globals.md) / BaseResultWithTokenId
+[Masa SDK v3.38.0](../globals.md) / BaseResultWithTokenId
 
 # Interface: BaseResultWithTokenId
 
 ## Extends
 
 - [`BaseResult`](BaseResult.md)
+
+## Extended by
+
+- [`UpdateCreditScoreResult`](UpdateCreditScoreResult.md)
+- [`GreenBaseResult`](GreenBaseResult.md)
+- [`SoulNameResultBase`](SoulNameResultBase.md)
 
 ## Properties
 

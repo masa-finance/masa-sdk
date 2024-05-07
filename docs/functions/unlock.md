@@ -2,15 +2,17 @@
 
 ***
 
-[Masa SDK v3.38.0](../globals.md) / burnIdentity
+[Masa SDK v3.38.0](../globals.md) / unlock
 
-# Function: burnIdentity()
+# Function: unlock()
 
-> **burnIdentity**(`masa`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+> **unlock**(`masa`, `position`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
 ## Parameters
 
 • **masa**: [`MasaInterface`](../interfaces/MasaInterface.md)
+
+• **position**: `number`
 
 ## Returns
 

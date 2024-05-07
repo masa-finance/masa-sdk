@@ -1,8 +1,8 @@
-[**Masa SDK v3.36.1**](README.md) • **Docs**
+[**Masa SDK v3.38.0**](README.md) • **Docs**
 
 ***
 
-# Masa SDK v3.36.1
+# Masa SDK v3.38.0
 
 ## Enumerations
 
@@ -152,6 +152,7 @@
 - [calculateSoulNameLength](functions/calculateSoulNameLength.md)
 - [checkExists](functions/checkExists.md)
 - [checkLogin](functions/checkLogin.md)
+- [claim](functions/claim.md)
 - [claimAllRewards](functions/claimAllRewards.md)
 - [createCreditScore](functions/createCreditScore.md)
 - [createGreen](functions/createGreen.md)
@@ -172,11 +173,13 @@
 - [getSendQuote](functions/getSendQuote.md)
 - [getSession](functions/getSession.md)
 - [getSoulNameMetadataPrefix](functions/getSoulNameMetadataPrefix.md)
+- [info](functions/info.md)
 - [isBigNumber](functions/isBigNumber.md)
 - [isERC20Currency](functions/isERC20Currency.md)
 - [isNativeCurrency](functions/isNativeCurrency.md)
 - [isSession](functions/isSession.md)
 - [isSoulNameMetadataStoreResult](functions/isSoulNameMetadataStoreResult.md)
+- [list](functions/list.md)
 - [listCreditScores](functions/listCreditScores.md)
 - [listCreditScoresAndPrint](functions/listCreditScoresAndPrint.md)
 - [listGreens](functions/listGreens.md)
@@ -218,7 +221,6 @@
 - [resolveSoulName](functions/resolveSoulName.md)
 - [send](functions/send.md)
 - [sendSoulName](functions/sendSoulName.md)
-- [show](functions/show.md)
 - [showIdentity](functions/showIdentity.md)
 - [signMessage](functions/signMessage.md)
 - [signTypedData](functions/signTypedData.md)
@@ -226,8 +228,8 @@
 - [stakeAll](functions/stakeAll.md)
 - [tailSoulNames](functions/tailSoulNames.md)
 - [tailSoulNamesAndPrint](functions/tailSoulNamesAndPrint.md)
+- [unlock](functions/unlock.md)
 - [unpackSessionId](functions/unpackSessionId.md)
-- [unstake](functions/unstake.md)
 - [validateSoulName](functions/validateSoulName.md)
 - [verifyByName](functions/verifyByName.md)
 - [verifyGreen](functions/verifyGreen.md)

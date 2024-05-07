@@ -2,15 +2,17 @@
 
 ***
 
-[Masa SDK v3.38.0](../globals.md) / burnIdentity
+[Masa SDK v3.38.0](../globals.md) / claim
 
-# Function: burnIdentity()
+# Function: claim()
 
-> **burnIdentity**(`masa`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+> **claim**(`masa`, `position`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
 ## Parameters
 
 • **masa**: [`MasaInterface`](../interfaces/MasaInterface.md)
+
+• **position**: `number`
 
 ## Returns
 

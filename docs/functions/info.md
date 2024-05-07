@@ -2,11 +2,11 @@
 
 ***
 
-[Masa SDK v3.38.0](../globals.md) / burnIdentity
+[Masa SDK v3.38.0](../globals.md) / info
 
-# Function: burnIdentity()
+# Function: info()
 
-> **burnIdentity**(`masa`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
+> **info**(`masa`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
 
 ## Parameters
 

@@ -1,14 +1,13 @@
-**Masa SDK v3.36.1** • [**Docs**](globals.md)
+**Masa SDK v3.38.0** • [**Docs**](globals.md)
 
 ***
 
 <!-- TOC -->
 
-- [Masa SDK](#masa-sdk)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Interface](#interface)
-  - [Configuration](#configuration)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Interface](#interface)
+- [Configuration](#configuration)
 
 <!-- TOC -->
 

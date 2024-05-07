@@ -1,14 +1,24 @@
-[**Masa SDK v3.36.1**](../README.md) • **Docs**
+[**Masa SDK v3.38.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.36.1](../globals.md) / MasaSBTModuleBase
+[Masa SDK v3.38.0](../globals.md) / MasaSBTModuleBase
 
 # Class: `abstract` MasaSBTModuleBase
 
 ## Extends
 
 - `MasaContractModuleBase`
+
+## Extended by
+
+- [`CreditScore`](CreditScore.md)
+- [`Green`](Green.md)
+- [`Identity`](Identity.md)
+- [`ASBTContract`](ASBTContract.md)
+- [`SBTContract`](SBTContract.md)
+- [`SBTContractWrapper`](SBTContractWrapper.md)
+- [`SSSBTContract`](SSSBTContract.md)
 
 ## Constructors
 
