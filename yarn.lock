@@ -462,32 +462,32 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@layerzerolabs/evm-sdks-core@^2.3.5":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.3.5.tgz#0638fef12e587e0085a8108aaa0990c2d04efa62"
-  integrity sha512-89y7bX/Vu4Eprr8hxWqwJN8xrlaPoY5vvv8IiUoJXZOScAalrZEPPsUs7W7WDOQ5oVF/GDYmSQtiCJ3HTuLTPg==
+"@layerzerolabs/evm-sdks-core@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/evm-sdks-core/-/evm-sdks-core-2.3.6.tgz#7e9182828e9db72c8acc666f2bc5566bff903f14"
+  integrity sha512-fCjEN1YF/ovmPbDwi9C8BZ/fO5+r8fMWBVHslAP8RNwmMQglCaVt4rZk4KNgMdF/uFy2cDR3q0cOYBByesGOew==
   dependencies:
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-definitions@^2.3.2":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.3.5.tgz#c6ff5000f6f522e6eb47f37eda152a7bb4cc772d"
-  integrity sha512-ZxXJogVxpdQD1mxd+uxodcb/khhGKRDG8u+qaaTaCNkiL8AWbTQ/sSeG2SWPN46wVUWWFFCxxDSaz3erUGaTfw==
+"@layerzerolabs/lz-definitions@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.3.6.tgz#a5a0c3a3100b94e1867417dc90e81756875e3e7f"
+  integrity sha512-koYblq06gEs2ERopoTuRNftlIbKEPqHW4UK1wdXjiauQAZcMERkU4hX78oCQAhRl+6QO5b40JC/czvWIlUi32w==
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-evm-sdk-v2@^2.3.5":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.3.5.tgz#89f94cd02adb0c3ae55f689cde264335835f058b"
-  integrity sha512-qLcgz7UvgwRSbBUqRziolZ1Af5veP0TKn6Nmnz/BxJKhaCrMP9ITe3Fc6nBQFWkuA9LJhcp61Z76PFoslJyKPA==
+"@layerzerolabs/lz-evm-sdk-v2@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-2.3.6.tgz#e79a75fed6f56d8c320cb10450455a0ce090ade6"
+  integrity sha512-/aFD6eRoFYj9M86GtzgHpXUuY3sIE+dWzYU3ObkQmblTtV25qihzjjUO2dhtZM6S8u9vf+tSz6jF/PaN0QDYaA==
   dependencies:
-    "@layerzerolabs/evm-sdks-core" "^2.3.5"
+    "@layerzerolabs/evm-sdks-core" "^2.3.6"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-v2-utilities@^2.3.2":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.3.5.tgz#7e04f5ad9e33779cc82c4bd3626999b73f023614"
-  integrity sha512-6adovcyHS0DDqlN3GymdHpJA+PyDgbqnAr/EYN8h9ZrnL4Hw11X5rRprOVfxVjvL3vJw5MCgqoTlVIFe6CSrhA==
+"@layerzerolabs/lz-v2-utilities@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.3.6.tgz#2f454cde4d085ac8e88394adc451b311eaf4b169"
+  integrity sha512-vDdo9d/DKP4UZ8my7CxxDaMbw0iNJN2dFSsII6t0zCjzIvcLa+PsebFDxcVOAhlDIKdXh2CkZ4eaHOM2e3nwzw==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/address" "^5.7.0"
@@ -495,8 +495,8 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/keccak256" "^5.7.0"
     "@ethersproject/solidity" "^5.7.0"
-    "@layerzerolabs/lz-evm-sdk-v2" "^2.3.5"
-    "@solana/web3.js" "^1.91.4"
+    "@layerzerolabs/lz-evm-sdk-v2" "^2.3.6"
+    "@solana/web3.js" "^1.91.8"
     tiny-invariant "^1.3.1"
 
 "@masa-finance/masa-contracts-identity@^1.15.0":
@@ -513,10 +513,10 @@
   dependencies:
     ethers "~5.7.2"
 
-"@masa-finance/masa-contracts-staking@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-staking/-/masa-contracts-staking-0.1.6.tgz#1a788d264976997fe1212f8de700eca7cbecb64c"
-  integrity sha512-2Ll64MvvDAOIWtV3rx/ws0YTgBk1JNd9iRiPgieybhi8OYgaooDTewrzuZ/QMsbh3NA9dXMX51ycl3TT0xk3Ig==
+"@masa-finance/masa-contracts-staking@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-staking/-/masa-contracts-staking-0.3.1.tgz#fb4e7d9da7c49f41da134380900faae4a483d975"
+  integrity sha512-UVM/M+NdLXQgIEXg87nLjFiijjhgqpVJxHSJw0qC+4qK51i5GKAbVivtSDHjXPXW/w8s9JA4pSpjtBNt0V9D8Q==
 
 "@masa-finance/masa-token@^2.9.2":
   version "2.9.2"
@@ -563,7 +563,7 @@
   dependencies:
     buffer "~6.0.3"
 
-"@solana/web3.js@^1.91.4":
+"@solana/web3.js@^1.91.8":
   version "1.91.8"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.91.8.tgz#0d5eb69626a92c391b53e15bfbb0bad3f6858e51"
   integrity sha512-USa6OS1jbh8zOapRJ/CBZImZ8Xb7AJjROZl5adql9TpOoBN9BUzyyouS5oPuZHft7S7eB8uJPuXWYjMi6BHgOw==
@@ -672,10 +672,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
   integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
 
-"@types/node@^20.12.9":
-  version "20.12.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.9.tgz#d7234f2e7839b55fcab5048404aef0195684adff"
-  integrity sha512-o93r47yu04MHumPBCFg0bMPBMNgtMg3jzbhl7e68z50+BMHmRMGDJv13eBlUgOdc9i/uoJXGMGYLtJV4ReTXEg==
+"@types/node@^20.12.10":
+  version "20.12.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.10.tgz#8f0c3f12b0f075eee1fe20c1afb417e9765bef76"
+  integrity sha512-Eem5pH9pmWBHoGAT8Dr5fdc5rYA+4NAovdM4EktRPVAAiJhmWWfQrA0cFhAbOsQdSfIHjAud6YdkbL69+zSKjw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3483,10 +3483,10 @@ typed-array-length@^1.0.6:
     is-typed-array "^1.1.13"
     possible-typed-array-names "^1.0.0"
 
-typedoc-plugin-markdown@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-4.0.0.tgz#3e6dcfd5fab0f7634c26a71bfbd2cb4fac0b6d18"
-  integrity sha512-7cNKIGxGq1w9IvwWbm6jAASUCvlJeaANJXCOH+Fcvz2JrNIIMVbRu4j2Nq2zpDDaBHsrUmKVaz+F5vroMU8u4A==
+typedoc-plugin-markdown@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-4.0.1.tgz#daaa0265c3806e19f0abcb1839922b4628a157f0"
+  integrity sha512-AfuIILU7aQbLMFyhX/qPT1yLrsQE9TiIxtmDKHRoQosDuHRS9CqA3aMOJyqmfE4Gn43vEQGb7vxEDwlrl3Sw8A==
 
 typedoc@^0.25.9:
   version "0.25.13"

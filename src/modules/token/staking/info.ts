@@ -28,18 +28,25 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
       interestRates,
       totalStakedForPeriod,
       totalStaked,
+      rewardsReserved,
+      rewardsNotReserved,
+      address,
     } = masa.contracts.instances.MasaStaking;
 
-    let totalRewards = BigNumber.from(0);
+    const { balanceOf } = masa.contracts.instances.MasaToken;
 
-    const [periods, periodSize, allStakes, balance] = await Promise.all([
-      getPeriods(),
-      secondsForPeriod(),
-      totalStaked(),
-      masa.contracts.instances.MasaToken.balanceOf(
-        masa.contracts.instances.MasaStaking.address,
-      ),
-    ]);
+    const [balance] = await Promise.all([balanceOf(address)]);
+
+    const [periods, periodSize, allStakes, reserved, notReserved] =
+      await Promise.all([
+        getPeriods(),
+        secondsForPeriod(),
+        totalStaked(),
+        rewardsReserved(),
+        rewardsNotReserved(),
+      ]);
+
+    let totalRewards = BigNumber.from(0);
 
     for (const period of periods) {
       console.log(
@@ -51,10 +58,10 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
         totalStakedForPeriod(period),
       ]);
 
-      console.log(`Interest rate: ${interest}%`);
+      console.log(`Interest rate: ${interest.toNumber() / mil}%`);
       console.log(`Period total Staked: ${utils.formatEther(totalStaked)}`);
 
-      const periodRewards = totalStaked.mul(interest).div(100);
+      const periodRewards = totalStaked.mul(interest.div(mil));
 
       console.log(`Period total Rewards: ${utils.formatEther(periodRewards)}`);
 
@@ -69,12 +76,19 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
     console.log(`Total Rewards: ${utils.formatEther(totalRewards)}`);
     console.log(`Total Claimable: ${utils.formatEther(claimable)}`);
 
-    const ratio =
-      BigNumber.from(mil).mul(balance).div(claimable).toNumber() / mil;
+    const balanceClaimableRatio = claimable.eq(0)
+      ? 0
+      : BigNumber.from(mil).mul(balance).div(claimable).toNumber() / mil;
 
     console.log(
-      `Current Balance: ${utils.formatEther(balance)}, Balance / Claimable ratio: ${ratio}`,
+      `Current Balance: ${utils.formatEther(balance)}, Balance / Claimable ratio: ${balanceClaimableRatio}`,
     );
+
+    const reserveRatio = reserved.eq(0)
+      ? 0
+      : BigNumber.from(mil).mul(reserved).div(notReserved).toNumber() / mil;
+
+    console.log(`Reserve ratio: ${reserveRatio}`);
 
     result.success = true;
   } catch (error: unknown) {

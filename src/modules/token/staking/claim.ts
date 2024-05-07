@@ -6,7 +6,7 @@ import { BaseResult, MasaInterface } from "../../../interface";
  * @param masa
  * @param position
  */
-export const unstake = async (
+export const claim = async (
   masa: MasaInterface,
   position: number,
 ): Promise<BaseResult> => {
@@ -14,30 +14,30 @@ export const unstake = async (
     success: false,
   };
 
-  console.log(`Unstaking position ${position}!`);
+  console.log(`Claiming position ${position}!`);
 
   if (!masa.contracts.instances.MasaStaking.hasAddress) {
-    result.message = `Unable to unstake on ${masa.config.networkName}!`;
+    result.message = `Unable to claim on ${masa.config.networkName}!`;
     console.error(result.message);
 
     return result;
   }
 
   try {
-    const { unstake, canWithdrawStake } = masa.contracts.instances.MasaStaking;
+    const { claim, canClaimStake } = masa.contracts.instances.MasaStaking;
 
     if (
-      !(await canWithdrawStake(await masa.config.signer.getAddress(), position))
+      !(await canClaimStake(await masa.config.signer.getAddress(), position))
     ) {
-      result.message = `Cannot unstake position ${position}`;
+      result.message = `Cannot claim position ${position}`;
       console.error(result.message);
 
       return result;
     }
 
-    console.log("Unstaking ...");
+    console.log("Claiming ...");
 
-    const { wait, hash } = await unstake(position);
+    const { wait, hash } = await claim(position);
 
     console.log(
       Messages.WaitingToFinalize(
@@ -48,11 +48,11 @@ export const unstake = async (
 
     await wait();
 
-    console.log("Unstaking done!");
+    console.log("Claiming done!");
 
     result.success = true;
   } catch (error: unknown) {
-    result.message = "Unstaking failed!";
+    result.message = "Claiming failed!";
 
     if (error instanceof Error) {
       result.message = `${result.message}: ${error.message}`;

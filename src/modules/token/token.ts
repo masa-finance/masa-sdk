@@ -7,7 +7,7 @@ import { BigNumber } from "ethers";
 import { NetworkName } from "../../interface";
 import { MasaBase } from "../../masa-base";
 import { getSendParameters, getSendQuote, send } from "./bridge";
-import { info, show, stake, unstake } from "./staking";
+import { claim, info, list, stake, unlock } from "./staking";
 import { deposit, withdraw } from "./wrapping";
 
 export class MasaToken extends MasaBase {
@@ -74,16 +74,22 @@ export class MasaToken extends MasaBase {
       stake(this.masa, amount, duration),
 
     /**
-     * Unstake
+     * Unlock
      * @param index
      */
-    unstake: (index: number) => unstake(this.masa, index),
+    unlock: (index: number) => unlock(this.masa, index),
+
+    /**
+     * Claim
+     * @param index
+     */
+    claim: (index: number) => claim(this.masa, index),
 
     /**
      * Show stakes
      * @param address
      */
-    show: (address?: string) => show(this.masa, address),
+    list: (address?: string) => list(this.masa, address),
 
     /**
      * Show taking info
