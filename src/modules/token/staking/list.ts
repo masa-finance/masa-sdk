@@ -124,7 +124,7 @@ export const list = async (
 
     result.success = true;
   } catch (error: unknown) {
-    result.message = "Show failed!";
+    result.message = "List failed!";
 
     if (error instanceof Error) {
       result.message = `${result.message}: ${error.message}`;
