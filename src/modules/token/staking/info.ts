@@ -49,9 +49,13 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
 
     let totalRewards = BigNumber.from(0);
 
-    for (const period of periods) {
+    const sortedPeriods = periods
+      .map((period: BigNumber) => period.toNumber())
+      .sort((periodA: number, periodB: number) => periodA - periodB);
+
+    for (const period of sortedPeriods) {
       console.log(
-        `Period: ${period.mul(periodSize).toNumber() / secondsInMonth} months`,
+        `Period: ${periodSize.mul(period).toNumber() / secondsInMonth} months (${period})`,
       );
 
       const [interest, totalStaked] = await Promise.all([
