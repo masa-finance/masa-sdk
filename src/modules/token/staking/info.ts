@@ -96,10 +96,13 @@ export const info = async (masa: MasaInterface): Promise<BaseResult> => {
 
     const reserveRatio = reserved.eq(0)
       ? 0
-      : BigNumber.from(precision).mul(reserved).div(notReserved).toNumber() /
-        precision.toNumber();
+      : (BigNumber.from(precision).mul(reserved).div(notReserved).toNumber() /
+          precision.toNumber()) *
+        100;
 
-    console.log(`Reserve ratio: ${reserveRatio}`);
+    console.log(
+      `Reserved: ${utils.formatEther(reserved)} Free: ${utils.formatEther(notReserved)} Reserved/Free ratio: ${reserveRatio.toFixed(4)}% Total: ${utils.formatEther(reserved.add(notReserved))} MASA`,
+    );
 
     result.success = true;
   } catch (error: unknown) {
