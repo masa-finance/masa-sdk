@@ -9,7 +9,6 @@ import type { Addresses } from "../../interface";
 
 const { MasaStaking: MasaStakingAddress } = ethereumAddressesMasaStaking;
 
-
 const {
   SoulboundIdentity: SoulboundIdentityAddress,
   SoulboundCreditScore: SoulboundCreditScoreAddress,
@@ -30,5 +29,5 @@ export const ethereum: Addresses = {
   SoulStoreAddress,
   SoulLinkerAddress,
   SoulboundGreenAddress,
-  MasaStakingAddress
+  MasaStakingAddress,
 };
