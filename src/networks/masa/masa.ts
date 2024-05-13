@@ -4,7 +4,10 @@ import { masa as masaAddressesMasaToken } from "@masa-finance/masa-token/address
 
 import type { Addresses } from "../../interface";
 
-const { DataPointsMulti: DataPointsMultiAddress } = masaAddressesMarketplace;
+const {
+  DataPointsMulti: DataPointsMultiAddress,
+  ProxyViewAggregator: ProxyViewAggregatorAddress,
+} = masaAddressesMarketplace;
 
 const { SoulboundIdentity: SoulboundIdentityAddress } = masaAddresses;
 
@@ -12,6 +15,9 @@ export const masa: Addresses = {
   tokens: {
     MASA: masaAddressesMasaToken.MasaTokenNativeOFT,
   },
+  // identity
   SoulboundIdentityAddress,
+  // marketplace
   DataPointsMultiAddress,
+  ProxyViewAggregatorAddress,
 };
