@@ -1,3 +1,5 @@
+import { utils } from "ethers";
+
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
 
@@ -24,7 +26,22 @@ export const claim = async (
   }
 
   try {
-    const { claim, canClaimStake } = masa.contracts.instances.MasaStaking;
+    const address = await masa.config.signer.getAddress();
+    const { claim, canClaimStake, INTEREST_PRECISSION, getUserStake } =
+      masa.contracts.instances.MasaStaking;
+
+    if (masa.config.verbose) {
+      const [{ stake }, precision] = await Promise.all([
+        getUserStake(address, position),
+        INTEREST_PRECISSION(),
+      ]);
+
+      console.log(`Amount ${utils.formatEther(stake.amount)} MASA`);
+      console.log(`Period ${stake.period}`);
+      console.log(
+        `Reward ${stake.interestRate.toNumber() / precision.toNumber()}%`,
+      );
+    }
 
     if (
       !(await canClaimStake(await masa.config.signer.getAddress(), position))
