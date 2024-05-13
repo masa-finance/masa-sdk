@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.0**](../README.md) • **Docs**
+[**Masa SDK v3.38.6**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.0](../globals.md) / ApprovalEvent
+[Masa SDK v3.38.6](../globals.md) / ApprovalEvent
 
 # Type alias: ApprovalEvent
 

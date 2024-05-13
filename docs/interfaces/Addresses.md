@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.0**](../README.md) • **Docs**
+[**Masa SDK v3.38.6**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.0](../globals.md) / Addresses
+[Masa SDK v3.38.6](../globals.md) / Addresses
 
 # Interface: Addresses
 
