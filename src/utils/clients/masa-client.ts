@@ -5,8 +5,6 @@ import type {
   BaseResult,
   ChallengeResult,
   ChallengeResultWithCookie,
-  GenerateCreditScoreResult,
-  GenerateGreenResult,
   ICreditScore,
   IGreen,
   IIdentity,
@@ -17,8 +15,6 @@ import type {
   SessionUser,
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
-  UpdateCreditScoreResult,
-  VerifyGreenResult,
 } from "../../interface";
 import { isSession } from "../../interface";
 import { MasaBase } from "../../masa-base";
@@ -271,145 +267,6 @@ export class MasaClient extends MasaBase {
       });
 
       return soulNameMetadataStoreResult;
-    },
-  };
-
-  green = {
-    /**
-     * Generates a new masa green request
-     * @param phoneNumber
-     */
-    generate: async (phoneNumber: string): Promise<GenerateGreenResult> => {
-      const result = {
-        success: false,
-        status: "failed",
-        message: "Generating green failed",
-      };
-
-      const { data: greenGenerateResponseData } = await this.post<
-        {
-          phoneNumber: string;
-        },
-        GenerateGreenResult
-      >("/green/generate", {
-        phoneNumber,
-      });
-
-      if (greenGenerateResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...greenGenerateResponseData };
-      } else {
-        result.message = `Generating green failed! ${result.message}`;
-        console.error(result.message);
-      }
-
-      return result;
-    },
-
-    verify: async (
-      phoneNumber: string,
-      code: string,
-    ): Promise<VerifyGreenResult | undefined> => {
-      const result = {
-        success: false,
-        status: "failed",
-        message: "Verifying green failed",
-      };
-
-      const { data: greenVerifyResponseData } = await this.post<
-        {
-          phoneNumber: string;
-          code: string;
-          network: NetworkName;
-        },
-        VerifyGreenResult
-      >("/green/verify", {
-        phoneNumber,
-        code,
-        network: this.masa.config.networkName,
-      });
-
-      if (greenVerifyResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...greenVerifyResponseData };
-      } else {
-        result.message = `Verifying green failed! ${result.message}`;
-        console.error(result.message);
-      }
-
-      return result;
-    },
-  };
-
-  creditScore = {
-    /**
-     * Generates a new credit score
-     */
-    generate: async (): Promise<GenerateCreditScoreResult | undefined> => {
-      const result = {
-        success: false,
-        status: "failed",
-        message: "Generating Credit Score failed!",
-      };
-
-      const generateCreditScoreResponseData = await this.post<
-        {
-          network: NetworkName;
-        },
-        GenerateCreditScoreResult
-      >("/credit-score/generate", {
-        network: this.masa.config.networkName,
-      });
-
-      if (generateCreditScoreResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...generateCreditScoreResponseData };
-      } else {
-        console.error(result.message);
-        return result;
-      }
-    },
-
-    /**
-     * Update an existing credit score
-     * @param transactionHash
-     */
-    update: async (
-      transactionHash: string,
-    ): Promise<UpdateCreditScoreResult | undefined> => {
-      const result = {
-        success: false,
-        status: "failed",
-        message: "Updating of credit score failed!",
-      };
-
-      const { data: updateCreditScoreResponseData } = await this.post<
-        {
-          transactionHash: string;
-          network: NetworkName;
-        },
-        UpdateCreditScoreResult
-      >("/credit-score/update", {
-        transactionHash,
-        network: this.masa.config.networkName,
-      });
-
-      if (updateCreditScoreResponseData) {
-        result.success = true;
-        result.message = "";
-        result.status = "success";
-        return { ...result, ...updateCreditScoreResponseData };
-      } else {
-        console.error(result.message);
-      }
-
-      return result;
     },
   };
 
