@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](../README.md) • **Docs**
+[**Masa SDK v3.40.0-alpha.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.6](../globals.md) / MasaClient
+[Masa SDK v3.40.0-alpha.0](../globals.md) / MasaClient
 
 # Class: MasaClient
 
@@ -45,70 +45,6 @@
 ### \_middlewareClient
 
 > `private` **\_middlewareClient**: `AxiosInstance`
-
-***
-
-### creditScore
-
-> **creditScore**: `object`
-
-#### generate()
-
-> **generate**: () => `Promise`\<`undefined` \| [`GenerateCreditScoreResult`](../interfaces/GenerateCreditScoreResult.md)\>
-
-Generates a new credit score
-
-##### Returns
-
-`Promise`\<`undefined` \| [`GenerateCreditScoreResult`](../interfaces/GenerateCreditScoreResult.md)\>
-
-#### update()
-
-> **update**: (`transactionHash`) => `Promise`\<`undefined` \| [`UpdateCreditScoreResult`](../interfaces/UpdateCreditScoreResult.md)\>
-
-Update an existing credit score
-
-##### Parameters
-
-• **transactionHash**: `string`
-
-##### Returns
-
-`Promise`\<`undefined` \| [`UpdateCreditScoreResult`](../interfaces/UpdateCreditScoreResult.md)\>
-
-***
-
-### green
-
-> **green**: `object`
-
-#### generate()
-
-> **generate**: (`phoneNumber`) => `Promise`\<[`GenerateGreenResult`](../interfaces/GenerateGreenResult.md)\>
-
-Generates a new masa green request
-
-##### Parameters
-
-• **phoneNumber**: `string`
-
-##### Returns
-
-`Promise`\<[`GenerateGreenResult`](../interfaces/GenerateGreenResult.md)\>
-
-#### verify()
-
-> **verify**: (`phoneNumber`, `code`) => `Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
-
-##### Parameters
-
-• **phoneNumber**: `string`
-
-• **code**: `string`
-
-##### Returns
-
-`Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
 
 ***
 

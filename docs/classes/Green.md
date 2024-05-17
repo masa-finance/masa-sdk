@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](../README.md) • **Docs**
+[**Masa SDK v3.40.0-alpha.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.6](../globals.md) / Green
+[Masa SDK v3.40.0-alpha.0](../globals.md) / Green
 
 # Class: Green
 
@@ -49,12 +49,6 @@
 #### Inherited from
 
 [`MasaSBTModuleBase`](MasaSBTModuleBase.md).[`masa`](MasaSBTModuleBase.md#masa)
-
-***
-
-### types
-
-> `readonly` **types**: `Record`\<`string`, `TypedDataField`[]\>
 
 ## Methods
 
@@ -214,24 +208,6 @@ Gets the payment address for a given payment method
 
 ***
 
-### getPrice()
-
-> **getPrice**(`paymentMethod`, `slippage`): `Promise`\<[`PriceInformation`](../interfaces/PriceInformation.md) & `object`\>
-
-Gets the price for a masa green
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-• **slippage**: `undefined` \| `number`= `250`
-
-#### Returns
-
-`Promise`\<[`PriceInformation`](../interfaces/PriceInformation.md) & `object`\>
-
-***
-
 ### loadSBTContract()
 
 > `protected` **loadSBTContract**\<`Contract`\>(`address`, `factory`): `Promise`\<`Contract`\>
@@ -253,48 +229,6 @@ Gets the price for a masa green
 #### Inherited from
 
 [`MasaSBTModuleBase`](MasaSBTModuleBase.md).[`loadSBTContract`](MasaSBTModuleBase.md#loadsbtcontract)
-
-***
-
-### mint()
-
-> **mint**(`paymentMethod`, `receiver`, `authorityAddress`, `signatureDate`, `signature`, `slippage`): `Promise`\<`ContractTransaction`\>
-
-Purchase a masa green
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-• **receiver**: `string`
-
-• **authorityAddress**: `string`
-
-• **signatureDate**: `number`
-
-• **signature**: `string`
-
-• **slippage**: `undefined` \| `number`= `250`
-
-#### Returns
-
-`Promise`\<`ContractTransaction`\>
-
-***
-
-### sign()
-
-> **sign**(`receiver`): `Promise`\<`undefined` \| `object`\>
-
-Signs a masa green
-
-#### Parameters
-
-• **receiver**: `string`
-
-#### Returns
-
-`Promise`\<`undefined` \| `object`\>
 
 ***
 

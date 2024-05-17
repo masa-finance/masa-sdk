@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](README.md) • **Docs**
+[**Masa SDK v3.40.0-alpha.0**](README.md) • **Docs**
 
 ***
 
-# Masa SDK v3.38.6
+# Masa SDK v3.40.0-alpha.0
 
 ## Enumerations
 
@@ -95,7 +95,6 @@
 - [Stake](interfaces/Stake.md)
 - [TransferEventObject](interfaces/TransferEventObject.md)
 - [UpdateCreditScoreResult](interfaces/UpdateCreditScoreResult.md)
-- [User](interfaces/User.md)
 - [VerifyGreenResult](interfaces/VerifyGreenResult.md)
 
 ## Type Aliases
@@ -154,8 +153,6 @@
 - [checkLogin](functions/checkLogin.md)
 - [claim](functions/claim.md)
 - [claimAllRewards](functions/claimAllRewards.md)
-- [createCreditScore](functions/createCreditScore.md)
-- [createGreen](functions/createGreen.md)
 - [createIdentity](functions/createIdentity.md)
 - [createIdentityWithSoulName](functions/createIdentityWithSoulName.md)
 - [createLink](functions/createLink.md)
@@ -165,7 +162,6 @@
 - [deposit](functions/deposit.md)
 - [establishLink](functions/establishLink.md)
 - [establishLinkFromPassport](functions/establishLinkFromPassport.md)
-- [generateGreen](functions/generateGreen.md)
 - [generateSignatureDomain](functions/generateSignatureDomain.md)
 - [getBalances](functions/getBalances.md)
 - [getNetworkNameByChainId](functions/getNetworkNameByChainId.md)
@@ -206,7 +202,6 @@
 - [loadSoulNamesWithExpired](functions/loadSoulNamesWithExpired.md)
 - [login](functions/login.md)
 - [logout](functions/logout.md)
-- [mintGreen](functions/mintGreen.md)
 - [parsePassport](functions/parsePassport.md)
 - [patchMetadataUrl](functions/patchMetadataUrl.md)
 - [printSoulName](functions/printSoulName.md)
@@ -232,7 +227,6 @@
 - [unpackSessionId](functions/unpackSessionId.md)
 - [validateSoulName](functions/validateSoulName.md)
 - [verifyByName](functions/verifyByName.md)
-- [verifyGreen](functions/verifyGreen.md)
 - [verifyLink](functions/verifyLink.md)
 - [version](functions/version.md)
 - [withdraw](functions/withdraw.md)

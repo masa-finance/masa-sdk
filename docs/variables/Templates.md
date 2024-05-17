@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](../README.md) • **Docs**
+[**Masa SDK v3.40.0-alpha.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.6](../globals.md) / Templates
+[Masa SDK v3.40.0-alpha.0](../globals.md) / Templates
 
 # Variable: Templates
 
@@ -14,7 +14,27 @@
 
 > **loginTemplate**: (`challenge`, `expires`) => `string`
 
-The Masa Finance Login Template used for authenticating with the middleware
+The Masa Finance Login Template used for authenticating with masa-express
+
+#### Parameters
+
+• **challenge**: `string`
+
+The challenge received from the login process
+
+• **expires**: `string`
+
+The session expiration date received from the login process
+
+#### Returns
+
+`string`
+
+### loginTemplateNext()
+
+> **loginTemplateNext**: (`challenge`, `expires`) => `string`
+
+The Masa Finance Login rotation Template used for authenticating with masa-express
 
 #### Parameters
 

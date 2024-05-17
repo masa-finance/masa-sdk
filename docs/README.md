@@ -1,4 +1,4 @@
-**Masa SDK v3.38.6** • [**Docs**](globals.md)
+**Masa SDK v3.40.0-alpha.0** • [**Docs**](globals.md)
 
 ***
 
