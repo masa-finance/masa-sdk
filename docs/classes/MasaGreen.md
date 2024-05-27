@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](../README.md) • **Docs**
+[**Masa SDK v3.40.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.6](../globals.md) / MasaGreen
+[Masa SDK v3.40.0](../globals.md) / MasaGreen
 
 # Class: MasaGreen
 
@@ -86,42 +86,6 @@ Burns a green
 
 ***
 
-### create()
-
-> **create**(`paymentMethod`, `phoneNumber`, `code`): `Promise`\<[`GreenBaseResult`](../interfaces/GreenBaseResult.md)\>
-
-Does the verification and mint step in one go
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-• **phoneNumber**: `string`
-
-• **code**: `string`
-
-#### Returns
-
-`Promise`\<[`GreenBaseResult`](../interfaces/GreenBaseResult.md)\>
-
-***
-
-### generate()
-
-> **generate**(`phoneNumber`): `Promise`\<[`GenerateGreenResult`](../interfaces/GenerateGreenResult.md)\>
-
-Generates a new verification attempt
-
-#### Parameters
-
-• **phoneNumber**: `string`
-
-#### Returns
-
-`Promise`\<[`GenerateGreenResult`](../interfaces/GenerateGreenResult.md)\>
-
-***
-
 ### list()
 
 > **list**(`address`?): `Promise`\<[`GreenDetails`](../interfaces/GreenDetails.md)[]\>
@@ -151,43 +115,3 @@ Loads all greens for an identity on the current network
 #### Returns
 
 `Promise`\<[`GreenDetails`](../interfaces/GreenDetails.md)[]\>
-
-***
-
-### mint()
-
-> **mint**(`paymentMethod`, `authorityAddress`, `signatureDate`, `signature`): `Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-Mints a green based on the previously made verification result
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-• **authorityAddress**: `string`
-
-• **signatureDate**: `number`
-
-• **signature**: `string`
-
-#### Returns
-
-`Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-***
-
-### verify()
-
-> **verify**(`phoneNumber`, `code`): `Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>
-
-Tries to verify the current verification attempt
-
-#### Parameters
-
-• **phoneNumber**: `string`
-
-• **code**: `string`
-
-#### Returns
-
-`Promise`\<`undefined` \| [`VerifyGreenResult`](../interfaces/VerifyGreenResult.md)\>

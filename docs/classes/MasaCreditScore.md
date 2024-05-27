@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](../README.md) • **Docs**
+[**Masa SDK v3.40.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.6](../globals.md) / MasaCreditScore
+[Masa SDK v3.40.0](../globals.md) / MasaCreditScore
 
 # Class: MasaCreditScore
 
@@ -81,20 +81,6 @@
 #### Returns
 
 `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-***
-
-### create()
-
-> **create**(`paymentMethod`): `Promise`\<[`GenerateCreditScoreResult`](../interfaces/GenerateCreditScoreResult.md)\>
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-#### Returns
-
-`Promise`\<[`GenerateCreditScoreResult`](../interfaces/GenerateCreditScoreResult.md)\>
 
 ***
 

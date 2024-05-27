@@ -21,7 +21,7 @@ export const login = async (masa: MasaInterface): Promise<LoginResult> => {
 
     if (challengeData) {
       // sign
-      const msg = Templates.loginTemplate(
+      const msg = Templates.loginTemplateNext(
         challengeData.challenge,
         challengeData.expires,
       );

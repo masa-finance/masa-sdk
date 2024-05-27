@@ -1,8 +1,8 @@
-[**Masa SDK v3.38.6**](../README.md) • **Docs**
+[**Masa SDK v3.40.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.38.6](../globals.md) / erc20Currencies
+[Masa SDK v3.40.0](../globals.md) / erc20Currencies
 
 # Variable: erc20Currencies
 
