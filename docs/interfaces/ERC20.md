@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0-alpha.0**](../README.md) • **Docs**
+[**Masa SDK v3.40.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0-alpha.0](../globals.md) / ERC20
+[Masa SDK v3.40.0](../globals.md) / ERC20
 
 # Interface: ERC20
 
