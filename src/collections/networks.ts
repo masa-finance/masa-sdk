@@ -508,6 +508,33 @@ const scrollsepolia: Network = {
   lzEndpointId: EndpointId.SCROLL_V2_MAINNET,
 };
 
+// aurora
+const auroratest: Network = {
+  networkName: "auroratest",
+  chainName: "Aurora Testnet",
+  chainNameShort: "Aurora Test",
+  isTestnet: true,
+  chainId: 1313161555,
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH", // 2-6 characters long
+    decimals: 18,
+  },
+  rpcUrls: [
+    // default https
+    "https://testnet.aurora.dev",
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  blockExplorerUrls: ["https://explorer.testnet.aurora.dev"],
+  addresses: addresses["auroratest"] as Addresses,
+  lzEndpointId: EndpointId.AURORA_V2_TESTNET,
+};
+
 export const SupportedNetworks: Partial<{
   [key in NetworkName]: Network;
 }> = {
@@ -541,4 +568,6 @@ export const SupportedNetworks: Partial<{
   // scroll
   scroll,
   scrollsepolia,
+  // aurora
+  auroratest,
 };

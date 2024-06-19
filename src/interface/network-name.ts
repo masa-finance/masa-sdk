@@ -26,5 +26,7 @@ export type NetworkName =
   // scroll
   | "scrollsepolia" // testnet
   | "scroll" // mainnet
+  // aurora
+  | "auroratest"
   // fallback for unknown networks
   | "unknown";
