@@ -3,6 +3,7 @@
 # For details on acceptable file patterns, please refer to the [Github Documentation](https://help.github.com/articles/about-codeowners/)
 
 # default owners, overridden by package specific owners below
-* @masa-finance/core-team
+* @H34D
+* @hide-on-bush
 
 # directory and file-level owners. Feel free to add to this!
