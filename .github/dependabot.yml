@@ -10,4 +10,5 @@ updates:
     schedule:
       interval: "weekly"
     reviewers:
-      - "masa-finance/core-team"
+      - "H34D"
+      - "hide-on-bush"
