@@ -1,4 +1,5 @@
 import type { Addresses, NetworkName } from "../interface";
+import { auroratest } from "./aurora";
 import { base, basegoerli, basesepolia } from "./base";
 import { bsc, bsctest } from "./bsc";
 import { alfajores, celo } from "./celo";
@@ -46,4 +47,7 @@ export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // scroll
   scroll,
   scrollsepolia,
+
+  // aurora / NEAR
+  auroratest,
 };
