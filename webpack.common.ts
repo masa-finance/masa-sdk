@@ -1,4 +1,5 @@
 import CircularDependencyPlugin = require("circular-dependency-plugin");
+import { WebpackPluginFunction } from "webpack";
 import { WebpackConfiguration } from "webpack-cli";
 
 import { paths } from "./webpack.parts";
@@ -23,7 +24,7 @@ export const common: WebpackConfiguration = {
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
       cwd: process.cwd(),
-    }),
+    }) as WebpackPluginFunction,
   ],
   resolve: {
     extensions: [".js"],
