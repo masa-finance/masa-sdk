@@ -1,5 +1,3 @@
-import "./utils/solana";
-
 import { SupportedNetworks } from "./collections";
 import { MasaContracts } from "./contracts";
 import type { MasaArgs, MasaConfig, MasaInterface } from "./interface";
