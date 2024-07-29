@@ -59,7 +59,7 @@
     "@types/node": "^20.14.12",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
-    "chai": "~4.4.1",
+    "chai": "~4.5.0",
     "circular-dependency-plugin": "^5.2.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.25.0",
