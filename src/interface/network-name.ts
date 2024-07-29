@@ -29,6 +29,7 @@ export type NetworkName =
   // aurora
   | "auroratest"
   // solana
+  | "solanadev"
   | "solanatest"
   // fallback for unknown networks
   | "unknown";

@@ -557,6 +557,32 @@ const auroratest: Network = {
 };
 
 // solana
+const solanadev: Network = {
+  type: "solana",
+  networkName: "solanadev",
+  chainName: "Solana Devnet",
+  chainNameShort: "Solana Dev",
+  isTestnet: true,
+  chainId: 0,
+  nativeCurrency: {
+    name: "SOL",
+    symbol: "SOL", // 2-6 characters long
+    decimals: 9,
+  },
+  rpcUrls: [
+    // default https
+    clusterApiUrl("devnet"),
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  blockExplorerUrls: ["https://explorer.solana.com/?cluster=devnet"],
+  addresses: addresses["solanadev"] as Addresses,
+  lzEndpointId: EndpointId.SOLANA_V2_SANDBOX,
+};
 const solanatest: Network = {
   type: "solana",
   networkName: "solanatest",
@@ -620,5 +646,6 @@ export const SupportedNetworks: Partial<{
   // aurora
   auroratest,
   // solana
+  solanadev,
   solanatest,
 };
