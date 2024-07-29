@@ -13,6 +13,7 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  isSigner,
   signTypedData,
 } from "../../../../utils";
 import { SBTContractWrapper } from "../SBT/sbt-contract-wrapper";
@@ -41,10 +42,17 @@ export class SSSBTContractWrapper<
     name: string,
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number>,
-  ): Promise<{
-    signature: string;
-    authorityAddress: string;
-  }> => {
+  ): Promise<
+    | {
+        signature: string;
+        authorityAddress: string;
+      }
+    | undefined
+  > => {
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
+
     const authorityAddress = await this.masa.config.signer.getAddress();
 
     const { signature, domain } = await signTypedData({
@@ -65,7 +73,10 @@ export class SSSBTContractWrapper<
       authorityAddress,
     );
 
-    return { signature, authorityAddress };
+    return {
+      signature,
+      authorityAddress,
+    };
   };
 
   /**
@@ -86,7 +97,11 @@ export class SSSBTContractWrapper<
     signature: string,
     authorityAddress: string,
     slippage: number | undefined = 250,
-  ): Promise<PriceInformation> => {
+  ): Promise<PriceInformation | undefined> => {
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
+
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       name,
@@ -172,7 +187,7 @@ export class SSSBTContractWrapper<
       signatureDate,
     };
 
-    const { price, paymentAddress } = await this.prepareMint(
+    const prepareMintResult = await this.prepareMint(
       paymentMethod,
       "ReferenceSBTSelfSovereign",
       this.types,
@@ -180,6 +195,13 @@ export class SSSBTContractWrapper<
       signature,
       authorityAddress,
     );
+
+    if (!prepareMintResult) {
+      result.message = "Unable to prepare mint!";
+      return result;
+    }
+
+    const { price, paymentAddress } = prepareMintResult;
 
     const mintSSSBTArguments: [
       string, // paymentMethod string

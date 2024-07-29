@@ -5,6 +5,7 @@ import type {
   BaseResultWithTokenId,
   PaymentMethod,
 } from "../../../../interface";
+import { isSigner } from "../../../../utils";
 import { MasaDynamicSBTWrapper } from "../masa-dynamic-sbt-wrapper";
 
 type SignSetStateResult = BaseResult & {
@@ -33,6 +34,13 @@ export class MasaDynamicSSSBTWrapper<
       this.contract.name(),
       this.contract.symbol(),
     ]);
+
+    if (!isSigner(this.masa.config.signer)) {
+      return {
+        success: false,
+        message: "Sign setState failed!",
+      };
+    }
 
     console.log(
       `Signing Set State for Dynamic SSSBT on: '${this.masa.config.networkName}'`,
@@ -115,6 +123,13 @@ export class MasaDynamicSSSBTWrapper<
   public mint = async (
     paymentMethod: PaymentMethod = "ETH",
   ): Promise<BaseResultWithTokenId> => {
+    if (!isSigner(this.masa.config.signer)) {
+      return {
+        success: false,
+        message: "Minting failed!",
+      };
+    }
+
     const receiver = await this.masa.config.signer.getAddress();
 
     const [name, symbol] = await Promise.all([
@@ -148,6 +163,13 @@ export class MasaDynamicSSSBTWrapper<
     signatureDate: number,
     authorityAddress: string,
   ): Promise<BaseResult> => {
+    if (!isSigner(this.masa.config.signer)) {
+      return {
+        success: false,
+        message: "Setting state failed!",
+      };
+    }
+
     const receiver = await this.masa.config.signer.getAddress();
 
     const [name, symbol] = await Promise.all([

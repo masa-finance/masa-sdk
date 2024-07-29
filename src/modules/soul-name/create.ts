@@ -8,7 +8,7 @@ import type {
   SoulNameMetadataStoreResult,
   SoulNameResultBase,
 } from "../../interface";
-import { isSoulNameMetadataStoreResult } from "../../utils";
+import { isSigner, isSoulNameMetadataStoreResult } from "../../utils";
 
 const purchaseSoulName = async (
   masa: MasaInterface,
@@ -30,7 +30,7 @@ const purchaseSoulName = async (
     masa.contracts.soulName.isAvailable(soulName),
   ]);
 
-  if (isAvailable) {
+  if (isAvailable && isSigner(masa.config.signer)) {
     receiver = receiver || (await masa.config.signer.getAddress());
 
     const storeMetadataResponse:
@@ -51,7 +51,7 @@ const purchaseSoulName = async (
           }`;
           console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-          const { wait, hash } = await masa.contracts.soulName.purchase(
+          const purchaseResult = await masa.contracts.soulName.purchase(
             paymentMethod,
             soulName,
             soulNameLength,
@@ -61,6 +61,13 @@ const purchaseSoulName = async (
             storeMetadataResponse.signature,
             receiver,
           );
+
+          if (!purchaseResult) {
+            result.message = "Purchase Failed!";
+            return result;
+          }
+
+          const { wait, hash } = purchaseResult;
 
           console.log(
             Messages.WaitingToFinalize(

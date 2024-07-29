@@ -1,7 +1,7 @@
 import type { MasaSBT } from "@masa-finance/masa-contracts-identity";
 import type { BigNumber } from "ethers";
 
-import { isBigNumber, patchMetadataUrl } from "../../../utils";
+import { isBigNumber, isSigner, patchMetadataUrl } from "../../../utils";
 import { MasaLinkable } from "../../masa-linkable";
 
 export class MasaSBTWrapper<
@@ -11,7 +11,18 @@ export class MasaSBTWrapper<
    *
    * @param address
    */
-  public list = async (address?: string) => {
+  public list = async (
+    address?: string,
+  ): Promise<
+    {
+      tokenId: BigNumber;
+      tokenUri: string;
+    }[]
+  > => {
+    if (!isSigner(this.masa.config.signer)) {
+      return [];
+    }
+
     address = address || (await this.masa.config.signer.getAddress());
 
     const SBTs = await this.loadSBTs(address);

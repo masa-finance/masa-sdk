@@ -13,6 +13,7 @@ import type {
 } from "../../interface";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
+import { isSigner } from "../../utils";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
@@ -36,6 +37,10 @@ export const getBalances = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<Balances> => {
+  if (!isSigner(masa.config.signer)) {
+    return {};
+  }
+
   const addressToLoad: string =
     address || (await masa.config.signer.getAddress());
 
@@ -46,14 +51,14 @@ export const getBalances = async (
     let result;
 
     if (
-      masa.config.signer.provider &&
+      isSigner(masa.config.signer) &&
       tokenAddress &&
       tokenAddress !== constants.AddressZero
     ) {
       try {
         const contract: ERC20 = ERC20__factory.connect(
           tokenAddress,
-          masa.config.signer.provider,
+          masa.config.signer,
         );
 
         const [balance, decimals] = await Promise.all([

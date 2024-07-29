@@ -7,6 +7,7 @@ import { constants, ContractFactory } from "ethers";
 
 import { Messages } from "../../../collections";
 import type { DeployResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils";
 import PaymentParamsStruct = PaymentGateway.PaymentParamsStruct;
 
 export const deployASBT = async ({
@@ -29,6 +30,10 @@ export const deployASBT = async ({
   };
 }): Promise<DeployResult<PaymentParamsStruct> | undefined> => {
   let result: DeployResult<PaymentParamsStruct> | undefined;
+
+  if (!isSigner(masa.config.signer)) {
+    return;
+  }
 
   adminAddress = adminAddress || (await masa.config.signer.getAddress());
 

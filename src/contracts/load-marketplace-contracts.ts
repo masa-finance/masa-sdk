@@ -4,6 +4,7 @@ import {
   ProxyViewAggregator,
   ProxyViewAggregator__factory,
 } from "@masa-finance/masa-contracts-marketplace";
+import { Connection, Keypair } from "@solana/web3.js";
 import { Signer } from "ethers";
 
 import { ContractInfo, IMarketplaceContracts, NetworkName } from "../interface";
@@ -14,7 +15,12 @@ export const loadMarketplaceContracts = ({
   signer,
   networkName = "ethereum",
 }: {
-  signer: Signer;
+  signer:
+    | Signer
+    | {
+        keypair: Keypair;
+        connection: Connection;
+      };
   networkName?: NetworkName;
 }): IMarketplaceContracts => {
   // DataPointsMulti

@@ -6,6 +6,7 @@ import { BigNumber, utils } from "ethers";
 
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils/is-signer";
 
 /**
  *
@@ -27,7 +28,8 @@ export const withdraw = async (
   if (
     !masa.config.network?.addresses.tokens?.MASA ||
     (masa.config.networkName !== "masa" &&
-      masa.config.networkName !== "masatest")
+      masa.config.networkName !== "masatest") ||
+    !isSigner(masa.config.signer)
   ) {
     result.message = `Unable to withdraw on ${masa.config.networkName}!`;
     console.log(result.message);

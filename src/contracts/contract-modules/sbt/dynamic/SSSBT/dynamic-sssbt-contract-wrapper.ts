@@ -9,6 +9,7 @@ import type { BaseResult, PaymentMethod } from "../../../../../interface";
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  isSigner,
   signTypedData,
 } from "../../../../../utils";
 import { DynamicSBTContractWrapper } from "../dynamic-sbt-contract-wrapper";
@@ -37,10 +38,17 @@ export class DynamicSSSBTContractWrapper<
   public signSetState = async (
     types: Record<string, Array<TypedDataField>>,
     value: Record<string, string | BigNumber | number | boolean>,
-  ): Promise<{
-    signature: string;
-    authorityAddress: string;
-  }> => {
+  ): Promise<
+    | {
+        signature: string;
+        authorityAddress: string;
+      }
+    | undefined
+  > => {
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
+
     const authorityAddress = await this.masa.config.signer.getAddress();
 
     const { signature, domain } = await signTypedData({
@@ -77,6 +85,11 @@ export class DynamicSSSBTContractWrapper<
     authorityAddress: string,
   ): Promise<BaseResult> => {
     const result: BaseResult = { success: false };
+
+    if (!isSigner(this.masa.config.signer)) {
+      result.message = "Unable to prepare set state!";
+      return result;
+    }
 
     const { name, version, verifyingContract } =
       await this.contract.eip712Domain();

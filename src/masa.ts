@@ -1,3 +1,5 @@
+import "./utils/solana";
+
 import { SupportedNetworks } from "./collections";
 import { MasaContracts } from "./contracts";
 import type { MasaArgs, MasaConfig, MasaInterface } from "./interface";
@@ -17,7 +19,12 @@ import {
   MasaToken,
   version,
 } from "./modules";
-import { getNetworkNameByChainId, MasaArweave, MasaClient } from "./utils";
+import {
+  getNetworkNameByChainId,
+  isSigner,
+  MasaArweave,
+  MasaClient,
+} from "./utils";
 
 export class Masa implements MasaInterface {
   // config
@@ -118,7 +125,9 @@ export class Masa implements MasaInterface {
   };
 
   public static create = async (masaArgs: MasaArgs) => {
-    const network = await masaArgs.signer.provider?.getNetwork();
+    const network = isSigner(masaArgs.signer)
+      ? await masaArgs.signer.provider?.getNetwork()
+      : undefined;
 
     return new Masa({
       ...masaArgs,

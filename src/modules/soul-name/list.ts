@@ -1,4 +1,5 @@
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { isSigner } from "../../utils";
 import { printSoulName } from "./helpers";
 import { loadSoulNameDetailsByAddress } from "./load";
 
@@ -12,6 +13,10 @@ export const listSoulNames = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<SoulNameDetails[]> => {
+  if (!isSigner(masa.config.signer)) {
+    return [];
+  }
+
   address = address || (await masa.config.signer.getAddress());
   return await loadSoulNameDetailsByAddress(masa, address);
 };
@@ -26,6 +31,10 @@ export const listSoulNamesAndPrint = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<SoulNameDetails[]> => {
+  if (!isSigner(masa.config.signer)) {
+    return [];
+  }
+
   address = address || (await masa.config.signer.getAddress());
   const soulNames = await listSoulNames(masa, address);
 

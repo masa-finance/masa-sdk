@@ -15,6 +15,7 @@ import type {
 import {
   generateSignatureDomain,
   isNativeCurrency,
+  isSigner,
   signTypedData,
 } from "../../utils";
 import { MasaContractModuleBase } from "./masa-contract-module-base";
@@ -65,7 +66,11 @@ export class SoulName extends MasaContractModuleBase {
     authorityAddress: string,
     signature: string,
     receiver?: string,
-  ): Promise<ContractTransaction> => {
+  ): Promise<ContractTransaction | undefined> => {
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
+
     const to = receiver || (await this.masa.config.signer.getAddress());
 
     const domain: TypedDataDomain = await generateSignatureDomain(
@@ -266,6 +271,10 @@ export class SoulName extends MasaContractModuleBase {
       }
     | undefined
   > => {
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
+
     const value: {
       to: string;
       name: string;
@@ -319,7 +328,7 @@ export class SoulName extends MasaContractModuleBase {
       this.masa.contracts.instances.SoulNameContract.extension(),
     ]);
 
-    if (soulNameData.exists) {
+    if (soulNameData.exists && isSigner(this.masa.config.signer)) {
       console.log(
         `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
       );

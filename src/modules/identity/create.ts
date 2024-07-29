@@ -8,7 +8,7 @@ import type {
   MasaInterface,
   PaymentMethod,
 } from "../../interface";
-import { isSoulNameMetadataStoreResult } from "../../utils";
+import { isSigner, isSoulNameMetadataStoreResult } from "../../utils";
 
 /**
  * Identity only
@@ -119,7 +119,7 @@ export const purchaseIdentityWithSoulName = async (
     masa.contracts.soulName.isAvailable(soulName),
   ]);
 
-  if (isAvailable) {
+  if (isAvailable && isSigner(masa.config.signer)) {
     const storeMetadataResponse = await masa.client.soulName.store(
       `${soulName}${extension}`,
       await masa.config.signer.getAddress(),
@@ -135,7 +135,7 @@ export const purchaseIdentityWithSoulName = async (
           }`;
           console.log(`Soul Name Metadata URL: '${soulNameMetadataUrl}'`);
 
-          const { wait, hash } =
+          const purchaseIdentityAndNameResult =
             await masa.contracts.identity.purchaseIdentityAndName(
               paymentMethod,
               soulName,
@@ -145,6 +145,13 @@ export const purchaseIdentityWithSoulName = async (
               storeMetadataResponse.authorityAddress,
               storeMetadataResponse.signature,
             );
+
+          if (!purchaseIdentityAndNameResult) {
+            result.message = "Purchasing Identity and Name Failed!";
+            return result;
+          }
+
+          const { wait, hash } = purchaseIdentityAndNameResult;
 
           console.log(
             Messages.WaitingToFinalize(
@@ -245,7 +252,8 @@ export const createIdentityWithSoulName = async (
     if (
       !masa.contracts.instances.SoulStoreContract.hasAddress ||
       !masa.contracts.instances.SoulboundIdentityContract.hasAddress ||
-      !masa.contracts.instances.SoulNameContract.hasAddress
+      !masa.contracts.instances.SoulNameContract.hasAddress ||
+      !isSigner(masa.config.signer)
     ) {
       result.message = Messages.ContractNotDeployed(masa.config.networkName);
       return result;

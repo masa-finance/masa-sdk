@@ -1,3 +1,4 @@
+import { Connection, Keypair } from "@solana/web3.js";
 import type { Signer } from "ethers";
 
 import type { Network } from "./network";
@@ -8,7 +9,12 @@ export interface MasaConfig {
   readonly environment: string;
   readonly networkName: NetworkName;
   readonly network?: Network;
-  readonly signer: Signer;
+  readonly signer:
+    | Signer
+    | {
+        keypair: Keypair;
+        connection: Connection;
+      };
   readonly verbose: boolean;
   readonly forceTransactions: boolean;
 }

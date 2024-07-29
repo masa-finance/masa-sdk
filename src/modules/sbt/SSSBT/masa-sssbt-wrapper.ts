@@ -1,6 +1,7 @@
 import type { ReferenceSBTSelfSovereign } from "@masa-finance/masa-contracts-identity";
 
 import type { BaseResultWithTokenId, PaymentMethod } from "../../../interface";
+import { isSigner } from "../../../utils";
 import { MasaSBTWrapper } from "../SBT/masa-sbt-wrapper";
 
 export class MasaSSSBTWrapper<
@@ -10,7 +11,16 @@ export class MasaSSSBTWrapper<
    *
    * @param receiver
    */
-  sign = async (receiver: string) => {
+  sign = async (
+    receiver: string,
+  ): Promise<
+    | {
+        authorityAddress: string;
+        signatureDate: number;
+        signature: string;
+      }
+    | undefined
+  > => {
     let result:
       | {
           authorityAddress: string;
@@ -18,6 +28,10 @@ export class MasaSSSBTWrapper<
           signature: string;
         }
       | undefined;
+
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
 
     const [name, symbol] = await Promise.all([
       this.contract.name(),
@@ -80,6 +94,13 @@ export class MasaSSSBTWrapper<
     signature: string,
     paymentMethod: PaymentMethod = "ETH",
   ): Promise<BaseResultWithTokenId> => {
+    if (!isSigner(this.masa.config.signer)) {
+      return {
+        success: false,
+        message: "Unable to mint!",
+      };
+    }
+
     const receiver = await this.masa.config.signer.getAddress();
 
     const [name, symbol] = await Promise.all([

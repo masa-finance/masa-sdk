@@ -1,10 +1,12 @@
 import { EndpointId } from "@layerzerolabs/lz-definitions";
+import { clusterApiUrl } from "@solana/web3.js";
 
 import type { Addresses, Network, NetworkName } from "../interface";
 import { addresses } from "../networks";
 
 // masa
 const masa: Network = {
+  type: "evm",
   networkName: "masa",
   chainName: "Masa",
   chainNameShort: "Masa",
@@ -30,6 +32,7 @@ const masa: Network = {
   lzEndpointId: EndpointId.MASA_V2_MAINNET,
 };
 const masatest: Network = {
+  type: "evm",
   networkName: "masatest",
   chainName: "Masa Testnet",
   chainNameShort: "Masa Testnet",
@@ -57,6 +60,7 @@ const masatest: Network = {
 
 // bsc
 const bsc: Network = {
+  type: "evm",
   networkName: "bsc",
   chainName: "Binance Smart Chain",
   chainNameShort: "BSC",
@@ -83,6 +87,7 @@ const bsc: Network = {
   lzEndpointId: EndpointId.BSC_V2_MAINNET,
 };
 const bsctest: Network = {
+  type: "evm",
   networkName: "bsctest",
   chainName: "Binance Smart Chain Testnet",
   chainNameShort: "BSC Testnet",
@@ -111,6 +116,7 @@ const bsctest: Network = {
 
 // op bnb
 const opbnb: Network = {
+  type: "evm",
   networkName: "opbnb",
   chainName: "opBNB Mainnet",
   chainNameShort: "opBNB",
@@ -136,6 +142,7 @@ const opbnb: Network = {
   lzEndpointId: EndpointId.OPBNB_V2_MAINNET,
 };
 const opbnbtest: Network = {
+  type: "evm",
   networkName: "opbnbtest",
   chainName: "opBNB Testnet",
   chainNameShort: "opBNB Test",
@@ -163,6 +170,7 @@ const opbnbtest: Network = {
 
 // celo
 const celo: Network = {
+  type: "evm",
   networkName: "celo",
   chainName: "Celo Mainnet",
   chainNameShort: "Celo",
@@ -189,6 +197,7 @@ const celo: Network = {
   lzEndpointId: EndpointId.CELO_V2_MAINNET,
 };
 const alfajores: Network = {
+  type: "evm",
   networkName: "alfajores",
   chainName: "Alfajores Network",
   chainNameShort: "Alfajores",
@@ -217,6 +226,7 @@ const alfajores: Network = {
 
 // polygon
 const polygon: Network = {
+  type: "evm",
   networkName: "polygon",
   chainName: "Polygon Mainnet",
   chainNameShort: "Polygon",
@@ -245,6 +255,7 @@ const polygon: Network = {
   lzEndpointId: EndpointId.POLYGON_V2_MAINNET,
 };
 const amoy: Network = {
+  type: "evm",
   networkName: "amoy",
   chainName: "Amoy Testnet",
   chainNameShort: "Amoy",
@@ -272,6 +283,7 @@ const amoy: Network = {
 };
 // @deprecated: use amoy instead
 const mumbai: Network = {
+  type: "evm",
   networkName: "mumbai",
   chainName: "Mumbai Testnet",
   chainNameShort: "Mumbai",
@@ -302,6 +314,7 @@ const mumbai: Network = {
 
 // ethereum
 const ethereum: Network = {
+  type: "evm",
   networkName: "ethereum",
   chainName: "Ethereum Mainnet",
   chainNameShort: "Ethereum",
@@ -329,6 +342,7 @@ const ethereum: Network = {
 };
 // @deprecated: use sepolia instead
 const goerli: Network = {
+  type: "evm",
   networkName: "goerli",
   chainName: "Goerli Testnet",
   chainNameShort: "Goerli",
@@ -355,6 +369,7 @@ const goerli: Network = {
   addresses: addresses["goerli"] as Addresses,
 };
 const sepolia: Network = {
+  type: "evm",
   networkName: "sepolia",
   chainName: "Sepolia Testnet",
   chainNameShort: "Sepolia",
@@ -383,6 +398,7 @@ const sepolia: Network = {
 
 // base mainnet
 const base: Network = {
+  type: "evm",
   networkName: "base",
   chainName: "Base Mainnet",
   chainNameShort: "Base",
@@ -410,6 +426,7 @@ const base: Network = {
 };
 // @deprecated: use base sepolia instead
 const basegoerli: Network = {
+  type: "evm",
   networkName: "basegoerli",
   chainName: "Base Goerli Testnet",
   chainNameShort: "Base Goerli",
@@ -436,6 +453,7 @@ const basegoerli: Network = {
   addresses: addresses["basegoerli"] as Addresses,
 };
 const basesepolia: Network = {
+  type: "evm",
   networkName: "basesepolia",
   chainName: "Base Sepolia Testnet",
   chainNameShort: "Base Sepolia",
@@ -458,6 +476,7 @@ const basesepolia: Network = {
 
 // scroll mainnet
 const scroll: Network = {
+  type: "evm",
   networkName: "scroll",
   chainName: "Scroll Mainnet",
   chainNameShort: "Scroll",
@@ -483,6 +502,7 @@ const scroll: Network = {
   lzEndpointId: EndpointId.SCROLL_V2_MAINNET,
 };
 const scrollsepolia: Network = {
+  type: "evm",
   networkName: "scrollsepolia",
   chainName: "Scroll Sepolia Testnet",
   chainNameShort: "Scroll Sepolia",
@@ -510,6 +530,7 @@ const scrollsepolia: Network = {
 
 // aurora
 const auroratest: Network = {
+  type: "evm",
   networkName: "auroratest",
   chainName: "Aurora Testnet",
   chainNameShort: "Aurora Test",
@@ -533,6 +554,34 @@ const auroratest: Network = {
   blockExplorerUrls: ["https://explorer.testnet.aurora.dev"],
   addresses: addresses["auroratest"] as Addresses,
   lzEndpointId: EndpointId.AURORA_V2_TESTNET,
+};
+
+// solana
+const solanatest: Network = {
+  type: "solana",
+  networkName: "solanatest",
+  chainName: "Solana Testnet",
+  chainNameShort: "Solana Test",
+  isTestnet: true,
+  chainId: 0,
+  nativeCurrency: {
+    name: "SOL",
+    symbol: "SOL", // 2-6 characters long
+    decimals: 9,
+  },
+  rpcUrls: [
+    // default https
+    clusterApiUrl("testnet"),
+    // alternative https
+    undefined,
+    // default wss
+    undefined,
+    // alternative wss
+    undefined,
+  ],
+  blockExplorerUrls: ["https://explorer.solana.com/?cluster=testnet"],
+  addresses: addresses["solanatest"] as Addresses,
+  lzEndpointId: EndpointId.SOLANA_V2_TESTNET,
 };
 
 export const SupportedNetworks: Partial<{
@@ -570,4 +619,6 @@ export const SupportedNetworks: Partial<{
   scrollsepolia,
   // aurora
   auroratest,
+  // solana
+  solanatest,
 };

@@ -1,11 +1,16 @@
 import { Messages } from "../../collections";
 import type { CreditScoreDetails, MasaInterface } from "../../interface";
+import { isSigner } from "../../utils";
 import { loadCreditScores } from "./load";
 
 export const listCreditScores = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<CreditScoreDetails[]> => {
+  if (!isSigner(masa.config.signer)) {
+    return [];
+  }
+
   address = address || (await masa.config.signer.getAddress());
 
   const { identityId } = await masa.identity.load(address);

@@ -7,7 +7,11 @@ import {
 
 import { Messages } from "../../collections";
 import type { BaseResult, PaymentMethod } from "../../interface";
-import { generateSignatureDomain, isNativeCurrency } from "../../utils";
+import {
+  generateSignatureDomain,
+  isNativeCurrency,
+  isSigner,
+} from "../../utils";
 import { MasaSBTModuleBase } from "./sbt/masa-sbt-module-base";
 
 export class Identity extends MasaSBTModuleBase {
@@ -44,7 +48,11 @@ export class Identity extends MasaSBTModuleBase {
     metadataURL: string,
     authorityAddress: string,
     signature: string,
-  ): Promise<ContractTransaction> => {
+  ): Promise<ContractTransaction | undefined> => {
+    if (!isSigner(this.masa.config.signer)) {
+      return;
+    }
+
     const domain: TypedDataDomain = await generateSignatureDomain(
       this.masa.config.signer,
       "SoulStore",

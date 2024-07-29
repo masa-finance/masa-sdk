@@ -25,7 +25,7 @@ import type {
 import { MasaBase } from "../../masa-base";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
-import { isERC20Currency, isNativeCurrency } from "../../utils";
+import { isERC20Currency, isNativeCurrency, isSigner } from "../../utils";
 
 const DEFAULT_GAS_LIMIT: number = 750_000;
 
@@ -53,7 +53,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
   ): Promise<ContractReceipt | undefined> => {
     let contractReceipt;
 
-    if (isERC20Currency(paymentMethod)) {
+    if (isERC20Currency(paymentMethod) && isSigner(this.masa.config.signer)) {
       const tokenContract: ERC20 = ERC20__factory.connect(
         paymentAddress,
         this.masa.config.signer,
@@ -172,6 +172,10 @@ export abstract class MasaContractModuleBase extends MasaBase {
     let feeData;
 
     try {
+      if (!isSigner(this.masa.config.signer)) {
+        return;
+      }
+
       feeData = await this.masa.config.signer.provider?.getFeeData();
 
       if (this.masa.config.verbose) {
@@ -200,7 +204,10 @@ export abstract class MasaContractModuleBase extends MasaBase {
    */
   protected formatPrice = async (paymentAddress: string, price: BigNumber) => {
     let decimals = 18;
-    if (paymentAddress !== constants.AddressZero) {
+    if (
+      paymentAddress !== constants.AddressZero &&
+      isSigner(this.masa.config.signer)
+    ) {
       const contract: ERC20 = ERC20__factory.connect(
         paymentAddress,
         this.masa.config.signer,
