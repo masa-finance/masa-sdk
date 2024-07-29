@@ -4,6 +4,7 @@ import type {
   SoulboundIdentity,
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { constants, utils } from "ethers";
 
 import type {
@@ -37,12 +38,22 @@ export const getBalances = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<Balances> => {
-  if (!isSigner(masa.config.signer)) {
-    return {};
-  }
-
   const addressToLoad: string =
-    address || (await masa.config.signer.getAddress());
+    address ||
+    (isSigner(masa.config.signer)
+      ? await masa.config.signer.getAddress()
+      : masa.config.signer.keypair.publicKey.toBase58());
+
+  if (!isSigner(masa.config.signer)) {
+    const nativeBalance =
+      (await masa.config.signer.connection.getBalance(
+        masa.config.signer.keypair.publicKey,
+      )) / LAMPORTS_PER_SOL;
+
+    return {
+      Native: nativeBalance,
+    };
+  }
 
   const loadERC20Balance = async (
     userAddress: string,
