@@ -90,7 +90,7 @@ export const loadIdentity = async (
   let result: IdentityDetails | undefined;
 
   if (!isSigner(masa.config.signer)) {
-    return;
+    return undefined;
   }
 
   address = address || (await masa.config.signer.getAddress());

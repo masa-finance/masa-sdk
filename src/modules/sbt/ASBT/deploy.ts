@@ -32,7 +32,7 @@ export const deployASBT = async ({
   let result: DeployResult<PaymentParamsStruct> | undefined;
 
   if (!isSigner(masa.config.signer)) {
-    return;
+    return undefined;
   }
 
   adminAddress = adminAddress || (await masa.config.signer.getAddress());

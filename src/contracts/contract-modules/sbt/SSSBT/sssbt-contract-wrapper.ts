@@ -50,7 +50,7 @@ export class SSSBTContractWrapper<
     | undefined
   > => {
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const authorityAddress = await this.masa.config.signer.getAddress();
@@ -99,7 +99,7 @@ export class SSSBTContractWrapper<
     slippage: number | undefined = 250,
   ): Promise<PriceInformation | undefined> => {
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const domain: TypedDataDomain = await generateSignatureDomain(

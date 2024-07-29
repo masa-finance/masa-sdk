@@ -173,7 +173,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
 
     try {
       if (!isSigner(this.masa.config.signer)) {
-        return;
+        return undefined;
       }
 
       feeData = await this.masa.config.signer.provider?.getFeeData();

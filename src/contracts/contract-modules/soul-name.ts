@@ -68,7 +68,7 @@ export class SoulName extends MasaContractModuleBase {
     receiver?: string,
   ): Promise<ContractTransaction | undefined> => {
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const to = receiver || (await this.masa.config.signer.getAddress());
@@ -272,7 +272,7 @@ export class SoulName extends MasaContractModuleBase {
     | undefined
   > => {
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const value: {

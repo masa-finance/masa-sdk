@@ -36,7 +36,7 @@ export const deploySSSBT = async ({
 
   if (!isSigner(masa.config.signer)) {
     console.log(`Deployment to ${masa.config.networkName} failed!`);
-    return;
+    return undefined;
   }
 
   const signerAddress = await masa.config.signer.getAddress();

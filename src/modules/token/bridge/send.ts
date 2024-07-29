@@ -41,8 +41,9 @@ export const loadOFTContract = (
   if (
     !masa.config.network?.addresses.tokens?.MASA ||
     !isSigner(masa.config.signer)
-  )
-    return;
+  ) {
+    return undefined;
+  }
 
   // origin
   let oft: MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined;

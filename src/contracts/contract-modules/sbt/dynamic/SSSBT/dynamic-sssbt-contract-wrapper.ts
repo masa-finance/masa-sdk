@@ -46,7 +46,7 @@ export class DynamicSSSBTContractWrapper<
     | undefined
   > => {
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const authorityAddress = await this.masa.config.signer.getAddress();

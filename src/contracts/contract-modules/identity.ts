@@ -50,7 +50,7 @@ export class Identity extends MasaSBTModuleBase {
     signature: string,
   ): Promise<ContractTransaction | undefined> => {
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const domain: TypedDataDomain = await generateSignatureDomain(

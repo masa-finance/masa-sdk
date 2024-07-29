@@ -30,7 +30,7 @@ export class MasaSSSBTWrapper<
       | undefined;
 
     if (!isSigner(this.masa.config.signer)) {
-      return;
+      return undefined;
     }
 
     const [name, symbol] = await Promise.all([
