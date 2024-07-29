@@ -11,7 +11,7 @@ export const environments: Environment[] = [
   {
     environment: "local",
     apiUrl: "http://localhost:4000/",
-    networkName: "goerli",
+    networkName: "sepolia",
     arweave: {
       host: "arweave.net",
       port: 443,
@@ -22,7 +22,7 @@ export const environments: Environment[] = [
   {
     environment: "dev",
     apiUrl: "https://dev.middleware.masa.finance/",
-    networkName: "goerli",
+    networkName: "sepolia",
     arweave: {
       host: "arweave.net",
       port: 443,
@@ -33,7 +33,7 @@ export const environments: Environment[] = [
   {
     environment: "stage",
     apiUrl: "https://beta.middleware.masa.finance/",
-    networkName: "goerli",
+    networkName: "sepolia",
     arweave: {
       host: "arweave.net",
       port: 443,
