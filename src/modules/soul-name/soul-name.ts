@@ -1,9 +1,8 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 
-import type { MasaInterface, PaymentMethod } from "../../interface";
+import type { MasaInterface } from "../../interface";
 import { MasaModuleBase } from "../masa-module-base";
 import { burnSoulName } from "./burn";
-import { createSoulName } from "./create";
 import { getSoulNameMetadataPrefix } from "./helpers";
 import { listSoulNames } from "./list";
 import {
@@ -69,30 +68,6 @@ export class MasaSoulName extends MasaModuleBase {
    */
   loadSoulNameByTokenId = (tokenId: string | BigNumber) =>
     loadSoulNameByTokenId(this.masa, tokenId);
-
-  /**
-   *
-   * @param paymentMethod
-   * @param soulName
-   * @param duration
-   * @param receiver
-   * @param style
-   */
-  create = (
-    paymentMethod: PaymentMethod = "ETH",
-    soulName: string,
-    duration: number,
-    receiver?: string,
-    style?: string,
-  ) =>
-    createSoulName(
-      this.masa,
-      paymentMethod,
-      soulName,
-      duration,
-      receiver,
-      style,
-    );
 
   /**
    *
