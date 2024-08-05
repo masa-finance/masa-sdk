@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 
-import type { GreenDetails, IGreen, MasaInterface } from "../../interface";
+import type { GreenDetails, MasaInterface } from "../../interface";
 import { isBigNumber, patchMetadataUrl } from "../../utils";
 
 export const loadGreenDetails = async (
@@ -21,14 +21,9 @@ export const loadGreenDetails = async (
           console.info(`Green Metadata URL: '${tokenUri}'`);
         }
 
-        const metadata = <IGreen | undefined>(
-          await masa.client.metadata.get(tokenUri)
-        );
-
         return {
           tokenId,
           tokenUri,
-          metadata,
         };
       }),
     )
