@@ -4,6 +4,7 @@ import type { Addresses } from "./addresses";
 import type { NetworkName } from "./network-name";
 
 export interface Network {
+  type: "evm" | "solana";
   /**
    * the technical network name that the SDK knows
    */

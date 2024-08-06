@@ -2,6 +2,7 @@ import { utils } from "ethers";
 
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils";
 
 /**
  *
@@ -16,14 +17,17 @@ export const unlock = async (
     success: false,
   };
 
-  console.log(`Unlocking position ${position}!`);
-
-  if (!masa.contracts.instances.MasaStaking.hasAddress) {
+  if (
+    !masa.contracts.instances.MasaStaking.hasAddress ||
+    !isSigner(masa.config.signer)
+  ) {
     result.message = `Unable to unlock on ${masa.config.networkName}!`;
     console.error(result.message);
 
     return result;
   }
+
+  console.log(`Unlocking position ${position}!`);
 
   try {
     const address = await masa.config.signer.getAddress();

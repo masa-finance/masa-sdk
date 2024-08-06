@@ -2,15 +2,22 @@ import type { BigNumber } from "@ethersproject/bignumber";
 
 import { Messages } from "../../collections";
 import type { IdentityDetails, MasaInterface } from "../../interface";
-import { isBigNumber, patchMetadataUrl } from "../../utils";
+import { isBigNumber, isSigner, patchMetadataUrl } from "../../utils";
 import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (
   masa: MasaInterface,
   address?: string,
-): Promise<{ identityId?: BigNumber; address: string }> => {
-  address = address || (await masa.config.signer.getAddress());
+): Promise<{ identityId?: BigNumber; address?: string }> => {
   let identityId;
+
+  if (!isSigner(masa.config.signer)) {
+    return {
+      address,
+    };
+  }
+
+  address = address || (await masa.config.signer.getAddress());
 
   try {
     const balance =
@@ -29,7 +36,10 @@ export const loadIdentityByAddress = async (
     // ignore
   }
 
-  return { identityId, address };
+  return {
+    identityId,
+    address,
+  };
 };
 
 export const loadIdentityDetails = async (
@@ -68,7 +78,11 @@ export const loadIdentity = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<IdentityDetails | undefined> => {
-  let result;
+  let result: IdentityDetails | undefined;
+
+  if (!isSigner(masa.config.signer)) {
+    return undefined;
+  }
 
   address = address || (await masa.config.signer.getAddress());
 

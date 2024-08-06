@@ -15,6 +15,7 @@ import { BigNumber, constants, utils } from "ethers";
 
 import { Messages, SupportedNetworks } from "../../../collections";
 import { BaseResult, MasaInterface, NetworkName } from "../../../interface";
+import { isSigner } from "../../../utils";
 
 const lzUrl = (txHash: string, testnet: boolean = false) =>
   `https://${testnet ? "testnet." : ""}layerzeroscan.com/tx/${txHash}`;
@@ -37,7 +38,12 @@ export interface SendResult extends BaseResult {
 export const loadOFTContract = (
   masa: MasaInterface,
 ): MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined => {
-  if (!masa.config.network?.addresses.tokens?.MASA) return;
+  if (
+    !masa.config.network?.addresses.tokens?.MASA ||
+    !isSigner(masa.config.signer)
+  ) {
+    return undefined;
+  }
 
   // origin
   let oft: MasaToken | MasaTokenOFT | MasaTokenNativeOFT | undefined;
@@ -92,46 +98,48 @@ const loadTransactionCost = async (
 }> => {
   const { nativeFee, lzTokenFee } = fees;
 
-  const {
-    estimateGas: { send },
-  } = oft;
-
-  let gasPrice: BigNumber | undefined;
-
-  try {
-    const feeData = await masa.config.signer.getFeeData();
-    if (feeData.maxPriorityFeePerGas) {
-      gasPrice = feeData.maxPriorityFeePerGas;
-    }
-  } catch {
-    console.warn(
-      "Failed to get network fee information, falling back to gas price!",
-    );
-  }
-
-  if (!gasPrice) {
-    gasPrice = await masa.config.signer.getGasPrice();
-  }
-
   let gasLimit, transactionCost;
 
-  try {
-    gasLimit = await send(
-      sendParameters,
-      { nativeFee, lzTokenFee },
-      await masa.config.signer.getAddress(),
-      {
-        value:
-          masa.config.networkName === "masa" ||
-          masa.config.networkName === "masatest"
-            ? nativeFee.add(sendParameters.amountLD)
-            : nativeFee,
-      },
-    );
+  if (isSigner(masa.config.signer)) {
+    const {
+      estimateGas: { send },
+    } = oft;
 
-    transactionCost = gasLimit.mul(gasPrice);
-  } catch {
-    console.warn("Unable to load transaction cost!");
+    let gasPrice: BigNumber | undefined;
+
+    try {
+      const feeData = await masa.config.signer.getFeeData();
+      if (feeData.maxPriorityFeePerGas) {
+        gasPrice = feeData.maxPriorityFeePerGas;
+      }
+    } catch {
+      console.warn(
+        "Failed to get network fee information, falling back to gas price!",
+      );
+    }
+
+    if (!gasPrice) {
+      gasPrice = await masa.config.signer.getGasPrice();
+    }
+
+    try {
+      gasLimit = await send(
+        sendParameters,
+        { nativeFee, lzTokenFee },
+        await masa.config.signer.getAddress(),
+        {
+          value:
+            masa.config.networkName === "masa" ||
+            masa.config.networkName === "masatest"
+              ? nativeFee.add(sendParameters.amountLD)
+              : nativeFee,
+        },
+      );
+
+      transactionCost = gasLimit.mul(gasPrice);
+    } catch {
+      console.warn("Unable to load transaction cost!");
+    }
   }
 
   return {
@@ -264,20 +272,25 @@ export const send = async (
     success: false,
   };
 
-  console.log(
-    `Sending ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
-  );
-
   // current wallet
-  const address = await masa.config.signer.getAddress();
   const { lzEndpointId: toEID } = SupportedNetworks[to] ?? {};
 
-  if (!masa.contracts.instances.MasaToken.hasAddress || !toEID) {
+  if (
+    !masa.contracts.instances.MasaToken.hasAddress ||
+    !toEID ||
+    !isSigner(masa.config.signer)
+  ) {
     result.message = `Unable to send from ${masa.config.networkName} to ${to}!`;
     console.error(result.message);
 
     return result;
   }
+
+  console.log(
+    `Sending ${parseFloat(amount).toLocaleString()} MASA from '${masa.config.networkName}' to '${to}'!`,
+  );
+
+  const address = await masa.config.signer.getAddress();
 
   const tokenAmount = BigNumber.from(utils.parseEther(amount));
 

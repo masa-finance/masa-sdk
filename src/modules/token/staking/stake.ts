@@ -2,6 +2,7 @@ import { BigNumber, utils } from "ethers";
 
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils/is-signer";
 
 const secondsInMonth = 2_592_000;
 
@@ -20,7 +21,10 @@ export const stake = async (
     success: false,
   };
 
-  if (!masa.contracts.instances.MasaStaking.hasAddress) {
+  if (
+    !masa.contracts.instances.MasaStaking.hasAddress ||
+    !isSigner(masa.config.signer)
+  ) {
     result.message = `Unable to stake on ${masa.config.networkName}!`;
     console.error(result.message);
 

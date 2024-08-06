@@ -54,6 +54,12 @@ export const createLink = async (
       24 * 60 * 60,
     );
 
+  if (!signature) {
+    result.message = "Unable to sign!";
+    console.error(result.message);
+    return result;
+  }
+
   console.log(`Signature Date: ${currentDate.toUTCString()}`);
   console.log(
     `Expiration Date: ${new Date(expirationDate * 1000).toUTCString()}`,

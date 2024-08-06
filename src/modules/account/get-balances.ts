@@ -4,6 +4,7 @@ import type {
   SoulboundIdentity,
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { constants, utils } from "ethers";
 
 import type {
@@ -13,6 +14,7 @@ import type {
 } from "../../interface";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
+import { isSigner } from "../../utils";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
@@ -37,7 +39,21 @@ export const getBalances = async (
   address?: string,
 ): Promise<Balances> => {
   const addressToLoad: string =
-    address || (await masa.config.signer.getAddress());
+    address ||
+    (isSigner(masa.config.signer)
+      ? await masa.config.signer.getAddress()
+      : masa.config.signer.keypair.publicKey.toBase58());
+
+  if (!isSigner(masa.config.signer)) {
+    const nativeBalance =
+      (await masa.config.signer.connection.getBalance(
+        masa.config.signer.keypair.publicKey,
+      )) / LAMPORTS_PER_SOL;
+
+    return {
+      Native: nativeBalance,
+    };
+  }
 
   const loadERC20Balance = async (
     userAddress: string,
@@ -46,14 +62,14 @@ export const getBalances = async (
     let result;
 
     if (
-      masa.config.signer.provider &&
+      isSigner(masa.config.signer) &&
       tokenAddress &&
       tokenAddress !== constants.AddressZero
     ) {
       try {
         const contract: ERC20 = ERC20__factory.connect(
           tokenAddress,
-          masa.config.signer.provider,
+          masa.config.signer,
         );
 
         const [balance, decimals] = await Promise.all([

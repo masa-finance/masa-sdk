@@ -2,6 +2,7 @@ import { TransferEvent } from "@masa-finance/masa-contracts-identity/dist/typech
 import { constants } from "ethers";
 
 import type { MasaInterface, SoulNameDetails } from "../../interface";
+import { isSigner } from "../../utils";
 import { printSoulName } from "./helpers";
 import { loadSoulNameByTokenId } from "./load";
 
@@ -9,6 +10,10 @@ export const tailSoulNames = async (
   masa: MasaInterface,
   limit: number = 5,
 ): Promise<SoulNameDetails[]> => {
+  if (!isSigner(masa.config.signer)) {
+    return [];
+  }
+
   const soulNameMintEventsFilter =
     masa.contracts.instances.SoulNameContract.filters.Transfer(
       constants.AddressZero,
