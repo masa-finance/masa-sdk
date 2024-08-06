@@ -8,10 +8,7 @@ import type {
   ISession,
   LogoutResult,
   MasaInterface,
-  NetworkName,
   SessionUser,
-  SoulNameMetadataStoreResult,
-  SoulNameResultBase,
 } from "../../interface";
 import { isSession } from "../../interface";
 import { MasaBase } from "../../masa-base";
@@ -182,45 +179,6 @@ export class MasaClient extends MasaBase {
       );
       delete this._cookie;
       return logoutResult;
-    },
-  };
-
-  soulName = {
-    /**
-     * Store metadata
-     * @param soulName
-     * @param receiver
-     * @param duration
-     * @param style
-     */
-    store: async (
-      soulName: string,
-      receiver: string,
-      duration: number,
-      style?: string,
-    ): Promise<
-      SoulNameMetadataStoreResult | SoulNameResultBase | undefined
-    > => {
-      console.log(`Writing metadata for '${soulName}'`);
-
-      const { data: soulNameMetadataStoreResult } = await this.post<
-        {
-          soulName: string;
-          receiver: string;
-          duration: number;
-          network: NetworkName;
-          style?: string;
-        },
-        SoulNameMetadataStoreResult | SoulNameResultBase
-      >("/soul-name/store", {
-        soulName,
-        receiver,
-        duration,
-        network: this.masa.config.networkName,
-        style,
-      });
-
-      return soulNameMetadataStoreResult;
     },
   };
 
