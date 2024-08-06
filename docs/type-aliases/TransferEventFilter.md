@@ -1,9 +1,9 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / TransferEventFilter
+[Masa SDK v4.2.0](../globals.md) / TransferEventFilter
 
-# Type alias: TransferEventFilter
+# Type Alias: TransferEventFilter
 
 > **TransferEventFilter**: `TypedEventFilter`\<[`TransferEvent`](TransferEvent.md)\>

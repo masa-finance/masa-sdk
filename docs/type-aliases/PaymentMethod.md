@@ -1,9 +1,9 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / PaymentMethod
+[Masa SDK v4.2.0](../globals.md) / PaymentMethod
 
-# Type alias: PaymentMethod
+# Type Alias: PaymentMethod
 
 > **PaymentMethod**: [`NativeCurrencies`](NativeCurrencies.md) \| [`ERC20Currencies`](ERC20Currencies.md)

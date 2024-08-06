@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / SBTContractWrapper
+[Masa SDK v4.2.0](../globals.md) / SBTContractWrapper
 
 # Class: SBTContractWrapper\<Contract\>
 
@@ -15,7 +15,7 @@
 - [`ASBTContractWrapper`](ASBTContractWrapper.md)
 - [`SSSBTContractWrapper`](SSSBTContractWrapper.md)
 
-## Type parameters
+## Type Parameters
 
 • **Contract** *extends* `MasaSBT`
 
@@ -80,32 +80,6 @@
 #### Returns
 
 `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-***
-
-### checkOrGiveAllowance()
-
-> `private` **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<`undefined` \| `ContractReceipt`\>
-
-Checks or gives allowance on ERC20 tokens
-
-#### Parameters
-
-• **paymentAddress**: `string`
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-• **spenderAddress**: `string`
-
-• **price**: `BigNumber`
-
-#### Returns
-
-`Promise`\<`undefined` \| `ContractReceipt`\>
-
-#### Inherited from
-
-[`MasaSBTModuleBase`](MasaSBTModuleBase.md).[`checkOrGiveAllowance`](MasaSBTModuleBase.md#checkorgiveallowance)
 
 ***
 
@@ -179,7 +153,7 @@ Checks or gives allowance on ERC20 tokens
 
 • **contract**: `MasaSBT`
 
-• **slippage**: `undefined` \| `number`= `250`
+• **slippage**: `undefined` \| `number` = `250`
 
 #### Returns
 
@@ -205,26 +179,6 @@ Checks or gives allowance on ERC20 tokens
 
 ***
 
-### getPaymentAddress()
-
-> `private` **getPaymentAddress**(`paymentMethod`): `string`
-
-Gets the payment address for a given payment method
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-#### Returns
-
-`string`
-
-#### Inherited from
-
-[`MasaSBTModuleBase`](MasaSBTModuleBase.md).[`getPaymentAddress`](MasaSBTModuleBase.md#getpaymentaddress)
-
-***
-
 ### getPrice()
 
 > **getPrice**(`paymentMethod`, `slippage`): `Promise`\<[`PriceInformation`](../interfaces/PriceInformation.md)\>
@@ -233,7 +187,7 @@ Gets the payment address for a given payment method
 
 • **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
 
-• **slippage**: `undefined` \| `number`= `250`
+• **slippage**: `undefined` \| `number` = `250`
 
 #### Returns
 
@@ -245,7 +199,7 @@ Gets the payment address for a given payment method
 
 > `protected` **loadSBTContract**\<`Contract`\>(`address`, `factory`): `Promise`\<`Contract`\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Contract** *extends* `MasaSBT`
 
@@ -299,7 +253,7 @@ verify a signature created during one of the SBT signing flows
 
 ### addSlippage()
 
-> `static` `protected` **addSlippage**(`price`, `slippage`): `BigNumber`
+> `protected` `static` **addSlippage**(`price`, `slippage`): `BigNumber`
 
 adds a percentage to the price as slippage
 

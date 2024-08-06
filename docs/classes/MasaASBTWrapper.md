@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaASBTWrapper
+[Masa SDK v4.2.0](../globals.md) / MasaASBTWrapper
 
 # Class: MasaASBTWrapper\<Contract\>
 
@@ -10,7 +10,7 @@
 
 - [`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>
 
-## Type parameters
+## Type Parameters
 
 • **Contract** *extends* `ReferenceSBTAuthority`
 
@@ -74,23 +74,11 @@
 
 `boolean`
 
+#### Inherited from
+
+[`MasaSBTWrapper`](MasaSBTWrapper.md).[`isContractAvailable`](MasaSBTWrapper.md#iscontractavailable)
+
 ## Methods
-
-### bulkMint()
-
-> **bulkMint**(`receivers`, `paymentMethod`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)[]\>
-
-#### Parameters
-
-• **receivers**: `string`[]
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-#### Returns
-
-`Promise`\<[`BaseResult`](../interfaces/BaseResult.md)[]\>
-
-***
 
 ### burn()
 
@@ -161,19 +149,3 @@
 #### Inherited from
 
 [`MasaSBTWrapper`](MasaSBTWrapper.md).[`loadSBTs`](MasaSBTWrapper.md#loadsbts)
-
-***
-
-### mint()
-
-> **mint**(`receiver`, `paymentMethod`): `Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-#### Parameters
-
-• **receiver**: `string`
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-#### Returns
-
-`Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>

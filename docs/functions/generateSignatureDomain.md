@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / generateSignatureDomain
+[Masa SDK v4.2.0](../globals.md) / generateSignatureDomain
 
 # Function: generateSignatureDomain()
 
@@ -16,7 +16,7 @@
 
 • **verifyingContract**: `string`
 
-• **version**: `string`= `"1.0.0"`
+• **version**: `string` = `"1.0.0"`
 
 ## Returns
 

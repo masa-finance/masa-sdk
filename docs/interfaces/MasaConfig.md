@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaConfig
+[Masa SDK v4.2.0](../globals.md) / MasaConfig
 
 # Interface: MasaConfig
 
@@ -28,7 +28,7 @@
 
 ### network?
 
-> `optional` `readonly` **network**: [`Network`](Network.md)
+> `readonly` `optional` **network**: [`Network`](Network.md)
 
 ***
 

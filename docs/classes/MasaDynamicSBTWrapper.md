@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaDynamicSBTWrapper
+[Masa SDK v4.2.0](../globals.md) / MasaDynamicSBTWrapper
 
 # Class: MasaDynamicSBTWrapper\<Contract\>
 
@@ -14,7 +14,7 @@
 
 - [`MasaDynamicSSSBTWrapper`](MasaDynamicSSSBTWrapper.md)
 
-## Type parameters
+## Type Parameters
 
 • **Contract** *extends* `MasaSBTDynamic`
 
@@ -77,6 +77,10 @@
 #### Returns
 
 `boolean`
+
+#### Inherited from
+
+[`MasaSBTWrapper`](MasaSBTWrapper.md).[`isContractAvailable`](MasaSBTWrapper.md#iscontractavailable)
 
 ## Methods
 

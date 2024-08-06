@@ -1,10 +1,10 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / ListLinksResult
+[Masa SDK v4.2.0](../globals.md) / ListLinksResult
 
-# Type alias: ListLinksResult
+# Type Alias: ListLinksResult
 
 > **ListLinksResult**: [`BaseResult`](../interfaces/BaseResult.md) & `object`
 

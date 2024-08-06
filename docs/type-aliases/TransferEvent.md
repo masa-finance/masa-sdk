@@ -1,9 +1,9 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / TransferEvent
+[Masa SDK v4.2.0](../globals.md) / TransferEvent
 
-# Type alias: TransferEvent
+# Type Alias: TransferEvent
 
 > **TransferEvent**: `TypedEvent`\<[`string`, `string`, `BigNumber`], [`TransferEventObject`](../interfaces/TransferEventObject.md)\>

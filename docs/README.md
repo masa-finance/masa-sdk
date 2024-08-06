@@ -1,4 +1,4 @@
-**Masa SDK v3.40.0** • [**Docs**](globals.md)
+**Masa SDK v4.2.0** • [**Docs**](globals.md)
 
 ***
 
@@ -62,7 +62,7 @@ export const masa = new Masa({
 
 ## Interface
 
-For a detailed interface description see [Masa](docs/classes/Masa.md)
+For a detailed interface description see [Masa](_media/Masa.md)
 
 ## Configuration
 

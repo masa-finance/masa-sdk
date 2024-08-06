@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / StaticJsonRpcProvider
+[Masa SDK v4.2.0](../globals.md) / StaticJsonRpcProvider
 
 # Class: StaticJsonRpcProvider
 
@@ -46,7 +46,7 @@
 
 > **\_emitted**: `object`
 
-#### Index signature
+#### Index Signature
 
  \[`eventName`: `string`\]: `number` \| `"pending"`
 
@@ -278,6 +278,10 @@
 
 `Record`\<`string`, `Promise`\<`any`\>\>
 
+#### Inherited from
+
+`providers.JsonRpcProvider._cache`
+
 ***
 
 ### blockNumber
@@ -288,6 +292,10 @@
 
 `number`
 
+#### Inherited from
+
+`providers.JsonRpcProvider.blockNumber`
+
 ***
 
 ### network
@@ -297,6 +305,10 @@
 #### Returns
 
 `Network`
+
+#### Inherited from
+
+`providers.JsonRpcProvider.network`
 
 ***
 
@@ -314,6 +326,10 @@
 
 `boolean`
 
+#### Inherited from
+
+`providers.JsonRpcProvider.polling`
+
 ***
 
 ### pollingInterval
@@ -330,6 +346,10 @@
 
 `number`
 
+#### Inherited from
+
+`providers.JsonRpcProvider.pollingInterval`
+
 ***
 
 ### ready
@@ -339,6 +359,10 @@
 #### Returns
 
 `Promise`\<`Network`\>
+
+#### Inherited from
+
+`providers.JsonRpcProvider.ready`
 
 ## Methods
 

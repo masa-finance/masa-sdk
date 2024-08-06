@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaSSSBT
+[Masa SDK v4.2.0](../globals.md) / MasaSSSBT
 
 # Class: MasaSSSBT
 
@@ -44,7 +44,7 @@
 
 > **attach**\<`Contract`\>(`contract`): [`MasaSSSBTWrapper`](MasaSSSBTWrapper.md)\<`Contract`\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Contract** *extends* `ReferenceSBTSelfSovereign`
 
@@ -62,7 +62,7 @@
 
 > **connect**\<`Contract`\>(`address`, `factory`): `Promise`\<[`MasaSSSBTWrapper`](MasaSSSBTWrapper.md)\<`Contract`\>\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Contract** *extends* `ReferenceSBTSelfSovereign`
 
@@ -70,34 +70,8 @@
 
 • **address**: `string`
 
-• **factory**: [`ContractFactory`](ContractFactory.md)= `ReferenceSBTSelfSovereign__factory`
+• **factory**: [`ContractFactory`](ContractFactory.md) = `ReferenceSBTSelfSovereign__factory`
 
 #### Returns
 
 `Promise`\<[`MasaSSSBTWrapper`](MasaSSSBTWrapper.md)\<`Contract`\>\>
-
-***
-
-### deploy()
-
-> **deploy**(`__namedParameters`): `Promise`\<`undefined` \| [`DeployResult`](../interfaces/DeployResult.md)\<`PaymentParamsStruct`\>\>
-
-#### Parameters
-
-• **\_\_namedParameters**
-
-• **\_\_namedParameters.adminAddress?**: `string`
-
-• **\_\_namedParameters.authorityAddress**: `string`
-
-• **\_\_namedParameters.baseTokenUri**: `string`
-
-• **\_\_namedParameters.limit?**: `number`= `1`
-
-• **\_\_namedParameters.name**: `string`
-
-• **\_\_namedParameters.symbol**: `string`
-
-#### Returns
-
-`Promise`\<`undefined` \| [`DeployResult`](../interfaces/DeployResult.md)\<`PaymentParamsStruct`\>\>

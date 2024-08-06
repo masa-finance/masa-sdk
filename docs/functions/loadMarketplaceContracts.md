@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / loadMarketplaceContracts
+[Masa SDK v4.2.0](../globals.md) / loadMarketplaceContracts
 
 # Function: loadMarketplaceContracts()
 
@@ -12,7 +12,7 @@
 
 • **\_\_namedParameters**
 
-• **\_\_namedParameters.networkName?**: [`NetworkName`](../type-aliases/NetworkName.md)= `"ethereum"`
+• **\_\_namedParameters.networkName?**: [`NetworkName`](../type-aliases/NetworkName.md) = `"ethereum"`
 
 • **\_\_namedParameters.signer**: `Signer`
 

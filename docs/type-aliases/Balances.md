@@ -1,9 +1,9 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / Balances
+[Masa SDK v4.2.0](../globals.md) / Balances
 
-# Type alias: Balances
+# Type Alias: Balances
 
 > **Balances**: `Partial`\<\{ \[index in BalanceTypes\]: number \| undefined \}\>

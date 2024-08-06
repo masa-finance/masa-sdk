@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaArgs
+[Masa SDK v4.2.0](../globals.md) / MasaArgs
 
 # Interface: MasaArgs
 
@@ -10,43 +10,43 @@
 
 ### apiUrl?
 
-> `optional` `readonly` **apiUrl**: `string`
+> `readonly` `optional` **apiUrl**: `string`
 
 ***
 
 ### arweave?
 
-> `optional` `readonly` **arweave**: `ApiConfig`
+> `readonly` `optional` **arweave**: `ApiConfig`
 
 ***
 
 ### contractOverrides?
 
-> `optional` `readonly` **contractOverrides**: `Partial`\<[`IIdentityContracts`](IIdentityContracts.md)\>
+> `readonly` `optional` **contractOverrides**: `Partial`\<[`IIdentityContracts`](IIdentityContracts.md)\>
 
 ***
 
 ### cookie?
 
-> `optional` `readonly` **cookie**: `string`
+> `readonly` `optional` **cookie**: `string`
 
 ***
 
 ### environment?
 
-> `optional` `readonly` **environment**: [`EnvironmentName`](../type-aliases/EnvironmentName.md)
+> `readonly` `optional` **environment**: [`EnvironmentName`](../type-aliases/EnvironmentName.md)
 
 ***
 
 ### forceTransactions?
 
-> `optional` `readonly` **forceTransactions**: `boolean`
+> `readonly` `optional` **forceTransactions**: `boolean`
 
 ***
 
 ### networkName?
 
-> `optional` `readonly` **networkName**: [`NetworkName`](../type-aliases/NetworkName.md)
+> `readonly` `optional` **networkName**: [`NetworkName`](../type-aliases/NetworkName.md)
 
 ***
 
@@ -58,4 +58,4 @@
 
 ### verbose?
 
-> `optional` `readonly` **verbose**: `boolean`
+> `readonly` `optional` **verbose**: `boolean`

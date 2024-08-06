@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaClient
+[Masa SDK v4.2.0](../globals.md) / MasaClient
 
 # Class: MasaClient
 
@@ -36,18 +36,6 @@
 
 ## Properties
 
-### \_cookie?
-
-> `private` `optional` **\_cookie**: `string`
-
-***
-
-### \_middlewareClient
-
-> `private` **\_middlewareClient**: `AxiosInstance`
-
-***
-
 ### masa
 
 > `protected` `readonly` **masa**: [`MasaInterface`](../interfaces/MasaInterface.md)
@@ -55,28 +43,6 @@
 #### Inherited from
 
 `MasaBase.masa`
-
-***
-
-### metadata
-
-> **metadata**: `object`
-
-#### get()
-
-> **get**: (`uri`, `additionalHeaders`?) => `Promise`\<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`IGreen`](../interfaces/IGreen.md)\>
-
-Retrieve metadata
-
-##### Parameters
-
-• **uri**: `string`
-
-• **additionalHeaders?**: `Record`\<`string`, `string`\>
-
-##### Returns
-
-`Promise`\<`undefined` \| [`IIdentity`](../interfaces/IIdentity.md) \| [`ICreditScore`](../interfaces/ICreditScore.md) \| [`IGreen`](../interfaces/IGreen.md)\>
 
 ***
 
@@ -130,32 +96,6 @@ Logout the current user
 
 `Promise`\<`undefined` \| [`LogoutResult`](../interfaces/LogoutResult.md)\>
 
-***
-
-### soulName
-
-> **soulName**: `object`
-
-#### store()
-
-> **store**: (`soulName`, `receiver`, `duration`, `style`?) => `Promise`\<`undefined` \| [`SoulNameMetadataStoreResult`](../interfaces/SoulNameMetadataStoreResult.md) \| [`SoulNameResultBase`](../interfaces/SoulNameResultBase.md)\>
-
-Store metadata
-
-##### Parameters
-
-• **soulName**: `string`
-
-• **receiver**: `string`
-
-• **duration**: `number`
-
-• **style?**: `string`
-
-##### Returns
-
-`Promise`\<`undefined` \| [`SoulNameMetadataStoreResult`](../interfaces/SoulNameMetadataStoreResult.md) \| [`SoulNameResultBase`](../interfaces/SoulNameResultBase.md)\>
-
 ## Accessors
 
 ### cookie
@@ -172,7 +112,7 @@ Store metadata
 
 > **get**\<`Result`\>(`endpoint`, `silent`): `Promise`\<`object`\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Result**
 
@@ -180,7 +120,7 @@ Store metadata
 
 • **endpoint**: `string`
 
-• **silent**: `boolean`= `false`
+• **silent**: `boolean` = `false`
 
 #### Returns
 
@@ -204,7 +144,7 @@ Store metadata
 
 > **patch**\<`Request`, `Result`\>(`endpoint`, `data`, `silent`): `Promise`\<`object`\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Request**
 
@@ -216,7 +156,7 @@ Store metadata
 
 • **data**: `Request`
 
-• **silent**: `boolean`= `false`
+• **silent**: `boolean` = `false`
 
 #### Returns
 
@@ -240,7 +180,7 @@ Store metadata
 
 > **post**\<`Request`, `Result`\>(`endpoint`, `data`, `silent`): `Promise`\<`object`\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Request**
 
@@ -252,7 +192,7 @@ Store metadata
 
 • **data**: `Request`
 
-• **silent**: `boolean`= `false`
+• **silent**: `boolean` = `false`
 
 #### Returns
 

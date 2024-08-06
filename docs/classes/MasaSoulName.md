@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaSoulName
+[Masa SDK v4.2.0](../globals.md) / MasaSoulName
 
 # Class: MasaSoulName
 
@@ -58,6 +58,10 @@
 
 `boolean`
 
+#### Inherited from
+
+`MasaModuleBase.isContractAvailable`
+
 ## Methods
 
 ### burn()
@@ -71,28 +75,6 @@
 #### Returns
 
 `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-***
-
-### create()
-
-> **create**(`paymentMethod`, `soulName`, `duration`, `receiver`?, `style`?): `Promise`\<[`CreateSoulNameResult`](../interfaces/CreateSoulNameResult.md)\>
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-• **soulName**: `string`
-
-• **duration**: `number`
-
-• **receiver?**: `string`
-
-• **style?**: `string`
-
-#### Returns
-
-`Promise`\<[`CreateSoulNameResult`](../interfaces/CreateSoulNameResult.md)\>
 
 ***
 

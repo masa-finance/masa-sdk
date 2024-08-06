@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / getSendParameters
+[Masa SDK v4.2.0](../globals.md) / getSendParameters
 
 # Function: getSendParameters()
 
@@ -16,7 +16,7 @@
 
 • **tokenAmount**: `BigNumber`
 
-• **slippage**: `number`= `250`
+• **slippage**: `number` = `250`
 
 ## Returns
 
