@@ -21,7 +21,7 @@ export const environments: Environment[] = [
   } as Environment,
   {
     environment: "dev",
-    apiUrl: "https://dev.middleware.masa.finance/",
+    apiUrl: "https://dev.api.cookiemonster.masa.finance/",
     networkName: "sepolia",
     arweave: {
       host: "arweave.net",
@@ -32,7 +32,7 @@ export const environments: Environment[] = [
   } as Environment,
   {
     environment: "stage",
-    apiUrl: "https://beta.middleware.masa.finance/",
+    apiUrl: "https://stage.api.cookiemonster.masa.finance/",
     networkName: "sepolia",
     arweave: {
       host: "arweave.net",
@@ -43,7 +43,7 @@ export const environments: Environment[] = [
   } as Environment,
   {
     environment: "production",
-    apiUrl: "https://middleware.masa.finance/",
+    apiUrl: "https://api.cookiemonster.masa.finance/",
     networkName: "ethereum",
     arweave: {
       host: "arweave.net",

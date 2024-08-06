@@ -18,7 +18,7 @@ const headers = {
 };
 
 export class MasaClient extends MasaBase {
-  private _middlewareClient: AxiosInstance;
+  private _apiClient: AxiosInstance;
   private _cookie?: string;
 
   get cookie() {
@@ -37,7 +37,7 @@ export class MasaClient extends MasaBase {
     super(masa);
     this._cookie = cookie;
 
-    this._middlewareClient = axios.create({
+    this._apiClient = axios.create({
       baseURL: apiUrl,
       withCredentials: true,
       headers,
@@ -72,7 +72,7 @@ export class MasaClient extends MasaBase {
 
       const cookieToUse = cookie || this.cookie;
 
-      const checkSignatureResponse = await this._middlewareClient
+      const checkSignatureResponse = await this._apiClient
         .post<
           {
             address: string;
@@ -129,7 +129,7 @@ export class MasaClient extends MasaBase {
     getChallenge: async (): Promise<ChallengeResultWithCookie | undefined> => {
       let result;
 
-      const getChallengeResponse = await this._middlewareClient
+      const getChallengeResponse = await this._apiClient
         .get<ChallengeResult>("/session/get-challenge")
         .catch((error: Error | AxiosError) => {
           console.error("Get Challenge failed!", error.message);
@@ -195,7 +195,7 @@ export class MasaClient extends MasaBase {
       console.log(`Posting '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
-    const postResponse = await this._middlewareClient
+    const postResponse = await this._apiClient
       .post<Request, AxiosResponse<Result>>(endpoint, data, {
         withCredentials: true,
         headers: {
@@ -243,7 +243,7 @@ export class MasaClient extends MasaBase {
       console.log(`Patching '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
-    const patchResponse = await this._middlewareClient
+    const patchResponse = await this._apiClient
       .patch<Request, AxiosResponse<Result>>(endpoint, data, {
         withCredentials: true,
         headers: {
@@ -290,7 +290,7 @@ export class MasaClient extends MasaBase {
       console.log(`Getting '${endpoint}'`);
     }
 
-    const getResponse = await this._middlewareClient
+    const getResponse = await this._apiClient
       .get<Result>(endpoint, {
         withCredentials: true,
         headers: {

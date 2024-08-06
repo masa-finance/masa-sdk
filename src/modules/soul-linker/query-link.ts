@@ -70,7 +70,7 @@ export const queryLink = async (
     signature,
   );
 
-  console.log("tx hash for middleware", txHash);
+  console.log("tx hash for backend", txHash);
 
   const { "tokenURI(uint256)": tokenURI } = contract;
 
