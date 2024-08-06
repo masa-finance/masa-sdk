@@ -2,7 +2,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 
 import { Messages } from "../../collections";
 import type { IdentityDetails, MasaInterface } from "../../interface";
-import { isBigNumber, patchMetadataUrl } from "../../utils";
+import { isBigNumber, isSigner, patchMetadataUrl } from "../../utils";
 import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (

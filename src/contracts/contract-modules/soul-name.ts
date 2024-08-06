@@ -3,8 +3,8 @@ import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type { BaseResult } from "../../interface";
+import { isSigner } from "../../utils";
 import { MasaContractModuleBase } from "./masa-contract-module-base";
-import { isSigner } from "../../utils"
 
 export class SoulName extends MasaContractModuleBase {
   /**
