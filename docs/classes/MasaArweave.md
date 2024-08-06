@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaArweave
+[Masa SDK v4.2.0](../globals.md) / MasaArweave
 
 # Class: MasaArweave
 
@@ -34,7 +34,7 @@
 
 ### api
 
-> **api**: `default`
+> **api**: `Api`
 
 #### Inherited from
 
@@ -44,7 +44,7 @@
 
 ### ar
 
-> **ar**: `default`
+> **ar**: `Ar`
 
 #### Inherited from
 
@@ -54,7 +54,7 @@
 
 ### blocks
 
-> **blocks**: `default`
+> **blocks**: `Blocks`
 
 #### Inherited from
 
@@ -64,7 +64,7 @@
 
 ### chunks
 
-> **chunks**: `default`
+> **chunks**: `Chunks`
 
 #### Inherited from
 
@@ -72,15 +72,9 @@
 
 ***
 
-### masaConfig
-
-> `private` **masaConfig**: [`MasaConfig`](../interfaces/MasaConfig.md)
-
-***
-
 ### network
 
-> **network**: `default`
+> **network**: `Network`
 
 #### Inherited from
 
@@ -90,7 +84,7 @@
 
 ### silo
 
-> **silo**: `default`
+> **silo**: `Silo`
 
 #### Inherited from
 
@@ -100,7 +94,7 @@
 
 ### transactions
 
-> **transactions**: `default`
+> **transactions**: `Transactions`
 
 #### Inherited from
 
@@ -110,7 +104,7 @@
 
 ### wallets
 
-> **wallets**: `default`
+> **wallets**: `Wallets`
 
 #### Inherited from
 
@@ -120,7 +114,7 @@
 
 ### crypto
 
-> `static` **crypto**: `default`
+> `static` **crypto**: `CryptoInterface`
 
 #### Inherited from
 
@@ -130,7 +124,7 @@
 
 ### init()
 
-> `static` **init**: (`apiConfig`) => `default`
+> `static` **init**: (`apiConfig`) => `Arweave`
 
 #### Parameters
 
@@ -138,7 +132,7 @@
 
 #### Returns
 
-`default`
+`Arweave`
 
 #### Inherited from
 
@@ -158,13 +152,17 @@
 
 ### crypto
 
-> `get` **crypto**(): `default`
+> `get` **crypto**(): `CryptoInterface`
 
 #### Deprecated
 
 #### Returns
 
-`default`
+`CryptoInterface`
+
+#### Inherited from
+
+`Arweave.crypto`
 
 ***
 
@@ -177,6 +175,10 @@
 #### Returns
 
 `__module`
+
+#### Inherited from
+
+`Arweave.utils`
 
 ## Methods
 
@@ -200,7 +202,7 @@
 
 ### createSiloTransaction()
 
-> **createSiloTransaction**(`attributes`, `jwk`, `siloUri`): `Promise`\<`default`\>
+> **createSiloTransaction**(`attributes`, `jwk`, `siloUri`): `Promise`\<`Transaction`\>
 
 #### Parameters
 
@@ -212,7 +214,7 @@
 
 #### Returns
 
-`Promise`\<`default`\>
+`Promise`\<`Transaction`\>
 
 #### Inherited from
 
@@ -222,7 +224,7 @@
 
 ### createTransaction()
 
-> **createTransaction**(`attributes`, `jwk`?): `Promise`\<`default`\>
+> **createTransaction**(`attributes`, `jwk`?): `Promise`\<`Transaction`\>
 
 #### Parameters
 
@@ -232,7 +234,7 @@
 
 #### Returns
 
-`Promise`\<`default`\>
+`Promise`\<`Transaction`\>
 
 #### Inherited from
 
@@ -262,7 +264,7 @@
 
 • **txId**: `string`
 
-• **isString**: `boolean`= `true`
+• **isString**: `boolean` = `true`
 
 #### Returns
 

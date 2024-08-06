@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / ERC20
+[Masa SDK v4.2.0](../globals.md) / ERC20
 
 # Interface: ERC20
 
@@ -26,7 +26,7 @@
 
 > **\_runningEvents**: `object`
 
-#### Index signature
+#### Index Signature
 
  \[`eventTag`: `string`\]: `RunningEvent`
 
@@ -40,7 +40,7 @@
 
 > **\_wrappedEmits**: `object`
 
-#### Index signature
+#### Index Signature
 
  \[`eventTag`: `string`\]: (...`args`) => `void`
 
@@ -1080,7 +1080,7 @@
 
 > **listeners**\<`TEvent`\>(`eventFilter`?): `TypedListener`\<`TEvent`\>[]
 
-##### Type parameters
+##### Type Parameters
 
 • **TEvent** *extends* `TypedEvent`\<`any`, `any`\>
 
@@ -1132,7 +1132,7 @@
 
 > **queryFilter**\<`TEvent`\>(`event`, `fromBlockOrBlockhash`?, `toBlock`?): `Promise`\<`TEvent`[]\>
 
-#### Type parameters
+#### Type Parameters
 
 • **TEvent** *extends* `TypedEvent`\<`any`, `any`\>
 
@@ -1160,7 +1160,7 @@
 
 > **removeAllListeners**\<`TEvent`\>(`eventFilter`): `this`
 
-##### Type parameters
+##### Type Parameters
 
 • **TEvent** *extends* `TypedEvent`\<`any`, `any`\>
 

@@ -5,16 +5,10 @@ import type {
   BaseResult,
   ChallengeResult,
   ChallengeResultWithCookie,
-  ICreditScore,
-  IGreen,
-  IIdentity,
   ISession,
   LogoutResult,
   MasaInterface,
-  NetworkName,
   SessionUser,
-  SoulNameMetadataStoreResult,
-  SoulNameResultBase,
 } from "../../interface";
 import { isSession } from "../../interface";
 import { MasaBase } from "../../masa-base";
@@ -24,7 +18,7 @@ const headers = {
 };
 
 export class MasaClient extends MasaBase {
-  private _middlewareClient: AxiosInstance;
+  private _apiClient: AxiosInstance;
   private _cookie?: string;
 
   get cookie() {
@@ -43,7 +37,7 @@ export class MasaClient extends MasaBase {
     super(masa);
     this._cookie = cookie;
 
-    this._middlewareClient = axios.create({
+    this._apiClient = axios.create({
       baseURL: apiUrl,
       withCredentials: true,
       headers,
@@ -78,7 +72,7 @@ export class MasaClient extends MasaBase {
 
       const cookieToUse = cookie || this.cookie;
 
-      const checkSignatureResponse = await this._middlewareClient
+      const checkSignatureResponse = await this._apiClient
         .post<
           {
             address: string;
@@ -135,7 +129,7 @@ export class MasaClient extends MasaBase {
     getChallenge: async (): Promise<ChallengeResultWithCookie | undefined> => {
       let result;
 
-      const getChallengeResponse = await this._middlewareClient
+      const getChallengeResponse = await this._apiClient
         .get<ChallengeResult>("/session/get-challenge")
         .catch((error: Error | AxiosError) => {
           console.error("Get Challenge failed!", error.message);
@@ -188,88 +182,6 @@ export class MasaClient extends MasaBase {
     },
   };
 
-  metadata = {
-    /**
-     * Retrieve metadata
-     * @param uri
-     * @param additionalHeaders
-     */
-    get: async (
-      uri: string,
-      additionalHeaders?: Record<string, string>,
-    ): Promise<IIdentity | ICreditScore | IGreen | undefined> => {
-      const headers = {
-        cookie: this.cookie ? [this.cookie] : undefined,
-        ...additionalHeaders,
-      };
-
-      const metadataResponse = await this._middlewareClient
-        .get(uri, {
-          headers,
-        })
-        .catch((error: Error | AxiosError) => {
-          console.error("Failed to load Metadata!", error.message, uri);
-        });
-
-      const { data: metadataResponseData, status } = metadataResponse || {};
-
-      if (this.masa.config.verbose) {
-        console.dir(
-          {
-            metadataResponse: {
-              status,
-              metadataResponseData,
-            },
-          },
-          {
-            depth: null,
-          },
-        );
-      }
-
-      return metadataResponseData;
-    },
-  };
-
-  soulName = {
-    /**
-     * Store metadata
-     * @param soulName
-     * @param receiver
-     * @param duration
-     * @param style
-     */
-    store: async (
-      soulName: string,
-      receiver: string,
-      duration: number,
-      style?: string,
-    ): Promise<
-      SoulNameMetadataStoreResult | SoulNameResultBase | undefined
-    > => {
-      console.log(`Writing metadata for '${soulName}'`);
-
-      const { data: soulNameMetadataStoreResult } = await this.post<
-        {
-          soulName: string;
-          receiver: string;
-          duration: number;
-          network: NetworkName;
-          style?: string;
-        },
-        SoulNameMetadataStoreResult | SoulNameResultBase
-      >("/soul-name/store", {
-        soulName,
-        receiver,
-        duration,
-        network: this.masa.config.networkName,
-        style,
-      });
-
-      return soulNameMetadataStoreResult;
-    },
-  };
-
   post = async <Request, Result>(
     endpoint: string,
     data: Request,
@@ -283,7 +195,7 @@ export class MasaClient extends MasaBase {
       console.log(`Posting '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
-    const postResponse = await this._middlewareClient
+    const postResponse = await this._apiClient
       .post<Request, AxiosResponse<Result>>(endpoint, data, {
         withCredentials: true,
         headers: {
@@ -331,7 +243,7 @@ export class MasaClient extends MasaBase {
       console.log(`Patching '${JSON.stringify(data)}' to '${endpoint}'`);
     }
 
-    const patchResponse = await this._middlewareClient
+    const patchResponse = await this._apiClient
       .patch<Request, AxiosResponse<Result>>(endpoint, data, {
         withCredentials: true,
         headers: {
@@ -378,7 +290,7 @@ export class MasaClient extends MasaBase {
       console.log(`Getting '${endpoint}'`);
     }
 
-    const getResponse = await this._middlewareClient
+    const getResponse = await this._apiClient
       .get<Result>(endpoint, {
         withCredentials: true,
         headers: {

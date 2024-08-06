@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / ContractFactory
+[Masa SDK v4.2.0](../globals.md) / ContractFactory
 
 # Class: `abstract` ContractFactory
 
@@ -22,7 +22,7 @@
 
 > `static` **connect**: \<`Contract`\>(`address`, `signerOrProvider`) => `Contract`
 
-#### Type parameters
+#### Type Parameters
 
 • **Contract**
 

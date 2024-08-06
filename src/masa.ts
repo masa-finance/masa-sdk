@@ -54,7 +54,7 @@ export class Masa implements MasaInterface {
   public constructor({
     cookie,
     signer,
-    apiUrl = "https://middleware.masa.finance",
+    apiUrl = "https://api.cookiemonster.masa.finance",
     environment = "production",
     networkName = "ethereum",
     arweave = {

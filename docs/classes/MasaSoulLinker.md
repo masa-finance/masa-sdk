@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaSoulLinker
+[Masa SDK v4.2.0](../globals.md) / MasaSoulLinker
 
 # Class: MasaSoulLinker
 
@@ -31,12 +31,6 @@
 `MasaBase.constructor`
 
 ## Properties
-
-### contract
-
-> `private` **contract**: `Contract`
-
-***
 
 ### masa
 
@@ -86,7 +80,7 @@
 
 #### Parameters
 
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
+• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md) = `"ETH"`
 
 • **passport**: `string`
 

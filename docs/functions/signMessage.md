@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / signMessage
+[Masa SDK v4.2.0](../globals.md) / signMessage
 
 # Function: signMessage()
 
@@ -14,7 +14,7 @@
 
 • **signer**: `Signer`
 
-• **doHash**: `boolean`= `false`
+• **doHash**: `boolean` = `false`
 
 ## Returns
 

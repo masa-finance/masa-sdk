@@ -3,40 +3,9 @@ import { ReferenceSBTAuthority__factory } from "@masa-finance/masa-contracts-ide
 
 import type { ContractFactory } from "../../../interface/contract-factory";
 import { MasaBase } from "../../../masa-base";
-import { deployASBT } from "./deploy";
 import { MasaASBTWrapper } from "./masa-asbt-wrapper";
 
 export class MasaASBT extends MasaBase {
-  /**
-   *
-   * @param name
-   * @param symbol
-   * @param baseTokenUri
-   * @param limit
-   * @param adminAddress
-   */
-  public deploy = ({
-    name,
-    symbol,
-    baseTokenUri,
-    limit = 1,
-    adminAddress,
-  }: {
-    name: string;
-    symbol: string;
-    baseTokenUri: string;
-    limit?: number;
-    adminAddress?: string;
-  }) =>
-    deployASBT({
-      masa: this.masa,
-      name,
-      symbol,
-      baseTokenUri,
-      limit,
-      adminAddress,
-    });
-
   /**
    *
    * @param contract

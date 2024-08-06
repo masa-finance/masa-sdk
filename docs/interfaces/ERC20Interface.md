@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / ERC20Interface
+[Masa SDK v4.2.0](../globals.md) / ERC20Interface
 
 # Interface: ERC20Interface
 
@@ -46,7 +46,7 @@
 
 > `readonly` **errors**: `object`
 
-#### Index signature
+#### Index Signature
 
  \[`name`: `string`\]: `ErrorFragment`
 
@@ -142,7 +142,7 @@
 
 > `readonly` **structs**: `object`
 
-#### Index signature
+#### Index Signature
 
  \[`name`: `string`\]: `any`
 

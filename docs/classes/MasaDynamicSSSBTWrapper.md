@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaDynamicSSSBTWrapper
+[Masa SDK v4.2.0](../globals.md) / MasaDynamicSSSBTWrapper
 
 # Class: MasaDynamicSSSBTWrapper\<Contract\>
 
@@ -10,7 +10,7 @@
 
 - [`MasaDynamicSBTWrapper`](MasaDynamicSBTWrapper.md)\<`Contract`\>
 
-## Type parameters
+## Type Parameters
 
 • **Contract** *extends* `MasaDynamicSSSBT`
 
@@ -73,6 +73,10 @@
 #### Returns
 
 `boolean`
+
+#### Inherited from
+
+[`MasaDynamicSBTWrapper`](MasaDynamicSBTWrapper.md).[`isContractAvailable`](MasaDynamicSBTWrapper.md#iscontractavailable)
 
 ## Methods
 
@@ -145,57 +149,3 @@
 #### Inherited from
 
 [`MasaDynamicSBTWrapper`](MasaDynamicSBTWrapper.md).[`loadSBTs`](MasaDynamicSBTWrapper.md#loadsbts)
-
-***
-
-### mint()
-
-> **mint**(`paymentMethod`): `Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-#### Returns
-
-`Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-***
-
-### setState()
-
-> **setState**(`state`, `stateValue`, `signature`, `signatureDate`, `authorityAddress`): `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-#### Parameters
-
-• **state**: `string`
-
-• **stateValue**: `boolean`
-
-• **signature**: `string`
-
-• **signatureDate**: `number`
-
-• **authorityAddress**: `string`
-
-#### Returns
-
-`Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-***
-
-### signSetState()
-
-> **signSetState**(`receiver`, `state`, `stateValue`): `Promise`\<`SignSetStateResult`\>
-
-#### Parameters
-
-• **receiver**: `string`
-
-• **state**: `string`
-
-• **stateValue**: `boolean`
-
-#### Returns
-
-`Promise`\<`SignSetStateResult`\>

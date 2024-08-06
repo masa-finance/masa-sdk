@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](README.md) • **Docs**
+[**Masa SDK v4.2.0**](README.md) • **Docs**
 
 ***
 
-# Masa SDK v3.40.0
+# Masa SDK v4.2.0
 
 ## Enumerations
 
@@ -153,12 +153,7 @@
 - [checkLogin](functions/checkLogin.md)
 - [claim](functions/claim.md)
 - [claimAllRewards](functions/claimAllRewards.md)
-- [createIdentity](functions/createIdentity.md)
-- [createIdentityWithSoulName](functions/createIdentityWithSoulName.md)
 - [createLink](functions/createLink.md)
-- [createSoulName](functions/createSoulName.md)
-- [deployASBT](functions/deployASBT.md)
-- [deploySSSBT](functions/deploySSSBT.md)
 - [deposit](functions/deposit.md)
 - [establishLink](functions/establishLink.md)
 - [establishLinkFromPassport](functions/establishLinkFromPassport.md)
@@ -205,8 +200,6 @@
 - [parsePassport](functions/parsePassport.md)
 - [patchMetadataUrl](functions/patchMetadataUrl.md)
 - [printSoulName](functions/printSoulName.md)
-- [purchaseIdentity](functions/purchaseIdentity.md)
-- [purchaseIdentityWithSoulName](functions/purchaseIdentityWithSoulName.md)
 - [queryLink](functions/queryLink.md)
 - [queryLinkFromPassport](functions/queryLinkFromPassport.md)
 - [recoverAddress](functions/recoverAddress.md)

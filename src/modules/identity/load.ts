@@ -1,12 +1,8 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 
 import { Messages } from "../../collections";
-import type {
-  IdentityDetails,
-  IIdentity,
-  MasaInterface,
-} from "../../interface";
-import { isBigNumber, isSigner, patchMetadataUrl } from "../../utils";
+import type { IdentityDetails, MasaInterface } from "../../interface";
+import { isBigNumber, patchMetadataUrl } from "../../utils";
 import { resolveReverseIdentity } from "./resolve";
 
 export const loadIdentityByAddress = async (
@@ -72,14 +68,9 @@ export const loadIdentityDetails = async (
     console.info(`Identity Metadata URL: '${tokenUri}'`);
   }
 
-  const metadata: IIdentity | undefined = <IIdentity | undefined>(
-    await masa.client.metadata.get(tokenUri)
-  );
-
   return {
     tokenId: identityId,
     tokenUri,
-    metadata,
   };
 };
 

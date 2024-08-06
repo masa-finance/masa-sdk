@@ -1,9 +1,9 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / BreakLinkResult
+[Masa SDK v4.2.0](../globals.md) / BreakLinkResult
 
-# Type alias: BreakLinkResult
+# Type Alias: BreakLinkResult
 
 > **BreakLinkResult**: [`BaseResult`](../interfaces/BaseResult.md)

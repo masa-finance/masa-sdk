@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaSBTBase
+[Masa SDK v4.2.0](../globals.md) / MasaSBTBase
 
 # Class: MasaSBTBase
 
@@ -44,7 +44,7 @@
 
 > **attach**\<`Contract`\>(`contract`): [`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Contract** *extends* `MasaSBT`
 
@@ -62,7 +62,7 @@
 
 > **connect**\<`Contract`\>(`address`, `factory`): `Promise`\<[`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>\>
 
-#### Type parameters
+#### Type Parameters
 
 • **Contract** *extends* `MasaSBT`
 
@@ -70,7 +70,7 @@
 
 • **address**: `string`
 
-• **factory**: [`ContractFactory`](ContractFactory.md)= `MasaSBT__factory`
+• **factory**: [`ContractFactory`](ContractFactory.md) = `MasaSBT__factory`
 
 #### Returns
 

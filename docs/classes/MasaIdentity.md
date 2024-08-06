@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaIdentity
+[Masa SDK v4.2.0](../globals.md) / MasaIdentity
 
 # Class: MasaIdentity
 
@@ -68,6 +68,10 @@
 
 `boolean`
 
+#### Inherited from
+
+`MasaLinkable.isContractAvailable`
+
 ## Methods
 
 ### burn()
@@ -77,36 +81,6 @@
 #### Returns
 
 `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-***
-
-### create()
-
-> **create**(): `Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-#### Returns
-
-`Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-***
-
-### createWithSoulName()
-
-> **createWithSoulName**(`paymentMethod`, `soulName`, `duration`, `style`?): `Promise`\<`object` & [`CreateSoulNameResult`](../interfaces/CreateSoulNameResult.md)\>
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-• **soulName**: `string`
-
-• **duration**: `number`
-
-• **style?**: `string`
-
-#### Returns
-
-`Promise`\<`object` & [`CreateSoulNameResult`](../interfaces/CreateSoulNameResult.md)\>
 
 ***
 

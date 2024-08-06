@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaMarketplace
+[Masa SDK v4.2.0](../globals.md) / MasaMarketplace
 
 # Class: MasaMarketplace
 
@@ -57,6 +57,10 @@
 #### Returns
 
 `boolean`
+
+#### Inherited from
+
+`MasaModuleBase.isContractAvailable`
 
 ## Methods
 

@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / SoulLinker
+[Masa SDK v4.2.0](../globals.md) / SoulLinker
 
 # Class: SoulLinker
 
@@ -82,7 +82,7 @@ Adds a link to the soullinker
 
 • **signature**: `string`
 
-• **slippage**: `undefined` \| `number`= `250`
+• **slippage**: `undefined` \| `number` = `250`
 
 #### Returns
 
@@ -105,32 +105,6 @@ Adds a link to the soullinker
 #### Returns
 
 `Promise`\<[`BaseResult`](../interfaces/BaseResult.md)\>
-
-***
-
-### checkOrGiveAllowance()
-
-> `private` **checkOrGiveAllowance**(`paymentAddress`, `paymentMethod`, `spenderAddress`, `price`): `Promise`\<`undefined` \| `ContractReceipt`\>
-
-Checks or gives allowance on ERC20 tokens
-
-#### Parameters
-
-• **paymentAddress**: `string`
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-• **spenderAddress**: `string`
-
-• **price**: `BigNumber`
-
-#### Returns
-
-`Promise`\<`undefined` \| `ContractReceipt`\>
-
-#### Inherited from
-
-`MasaContractModuleBase.checkOrGiveAllowance`
 
 ***
 
@@ -208,26 +182,6 @@ Checks or gives allowance on ERC20 tokens
 
 ***
 
-### getPaymentAddress()
-
-> `private` **getPaymentAddress**(`paymentMethod`): `string`
-
-Gets the payment address for a given payment method
-
-#### Parameters
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
-
-#### Returns
-
-`string`
-
-#### Inherited from
-
-`MasaContractModuleBase.getPaymentAddress`
-
-***
-
 ### getPrice()
 
 > **getPrice**(`tokenAddress`, `paymentMethod`, `slippage`): `Promise`\<[`PriceInformation`](../interfaces/PriceInformation.md)\>
@@ -240,7 +194,7 @@ Gets price for establishing a link
 
 • **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)
 
-• **slippage**: `undefined` \| `number`= `250`
+• **slippage**: `undefined` \| `number` = `250`
 
 #### Returns
 
@@ -264,9 +218,9 @@ Signs a soul linker link
 
 • **tokenId**: `BigNumber`
 
-• **signatureDate**: `number`= `undefined`
+• **signatureDate**: `number` = `...`
 
-• **expirationOffset**: `number`= `undefined`
+• **expirationOffset**: `number` = `...`
 
 #### Returns
 
@@ -320,7 +274,7 @@ verify a signature created during one of the SBT signing flows
 
 ### addSlippage()
 
-> `static` `protected` **addSlippage**(`price`, `slippage`): `BigNumber`
+> `protected` `static` **addSlippage**(`price`, `slippage`): `BigNumber`
 
 adds a percentage to the price as slippage
 

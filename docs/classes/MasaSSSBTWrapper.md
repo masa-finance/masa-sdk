@@ -1,8 +1,8 @@
-[**Masa SDK v3.40.0**](../README.md) • **Docs**
+[**Masa SDK v4.2.0**](../README.md) • **Docs**
 
 ***
 
-[Masa SDK v3.40.0](../globals.md) / MasaSSSBTWrapper
+[Masa SDK v4.2.0](../globals.md) / MasaSSSBTWrapper
 
 # Class: MasaSSSBTWrapper\<Contract\>
 
@@ -10,7 +10,7 @@
 
 - [`MasaSBTWrapper`](MasaSBTWrapper.md)\<`Contract`\>
 
-## Type parameters
+## Type Parameters
 
 • **Contract** *extends* `ReferenceSBTSelfSovereign`
 
@@ -73,6 +73,10 @@
 #### Returns
 
 `boolean`
+
+#### Inherited from
+
+[`MasaSBTWrapper`](MasaSBTWrapper.md).[`isContractAvailable`](MasaSBTWrapper.md#iscontractavailable)
 
 ## Methods
 
@@ -145,37 +149,3 @@
 #### Inherited from
 
 [`MasaSBTWrapper`](MasaSBTWrapper.md).[`loadSBTs`](MasaSBTWrapper.md#loadsbts)
-
-***
-
-### mint()
-
-> **mint**(`authorityAddress`, `signatureDate`, `signature`, `paymentMethod`): `Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-#### Parameters
-
-• **authorityAddress**: `string`
-
-• **signatureDate**: `number`
-
-• **signature**: `string`
-
-• **paymentMethod**: [`PaymentMethod`](../type-aliases/PaymentMethod.md)= `"ETH"`
-
-#### Returns
-
-`Promise`\<[`BaseResultWithTokenId`](../interfaces/BaseResultWithTokenId.md)\>
-
-***
-
-### sign()
-
-> **sign**(`receiver`): `Promise`\<`undefined` \| `object`\>
-
-#### Parameters
-
-• **receiver**: `string`
-
-#### Returns
-
-`Promise`\<`undefined` \| `object`\>
