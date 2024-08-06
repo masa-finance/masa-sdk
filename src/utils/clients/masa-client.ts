@@ -5,9 +5,6 @@ import type {
   BaseResult,
   ChallengeResult,
   ChallengeResultWithCookie,
-  ICreditScore,
-  IGreen,
-  IIdentity,
   ISession,
   LogoutResult,
   MasaInterface,
@@ -182,49 +179,6 @@ export class MasaClient extends MasaBase {
       );
       delete this._cookie;
       return logoutResult;
-    },
-  };
-
-  metadata = {
-    /**
-     * Retrieve metadata
-     * @param uri
-     * @param additionalHeaders
-     */
-    get: async (
-      uri: string,
-      additionalHeaders?: Record<string, string>,
-    ): Promise<IIdentity | ICreditScore | IGreen | undefined> => {
-      const headers = {
-        cookie: this.cookie ? [this.cookie] : undefined,
-        ...additionalHeaders,
-      };
-
-      const metadataResponse = await this._middlewareClient
-        .get(uri, {
-          headers,
-        })
-        .catch((error: Error | AxiosError) => {
-          console.error("Failed to load Metadata!", error.message, uri);
-        });
-
-      const { data: metadataResponseData, status } = metadataResponse || {};
-
-      if (this.masa.config.verbose) {
-        console.dir(
-          {
-            metadataResponse: {
-              status,
-              metadataResponseData,
-            },
-          },
-          {
-            depth: null,
-          },
-        );
-      }
-
-      return metadataResponseData;
     },
   };
 

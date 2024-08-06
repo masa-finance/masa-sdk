@@ -1,7 +1,7 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 
 import type { MasaInterface } from "../../interface";
-import { CreditScoreDetails, ICreditScore } from "../../interface";
+import { CreditScoreDetails } from "../../interface";
 import { isBigNumber, patchMetadataUrl } from "../../utils";
 
 export const loadCreditScoreDetails = async (
@@ -22,14 +22,9 @@ export const loadCreditScoreDetails = async (
           console.info(`Credit Score Metadata URL: '${tokenUri}'`);
         }
 
-        const metadata = <ICreditScore | undefined>(
-          await masa.client.metadata.get(tokenUri)
-        );
-
         return {
           tokenId,
           tokenUri,
-          metadata,
         };
       }),
     )
