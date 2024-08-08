@@ -23,9 +23,11 @@ export const loadContract = <Contract extends BaseContract & ContractInfo>({
 
   let contract: Contract;
 
-  contract = factory.attach(addr) as Contract;
+  contract = factory.attach(
+    isSigner(signer) ? addr : constants.AddressZero,
+  ) as Contract;
 
-  if (hasAddress && isSigner(signer)) {
+  if (isSigner(signer) && hasAddress) {
     contract = contract.connect(signer) as Contract;
   }
 
