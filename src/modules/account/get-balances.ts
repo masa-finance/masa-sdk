@@ -4,7 +4,7 @@ import type {
   SoulboundIdentity,
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { constants, utils } from "ethers";
 
 import type {
@@ -45,13 +45,78 @@ export const getBalances = async (
       : masa.config.signer.keypair.publicKey.toBase58());
 
   if (!isSigner(masa.config.signer)) {
+    // solana way
+
+    const loadSPLBalance = async (
+      userAddress: string,
+      tokenAddress?: string,
+    ): Promise<number | undefined> => {
+      let splBalance;
+
+      if (!isSigner(masa.config.signer) && tokenAddress) {
+        try {
+          const { value: tokenAccounts } =
+            await masa.config.signer.connection.getTokenAccountsByOwner(
+              new PublicKey(userAddress),
+              {
+                mint: new PublicKey(tokenAddress),
+              },
+            );
+
+          if (tokenAccounts.length > 0) {
+            const { value: tokenBalance } =
+              await masa.config.signer.connection.getTokenAccountBalance(
+                new PublicKey(tokenAccounts[0].pubkey),
+              );
+
+            if (tokenBalance.uiAmount) {
+              splBalance = tokenBalance.uiAmount;
+            }
+          }
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error(
+              `Getting balance failed!: Token: ${tokenAddress} Wallet Address: ${userAddress} ${error.message}`,
+            );
+          }
+        }
+      }
+
+      return splBalance;
+    };
+
     const nativeBalance =
       (await masa.config.signer.connection.getBalance(
         masa.config.signer.keypair.publicKey,
       )) / LAMPORTS_PER_SOL;
 
+    let SPLBalances;
+
+    if (masa.config.network?.addresses?.tokens) {
+      const tokens = Object.keys(masa.config.network.addresses.tokens);
+
+      SPLBalances = await tokens.reduce(
+        async (
+          accumulatedBalances: Promise<Partial<Balances>>,
+          symbol: string,
+        ): Promise<Balances> => {
+          const balance = await loadSPLBalance(
+            addressToLoad,
+            masa.config.network?.addresses?.tokens?.[symbol as PaymentMethod],
+          );
+
+          const accumulated = await accumulatedBalances;
+          return balance !== undefined
+            ? { ...accumulated, [symbol]: balance }
+            : { ...accumulated };
+        },
+        Promise.resolve({}),
+      );
+    }
+
     return {
       Native: nativeBalance,
+      ...SPLBalances,
     };
   }
 

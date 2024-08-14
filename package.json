@@ -35,6 +35,7 @@
   "author": "Masa Finance",
   "license": "MIT",
   "dependencies": {
+    "@coral-xyz/anchor": "~0.29.0",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/abstract-signer": "^5.7.0",
@@ -46,6 +47,7 @@
     "@masa-finance/masa-contracts-marketplace": "^2.1.26",
     "@masa-finance/masa-contracts-staking": "^0.4.0",
     "@masa-finance/masa-token": "^2.10.0",
+    "@masa-finance/masa-token-solana": "^1.0.4",
     "@solana/web3.js": "^1.95.1",
     "arweave": "1.11.8",
     "axios": "^1.6.8",
