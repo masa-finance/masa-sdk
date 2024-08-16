@@ -1,4 +1,4 @@
-import CircularDependencyPlugin = require("circular-dependency-plugin");
+import CircularDependencyPlugin from "circular-dependency-plugin";
 import { WebpackPluginFunction } from "webpack";
 import { WebpackConfiguration } from "webpack-cli";
 

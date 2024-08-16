@@ -12,7 +12,8 @@
 
     /* Language and Environment */
     "target": "ES6",
-    /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */ "lib": [
+    /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "lib": [
       /* Specify a set of bundled library declaration files that describe the target runtime environment. */
       "ES6",
       "ES2015",
@@ -31,9 +32,11 @@
 
     /* Modules */
     "module": "CommonJS",
-    /* Specify what module code is generated. */ // "rootDir": "./src",                               /* Specify the root folder within your source files. */
+    /* Specify what module code is generated. */
+    // "rootDir": "./src",                               /* Specify the root folder within your source files. */
     "moduleResolution": "Node",
-    /* Specify how TypeScript looks up a file from a given module specifier. */ // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
+    /* Specify how TypeScript looks up a file from a given module specifier. */
+    // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
@@ -41,7 +44,8 @@
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
     "resolveJsonModule": true,
-    /* Enable importing .json files. */ // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
+    /* Enable importing .json files. */
+    // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
 
     /* JavaScript Support */
     // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
@@ -50,12 +54,16 @@
 
     /* Emit */
     "declaration": true,
-    /* Generate .d.ts files from TypeScript and JavaScript files in your project. */ "declarationMap": true,
-    /* Create sourcemaps for d.ts files. */ // "emitDeclarationOnly": true,                      /* Only output d.ts files and not JavaScript files. */
+    /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
+    "declarationMap": true,
+    /* Create sourcemaps for d.ts files. */
+    // "emitDeclarationOnly": true,                      /* Only output d.ts files and not JavaScript files. */
     "sourceMap": true,
-    /* Create source map files for emitted JavaScript files. */ // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
+    /* Create source map files for emitted JavaScript files. */
+    // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
     "outDir": "./dist",
-    /* Specify an output folder for all emitted files. */ // "removeComments": true,                           /* Disable emitting comments. */
+    /* Specify an output folder for all emitted files. */
+    // "removeComments": true,                           /* Disable emitting comments. */
     // "noEmit": true,                                   /* Disable emitting files from a compilation. */
     // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
     // "importsNotUsedAsValues": "remove",               /* Specify emit/checking behavior for imports that are only used for types. */
@@ -77,10 +85,13 @@
     // "isolatedModules": true,                          /* Ensure that each file can be safely transpiled without relying on other imports. */
     // "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
     "esModuleInterop": true,
-    /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */ // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+    /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
     "forceConsistentCasingInFileNames": true,
-    /* Ensure that casing is correct in imports. */ /* Type Checking */
-    "strict": true /* Enable all strict type-checking options. */, // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
+    /* Ensure that casing is correct in imports. */
+    /* Type Checking */
+    "strict": true,
+    /* Enable all strict type-checking options. */ // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
     // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
     // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
     // "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
@@ -101,7 +112,8 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true
+    /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*", "test/**/*", "package.json"]
+  "include": ["src/**/*", "test/**/*", "package.json", "webpack.*.ts"]
 }
