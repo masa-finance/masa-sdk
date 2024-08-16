@@ -55,6 +55,8 @@ export const getBalances = async (
 
       if (!isSigner(masa.config.signer) && tokenAddress) {
         try {
+          splBalance = 0;
+
           const { value: tokenAccounts } =
             await masa.config.signer.connection.getTokenAccountsByOwner(
               new PublicKey(userAddress),
