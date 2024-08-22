@@ -2,6 +2,7 @@ import { utils } from "ethers";
 
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils";
 
 /**
  *
@@ -18,7 +19,10 @@ export const claim = async (
 
   console.log(`Claiming position ${position}!`);
 
-  if (!masa.contracts.instances.MasaStaking.hasAddress) {
+  if (
+    !masa.contracts.instances.MasaStaking.hasAddress ||
+    !isSigner(masa.config.signer)
+  ) {
     result.message = `Unable to claim on ${masa.config.networkName}!`;
     console.error(result.message);
 

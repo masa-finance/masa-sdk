@@ -3,6 +3,7 @@ import {
   MasaStaking__factory,
 } from "@masa-finance/masa-contracts-staking";
 import { MasaToken, MasaToken__factory } from "@masa-finance/masa-token";
+import { Connection, Keypair } from "@solana/web3.js";
 import { Signer } from "ethers";
 
 import { ContractInfo, ITokenContracts, NetworkName } from "../interface";
@@ -13,7 +14,12 @@ export const loadTokenContracts = ({
   signer,
   networkName = "masa",
 }: {
-  signer: Signer;
+  signer:
+    | Signer
+    | {
+        keypair: Keypair;
+        connection: Connection;
+      };
   networkName?: NetworkName;
 }): ITokenContracts => {
   // MasaToken

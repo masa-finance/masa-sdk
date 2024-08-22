@@ -8,6 +8,7 @@ import { masa, masatest } from "./masa";
 import { opbnb, opbnbtest } from "./opbnb";
 import { amoy, mumbai, polygon } from "./polygon";
 import { scroll, scrollsepolia } from "./scroll";
+import { solanadev } from "./solana";
 
 export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
   // masa
@@ -50,4 +51,7 @@ export const addresses: Partial<{ [key in NetworkName]: Addresses }> = {
 
   // aurora / NEAR
   auroratest,
+
+  // solana
+  solanadev,
 };

@@ -2,7 +2,7 @@ import type { BigNumber } from "ethers";
 
 import { Templates } from "../../collections";
 import type { BaseResult, MasaInterface } from "../../interface";
-import { signMessage, unpackSessionId } from "../../utils";
+import { isSigner, signMessage, unpackSessionId } from "../../utils";
 
 export interface LoginResult extends BaseResult {
   address?: string;
@@ -19,7 +19,7 @@ export const login = async (masa: MasaInterface): Promise<LoginResult> => {
     // get challenge
     const challengeData = await masa.client.session.getChallenge();
 
-    if (challengeData) {
+    if (challengeData && isSigner(masa.config.signer)) {
       // sign
       const msg = Templates.loginTemplateNext(
         challengeData.challenge,
