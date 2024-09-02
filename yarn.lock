@@ -463,9 +463,9 @@
     tiny-invariant "^1.3.1"
 
 "@layerzerolabs/lz-v2-utilities@^2.3.37":
-  version "2.3.37"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.3.37.tgz#421c91767e531a5b7c0cde7e0c39452acb3f3027"
-  integrity sha512-MdIPfu0kfW8HPtssQpSY+hsjTb9Ojd2u6LLNt5PBBaGpa5XuzRk+hW05fq6VK9LdzVJ7vt21Bxvx2+0spOp8pw==
+  version "2.3.40"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.3.40.tgz#23cb32850943293bd6600fb853f4182d010cfcdf"
+  integrity sha512-wYG/DZl6T+gc0zdEFZITWLvJfMZxZ4HPZIT2AoALnGETvGFADturFA2gNELfnzSTibLjRSSi6JH8eshaMyewMg==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/address" "^5.7.0"
