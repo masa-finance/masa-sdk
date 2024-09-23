@@ -3209,9 +3209,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typedoc-plugin-markdown@^4.2.5:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-4.2.5.tgz#ec99c1849626c74897eae368b6ccf6c609bfdf7e"
-  integrity sha512-ZWIfc0OqwEtQfuaqbmM1kesMi/Fhc++W+5f3TDEm1Tsi28pHSoZk4WCOm4lNuN30WtEImwAHhhXC4DIWki1DiA==
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-4.2.8.tgz#02a83a31c2fc1107cf0de98d58fc0e2fceb21d73"
+  integrity sha512-1EDsc66jaCjZtxdYy+Rl0KDU1WY/iyuCOOPaeFzcYFZ81FNXV8CmgUDOHri20WGmYnkEM5nQ+ooxj1vyuQo0Lg==
 
 typedoc@^0.26.5:
   version "0.26.6"
