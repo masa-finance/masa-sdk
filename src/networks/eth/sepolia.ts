@@ -4,7 +4,7 @@ import { sepolia as sepoliaAddressesMasaToken } from "@masa-finance/masa-token/a
 
 import type { Addresses } from "../../interface";
 
-const { MasaStaking: MasaStakingAddress } = sepoliaAddressesMasaStaking;
+const { MasaStakingV2: MasaStakingAddress } = sepoliaAddressesMasaStaking;
 
 export const sepolia: Addresses = {
   tokens: {
