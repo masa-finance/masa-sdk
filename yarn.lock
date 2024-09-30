@@ -456,9 +456,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
 "@layerzerolabs/lz-definitions@^2.3.37":
-  version "2.3.37"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.3.37.tgz#50f654ed7657294e69bc967907ad794c2577df5d"
-  integrity sha512-abGbu/+aXSPG4i8/6nJefeqLhtRfkqxV9jA3HtGtdxtocluYwBYzRJtPWSHQWyaptrDGldL0f7b7mdiEJ/7Sow==
+  version "2.3.44"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.3.44.tgz#7500995b86a1022e7f57d76e75fff4a16c19327d"
+  integrity sha512-8dH7rbHCVG+GDOizCb4RrtHEFHr5wud9Lf9Kxs/MLThgu7VWcXvy78KYHMQ4S7AXoFnyzMPaiEU/LS8kRWfhag==
   dependencies:
     tiny-invariant "^1.3.1"
 
