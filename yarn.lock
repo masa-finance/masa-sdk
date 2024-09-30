@@ -490,10 +490,10 @@
   dependencies:
     ethers "~5.7.2"
 
-"@masa-finance/masa-contracts-staking@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-staking/-/masa-contracts-staking-0.4.0.tgz#9b361ed16a8961a15c7342e72ed517d92a49048c"
-  integrity sha512-qvx29IIRdTLrSFBbe/XkrKn65cgETHZ1BcgXe64EzUCrOCDF6fkP8NOf/3Y9thbidIaUd8KXRh8eWZVVadTP6A==
+"@masa-finance/masa-contracts-staking@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@masa-finance/masa-contracts-staking/-/masa-contracts-staking-0.5.0.tgz#dcbf91060f516c4c6930c843288e9d7c81d86004"
+  integrity sha512-cQ6TZ994U4rF58BDtGj2SpC9kFRNsNRNkIIw8GnYgQ38jNp6BWDQN9MINBfrU0UQIh0zfDCmaQrVB/tVgVnW7Q==
 
 "@masa-finance/masa-token@^2.10.0":
   version "2.10.0"
