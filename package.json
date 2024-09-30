@@ -1,6 +1,6 @@
 {
   "name": "@masa-finance/masa-sdk",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Brand new Masa SDK",
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
