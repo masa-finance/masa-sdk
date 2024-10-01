@@ -1,6 +1,6 @@
 import {
-  MasaStaking,
   MasaStaking__factory,
+  MasaStakingV2 as MasaStaking,
 } from "@masa-finance/masa-contracts-staking";
 import { MasaToken, MasaToken__factory } from "@masa-finance/masa-token";
 import { Signer } from "ethers";
