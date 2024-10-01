@@ -10,7 +10,7 @@ import type {
   DataPointsMulti,
   ProxyViewAggregator,
 } from "@masa-finance/masa-contracts-marketplace";
-import { MasaStaking } from "@masa-finance/masa-contracts-staking";
+import { MasaStakingV2 as MasaStaking } from "@masa-finance/masa-contracts-staking";
 import { MasaToken } from "@masa-finance/masa-token";
 
 export interface ContractInfo {
