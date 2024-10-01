@@ -67,12 +67,13 @@ export const list = async (
     result.stakes = [];
 
     for (let i = 0; i < stakeCount.toNumber(); i++) {
-      const {
-        stake: { amount, startTime, period, interestRate, unlockTime },
-        canClaim,
-        canUnlock,
-      } = await getUserStake(address, i);
-
+     const userStake = await getUserStake(address, i);
+     console.log({userStake})
+     const {
+      stake: { amount, startTime, period, interestRate, unlockTime },
+      canClaim,
+      canUnlock,
+    }  = userStake
       const duration = period.mul(periodSize);
       const rewards = amount.mul(interestRate).div(100 * precision.toNumber());
 
