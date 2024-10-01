@@ -1,6 +1,6 @@
 {
   "name": "@masa-finance/masa-sdk",
-  "version": "4.4.0",
+  "version": "4.6.0",
   "description": "Brand new Masa SDK",
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -44,7 +44,7 @@
     "@layerzerolabs/lz-v2-utilities": "^2.3.37",
     "@masa-finance/masa-contracts-identity": "^1.15.0",
     "@masa-finance/masa-contracts-marketplace": "^2.1.26",
-    "@masa-finance/masa-contracts-staking": "^0.5.0",
+    "@masa-finance/masa-contracts-staking": "^0.5.1",
     "@masa-finance/masa-token": "^2.10.0",
     "arweave": "1.11.8",
     "axios": "^1.7.4",
