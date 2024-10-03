@@ -41,7 +41,7 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/lz-definitions": "^2.3.37",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.37",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.1",
     "@masa-finance/masa-contracts-identity": "^1.15.0",
     "@masa-finance/masa-contracts-marketplace": "^2.1.26",
     "@masa-finance/masa-contracts-staking": "^0.5.2",
