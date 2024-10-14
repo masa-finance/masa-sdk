@@ -462,10 +462,10 @@
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-v2-utilities@^2.3.37":
-  version "2.3.37"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-2.3.37.tgz#421c91767e531a5b7c0cde7e0c39452acb3f3027"
-  integrity sha512-MdIPfu0kfW8HPtssQpSY+hsjTb9Ojd2u6LLNt5PBBaGpa5XuzRk+hW05fq6VK9LdzVJ7vt21Bxvx2+0spOp8pw==
+"@layerzerolabs/lz-v2-utilities@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-v2-utilities/-/lz-v2-utilities-3.0.3.tgz#bf9c66cebc14ddf2bbadf409e2b8e9d0aab02ae7"
+  integrity sha512-71JGKUHPBqSgHIzdBRV+T30UNFZiPezvOHcUGKtJuxTRkI1mj2Af3/3w+bboJjMbxcbeMjv6P/QYR1In6aKEog==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/address" "^5.7.0"
