@@ -455,10 +455,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@layerzerolabs/lz-definitions@^2.3.37":
-  version "2.3.37"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-2.3.37.tgz#50f654ed7657294e69bc967907ad794c2577df5d"
-  integrity sha512-abGbu/+aXSPG4i8/6nJefeqLhtRfkqxV9jA3HtGtdxtocluYwBYzRJtPWSHQWyaptrDGldL0f7b7mdiEJ/7Sow==
+"@layerzerolabs/lz-definitions@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-3.0.6.tgz#22a70be18c4617e32576071005c82af8b1fcf74a"
+  integrity sha512-4Kg3xLZzue2684hdPlKzaEiFFZ81NHAr2Rju+3po4/yTEc5vfKB/C9i4dMAaQlPcDgMQlLf15zadq90jzq2NlQ==
   dependencies:
     tiny-invariant "^1.3.1"
 
