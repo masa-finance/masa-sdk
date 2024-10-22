@@ -7,7 +7,7 @@ import { ethereum as ethereumAddressesMasaToken } from "@masa-finance/masa-token
 
 import type { Addresses } from "../../interface";
 
-const { MasaStaking: MasaStakingAddress } = ethereumAddressesMasaStaking;
+const { MasaStakingV2: MasaStakingAddress } = ethereumAddressesMasaStaking;
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,
