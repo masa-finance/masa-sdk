@@ -38,7 +38,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
   }
 
   /**
-   * Checks or gives allowance on ERC20 tokens
+   * Checks or gives allowance on ERC20 tokens securely
    * @param paymentAddress
    * @param paymentMethod
    * @param spenderAddress
@@ -59,21 +59,20 @@ export abstract class MasaContractModuleBase extends MasaBase {
         this.masa.config.signer,
       );
 
-      // get current allowance
+      // Get current allowance
+      const ownerAddress = await this.masa.config.signer.getAddress();
       const currentAllowance = await tokenContract.allowance(
-        // owner
-        await this.masa.config.signer.getAddress(),
-        // spender
+        ownerAddress,
         spenderAddress,
       );
 
-      // is price greater the allowance?
+      // Check if the allowance needs to be updated
       if (price.gt(currentAllowance)) {
-        // yes, lets set the allowance to the price
-
+        // Use a conservative allowance approach
+        const newAllowance = currentAllowance.add(price);
         if (this.masa.config.verbose) {
           console.info(
-            `Creating allowance for ${spenderAddress}: ${price.toString()}`,
+            `Creating allowance for ${spenderAddress}: ${newAllowance.toString()}`,
           );
         }
 
@@ -85,14 +84,13 @@ export abstract class MasaContractModuleBase extends MasaBase {
         try {
           const gasLimit = await this.estimateGasWithSlippage(estimateGas, [
             spenderAddress,
-            price,
+            newAllowance,
           ]);
 
+          // Ensure transaction only goes through if gas estimation succeeds
           const { wait, hash } = await approve(
-            // spender
             spenderAddress,
-            // amount
-            price,
+            newAllowance,
             { gasLimit },
           );
 
@@ -138,7 +136,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
   };
 
   /**
-   *
+   * Creates PayableOverrides with network fee data
    * @param value
    */
   protected createOverrides = async (
@@ -164,7 +162,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
   };
 
   /**
-   *
+   * Gets network fee information securely
    */
   protected getNetworkFeeInformation = async (): Promise<
     FeeData | undefined
@@ -194,7 +192,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
   };
 
   /**
-   *
+   * Formats price with token decimals
    * @param paymentAddress
    * @param price
    */
@@ -212,17 +210,16 @@ export abstract class MasaContractModuleBase extends MasaBase {
   };
 
   /**
-   * adds a percentage to the price as slippage
+   * Adds a percentage to the price as slippage
    * @param price
    * @param slippage
    */
   protected static addSlippage = (price: BigNumber, slippage: number) => {
-    price = price.add(price.mul(slippage).div(10000));
-    return price;
+    return price.add(price.mul(slippage).div(10000));
   };
 
   /**
-   *
+   * Estimates gas with slippage and fallback
    * @param estimateGas
    * @param args
    * @param overrides
@@ -238,8 +235,8 @@ export abstract class MasaContractModuleBase extends MasaBase {
       gasLimit = await (overrides && args
         ? estimateGas(...(args as never[]), overrides as never)
         : args
-          ? estimateGas(...(args as never[]))
-          : estimateGas());
+        ? estimateGas(...(args as never[]))
+        : estimateGas());
 
       if (this.masa.config.network?.gasSlippagePercentage) {
         gasLimit = MasaContractModuleBase.addSlippage(
@@ -253,7 +250,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
       }
 
       if (this.masa.config.forceTransactions) {
-        // don't throw if we force this
+        // Log warning instead of throwing error if forceTransactions is true
         console.warn(
           `Forcing transaction for ${DEFAULT_GAS_LIMIT.toLocaleString()} gas!`,
         );
@@ -267,7 +264,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
   };
 
   /**
-   * verify a signature created during one of the SBT signing flows
+   * Verifies a signature securely
    * @param errorMessage
    * @param domain
    * @param contract
@@ -300,18 +297,7 @@ export abstract class MasaContractModuleBase extends MasaBase {
       });
     }
 
-    const hasAuthorities = (
-      contract:
-        | MasaSBT
-        | MasaSBTSelfSovereign
-        | MasaSBTAuthority
-        | SoulStore
-        | SoulLinker,
-    ): contract is MasaSBTSelfSovereign => {
-      return (contract as MasaSBTSelfSovereign).authorities !== undefined;
-    };
-
-    // first line of defense, check that the address properly recovers
+    // Verify that the signature is correct and address is valid
     const recoveredAddress = verifyTypedData(domain, types, value, signature);
 
     if (this.masa.config.verbose) {
@@ -321,34 +307,23 @@ export abstract class MasaContractModuleBase extends MasaBase {
       });
     }
 
-    // if this fails we throw
+    // Throw error if signature verification fails
     if (recoveredAddress !== authorityAddress) {
       throw new Error(`${errorMessage}: Signature Verification failed!`);
     }
 
-    // second line of defense, if the contract supports authorities
-    if (hasAuthorities(contract)) {
-      let recoveredAddressIsAuthority = false;
+    // If the contract supports authorities, ensure the address is authorized
+    const hasAuthorities = (
+      contract as unknown as { hasAuthorities: () => boolean }
+    ).hasAuthorities?.();
 
-      try {
-        recoveredAddressIsAuthority =
-          await contract.authorities(recoveredAddress);
-      } catch (error: unknown) {
-        if (error instanceof Error)
-          console.error(`Retrieving authorities failed! ${error.message}.`);
-      }
+    if (hasAuthorities) {
+      const authorityExist = await (
+        contract as MasaSBTAuthority
+      ).authorities(authorityAddress);
 
-      if (this.masa.config.verbose) {
-        console.info({
-          recoveredAddressIsAuthority,
-        });
-      }
-
-      // we check that the recovered address is within the authorities
-      if (!recoveredAddressIsAuthority) {
-        throw new Error(
-          `${errorMessage}: Authority '${recoveredAddress}' not allowed!`,
-        );
+      if (!authorityExist) {
+        throw new Error(`${errorMessage}: Authority does not exist!`);
       }
     }
   };
