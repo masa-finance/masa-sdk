@@ -1,10 +1,15 @@
 import type { GreenDetails, MasaInterface } from "../../interface";
+import { isSigner } from "../../utils";
 import { loadGreens } from "./load";
 
 export const listGreens = async (
   masa: MasaInterface,
   address?: string,
 ): Promise<GreenDetails[]> => {
+  if (!isSigner(masa.config.signer)) {
+    return [];
+  }
+
   address = address || (await masa.config.signer.getAddress());
   return loadGreens(masa, address);
 };

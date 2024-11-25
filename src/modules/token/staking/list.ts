@@ -1,6 +1,7 @@
 import { utils } from "ethers";
 
 import { BaseResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils";
 
 export interface Stake {
   amount: string;
@@ -31,16 +32,19 @@ export const list = async (
     success: false,
   };
 
-  address = address || (await masa.config.signer.getAddress());
-
-  console.log(address);
-
-  if (!masa.contracts.instances.MasaStaking.hasAddress) {
+  if (
+    !masa.contracts.instances.MasaStaking.hasAddress ||
+    !isSigner(masa.config.signer)
+  ) {
     result.message = `Unable to show on ${masa.config.networkName}!`;
     console.error(result.message);
 
     return result;
   }
+
+  address = address || (await masa.config.signer.getAddress());
+
+  console.log(address);
 
   try {
     const {

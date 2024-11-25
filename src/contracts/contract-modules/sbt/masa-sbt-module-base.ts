@@ -4,7 +4,7 @@ import { Signer, utils } from "ethers";
 
 import type { PaymentMethod, PriceInformation } from "../../../interface";
 import type { ContractFactory } from "../../../interface/contract-factory";
-import { isNativeCurrency } from "../../../utils";
+import { isNativeCurrency, isSigner } from "../../../utils";
 import { MasaContractModuleBase } from "../masa-contract-module-base";
 
 export const checkExists = async (
@@ -108,7 +108,7 @@ export abstract class MasaSBTModuleBase extends MasaContractModuleBase {
     let errorMessage = `Smart contract '${address}' does not exist on network '${this.masa.config.networkName}'!`;
 
     // address invalid, unable to load
-    if (!utils.isAddress(address)) {
+    if (!utils.isAddress(address) || !isSigner(this.masa.config.signer)) {
       errorMessage = `SBT Address '${address}' is not valid!`;
       console.error(errorMessage);
       throw new Error(errorMessage);

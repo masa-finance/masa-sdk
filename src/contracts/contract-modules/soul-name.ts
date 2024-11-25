@@ -3,6 +3,7 @@ import { TypedDataField } from "ethers";
 
 import { Messages } from "../../collections";
 import type { BaseResult } from "../../interface";
+import { isSigner } from "../../utils";
 import { MasaContractModuleBase } from "./masa-contract-module-base";
 
 export class SoulName extends MasaContractModuleBase {
@@ -47,7 +48,7 @@ export class SoulName extends MasaContractModuleBase {
       this.masa.contracts.instances.SoulNameContract.extension(),
     ]);
 
-    if (soulNameData.exists) {
+    if (soulNameData.exists && isSigner(this.masa.config.signer)) {
       console.log(
         `Sending '${soulName}${extension}' with token ID '${soulNameData.tokenId}' to '${receiver}'!`,
       );

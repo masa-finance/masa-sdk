@@ -4,6 +4,7 @@ import type {
   SoulboundIdentity,
   SoulName,
 } from "@masa-finance/masa-contracts-identity";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { constants, utils } from "ethers";
 
 import type {
@@ -13,6 +14,7 @@ import type {
 } from "../../interface";
 import type { ERC20 } from "../../stubs";
 import { ERC20__factory } from "../../stubs";
+import { isSigner } from "../../utils";
 
 export type BalanceTypes = "Native" | PaymentMethod | SBTContractNames;
 
@@ -37,7 +39,88 @@ export const getBalances = async (
   address?: string,
 ): Promise<Balances> => {
   const addressToLoad: string =
-    address || (await masa.config.signer.getAddress());
+    address ||
+    (isSigner(masa.config.signer)
+      ? await masa.config.signer.getAddress()
+      : masa.config.signer.keypair.publicKey.toBase58());
+
+  if (!isSigner(masa.config.signer)) {
+    // solana way
+
+    const loadSPLBalance = async (
+      userAddress: string,
+      tokenAddress?: string,
+    ): Promise<number | undefined> => {
+      let splBalance;
+
+      if (!isSigner(masa.config.signer) && tokenAddress) {
+        try {
+          splBalance = 0;
+
+          const { value: tokenAccounts } =
+            await masa.config.signer.connection.getTokenAccountsByOwner(
+              new PublicKey(userAddress),
+              {
+                mint: new PublicKey(tokenAddress),
+              },
+            );
+
+          if (tokenAccounts.length > 0) {
+            const { value: tokenBalance } =
+              await masa.config.signer.connection.getTokenAccountBalance(
+                new PublicKey(tokenAccounts[0].pubkey),
+              );
+
+            if (tokenBalance.uiAmount) {
+              splBalance = tokenBalance.uiAmount;
+            }
+          }
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error(
+              `Getting balance failed!: Token: ${tokenAddress} Wallet Address: ${userAddress} ${error.message}`,
+            );
+          }
+        }
+      }
+
+      return splBalance;
+    };
+
+    const nativeBalance =
+      (await masa.config.signer.connection.getBalance(
+        masa.config.signer.keypair.publicKey,
+      )) / LAMPORTS_PER_SOL;
+
+    let SPLBalances;
+
+    if (masa.config.network?.addresses?.tokens) {
+      const tokens = Object.keys(masa.config.network.addresses.tokens);
+
+      SPLBalances = await tokens.reduce(
+        async (
+          accumulatedBalances: Promise<Partial<Balances>>,
+          symbol: string,
+        ): Promise<Balances> => {
+          const balance = await loadSPLBalance(
+            addressToLoad,
+            masa.config.network?.addresses?.tokens?.[symbol as PaymentMethod],
+          );
+
+          const accumulated = await accumulatedBalances;
+          return balance !== undefined
+            ? { ...accumulated, [symbol]: balance }
+            : { ...accumulated };
+        },
+        Promise.resolve({}),
+      );
+    }
+
+    return {
+      Native: nativeBalance,
+      ...SPLBalances,
+    };
+  }
 
   const loadERC20Balance = async (
     userAddress: string,
@@ -46,14 +129,14 @@ export const getBalances = async (
     let result;
 
     if (
-      masa.config.signer.provider &&
+      isSigner(masa.config.signer) &&
       tokenAddress &&
       tokenAddress !== constants.AddressZero
     ) {
       try {
         const contract: ERC20 = ERC20__factory.connect(
           tokenAddress,
-          masa.config.signer.provider,
+          masa.config.signer,
         );
 
         const [balance, decimals] = await Promise.all([

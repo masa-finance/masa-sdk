@@ -6,6 +6,7 @@ import { BigNumber, utils } from "ethers";
 
 import { Messages } from "../../../collections";
 import { BaseResult, MasaInterface } from "../../../interface";
+import { isSigner } from "../../../utils";
 
 /**
  *
@@ -20,20 +21,21 @@ export const deposit = async (
     success: false,
   };
 
-  const tokenAmount = BigNumber.from(utils.parseEther(amount));
-
-  console.log(`Depositing ${parseFloat(amount).toLocaleString()} MASA!`);
-
   if (
     !masa.config.network?.addresses.tokens?.MASA ||
     (masa.config.networkName !== "masa" &&
-      masa.config.networkName !== "masatest")
+      masa.config.networkName !== "masatest") ||
+    !isSigner(masa.config.signer)
   ) {
     result.message = `Unable to deposit on ${masa.config.networkName}!`;
     console.error(result.message);
 
     return result;
   }
+
+  const tokenAmount = BigNumber.from(utils.parseEther(amount));
+
+  console.log(`Depositing ${parseFloat(amount).toLocaleString()} MASA!`);
 
   // origin
   const oft: MasaTokenNativeOFT = MasaTokenNativeOFT__factory.connect(

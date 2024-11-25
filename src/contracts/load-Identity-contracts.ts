@@ -12,6 +12,7 @@ import {
   type SoulStore,
   SoulStore__factory,
 } from "@masa-finance/masa-contracts-identity";
+import { Connection, Keypair } from "@solana/web3.js";
 import { Signer } from "ethers";
 
 import { ContractInfo, IIdentityContracts, NetworkName } from "../interface";
@@ -22,7 +23,12 @@ export const loadIdentityContracts = ({
   signer,
   networkName = "ethereum",
 }: {
-  signer: Signer;
+  signer:
+    | Signer
+    | {
+        keypair: Keypair;
+        connection: Connection;
+      };
   networkName?: NetworkName;
 }): IIdentityContracts => {
   // Identity

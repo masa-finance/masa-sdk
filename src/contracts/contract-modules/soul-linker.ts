@@ -10,7 +10,7 @@ import type {
 } from "../../interface";
 import type { Link } from "../../modules";
 import { loadLinks } from "../../modules";
-import { isNativeCurrency, signTypedData } from "../../utils";
+import { isNativeCurrency, isSigner, signTypedData } from "../../utils";
 import { MasaContractModuleBase } from "./masa-contract-module-base";
 
 export type BreakLinkResult = BaseResult;
@@ -219,8 +219,19 @@ export class SoulLinker extends MasaContractModuleBase {
     signatureDate: number = Math.floor(Date.now() / 1000),
     // default to 15 minutes
     expirationOffset: number = 60 * 15,
-  ) => {
+  ): Promise<{
+    signature?: string;
+    signatureDate: number;
+    expirationDate: number;
+  }> => {
     const expirationDate = signatureDate + expirationOffset;
+
+    if (!isSigner(this.masa.config.signer)) {
+      return {
+        signatureDate,
+        expirationDate,
+      };
+    }
 
     const value: {
       readerIdentityId: BigNumber;
@@ -256,7 +267,11 @@ export class SoulLinker extends MasaContractModuleBase {
       await this.masa.config.signer.getAddress(),
     );
 
-    return { signature, signatureDate, expirationDate };
+    return {
+      signature,
+      signatureDate,
+      expirationDate,
+    };
   };
 
   /**
