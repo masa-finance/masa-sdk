@@ -7,7 +7,7 @@ const { MasaStaking: MasaStakingAddress } = basesepoliaAddressesMasaStaking;
 
 export const basesepolia: Addresses = {
   tokens: {
-    MASA: BaseSepoliaAddressesMasaToken.MasaTokenOFT,
+    MASA: BaseSepoliaAddressesMasaToken.MasaTokenOFTv2,
   },
   MasaStakingAddress,
 };
