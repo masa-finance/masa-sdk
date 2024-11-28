@@ -4,7 +4,7 @@ import { base as BaseAddressesMasaToken } from "@masa-finance/masa-token/address
 
 import type { Addresses } from "../../interface";
 
-const { MasaStaking: MasaStakingAddress } = basesAddressesMasaStaking;
+const { MasaStakingV2: MasaStakingAddress } = basesAddressesMasaStaking;
 
 const {
   SoulboundIdentity: SoulboundIdentityAddress,
